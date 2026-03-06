@@ -1,0 +1,173 @@
+version: "3.9"
+
+services:
+  # ============================================================
+  # Infrastructure
+  # ============================================================
+
+  postgres:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_DB: solar3d
+      POSTGRES_USER: solar3d
+      POSTGRES_PASSWORD: solar3d_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U solar3d"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: solar3d
+      MINIO_ROOT_PASSWORD: solar3d_dev
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+
+  # ============================================================
+  # Backend Services
+  # ============================================================
+
+  project-service:
+    build:
+      context: ./services/project-service
+      dockerfile: Dockerfile
+    environment:
+      PORT: "8080"
+      DATABASE_URL: "postgres://solar3d:solar3d_dev@postgres:5432/solar3d?sslmode=disable"
+      LOG_LEVEL: "debug"
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  terrain-service:
+    build:
+      context: ./services/terrain-service
+      dockerfile: Dockerfile
+    environment:
+      PORT: "8081"
+      DATABASE_URL: "postgres://solar3d:solar3d_dev@postgres:5432/solar3d?sslmode=disable"
+      S3_ENDPOINT: "http://minio:9000"
+      S3_BUCKET: "terrain"
+      LOG_LEVEL: "debug"
+    ports:
+      - "8081:8081"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  layout-service:
+    build:
+      context: ./services/layout-service
+      dockerfile: Dockerfile
+    environment:
+      PORT: "8082"
+      DATABASE_URL: "postgres://solar3d:solar3d_dev@postgres:5432/solar3d?sslmode=disable"
+      TILE_SIZE: "100.0"
+      LOG_LEVEL: "debug"
+    ports:
+      - "8082:8082"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  simulation-service:
+    build:
+      context: ./services/simulation-service
+      dockerfile: Dockerfile
+    environment:
+      PORT: "8083"
+      DATABASE_URL: "postgres://solar3d:solar3d_dev@postgres:5432/solar3d?sslmode=disable"
+      LOG_LEVEL: "debug"
+    ports:
+      - "8083:8083"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  electrical-service:
+    build:
+      context: ./services/electrical-service
+      dockerfile: Dockerfile
+    environment:
+      PORT: "8084"
+      DATABASE_URL: "postgres://solar3d:solar3d_dev@postgres:5432/solar3d?sslmode=disable"
+      LOG_LEVEL: "debug"
+    ports:
+      - "8084:8084"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  routing-service:
+    build:
+      context: ./services/routing-service
+      dockerfile: Dockerfile
+    environment:
+      PORT: "8085"
+      DATABASE_URL: "postgres://solar3d:solar3d_dev@postgres:5432/solar3d?sslmode=disable"
+      LOG_LEVEL: "debug"
+    ports:
+      - "8085:8085"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  report-service:
+    build:
+      context: ./services/report-service
+      dockerfile: Dockerfile
+    environment:
+      PORT: "8086"
+      DATABASE_URL: "postgres://solar3d:solar3d_dev@postgres:5432/solar3d?sslmode=disable"
+      S3_ENDPOINT: "http://minio:9000"
+      S3_BUCKET: "reports"
+      LOG_LEVEL: "debug"
+    ports:
+      - "8086:8086"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  asset-service:
+    build:
+      context: ./services/asset-service
+      dockerfile: Dockerfile
+    environment:
+      PORT: "8087"
+      DATABASE_URL: "postgres://solar3d:solar3d_dev@postgres:5432/solar3d?sslmode=disable"
+      LOG_LEVEL: "debug"
+    ports:
+      - "8087:8087"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ============================================================
+  # Frontend
+  # ============================================================
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      VITE_API_BASE_URL: "http://localhost:8080"
+
+volumes:
+  postgres_data:
+  minio_data:

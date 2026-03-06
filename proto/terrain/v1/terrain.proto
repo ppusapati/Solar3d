@@ -1,0 +1,121 @@
+syntax = "proto3";
+
+package terrain.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/terrain/v1;terrainv1";
+
+import "google/protobuf/timestamp.proto";
+
+service TerrainService {
+  rpc UploadTerrain(UploadTerrainRequest) returns (UploadTerrainResponse);
+  rpc GetTerrainLayer(GetTerrainLayerRequest) returns (GetTerrainLayerResponse);
+  rpc ListTerrainLayers(ListTerrainLayersRequest) returns (ListTerrainLayersResponse);
+  rpc GetElevation(GetElevationRequest) returns (GetElevationResponse);
+  rpc GetElevationGrid(GetElevationGridRequest) returns (GetElevationGridResponse);
+  rpc ComputeSlope(ComputeSlopeRequest) returns (ComputeSlopeResponse);
+  rpc ComputeAspect(ComputeAspectRequest) returns (ComputeAspectResponse);
+  rpc DeleteTerrainLayer(DeleteTerrainLayerRequest) returns (DeleteTerrainLayerResponse);
+}
+
+message TerrainLayer {
+  string id = 1;
+  string project_id = 2;
+  string name = 3;
+  TerrainLayerType layer_type = 4;
+  string source_file = 5;
+  BoundingBox bounds = 6;
+  double resolution_m = 7;
+  string crs = 8;
+  double min_elevation = 9;
+  double max_elevation = 10;
+  google.protobuf.Timestamp created_at = 11;
+}
+
+enum TerrainLayerType {
+  TERRAIN_LAYER_TYPE_UNSPECIFIED = 0;
+  TERRAIN_LAYER_TYPE_DEM = 1;
+  TERRAIN_LAYER_TYPE_SLOPE = 2;
+  TERRAIN_LAYER_TYPE_ASPECT = 3;
+  TERRAIN_LAYER_TYPE_HILLSHADE = 4;
+}
+
+message BoundingBox {
+  double min_x = 1;
+  double min_y = 2;
+  double max_x = 3;
+  double max_y = 4;
+}
+
+message UploadTerrainRequest {
+  string project_id = 1;
+  string name = 2;
+  string file_path = 3;
+  string crs = 4;
+}
+
+message UploadTerrainResponse {
+  TerrainLayer layer = 1;
+}
+
+message GetTerrainLayerRequest {
+  string id = 1;
+}
+
+message GetTerrainLayerResponse {
+  TerrainLayer layer = 1;
+}
+
+message ListTerrainLayersRequest {
+  string project_id = 1;
+  TerrainLayerType type_filter = 2;
+}
+
+message ListTerrainLayersResponse {
+  repeated TerrainLayer layers = 1;
+}
+
+message GetElevationRequest {
+  string project_id = 1;
+  double longitude = 2;
+  double latitude = 3;
+}
+
+message GetElevationResponse {
+  double elevation = 1;
+}
+
+message GetElevationGridRequest {
+  string project_id = 1;
+  BoundingBox bounds = 2;
+  double resolution_m = 3;
+}
+
+message GetElevationGridResponse {
+  int32 width = 1;
+  int32 height = 2;
+  repeated double elevations = 3;
+  double min_elevation = 4;
+  double max_elevation = 5;
+}
+
+message ComputeSlopeRequest {
+  string terrain_layer_id = 1;
+}
+
+message ComputeSlopeResponse {
+  TerrainLayer slope_layer = 1;
+}
+
+message ComputeAspectRequest {
+  string terrain_layer_id = 1;
+}
+
+message ComputeAspectResponse {
+  TerrainLayer aspect_layer = 1;
+}
+
+message DeleteTerrainLayerRequest {
+  string id = 1;
+}
+
+message DeleteTerrainLayerResponse {}

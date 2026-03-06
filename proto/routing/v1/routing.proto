@@ -1,0 +1,129 @@
+syntax = "proto3";
+
+package routing.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/routing/v1;routingv1";
+
+import "google/protobuf/timestamp.proto";
+
+service RoutingService {
+  rpc CalculateRoute(CalculateRouteRequest) returns (CalculateRouteResponse);
+  rpc CreateCableRoute(CreateCableRouteRequest) returns (CreateCableRouteResponse);
+  rpc CreateRoadRoute(CreateRoadRouteRequest) returns (CreateRoadRouteResponse);
+  rpc ListRoutes(ListRoutesRequest) returns (ListRoutesResponse);
+  rpc DeleteRoute(DeleteRouteRequest) returns (DeleteRouteResponse);
+  rpc OptimizeRoutes(OptimizeRoutesRequest) returns (OptimizeRoutesResponse);
+}
+
+message Route {
+  string id = 1;
+  string project_id = 2;
+  RouteType route_type = 3;
+  string name = 4;
+  // GeoJSON LineString
+  string geometry_geojson = 5;
+  double distance_m = 6;
+  double cost_estimate = 7;
+  RouteMetadata metadata = 8;
+  google.protobuf.Timestamp created_at = 9;
+}
+
+enum RouteType {
+  ROUTE_TYPE_UNSPECIFIED = 0;
+  ROUTE_TYPE_DC_CABLE = 1;
+  ROUTE_TYPE_AC_CABLE = 2;
+  ROUTE_TYPE_COMMUNICATION = 3;
+  ROUTE_TYPE_ACCESS_ROAD = 4;
+  ROUTE_TYPE_SERVICE_ROAD = 5;
+}
+
+message RouteMetadata {
+  string cable_type = 1;
+  double cable_size_mm2 = 2;
+  double voltage_drop_percent = 3;
+  double max_slope_percent = 4;
+}
+
+message Waypoint {
+  double longitude = 1;
+  double latitude = 2;
+  double elevation = 3;
+}
+
+message RouteConstraints {
+  double max_slope_percent = 1;
+  bool avoid_water = 2;
+  repeated string avoid_zone_geojsons = 3;
+  double terrain_slope_penalty = 4;
+}
+
+message CalculateRouteRequest {
+  string project_id = 1;
+  Waypoint source = 2;
+  Waypoint destination = 3;
+  RouteType route_type = 4;
+  RouteConstraints constraints = 5;
+  string terrain_layer_id = 6;
+}
+
+message CalculateRouteResponse {
+  repeated Waypoint waypoints = 1;
+  double distance_m = 2;
+  double cost_estimate = 3;
+  double max_slope_encountered = 4;
+}
+
+message CreateCableRouteRequest {
+  string project_id = 1;
+  string name = 2;
+  Waypoint source = 3;
+  Waypoint destination = 4;
+  string cable_type = 5;
+  double cable_size_mm2 = 6;
+  RouteConstraints constraints = 7;
+  string terrain_layer_id = 8;
+}
+
+message CreateCableRouteResponse {
+  Route route = 1;
+}
+
+message CreateRoadRouteRequest {
+  string project_id = 1;
+  string name = 2;
+  Waypoint source = 3;
+  Waypoint destination = 4;
+  double road_width_m = 5;
+  RouteConstraints constraints = 6;
+  string terrain_layer_id = 7;
+}
+
+message CreateRoadRouteResponse {
+  Route route = 1;
+}
+
+message ListRoutesRequest {
+  string project_id = 1;
+  RouteType type_filter = 2;
+}
+
+message ListRoutesResponse {
+  repeated Route routes = 1;
+}
+
+message DeleteRouteRequest {
+  string id = 1;
+}
+
+message DeleteRouteResponse {}
+
+message OptimizeRoutesRequest {
+  string project_id = 1;
+  RouteType route_type = 2;
+}
+
+message OptimizeRoutesResponse {
+  repeated Route optimized_routes = 1;
+  double total_distance_m = 2;
+  double total_cost_estimate = 3;
+}

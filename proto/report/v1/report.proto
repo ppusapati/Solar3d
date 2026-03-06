@@ -1,0 +1,127 @@
+syntax = "proto3";
+
+package report.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/report/v1;reportv1";
+
+import "google/protobuf/timestamp.proto";
+
+service ReportService {
+  rpc GenerateReport(GenerateReportRequest) returns (GenerateReportResponse);
+  rpc GetReport(GetReportRequest) returns (GetReportResponse);
+  rpc ListReports(ListReportsRequest) returns (ListReportsResponse);
+  rpc DeleteReport(DeleteReportRequest) returns (DeleteReportResponse);
+  rpc GenerateBOM(GenerateBOMRequest) returns (GenerateBOMResponse);
+  rpc ExportLayout(ExportLayoutRequest) returns (ExportLayoutResponse);
+}
+
+message Report {
+  string id = 1;
+  string project_id = 2;
+  string name = 3;
+  ReportType report_type = 4;
+  ReportFormat format = 5;
+  string file_path = 6;
+  ReportStatus status = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp completed_at = 9;
+}
+
+enum ReportType {
+  REPORT_TYPE_UNSPECIFIED = 0;
+  REPORT_TYPE_SITE_LAYOUT = 1;
+  REPORT_TYPE_PANEL_LAYOUT = 2;
+  REPORT_TYPE_SYSTEM_CAPACITY = 3;
+  REPORT_TYPE_ELECTRICAL_DIAGRAM = 4;
+  REPORT_TYPE_BILL_OF_MATERIALS = 5;
+  REPORT_TYPE_ENERGY_ESTIMATE = 6;
+  REPORT_TYPE_FULL_ENGINEERING = 7;
+}
+
+enum ReportFormat {
+  REPORT_FORMAT_UNSPECIFIED = 0;
+  REPORT_FORMAT_PDF = 1;
+  REPORT_FORMAT_CSV = 2;
+  REPORT_FORMAT_EXCEL = 3;
+  REPORT_FORMAT_JSON = 4;
+}
+
+enum ReportStatus {
+  REPORT_STATUS_UNSPECIFIED = 0;
+  REPORT_STATUS_PENDING = 1;
+  REPORT_STATUS_GENERATING = 2;
+  REPORT_STATUS_COMPLETED = 3;
+  REPORT_STATUS_FAILED = 4;
+}
+
+message BOMItem {
+  string category = 1;
+  string name = 2;
+  string specification = 3;
+  int32 quantity = 4;
+  string unit = 5;
+  double unit_cost = 6;
+  double total_cost = 7;
+}
+
+message BillOfMaterials {
+  repeated BOMItem items = 1;
+  double total_cost = 2;
+  int32 total_panels = 3;
+  int32 total_inverters = 4;
+  int32 total_transformers = 5;
+  double total_cable_length_m = 6;
+}
+
+message GenerateReportRequest {
+  string project_id = 1;
+  string name = 2;
+  ReportType report_type = 3;
+  ReportFormat format = 4;
+}
+
+message GenerateReportResponse {
+  Report report = 1;
+}
+
+message GetReportRequest {
+  string id = 1;
+}
+
+message GetReportResponse {
+  Report report = 1;
+}
+
+message ListReportsRequest {
+  string project_id = 1;
+}
+
+message ListReportsResponse {
+  repeated Report reports = 1;
+}
+
+message DeleteReportRequest {
+  string id = 1;
+}
+
+message DeleteReportResponse {}
+
+message GenerateBOMRequest {
+  string project_id = 1;
+  string layout_id = 2;
+  string electrical_network_id = 3;
+}
+
+message GenerateBOMResponse {
+  BillOfMaterials bom = 1;
+}
+
+message ExportLayoutRequest {
+  string project_id = 1;
+  string layout_id = 2;
+  ReportFormat format = 3;
+}
+
+message ExportLayoutResponse {
+  string file_path = 1;
+}

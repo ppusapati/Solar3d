@@ -1,0 +1,179 @@
+syntax = "proto3";
+
+package electrical.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/electrical/v1;electricalv1";
+
+import "google/protobuf/timestamp.proto";
+
+service ElectricalService {
+  rpc CreateNetwork(CreateNetworkRequest) returns (CreateNetworkResponse);
+  rpc GetNetwork(GetNetworkRequest) returns (GetNetworkResponse);
+  rpc ListNetworks(ListNetworksRequest) returns (ListNetworksResponse);
+  rpc DeleteNetwork(DeleteNetworkRequest) returns (DeleteNetworkResponse);
+
+  // String operations
+  rpc CreateString(CreateStringRequest) returns (CreateStringResponse);
+  rpc AutoGenerateStrings(AutoGenerateStringsRequest) returns (AutoGenerateStringsResponse);
+  rpc ListStrings(ListStringsRequest) returns (ListStringsResponse);
+
+  // Inverter operations
+  rpc AssignInverter(AssignInverterRequest) returns (AssignInverterResponse);
+  rpc ListInverterGroups(ListInverterGroupsRequest) returns (ListInverterGroupsResponse);
+
+  // Calculations
+  rpc CalculateDCCapacity(CalculateDCCapacityRequest) returns (CalculateDCCapacityResponse);
+  rpc CalculateACCapacity(CalculateACCapacityRequest) returns (CalculateACCapacityResponse);
+  rpc CalculateLosses(CalculateLossesRequest) returns (CalculateLossesResponse);
+}
+
+message ElectricalNetwork {
+  string id = 1;
+  string project_id = 2;
+  string layout_id = 3;
+  string name = 4;
+  double total_dc_capacity_kw = 5;
+  double total_ac_capacity_kw = 6;
+  double dc_ac_ratio = 7;
+  int32 string_count = 8;
+  int32 inverter_count = 9;
+  google.protobuf.Timestamp created_at = 10;
+}
+
+message PanelString {
+  string id = 1;
+  string network_id = 2;
+  string inverter_group_id = 3;
+  repeated string panel_ids = 4;
+  int32 panel_count = 5;
+  double string_voltage = 6;
+  double string_current = 7;
+  double string_power_w = 8;
+}
+
+message InverterGroup {
+  string id = 1;
+  string network_id = 2;
+  string inverter_asset_id = 3;
+  repeated string string_ids = 4;
+  double dc_input_kw = 5;
+  double ac_output_kw = 6;
+  double dc_ac_ratio = 7;
+  string position_geojson = 8;
+}
+
+message CreateNetworkRequest {
+  string project_id = 1;
+  string layout_id = 2;
+  string name = 3;
+}
+
+message CreateNetworkResponse {
+  ElectricalNetwork network = 1;
+}
+
+message GetNetworkRequest {
+  string id = 1;
+}
+
+message GetNetworkResponse {
+  ElectricalNetwork network = 1;
+}
+
+message ListNetworksRequest {
+  string project_id = 1;
+}
+
+message ListNetworksResponse {
+  repeated ElectricalNetwork networks = 1;
+}
+
+message DeleteNetworkRequest {
+  string id = 1;
+}
+
+message DeleteNetworkResponse {}
+
+message CreateStringRequest {
+  string network_id = 1;
+  repeated string panel_ids = 2;
+  string inverter_group_id = 3;
+}
+
+message CreateStringResponse {
+  PanelString panel_string = 1;
+}
+
+message AutoGenerateStringsRequest {
+  string network_id = 1;
+  string layout_id = 2;
+  int32 panels_per_string = 3;
+  string inverter_asset_id = 4;
+  int32 strings_per_inverter = 5;
+}
+
+message AutoGenerateStringsResponse {
+  int32 strings_created = 1;
+  int32 inverter_groups_created = 2;
+  double total_dc_kw = 3;
+  double total_ac_kw = 4;
+}
+
+message ListStringsRequest {
+  string network_id = 1;
+}
+
+message ListStringsResponse {
+  repeated PanelString strings = 1;
+}
+
+message AssignInverterRequest {
+  string network_id = 1;
+  string inverter_asset_id = 2;
+  repeated string string_ids = 3;
+  string position_geojson = 4;
+}
+
+message AssignInverterResponse {
+  InverterGroup inverter_group = 1;
+}
+
+message ListInverterGroupsRequest {
+  string network_id = 1;
+}
+
+message ListInverterGroupsResponse {
+  repeated InverterGroup inverter_groups = 1;
+}
+
+message CalculateDCCapacityRequest {
+  string network_id = 1;
+}
+
+message CalculateDCCapacityResponse {
+  double total_dc_kw = 1;
+  int32 total_panels = 2;
+  int32 total_strings = 3;
+}
+
+message CalculateACCapacityRequest {
+  string network_id = 1;
+}
+
+message CalculateACCapacityResponse {
+  double total_ac_kw = 1;
+  double dc_ac_ratio = 2;
+  int32 total_inverters = 3;
+}
+
+message CalculateLossesRequest {
+  string network_id = 1;
+}
+
+message CalculateLossesResponse {
+  double dc_cable_loss_percent = 1;
+  double ac_cable_loss_percent = 2;
+  double inverter_loss_percent = 3;
+  double transformer_loss_percent = 4;
+  double total_loss_percent = 5;
+}

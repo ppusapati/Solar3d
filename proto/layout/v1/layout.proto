@@ -1,0 +1,208 @@
+syntax = "proto3";
+
+package layout.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/layout/v1;layoutv1";
+
+import "google/protobuf/timestamp.proto";
+
+service LayoutService {
+  // Layout management
+  rpc CreateLayout(CreateLayoutRequest) returns (CreateLayoutResponse);
+  rpc GetLayout(GetLayoutRequest) returns (GetLayoutResponse);
+  rpc ListLayouts(ListLayoutsRequest) returns (ListLayoutsResponse);
+  rpc DeleteLayout(DeleteLayoutRequest) returns (DeleteLayoutResponse);
+
+  // Component placement
+  rpc PlaceComponent(PlaceComponentRequest) returns (PlaceComponentResponse);
+  rpc MoveComponent(MoveComponentRequest) returns (MoveComponentResponse);
+  rpc RemoveComponent(RemoveComponentRequest) returns (RemoveComponentResponse);
+  rpc ListComponents(ListComponentsRequest) returns (ListComponentsResponse);
+
+  // Panel array generation
+  rpc GeneratePanelArray(GeneratePanelArrayRequest) returns (GeneratePanelArrayResponse);
+
+  // Tile-based queries
+  rpc GetTiles(GetTilesRequest) returns (GetTilesResponse);
+  rpc GetTilePanels(GetTilePanelsRequest) returns (GetTilePanelsResponse);
+}
+
+message Layout {
+  string id = 1;
+  string project_id = 2;
+  string name = 3;
+  int32 total_panels = 4;
+  double total_capacity_kw = 5;
+  int32 tile_count = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
+}
+
+message Component {
+  string id = 1;
+  string layout_id = 2;
+  string asset_id = 3;
+  ComponentType component_type = 4;
+  Position position = 5;
+  double rotation = 6;
+  string metadata_json = 7;
+  google.protobuf.Timestamp created_at = 8;
+}
+
+enum ComponentType {
+  COMPONENT_TYPE_UNSPECIFIED = 0;
+  COMPONENT_TYPE_PANEL = 1;
+  COMPONENT_TYPE_INVERTER = 2;
+  COMPONENT_TYPE_TRANSFORMER = 3;
+  COMPONENT_TYPE_JUNCTION_BOX = 4;
+  COMPONENT_TYPE_SUBSTATION = 5;
+  COMPONENT_TYPE_TRACKER = 6;
+  COMPONENT_TYPE_COMBINER_BOX = 7;
+}
+
+message Position {
+  double longitude = 1;
+  double latitude = 2;
+  double elevation = 3;
+}
+
+message LayoutTile {
+  string id = 1;
+  string layout_id = 2;
+  BoundingBox bbox = 3;
+  int32 lod_level = 4;
+  int32 panel_count = 5;
+  string metadata_json = 6;
+  google.protobuf.Timestamp created_at = 7;
+}
+
+message Panel {
+  string id = 1;
+  string tile_id = 2;
+  string string_id = 3;
+  // GeoJSON polygon
+  string geometry_geojson = 4;
+  double tilt = 5;
+  double azimuth = 6;
+  double elevation = 7;
+  string metadata_json = 8;
+}
+
+message BoundingBox {
+  double min_x = 1;
+  double min_y = 2;
+  double max_x = 3;
+  double max_y = 4;
+}
+
+message PanelArrayParams {
+  // Panel dimensions in meters
+  double panel_width = 1;
+  double panel_height = 2;
+  double tilt_angle = 3;
+  double azimuth = 4;
+  double row_spacing = 5;
+  double column_spacing = 6;
+  // GeoJSON polygon for the fill area
+  string fill_area_geojson = 7;
+  // Optional terrain layer for alignment
+  string terrain_layer_id = 8;
+}
+
+message CreateLayoutRequest {
+  string project_id = 1;
+  string name = 2;
+}
+
+message CreateLayoutResponse {
+  Layout layout = 1;
+}
+
+message GetLayoutRequest {
+  string id = 1;
+}
+
+message GetLayoutResponse {
+  Layout layout = 1;
+}
+
+message ListLayoutsRequest {
+  string project_id = 1;
+}
+
+message ListLayoutsResponse {
+  repeated Layout layouts = 1;
+}
+
+message DeleteLayoutRequest {
+  string id = 1;
+}
+
+message DeleteLayoutResponse {}
+
+message PlaceComponentRequest {
+  string layout_id = 1;
+  string asset_id = 2;
+  ComponentType component_type = 3;
+  Position position = 4;
+  double rotation = 5;
+  string metadata_json = 6;
+}
+
+message PlaceComponentResponse {
+  Component component = 1;
+}
+
+message MoveComponentRequest {
+  string component_id = 1;
+  Position position = 2;
+  double rotation = 3;
+}
+
+message MoveComponentResponse {
+  Component component = 1;
+}
+
+message RemoveComponentRequest {
+  string component_id = 1;
+}
+
+message RemoveComponentResponse {}
+
+message ListComponentsRequest {
+  string layout_id = 1;
+  ComponentType type_filter = 2;
+}
+
+message ListComponentsResponse {
+  repeated Component components = 1;
+}
+
+message GeneratePanelArrayRequest {
+  string layout_id = 1;
+  PanelArrayParams params = 2;
+}
+
+message GeneratePanelArrayResponse {
+  int32 panels_created = 1;
+  int32 tiles_created = 2;
+  double capacity_kw = 3;
+}
+
+message GetTilesRequest {
+  string layout_id = 1;
+  BoundingBox viewport = 2;
+  int32 lod_level = 3;
+}
+
+message GetTilesResponse {
+  repeated LayoutTile tiles = 1;
+}
+
+message GetTilePanelsRequest {
+  string tile_id = 1;
+}
+
+message GetTilePanelsResponse {
+  repeated Panel panels = 1;
+}

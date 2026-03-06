@@ -1,0 +1,141 @@
+syntax = "proto3";
+
+package simulation.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/simulation/v1;simulationv1";
+
+import "google/protobuf/timestamp.proto";
+
+service SimulationService {
+  rpc CreateSimulation(CreateSimulationRequest) returns (CreateSimulationResponse);
+  rpc GetSimulation(GetSimulationRequest) returns (GetSimulationResponse);
+  rpc ListSimulations(ListSimulationsRequest) returns (ListSimulationsResponse);
+  rpc RunSimulation(RunSimulationRequest) returns (RunSimulationResponse);
+  rpc GetSunPosition(GetSunPositionRequest) returns (GetSunPositionResponse);
+  rpc GetShadowMap(GetShadowMapRequest) returns (GetShadowMapResponse);
+  rpc DeleteSimulation(DeleteSimulationRequest) returns (DeleteSimulationResponse);
+}
+
+message Simulation {
+  string id = 1;
+  string project_id = 2;
+  string layout_id = 3;
+  string name = 4;
+  SimulationType simulation_type = 5;
+  SimulationStatus status = 6;
+  SimulationParams params = 7;
+  SimulationResult result = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp completed_at = 10;
+}
+
+enum SimulationType {
+  SIMULATION_TYPE_UNSPECIFIED = 0;
+  SIMULATION_TYPE_SHADOW = 1;
+  SIMULATION_TYPE_IRRADIANCE = 2;
+  SIMULATION_TYPE_ANNUAL_YIELD = 3;
+}
+
+enum SimulationStatus {
+  SIMULATION_STATUS_UNSPECIFIED = 0;
+  SIMULATION_STATUS_PENDING = 1;
+  SIMULATION_STATUS_RUNNING = 2;
+  SIMULATION_STATUS_COMPLETED = 3;
+  SIMULATION_STATUS_FAILED = 4;
+}
+
+message SimulationParams {
+  google.protobuf.Timestamp start_time = 1;
+  google.protobuf.Timestamp end_time = 2;
+  int32 time_step_minutes = 3;
+  double latitude = 4;
+  double longitude = 5;
+  bool include_terrain_shading = 6;
+  bool include_panel_shading = 7;
+}
+
+message SimulationResult {
+  double total_irradiance_kwh_m2 = 1;
+  double annual_yield_kwh = 2;
+  double performance_ratio = 3;
+  double shading_loss_percent = 4;
+  string result_file_path = 5;
+}
+
+message SunPosition {
+  double azimuth = 1;
+  double elevation = 2;
+  double zenith = 3;
+  double hour_angle = 4;
+  google.protobuf.Timestamp timestamp = 5;
+}
+
+message ShadowPolygon {
+  string source_panel_id = 1;
+  string shadow_geojson = 2;
+  double shadow_intensity = 3;
+}
+
+message CreateSimulationRequest {
+  string project_id = 1;
+  string layout_id = 2;
+  string name = 3;
+  SimulationType simulation_type = 4;
+  SimulationParams params = 5;
+}
+
+message CreateSimulationResponse {
+  Simulation simulation = 1;
+}
+
+message GetSimulationRequest {
+  string id = 1;
+}
+
+message GetSimulationResponse {
+  Simulation simulation = 1;
+}
+
+message ListSimulationsRequest {
+  string project_id = 1;
+}
+
+message ListSimulationsResponse {
+  repeated Simulation simulations = 1;
+}
+
+message RunSimulationRequest {
+  string simulation_id = 1;
+}
+
+message RunSimulationResponse {
+  Simulation simulation = 1;
+}
+
+message GetSunPositionRequest {
+  double latitude = 1;
+  double longitude = 2;
+  google.protobuf.Timestamp timestamp = 3;
+}
+
+message GetSunPositionResponse {
+  SunPosition position = 1;
+}
+
+message GetShadowMapRequest {
+  string layout_id = 1;
+  google.protobuf.Timestamp timestamp = 2;
+  double latitude = 3;
+  double longitude = 4;
+}
+
+message GetShadowMapResponse {
+  repeated ShadowPolygon shadows = 1;
+  SunPosition sun_position = 2;
+}
+
+message DeleteSimulationRequest {
+  string id = 1;
+}
+
+message DeleteSimulationResponse {}

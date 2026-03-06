@@ -1,0 +1,50 @@
+# Binaries
+bin/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Go
+vendor/
+*.test
+coverage.out
+coverage.html
+
+# Rust
+compute/*/target/
+
+# Node
+node_modules/
+.svelte-kit/
+build/
+dist/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Generated
+services/*/internal/db/generated/
+proto/gen/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+
+# Misc
+tmp/
+*.log
