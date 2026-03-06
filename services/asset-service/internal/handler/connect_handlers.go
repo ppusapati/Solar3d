@@ -3,7 +3,6 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
@@ -12,112 +11,155 @@ import (
 	"github.com/solar3d/solar3d/services/asset-service/internal/service"
 )
 
-type Handler struct {
-	svc *service.Service
+type AssetHandler struct {
+	svc *service.AssetService
 }
 
-func New(svc *service.Service) *Handler {
-	return &Handler{svc: svc}
+func NewAssetHandler(svc *service.AssetService) *AssetHandler {
+	return &AssetHandler{svc: svc}
 }
 
-func (h *Handler) RegisterRoutes(mux *http.ServeMux) {
-	mux.HandleFunc("POST /api/v1/assets", h.CreateAsset)
-	mux.HandleFunc("GET /api/v1/assets/{id}", h.GetAsset)
-	mux.HandleFunc("GET /api/v1/assets", h.ListAssets)
-	mux.HandleFunc("PUT /api/v1/assets/{id}", h.UpdateAsset)
-	mux.HandleFunc("DELETE /api/v1/assets/{id}", h.DeleteAsset)
+func (h *AssetHandler) RegisterRoutes(mux *http.ServeMux) {
+	mux.HandleFunc("POST /api/v1/assets", h.Create)
+	mux.HandleFunc("GET /api/v1/assets/{id}", h.GetByID)
+	mux.HandleFunc("GET /api/v1/assets", h.List)
+	mux.HandleFunc("PUT /api/v1/assets/{id}", h.Update)
+	mux.HandleFunc("DELETE /api/v1/assets/{id}", h.Delete)
+	mux.HandleFunc("GET /api/v1/assets/search", h.Search)
 }
 
-func (h *Handler) CreateAsset(w http.ResponseWriter, r *http.Request) {
-	var asset domain.Asset
-	if err := json.NewDecoder(r.Body).Decode(&asset); err != nil {
-		http.Error(w, `{"error":"invalid request body"}`, http.StatusBadRequest)
+func (h *AssetHandler) Create(w http.ResponseWriter, r *http.Request) {
+	var req domain.CreateAssetRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid request body")
 		return
 	}
 
-	if err := h.svc.CreateAsset(r.Context(), &asset); err != nil {
-		log.Error().Err(err).Msg("Failed to create asset")
-		http.Error(w, `{"error":"`+err.Error()+`"}`, http.StatusBadRequest)
+	if req.Name == "" || req.Category == "" {
+		writeError(w, http.StatusBadRequest, "name and category are required")
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(map[string]interface{}{"asset": asset})
+	asset, err := h.svc.Create(r.Context(), req)
+	if err != nil {
+		log.Error().Err(err).Msg("failed to create asset")
+		writeError(w, http.StatusInternalServerError, "failed to create asset")
+		return
+	}
+
+	writeJSON(w, http.StatusCreated, asset)
 }
 
-func (h *Handler) GetAsset(w http.ResponseWriter, r *http.Request) {
+func (h *AssetHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 	id, err := uuid.Parse(r.PathValue("id"))
 	if err != nil {
-		http.Error(w, `{"error":"invalid id"}`, http.StatusBadRequest)
+		writeError(w, http.StatusBadRequest, "invalid asset ID")
 		return
 	}
 
-	asset, err := h.svc.GetAsset(r.Context(), id)
+	asset, err := h.svc.GetByID(r.Context(), id)
 	if err != nil {
-		http.Error(w, `{"error":"not found"}`, http.StatusNotFound)
+		writeError(w, http.StatusNotFound, "asset not found")
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]interface{}{"asset": asset})
+	writeJSON(w, http.StatusOK, asset)
 }
 
-func (h *Handler) ListAssets(w http.ResponseWriter, r *http.Request) {
+func (h *AssetHandler) List(w http.ResponseWriter, r *http.Request) {
 	category := r.URL.Query().Get("category")
-	pageSize, _ := strconv.Atoi(r.URL.Query().Get("page_size"))
-	pageToken := r.URL.Query().Get("page_token")
 
-	assets, totalCount, err := h.svc.ListAssets(r.Context(), category, pageSize, pageToken)
+	var assets []domain.Asset
+	var err error
+
+	if category != "" {
+		assets, err = h.svc.ListByCategory(r.Context(), domain.AssetCategory(category))
+	} else {
+		assets, err = h.svc.List(r.Context())
+	}
+
 	if err != nil {
-		log.Error().Err(err).Msg("Failed to list assets")
-		http.Error(w, `{"error":"internal error"}`, http.StatusInternalServerError)
+		log.Error().Err(err).Msg("failed to list assets")
+		writeError(w, http.StatusInternalServerError, "failed to list assets")
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]interface{}{
-		"assets":      assets,
-		"total_count": totalCount,
-	})
+	writeJSON(w, http.StatusOK, assets)
 }
 
-func (h *Handler) UpdateAsset(w http.ResponseWriter, r *http.Request) {
+func (h *AssetHandler) Update(w http.ResponseWriter, r *http.Request) {
 	id, err := uuid.Parse(r.PathValue("id"))
 	if err != nil {
-		http.Error(w, `{"error":"invalid id"}`, http.StatusBadRequest)
+		writeError(w, http.StatusBadRequest, "invalid asset ID")
 		return
 	}
 
-	var asset domain.Asset
-	if err := json.NewDecoder(r.Body).Decode(&asset); err != nil {
-		http.Error(w, `{"error":"invalid request body"}`, http.StatusBadRequest)
-		return
-	}
-	asset.ID = id
-
-	if err := h.svc.UpdateAsset(r.Context(), &asset); err != nil {
-		log.Error().Err(err).Msg("Failed to update asset")
-		http.Error(w, `{"error":"internal error"}`, http.StatusInternalServerError)
+	var req domain.UpdateAssetRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid request body")
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]interface{}{"asset": asset})
+	asset, err := h.svc.Update(r.Context(), id, req)
+	if err != nil {
+		log.Error().Err(err).Str("id", id.String()).Msg("failed to update asset")
+		writeError(w, http.StatusNotFound, "asset not found")
+		return
+	}
+
+	writeJSON(w, http.StatusOK, asset)
 }
 
-func (h *Handler) DeleteAsset(w http.ResponseWriter, r *http.Request) {
+func (h *AssetHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	id, err := uuid.Parse(r.PathValue("id"))
 	if err != nil {
-		http.Error(w, `{"error":"invalid id"}`, http.StatusBadRequest)
+		writeError(w, http.StatusBadRequest, "invalid asset ID")
 		return
 	}
 
-	if err := h.svc.DeleteAsset(r.Context(), id); err != nil {
-		log.Error().Err(err).Msg("Failed to delete asset")
-		http.Error(w, `{"error":"internal error"}`, http.StatusInternalServerError)
+	if err := h.svc.Delete(r.Context(), id); err != nil {
+		writeError(w, http.StatusNotFound, "asset not found")
 		return
 	}
 
 	w.WriteHeader(http.StatusNoContent)
+}
+
+func (h *AssetHandler) Search(w http.ResponseWriter, r *http.Request) {
+	q := r.URL.Query()
+	filter := domain.AssetFilter{}
+
+	if cat := q.Get("category"); cat != "" {
+		c := domain.AssetCategory(cat)
+		filter.Category = &c
+	}
+	if mfg := q.Get("manufacturer"); mfg != "" {
+		filter.Manufacturer = &mfg
+	}
+	if search := q.Get("q"); search != "" {
+		filter.SearchQuery = &search
+	}
+
+	assets, err := h.svc.Search(r.Context(), filter)
+	if err != nil {
+		log.Error().Err(err).Msg("failed to search assets")
+		writeError(w, http.StatusInternalServerError, "failed to search assets")
+		return
+	}
+
+	writeJSON(w, http.StatusOK, assets)
+}
+
+func writeJSON(w http.ResponseWriter, status int, data any) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	if err := json.NewEncoder(w).Encode(data); err != nil {
+		log.Error().Err(err).Msg("failed to encode response")
+	}
+}
+
+func writeError(w http.ResponseWriter, status int, message string) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	json.NewEncoder(w).Encode(map[string]string{"error": message})
 }
