@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"time"
+	"strings"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
@@ -13,118 +13,116 @@ import (
 	"github.com/solar3d/solar3d/services/asset-service/internal/domain"
 )
 
-type Repository struct {
+type AssetRepository struct {
 	pool *pgxpool.Pool
 }
 
-func New(pool *pgxpool.Pool) *Repository {
-	return &Repository{pool: pool}
+func NewAssetRepository(pool *pgxpool.Pool) *AssetRepository {
+	return &AssetRepository{pool: pool}
 }
 
-func (r *Repository) CreateAsset(ctx context.Context, asset *domain.Asset) error {
-	asset.ID = uuid.New()
-	asset.CreatedAt = time.Now()
-	asset.UpdatedAt = asset.CreatedAt
-
-	_, err := r.pool.Exec(ctx,
-		`INSERT INTO assets (id, name, manufacturer, model, category, width_mm, height_mm, depth_mm, weight_kg,
-			electrical_params, model_3d_path, datasheet_path, metadata, created_at, updated_at)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`,
-		asset.ID, asset.Name, asset.Manufacturer, asset.Model, asset.Category,
-		asset.Dimensions.WidthMM, asset.Dimensions.HeightMM, asset.Dimensions.DepthMM, asset.Dimensions.WeightKG,
-		asset.ElectricalParams, asset.Model3DPath, asset.DatasheetPath, asset.Metadata,
-		asset.CreatedAt, asset.UpdatedAt,
-	)
-	return err
-}
-
-func (r *Repository) GetAsset(ctx context.Context, id uuid.UUID) (*domain.Asset, error) {
-	var asset domain.Asset
-	var electricalParams, metadata []byte
-
-	err := r.pool.QueryRow(ctx,
-		`SELECT id, name, manufacturer, model, category, width_mm, height_mm, depth_mm, weight_kg,
-			electrical_params, model_3d_path, datasheet_path, metadata, created_at, updated_at
-		FROM assets WHERE id = $1`, id,
-	).Scan(
-		&asset.ID, &asset.Name, &asset.Manufacturer, &asset.Model, &asset.Category,
-		&asset.Dimensions.WidthMM, &asset.Dimensions.HeightMM, &asset.Dimensions.DepthMM, &asset.Dimensions.WeightKG,
-		&electricalParams, &asset.Model3DPath, &asset.DatasheetPath, &metadata,
-		&asset.CreatedAt, &asset.UpdatedAt,
-	)
+func (r *AssetRepository) Create(ctx context.Context, asset *domain.Asset) error {
+	dimJSON, err := json.Marshal(asset.Dimensions)
 	if err != nil {
-		if err == pgx.ErrNoRows {
-			return nil, fmt.Errorf("asset not found: %s", id)
-		}
-		return nil, fmt.Errorf("querying asset: %w", err)
+		return fmt.Errorf("marshaling dimensions: %w", err)
 	}
-
-	asset.ElectricalParams = json.RawMessage(electricalParams)
-	asset.Metadata = json.RawMessage(metadata)
-	return &asset, nil
-}
-
-func (r *Repository) ListAssets(ctx context.Context, category string, limit, offset int) ([]domain.Asset, int, error) {
-	var countQuery string
-	var dataQuery string
-	var args []interface{}
-
-	if category != "" {
-		countQuery = `SELECT COUNT(*) FROM assets WHERE category = $1`
-		dataQuery = `SELECT id, name, manufacturer, model, category, width_mm, height_mm, depth_mm, weight_kg,
-			electrical_params, model_3d_path, datasheet_path, metadata, created_at, updated_at
-			FROM assets WHERE category = $1 ORDER BY name LIMIT $2 OFFSET $3`
-		args = []interface{}{category, limit, offset}
-	} else {
-		countQuery = `SELECT COUNT(*) FROM assets`
-		dataQuery = `SELECT id, name, manufacturer, model, category, width_mm, height_mm, depth_mm, weight_kg,
-			electrical_params, model_3d_path, datasheet_path, metadata, created_at, updated_at
-			FROM assets ORDER BY name LIMIT $1 OFFSET $2`
-		args = []interface{}{limit, offset}
-	}
-
-	var totalCount int
-	if category != "" {
-		r.pool.QueryRow(ctx, countQuery, category).Scan(&totalCount)
-	} else {
-		r.pool.QueryRow(ctx, countQuery).Scan(&totalCount)
-	}
-
-	rows, err := r.pool.Query(ctx, dataQuery, args...)
+	elecJSON, err := json.Marshal(asset.ElectricalParams)
 	if err != nil {
-		return nil, 0, fmt.Errorf("querying assets: %w", err)
-	}
-	defer rows.Close()
-
-	var assets []domain.Asset
-	for rows.Next() {
-		var asset domain.Asset
-		var electricalParams, metadata []byte
-		if err := rows.Scan(
-			&asset.ID, &asset.Name, &asset.Manufacturer, &asset.Model, &asset.Category,
-			&asset.Dimensions.WidthMM, &asset.Dimensions.HeightMM, &asset.Dimensions.DepthMM, &asset.Dimensions.WeightKG,
-			&electricalParams, &asset.Model3DPath, &asset.DatasheetPath, &metadata,
-			&asset.CreatedAt, &asset.UpdatedAt,
-		); err != nil {
-			return nil, 0, fmt.Errorf("scanning asset: %w", err)
-		}
-		asset.ElectricalParams = json.RawMessage(electricalParams)
-		asset.Metadata = json.RawMessage(metadata)
-		assets = append(assets, asset)
+		return fmt.Errorf("marshaling electrical params: %w", err)
 	}
 
-	return assets, totalCount, nil
-}
+	query := `
+		INSERT INTO assets (id, name, manufacturer, model, category, dimensions, electrical_params, model_3d_path, datasheet_path, metadata)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
 
-func (r *Repository) UpdateAsset(ctx context.Context, asset *domain.Asset) error {
-	asset.UpdatedAt = time.Now()
-	tag, err := r.pool.Exec(ctx,
-		`UPDATE assets SET name=$2, manufacturer=$3, model=$4, width_mm=$5, height_mm=$6,
-			depth_mm=$7, weight_kg=$8, electrical_params=$9, model_3d_path=$10, metadata=$11, updated_at=$12
-		WHERE id = $1`,
+	_, err = r.pool.Exec(ctx, query,
 		asset.ID, asset.Name, asset.Manufacturer, asset.Model,
-		asset.Dimensions.WidthMM, asset.Dimensions.HeightMM, asset.Dimensions.DepthMM, asset.Dimensions.WeightKG,
-		asset.ElectricalParams, asset.Model3DPath, asset.Metadata, asset.UpdatedAt,
+		asset.Category, dimJSON, elecJSON,
+		asset.Model3DPath, asset.DatasheetPath, asset.Metadata,
+	)
+	if err != nil {
+		return fmt.Errorf("inserting asset: %w", err)
+	}
+	return nil
+}
+
+func (r *AssetRepository) GetByID(ctx context.Context, id uuid.UUID) (*domain.Asset, error) {
+	query := `
+		SELECT id, name, manufacturer, model, category, dimensions, electrical_params, model_3d_path, datasheet_path, metadata
+		FROM assets WHERE id = $1`
+
+	return r.scanAsset(r.pool.QueryRow(ctx, query, id))
+}
+
+func (r *AssetRepository) List(ctx context.Context) ([]domain.Asset, error) {
+	query := `
+		SELECT id, name, manufacturer, model, category, dimensions, electrical_params, model_3d_path, datasheet_path, metadata
+		FROM assets ORDER BY category, name`
+
+	return r.queryAssets(ctx, query)
+}
+
+func (r *AssetRepository) ListByCategory(ctx context.Context, category domain.AssetCategory) ([]domain.Asset, error) {
+	query := `
+		SELECT id, name, manufacturer, model, category, dimensions, electrical_params, model_3d_path, datasheet_path, metadata
+		FROM assets WHERE category = $1 ORDER BY name`
+
+	return r.queryAssets(ctx, query, category)
+}
+
+func (r *AssetRepository) Search(ctx context.Context, filter domain.AssetFilter) ([]domain.Asset, error) {
+	var conditions []string
+	var args []interface{}
+	argIdx := 1
+
+	if filter.Category != nil {
+		conditions = append(conditions, fmt.Sprintf("category = $%d", argIdx))
+		args = append(args, *filter.Category)
+		argIdx++
+	}
+	if filter.Manufacturer != nil {
+		conditions = append(conditions, fmt.Sprintf("manufacturer ILIKE $%d", argIdx))
+		args = append(args, "%"+*filter.Manufacturer+"%")
+		argIdx++
+	}
+	if filter.SearchQuery != nil {
+		conditions = append(conditions, fmt.Sprintf("(name ILIKE $%d OR model ILIKE $%d OR manufacturer ILIKE $%d)", argIdx, argIdx, argIdx))
+		args = append(args, "%"+*filter.SearchQuery+"%")
+		argIdx++
+	}
+
+	query := `
+		SELECT id, name, manufacturer, model, category, dimensions, electrical_params, model_3d_path, datasheet_path, metadata
+		FROM assets`
+	if len(conditions) > 0 {
+		query += " WHERE " + strings.Join(conditions, " AND ")
+	}
+	query += " ORDER BY category, name"
+
+	return r.queryAssets(ctx, query, args...)
+}
+
+func (r *AssetRepository) Update(ctx context.Context, asset *domain.Asset) error {
+	dimJSON, err := json.Marshal(asset.Dimensions)
+	if err != nil {
+		return fmt.Errorf("marshaling dimensions: %w", err)
+	}
+	elecJSON, err := json.Marshal(asset.ElectricalParams)
+	if err != nil {
+		return fmt.Errorf("marshaling electrical params: %w", err)
+	}
+
+	query := `
+		UPDATE assets
+		SET name = $2, manufacturer = $3, model = $4, category = $5,
+		    dimensions = $6, electrical_params = $7, model_3d_path = $8,
+		    datasheet_path = $9, metadata = $10
+		WHERE id = $1`
+
+	tag, err := r.pool.Exec(ctx, query,
+		asset.ID, asset.Name, asset.Manufacturer, asset.Model,
+		asset.Category, dimJSON, elecJSON,
+		asset.Model3DPath, asset.DatasheetPath, asset.Metadata,
 	)
 	if err != nil {
 		return fmt.Errorf("updating asset: %w", err)
@@ -135,8 +133,9 @@ func (r *Repository) UpdateAsset(ctx context.Context, asset *domain.Asset) error
 	return nil
 }
 
-func (r *Repository) DeleteAsset(ctx context.Context, id uuid.UUID) error {
-	tag, err := r.pool.Exec(ctx, `DELETE FROM assets WHERE id = $1`, id)
+func (r *AssetRepository) Delete(ctx context.Context, id uuid.UUID) error {
+	query := `DELETE FROM assets WHERE id = $1`
+	tag, err := r.pool.Exec(ctx, query, id)
 	if err != nil {
 		return fmt.Errorf("deleting asset: %w", err)
 	}
@@ -144,4 +143,62 @@ func (r *Repository) DeleteAsset(ctx context.Context, id uuid.UUID) error {
 		return fmt.Errorf("asset not found: %s", id)
 	}
 	return nil
+}
+
+func (r *AssetRepository) scanAsset(row pgx.Row) (*domain.Asset, error) {
+	var asset domain.Asset
+	var dimJSON, elecJSON []byte
+
+	err := row.Scan(
+		&asset.ID, &asset.Name, &asset.Manufacturer, &asset.Model,
+		&asset.Category, &dimJSON, &elecJSON,
+		&asset.Model3DPath, &asset.DatasheetPath, &asset.Metadata,
+	)
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			return nil, fmt.Errorf("asset not found")
+		}
+		return nil, fmt.Errorf("scanning asset: %w", err)
+	}
+
+	if err := json.Unmarshal(dimJSON, &asset.Dimensions); err != nil {
+		return nil, fmt.Errorf("unmarshaling dimensions: %w", err)
+	}
+	if err := json.Unmarshal(elecJSON, &asset.ElectricalParams); err != nil {
+		return nil, fmt.Errorf("unmarshaling electrical params: %w", err)
+	}
+
+	return &asset, nil
+}
+
+func (r *AssetRepository) queryAssets(ctx context.Context, query string, args ...interface{}) ([]domain.Asset, error) {
+	rows, err := r.pool.Query(ctx, query, args...)
+	if err != nil {
+		return nil, fmt.Errorf("querying assets: %w", err)
+	}
+	defer rows.Close()
+
+	var assets []domain.Asset
+	for rows.Next() {
+		var asset domain.Asset
+		var dimJSON, elecJSON []byte
+
+		if err := rows.Scan(
+			&asset.ID, &asset.Name, &asset.Manufacturer, &asset.Model,
+			&asset.Category, &dimJSON, &elecJSON,
+			&asset.Model3DPath, &asset.DatasheetPath, &asset.Metadata,
+		); err != nil {
+			return nil, fmt.Errorf("scanning asset: %w", err)
+		}
+
+		if err := json.Unmarshal(dimJSON, &asset.Dimensions); err != nil {
+			return nil, fmt.Errorf("unmarshaling dimensions: %w", err)
+		}
+		if err := json.Unmarshal(elecJSON, &asset.ElectricalParams); err != nil {
+			return nil, fmt.Errorf("unmarshaling electrical params: %w", err)
+		}
+
+		assets = append(assets, asset)
+	}
+	return assets, nil
 }
