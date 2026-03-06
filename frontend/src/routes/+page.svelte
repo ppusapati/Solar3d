@@ -35,10 +35,15 @@
 		canUndo,
 		canRedo,
 		pushAction,
-		toast
+		toast,
+		addEntity,
+		removeEntity,
+		getEntity,
+		entities,
+		type MapEntity
 	} from '$lib/core/stores';
 	import { layoutApi, type PanelArrayParams } from '$lib/core/api';
-	import { loadTilesForViewport } from '$lib/core/stores';
+	import { loadTilesForViewport, visibleTiles } from '$lib/core/stores';
 
 	let use3DPanels = true;
 	let showTerrainHeatmap = false;
@@ -104,8 +109,25 @@
 				// Delete
 				case 'delete':
 					if ($selectedEntityId) {
-						// Entity deletion would go through entity manager
-						toast.info('Delete entity: ' + $selectedEntityId.substring(0, 8));
+						const entityToDelete = getEntity($selectedEntityId);
+						if (entityToDelete) {
+							const removed = removeEntity($selectedEntityId);
+							if (removed) {
+								removeCesiumEntities(removed.cesiumEntityIds);
+								pushAction({
+									type: 'delete-entity',
+									description: `Delete ${removed.type}`,
+									undo: () => {
+										addEntity(removed.type, removed.geojson, removed.cesiumEntityIds, removed.properties);
+									},
+									redo: () => {
+										const re = removeEntity(removed.id);
+										if (re) removeCesiumEntities(re.cesiumEntityIds);
+									}
+								});
+								toast.success(`Deleted ${removed.type}`);
+							}
+						}
 						selectedEntityId.set(null);
 					}
 					break;
@@ -121,16 +143,42 @@
 		return () => window.removeEventListener('keydown', handleKeyboard);
 	});
 
+	function removeCesiumEntities(cesiumIds: string[]) {
+		if (!viewer) return;
+		for (const cid of cesiumIds) {
+			const entity = viewer.entities.getById(cid);
+			if (entity) viewer.entities.remove(entity);
+		}
+	}
+
 	function handleBoundaryComplete(e: CustomEvent<{ positions: { longitude: number; latitude: number }[] }>) {
 		const coords = e.detail.positions.map((p: any) => [p.longitude, p.latitude]);
 		coords.push(coords[0]);
 		const geojson = JSON.stringify({ type: 'Polygon', coordinates: [coords] });
 
+		const cesiumIds: string[] = [];
+		if (viewer) {
+			// The DrawingManager already added entities to the viewer;
+			// capture IDs of the most recently added entities for tracking
+			const allEntities = viewer.entities.values;
+			if (allEntities.length > 0) {
+				const lastEntity = allEntities[allEntities.length - 1];
+				if (lastEntity?.id) cesiumIds.push(lastEntity.id);
+			}
+		}
+
+		const entityId = addEntity('boundary', geojson, cesiumIds);
+
 		pushAction({
 			type: 'draw-boundary',
 			description: 'Draw site boundary',
-			undo: () => { /* would remove the boundary entity */ },
-			redo: () => { /* would re-add it */ }
+			undo: () => {
+				const removed = removeEntity(entityId);
+				if (removed) removeCesiumEntities(removed.cesiumEntityIds);
+			},
+			redo: () => {
+				addEntity('boundary', geojson, cesiumIds);
+			}
 		});
 		toast.success('Site boundary drawn');
 	}
@@ -150,23 +198,50 @@
 	}
 
 	function handleMeasureComplete(e: CustomEvent<{ distance: number }>) {
-		console.log('Distance:', e.detail.distance, 'm');
+		const dist = e.detail.distance;
+		const label = dist >= 1000
+			? `${(dist / 1000).toFixed(2)} km`
+			: `${dist.toFixed(1)} m`;
+		addEntity('measurement', '', [], { distance: dist });
+		toast.info(`Measured distance: ${label}`);
 	}
 
 	function handleComponentPlace(e: CustomEvent<{ longitude: number; latitude: number }>) {
-		toast.info(`Component placed at ${e.detail.latitude.toFixed(4)}, ${e.detail.longitude.toFixed(4)}`);
+		const { longitude, latitude } = e.detail;
+		const geojson = JSON.stringify({ type: 'Point', coordinates: [longitude, latitude] });
+		const entityId = addEntity('component', geojson, [], { longitude, latitude });
+
+		pushAction({
+			type: 'place-component',
+			description: 'Place component',
+			undo: () => {
+				const removed = removeEntity(entityId);
+				if (removed) removeCesiumEntities(removed.cesiumEntityIds);
+			},
+			redo: () => {
+				addEntity('component', geojson, [], { longitude, latitude });
+			}
+		});
+		toast.info(`Component placed at ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
 	}
 
 	function handleDrop(e: CustomEvent<{ type: string; name: string; longitude: number; latitude: number }>) {
 		const { type, name, longitude, latitude } = e.detail;
-		toast.success(`Placed ${name} at ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
+		const geojson = JSON.stringify({ type: 'Point', coordinates: [longitude, latitude] });
+		const entityId = addEntity('component', geojson, [], { type, name, longitude, latitude });
 
 		pushAction({
 			type: 'place-component',
 			description: `Place ${name}`,
-			undo: () => { /* would remove the component */ },
-			redo: () => { /* would re-add it */ }
+			undo: () => {
+				const removed = removeEntity(entityId);
+				if (removed) removeCesiumEntities(removed.cesiumEntityIds);
+			},
+			redo: () => {
+				addEntity('component', geojson, [], { type, name, longitude, latitude });
+			}
 		});
+		toast.success(`Placed ${name} at ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
 	}
 
 	async function handleGenerate(e: CustomEvent<PanelArrayParams>) {
@@ -180,11 +255,16 @@
 			await loadTilesForViewport(layout.id, cam.longitude - 0.01, cam.latitude - 0.01, cam.longitude + 0.01, cam.latitude + 0.01, 0);
 			activeTool.set('select');
 
+			const savedTiles = [...($visibleTiles || [])];
 			pushAction({
 				type: 'generate-array',
-				description: `Generate panel array`,
-				undo: () => { /* would delete the generated panels */ },
-				redo: () => { /* would regenerate */ }
+				description: 'Generate panel array',
+				undo: () => {
+					visibleTiles.set([]);
+				},
+				redo: () => {
+					visibleTiles.set(savedTiles);
+				}
 			});
 			toast.success('Panel array generated successfully');
 		} catch (err) {
@@ -199,8 +279,14 @@
 		showShadows = e.detail;
 	}
 
+	let shadowTime: string = new Date().toISOString();
+	let shadowRenderer: ShadowRenderer;
+
 	function handleTimeChange(e: CustomEvent<string>) {
-		// Shadow time change handled by ShadowRenderer props
+		shadowTime = e.detail;
+		if (shadowRenderer) {
+			shadowRenderer.setTime(shadowTime);
+		}
 	}
 
 	function handleFlyTo(e: CustomEvent<{ longitude: number; latitude: number; name: string }>) {
@@ -269,6 +355,7 @@
 				{/if}
 
 				<ShadowRenderer
+					bind:this={shadowRenderer}
 					{viewer}
 					visible={showShadows && $layerVisibility.shadows}
 					layoutId={$activeLayout?.id ?? ''}

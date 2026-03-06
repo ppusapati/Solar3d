@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { camera, activeLayout, viewport } from '$lib/core/stores';
+	import { camera, activeLayout, viewport, boundaryEntities } from '$lib/core/stores';
 	import { createEventDispatcher } from 'svelte';
 
 	const dispatch = createEventDispatcher<{
@@ -12,11 +12,36 @@
 	let canvas: HTMLCanvasElement;
 	let ctx: CanvasRenderingContext2D | null = null;
 
-	// Map bounds (would come from project site boundary in production)
-	let mapBounds = {
-		west: -120.5, east: -119.5,
-		south: 34.5, north: 35.5
-	};
+	// Derive map bounds from boundary entities or fall back to camera-centered region
+	$: mapBounds = deriveMapBounds($boundaryEntities, $camera);
+
+	function deriveMapBounds(
+		boundaries: { geojson: string }[],
+		cam: { longitude: number; latitude: number }
+	) {
+		if (boundaries.length > 0) {
+			try {
+				const geojson = JSON.parse(boundaries[0].geojson);
+				const coords = geojson.coordinates?.[0] || [];
+				if (coords.length > 2) {
+					let west = Infinity, east = -Infinity, south = Infinity, north = -Infinity;
+					for (const c of coords) {
+						if (c[0] < west) west = c[0];
+						if (c[0] > east) east = c[0];
+						if (c[1] < south) south = c[1];
+						if (c[1] > north) north = c[1];
+					}
+					const padLon = (east - west) * 0.15 || 0.005;
+					const padLat = (north - south) * 0.15 || 0.005;
+					return { west: west - padLon, east: east + padLon, south: south - padLat, north: north + padLat };
+				}
+			} catch { /* fall through */ }
+		}
+		return {
+			west: cam.longitude - 0.5, east: cam.longitude + 0.5,
+			south: cam.latitude - 0.5, north: cam.latitude + 0.5
+		};
+	}
 
 	$: if (canvas && !ctx) {
 		ctx = canvas.getContext('2d');

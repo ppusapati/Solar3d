@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"fmt"
+	"sync"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
@@ -13,10 +14,12 @@ import (
 )
 
 // Repository handles persistence of terrain layer metadata using PostgreSQL
-// with PostGIS extensions.
+// with PostGIS extensions. Elevation grid data is cached in memory for
+// derived layers (slope, aspect) and uploaded DEMs.
 type Repository struct {
-	pool   *pgxpool.Pool
-	logger zerolog.Logger
+	pool      *pgxpool.Pool
+	logger    zerolog.Logger
+	gridCache sync.Map // map[uuid.UUID]*domain.ElevationGrid
 }
 
 // New creates a new Repository backed by the given connection pool.
@@ -182,5 +185,34 @@ func (r *Repository) DeleteTerrainLayer(ctx context.Context, id uuid.UUID) error
 		Str("layer_id", id.String()).
 		Msg("terrain layer deleted")
 
+	// Clean up cached grid data
+	r.gridCache.Delete(id)
+
 	return nil
+}
+
+// StoreElevationGrid caches an elevation grid for a given layer.
+// This is used for both uploaded DEMs and derived layers (slope, aspect).
+func (r *Repository) StoreElevationGrid(ctx context.Context, layerID uuid.UUID, grid *domain.ElevationGrid) error {
+	r.gridCache.Store(layerID, grid)
+	r.logger.Debug().
+		Str("layer_id", layerID.String()).
+		Int("width", grid.Width).
+		Int("height", grid.Height).
+		Msg("elevation grid cached")
+	return nil
+}
+
+// GetElevationGrid retrieves a cached elevation grid for a given layer.
+// Returns nil if no grid is cached.
+func (r *Repository) GetElevationGrid(ctx context.Context, layerID uuid.UUID) (*domain.ElevationGrid, error) {
+	val, ok := r.gridCache.Load(layerID)
+	if !ok {
+		return nil, nil
+	}
+	grid, ok := val.(*domain.ElevationGrid)
+	if !ok {
+		return nil, fmt.Errorf("invalid grid cache entry for layer %s", layerID)
+	}
+	return grid, nil
 }

@@ -49,3 +49,16 @@ export {
 
 export { toasts, addToast, removeToast, toast } from './toast';
 export type { Toast } from './toast';
+
+export {
+	entities,
+	boundaryEntities,
+	componentEntities,
+	addEntity,
+	removeEntity,
+	getEntity,
+	updateEntityProperty,
+	clearEntities,
+	getAllEntitiesForExport,
+	type MapEntity
+} from './entities';

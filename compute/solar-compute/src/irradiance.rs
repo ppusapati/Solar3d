@@ -40,6 +40,9 @@ pub struct IrradianceCalculator {
     pub panel_azimuth: f64,
     pub panel_efficiency: f64,
     pub system_losses: f64,
+    /// Site altitude above sea level in kilometers.
+    /// Affects atmospheric transmittance in the Hottel clear-sky model.
+    pub altitude_km: f64,
 }
 
 impl IrradianceCalculator {
@@ -60,7 +63,14 @@ impl IrradianceCalculator {
             panel_azimuth,
             panel_efficiency,
             system_losses,
+            altitude_km: 0.0,
         }
+    }
+
+    /// Create a calculator with a specific site altitude.
+    pub fn with_altitude(mut self, altitude_km: f64) -> Self {
+        self.altitude_km = altitude_km;
+        self
     }
 
     /// Calculate instantaneous irradiance for a given sun position.
@@ -85,8 +95,8 @@ impl IrradianceCalculator {
             / (elevation_rad.sin()
                 + 0.50572 * (6.07995 + sun.elevation).powf(-1.6364));
 
-        // Clear sky DNI using simplified Hottel model
-        let altitude_km = 0.0; // assume sea level
+        // Clear sky DNI using Hottel (1976) transmittance model
+        let altitude_km = self.altitude_km;
         let a0 = 0.4237 - 0.00821 * (6.0 - altitude_km).powi(2);
         let a1 = 0.5055 + 0.00595 * (6.5 - altitude_km).powi(2);
         let k = 0.2711 + 0.01858 * (2.5 - altitude_km).powi(2);

@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { activeProject, activeLayout } from '$lib/core/stores';
+	import { activeProject, activeLayout, visibleTiles, components, boundaryEntities, getAllEntitiesForExport } from '$lib/core/stores';
 	import { generateDxf, generateKml, generateGeoJson } from '$lib/core/export/dxf';
+	import { layoutApi } from '$lib/core/api';
 
 	let exportFormat: 'dxf' | 'kml' | 'geojson' | 'csv' = 'dxf';
 	let isExporting = false;
@@ -16,11 +17,27 @@
 		isExporting = true;
 
 		try {
-			// In production, these would come from the API
+			// Collect panel data from loaded tiles
 			const panels: any[] = [];
-			const components: any[] = [];
-			const boundary = undefined;
-			const routes: any[] = [];
+			for (const tile of $visibleTiles) {
+				try {
+					const resp = await layoutApi.getTilePanels(tile.id);
+					if (resp.panels) panels.push(...resp.panels);
+				} catch { /* tile may not have panels yet */ }
+			}
+
+			// Collect placed components from store
+			const componentsList = $components || [];
+
+			// Get boundary from entity store
+			const boundaries = $boundaryEntities;
+			const boundary = boundaries.length > 0 ? JSON.parse(boundaries[0].geojson) : undefined;
+
+			// Collect routes from entity store
+			const allEntities = getAllEntitiesForExport();
+			const routes = allEntities
+				.filter((e) => e.type === 'component' && e.properties?.type === 'route')
+				.map((e) => ({ geometry_geojson: e.geojson, ...e.properties }));
 
 			let content: string;
 			let filename: string;
@@ -30,22 +47,22 @@
 
 			switch (exportFormat) {
 				case 'dxf':
-					content = generateDxf(panels, components, boundary, routes);
+					content = generateDxf(panels, componentsList, boundary, routes);
 					filename = `${projectName}_layout.dxf`;
 					mimeType = 'application/dxf';
 					break;
 				case 'kml':
-					content = generateKml(projectName, panels, components, boundary);
+					content = generateKml(projectName, panels, componentsList, boundary);
 					filename = `${projectName}_layout.kml`;
 					mimeType = 'application/vnd.google-earth.kml+xml';
 					break;
 				case 'geojson':
-					content = generateGeoJson(panels, components, boundary);
+					content = generateGeoJson(panels, componentsList, boundary);
 					filename = `${projectName}_layout.geojson`;
 					mimeType = 'application/geo+json';
 					break;
 				case 'csv':
-					content = generateCsv(panels, components);
+					content = generateCsv(panels, componentsList);
 					filename = `${projectName}_layout.csv`;
 					mimeType = 'text/csv';
 					break;

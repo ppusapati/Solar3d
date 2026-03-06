@@ -1,14 +1,25 @@
 <script lang="ts">
 	import { camera, activeLayout, activeTool, activeView } from '$lib/core/stores';
+	import { writable } from 'svelte/store';
+
+	/** Store for live cursor geo-coordinates, updated by map mouse-move handlers. */
+	export const cursorPosition = writable<{ longitude: number; latitude: number }>({
+		longitude: 0, latitude: 0
+	});
 
 	let cursorLon = 0;
 	let cursorLat = 0;
-	let cursorElevation = 0;
 
-	// Update cursor position from camera (approximation - real impl would use mouse move)
+	// Use live cursor when available, otherwise fall back to camera center
 	$: {
-		cursorLon = $camera.longitude;
-		cursorLat = $camera.latitude;
+		const pos = $cursorPosition;
+		if (pos.longitude !== 0 || pos.latitude !== 0) {
+			cursorLon = pos.longitude;
+			cursorLat = pos.latitude;
+		} else {
+			cursorLon = $camera.longitude;
+			cursorLat = $camera.latitude;
+		}
 	}
 
 	function formatCoord(value: number, isLat: boolean): string {

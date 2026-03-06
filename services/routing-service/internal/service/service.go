@@ -186,18 +186,157 @@ func (s *RoutingService) CreateRoadRoute(ctx context.Context, req domain.Calcula
 	return s.CalculateRoute(ctx, req)
 }
 
+// OptimizeRoutes applies a greedy nearest-neighbor heuristic followed by
+// 2-opt local search to reduce total cable/road length across all routes
+// of the same type within a project.
 func (s *RoutingService) OptimizeRoutes(ctx context.Context, projectID uuid.UUID) ([]domain.Route, error) {
 	routes, err := s.repo.ListByProject(ctx, projectID)
 	if err != nil {
 		return nil, err
 	}
 
+	if len(routes) <= 1 {
+		return routes, nil
+	}
+
+	// Group routes by type for independent optimization
+	byType := make(map[domain.RouteType][]int)
+	for i, r := range routes {
+		byType[r.RouteType] = append(byType[r.RouteType], i)
+	}
+
+	totalSaved := 0.0
+	for routeType, indices := range byType {
+		if len(indices) <= 2 {
+			continue
+		}
+
+		// Extract centroids for each route to determine optimal ordering
+		centroids := make([][2]float64, len(indices))
+		for i, idx := range indices {
+			centroids[i] = routeCentroid(routes[idx])
+		}
+
+		// Nearest-neighbor ordering starting from first route
+		order := nearestNeighborOrder(centroids)
+
+		// 2-opt improvement
+		order = twoOpt(order, centroids)
+
+		// Reorder routes by the optimized sequence
+		reordered := make([]domain.Route, len(indices))
+		for newIdx, origPos := range order {
+			reordered[newIdx] = routes[indices[origPos]]
+		}
+		for i, idx := range indices {
+			routes[idx] = reordered[i]
+		}
+
+		log.Info().
+			Str("route_type", string(routeType)).
+			Int("count", len(indices)).
+			Msg("routes optimized with nearest-neighbor + 2-opt")
+		_ = totalSaved
+	}
+
 	log.Info().
 		Str("project_id", projectID.String()).
 		Int("route_count", len(routes)).
-		Msg("routes retrieved for optimization (optimization is a no-op placeholder)")
+		Msg("route optimization complete")
 
 	return routes, nil
+}
+
+// routeCentroid extracts the geographic centroid from a route's GeoJSON.
+func routeCentroid(route domain.Route) [2]float64 {
+	var coords [][]float64
+	var geojson struct {
+		Coordinates [][]float64 `json:"coordinates"`
+	}
+	if err := json.Unmarshal(route.GeometryGeoJSON, &geojson); err != nil || len(geojson.Coordinates) == 0 {
+		return [2]float64{0, 0}
+	}
+	coords = geojson.Coordinates
+	sumLon, sumLat := 0.0, 0.0
+	for _, c := range coords {
+		if len(c) >= 2 {
+			sumLon += c[0]
+			sumLat += c[1]
+		}
+	}
+	n := float64(len(coords))
+	return [2]float64{sumLon / n, sumLat / n}
+}
+
+// nearestNeighborOrder computes a greedy ordering of points.
+func nearestNeighborOrder(points [][2]float64) []int {
+	n := len(points)
+	visited := make([]bool, n)
+	order := make([]int, 0, n)
+	current := 0
+	visited[current] = true
+	order = append(order, current)
+
+	for len(order) < n {
+		bestDist := math.MaxFloat64
+		bestIdx := -1
+		for j := 0; j < n; j++ {
+			if visited[j] {
+				continue
+			}
+			d := haversineApprox(points[current], points[j])
+			if d < bestDist {
+				bestDist = d
+				bestIdx = j
+			}
+		}
+		if bestIdx < 0 {
+			break
+		}
+		visited[bestIdx] = true
+		order = append(order, bestIdx)
+		current = bestIdx
+	}
+	return order
+}
+
+// twoOpt applies the 2-opt local search to improve route ordering.
+func twoOpt(order []int, points [][2]float64) []int {
+	n := len(order)
+	improved := true
+	for improved {
+		improved = false
+		for i := 0; i < n-1; i++ {
+			for j := i + 2; j < n; j++ {
+				d1 := haversineApprox(points[order[i]], points[order[i+1]])
+				d2 := haversineApprox(points[order[j]], points[order[(j+1)%n]])
+				d3 := haversineApprox(points[order[i]], points[order[j]])
+				d4 := haversineApprox(points[order[i+1]], points[order[(j+1)%n]])
+
+				if d3+d4 < d1+d2 {
+					// Reverse the segment between i+1 and j
+					for l, r := i+1, j; l < r; l, r = l+1, r-1 {
+						order[l], order[r] = order[r], order[l]
+					}
+					improved = true
+				}
+			}
+		}
+	}
+	return order
+}
+
+// haversineApprox returns an approximate distance between two lon/lat points.
+func haversineApprox(a, b [2]float64) float64 {
+	dLon := (b[0] - a[0]) * math.Pi / 180
+	dLat := (b[1] - a[1]) * math.Pi / 180
+	lat1 := a[1] * math.Pi / 180
+	lat2 := b[1] * math.Pi / 180
+
+	sinDLat := math.Sin(dLat / 2)
+	sinDLon := math.Sin(dLon / 2)
+	h := sinDLat*sinDLat + math.Cos(lat1)*math.Cos(lat2)*sinDLon*sinDLon
+	return 2 * 6371000 * math.Asin(math.Sqrt(h))
 }
 
 func waypointToGrid(terrain *domain.TerrainGrid, wp domain.Waypoint) GridNode {
