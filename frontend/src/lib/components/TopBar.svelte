@@ -1,5 +1,16 @@
 <script lang="ts">
-	import { activeProject } from '$lib/core/stores';
+	import { activeProject, activeView, type AppView } from '$lib/core/stores';
+
+	const views: { id: AppView; label: string }[] = [
+		{ id: 'design', label: 'Design' },
+		{ id: 'simulate', label: 'Simulate' },
+		{ id: 'electrical', label: 'Electrical' },
+		{ id: 'reports', label: 'Reports' }
+	];
+
+	function setView(id: AppView) {
+		activeView.set(id);
+	}
 </script>
 
 <header class="topbar">
@@ -18,11 +29,15 @@
 	</div>
 
 	<nav class="nav-actions">
-		<button class="nav-btn">Projects</button>
-		<button class="nav-btn">Design</button>
-		<button class="nav-btn">Simulate</button>
-		<button class="nav-btn">Electrical</button>
-		<button class="nav-btn">Reports</button>
+		{#each views as view}
+			<button
+				class="nav-btn"
+				class:active={$activeView === view.id}
+				on:click={() => setView(view.id)}
+			>
+				{view.label}
+			</button>
+		{/each}
 	</nav>
 </header>
 
@@ -109,5 +124,10 @@
 	.nav-btn:hover {
 		background: rgba(255, 255, 255, 0.08);
 		color: #e2e8f0;
+	}
+
+	.nav-btn.active {
+		background: rgba(245, 158, 11, 0.2);
+		color: #f59e0b;
 	}
 </style>

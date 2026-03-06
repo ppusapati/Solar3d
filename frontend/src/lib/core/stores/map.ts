@@ -40,6 +40,27 @@ export const viewport = writable<ViewportBounds>({
 	north: 36
 });
 
+export type AppView = 'design' | 'simulate' | 'electrical' | 'reports';
+
 export const activeTool = writable<MapTool>('select');
 export const selectedEntityId = writable<string | null>(null);
 export const isMapReady = writable(false);
+export const activeView = writable<AppView>('design');
+
+export interface LayerVisibility {
+	satellite: boolean;
+	terrain: boolean;
+	boundary: boolean;
+	panels: boolean;
+	shadows: boolean;
+	cables: boolean;
+}
+
+export const layerVisibility = writable<LayerVisibility>({
+	satellite: true,
+	terrain: true,
+	boundary: true,
+	panels: true,
+	shadows: false,
+	cables: false
+});

@@ -2,6 +2,7 @@ export {
 	projects,
 	activeProject,
 	activeProjectId,
+	isLoading,
 	loadProjects,
 	createProject,
 	deleteProject
@@ -13,9 +14,13 @@ export {
 	activeTool,
 	selectedEntityId,
 	isMapReady,
+	activeView,
+	layerVisibility,
 	type CameraState,
 	type ViewportBounds,
-	type MapTool
+	type MapTool,
+	type AppView,
+	type LayerVisibility
 } from './map';
 
 export {

@@ -1,7 +1,37 @@
 <script lang="ts">
-	import { activeProject, activeLayout } from '$lib/core/stores';
+	import { activeProject, activeLayout, activeView, layerVisibility } from '$lib/core/stores';
+	import AssetLibrary from './AssetLibrary.svelte';
+	import PanelGeneratorForm from './PanelGeneratorForm.svelte';
+	import SimulationPanel from './SimulationPanel.svelte';
+	import ElectricalPanel from './ElectricalPanel.svelte';
+	import ReportsPanel from './ReportsPanel.svelte';
+	import { createEventDispatcher } from 'svelte';
+
+	const dispatch = createEventDispatcher();
+
+	export let fillAreaGeoJson: string = '';
 
 	let activeTab: 'properties' | 'layers' | 'components' = 'properties';
+
+	function toggleLayer(key: keyof typeof $layerVisibility) {
+		layerVisibility.update((v) => ({ ...v, [key]: !v[key] }));
+	}
+
+	function handleGenerate(e: CustomEvent) {
+		dispatch('generate', e.detail);
+	}
+
+	function handleAssetSelect(e: CustomEvent) {
+		dispatch('assetSelect', e.detail);
+	}
+
+	function handleTimeChange(e: CustomEvent) {
+		dispatch('timeChange', e.detail);
+	}
+
+	function handleToggleShadows(e: CustomEvent) {
+		dispatch('toggleShadows', e.detail);
+	}
 </script>
 
 <div class="inspector">
@@ -9,88 +39,110 @@
 		<h3>Inspector</h3>
 	</div>
 
-	<div class="tabs">
-		<button class:active={activeTab === 'properties'} on:click={() => (activeTab = 'properties')}>
-			Properties
-		</button>
-		<button class:active={activeTab === 'layers'} on:click={() => (activeTab = 'layers')}>
-			Layers
-		</button>
-		<button class:active={activeTab === 'components'} on:click={() => (activeTab = 'components')}>
-			Components
-		</button>
-	</div>
+	{#if $activeView === 'design'}
+		<div class="tabs">
+			<button class:active={activeTab === 'properties'} on:click={() => (activeTab = 'properties')}>
+				Properties
+			</button>
+			<button class:active={activeTab === 'layers'} on:click={() => (activeTab = 'layers')}>
+				Layers
+			</button>
+			<button class:active={activeTab === 'components'} on:click={() => (activeTab = 'components')}>
+				Components
+			</button>
+		</div>
 
-	<div class="inspector-content">
-		{#if activeTab === 'properties'}
-			{#if $activeProject}
-				<div class="property-group">
-					<h4>Project</h4>
-					<div class="property">
-						<span class="label">Name</span>
-						<span class="value">{$activeProject.name}</span>
+		<div class="inspector-content">
+			{#if activeTab === 'properties'}
+				{#if $activeProject}
+					<div class="property-group">
+						<h4>Project</h4>
+						<div class="property">
+							<span class="label">Name</span>
+							<span class="value">{$activeProject.name}</span>
+						</div>
+						<div class="property">
+							<span class="label">Status</span>
+							<span class="value badge">{$activeProject.status}</span>
+						</div>
+						<div class="property">
+							<span class="label">Capacity</span>
+							<span class="value">{$activeProject.target_capacity_mw ?? '—'} MW</span>
+						</div>
 					</div>
-					<div class="property">
-						<span class="label">Status</span>
-						<span class="value badge">{$activeProject.status}</span>
-					</div>
-					<div class="property">
-						<span class="label">Capacity</span>
-						<span class="value">{$activeProject.target_capacity_mw ?? '—'} MW</span>
-					</div>
-				</div>
-			{:else}
-				<p class="empty-state">No project selected</p>
-			{/if}
+				{:else}
+					<p class="empty-state">No project selected</p>
+				{/if}
 
-			{#if $activeLayout}
+				{#if $activeLayout}
+					<div class="property-group">
+						<h4>Layout</h4>
+						<div class="property">
+							<span class="label">Panels</span>
+							<span class="value">{$activeLayout.total_panels.toLocaleString()}</span>
+						</div>
+						<div class="property">
+							<span class="label">Capacity</span>
+							<span class="value">{$activeLayout.total_capacity_kw.toFixed(1)} kW</span>
+						</div>
+						<div class="property">
+							<span class="label">Tiles</span>
+							<span class="value">{$activeLayout.tile_count}</span>
+						</div>
+					</div>
+				{/if}
+
 				<div class="property-group">
-					<h4>Layout</h4>
-					<div class="property">
-						<span class="label">Panels</span>
-						<span class="value">{$activeLayout.total_panels.toLocaleString()}</span>
+					<PanelGeneratorForm
+						{fillAreaGeoJson}
+						on:generate={handleGenerate}
+						on:cancel
+					/>
+				</div>
+			{:else if activeTab === 'layers'}
+				<div class="layer-list">
+					<div class="layer-item">
+						<input type="checkbox" checked={$layerVisibility.satellite} on:change={() => toggleLayer('satellite')} />
+						<span>Satellite Imagery</span>
 					</div>
-					<div class="property">
-						<span class="label">Capacity</span>
-						<span class="value">{$activeLayout.total_capacity_kw.toFixed(1)} kW</span>
+					<div class="layer-item">
+						<input type="checkbox" checked={$layerVisibility.terrain} on:change={() => toggleLayer('terrain')} />
+						<span>Terrain</span>
 					</div>
-					<div class="property">
-						<span class="label">Tiles</span>
-						<span class="value">{$activeLayout.tile_count}</span>
+					<div class="layer-item">
+						<input type="checkbox" checked={$layerVisibility.boundary} on:change={() => toggleLayer('boundary')} />
+						<span>Site Boundary</span>
+					</div>
+					<div class="layer-item">
+						<input type="checkbox" checked={$layerVisibility.panels} on:change={() => toggleLayer('panels')} />
+						<span>Panel Layout</span>
+					</div>
+					<div class="layer-item">
+						<input type="checkbox" checked={$layerVisibility.shadows} on:change={() => toggleLayer('shadows')} />
+						<span>Shadows</span>
+					</div>
+					<div class="layer-item">
+						<input type="checkbox" checked={$layerVisibility.cables} on:change={() => toggleLayer('cables')} />
+						<span>Cable Routes</span>
 					</div>
 				</div>
+			{:else if activeTab === 'components'}
+				<AssetLibrary on:selectAsset={handleAssetSelect} />
 			{/if}
-		{:else if activeTab === 'layers'}
-			<div class="layer-list">
-				<div class="layer-item">
-					<input type="checkbox" checked />
-					<span>Satellite Imagery</span>
-				</div>
-				<div class="layer-item">
-					<input type="checkbox" checked />
-					<span>Terrain</span>
-				</div>
-				<div class="layer-item">
-					<input type="checkbox" checked />
-					<span>Site Boundary</span>
-				</div>
-				<div class="layer-item">
-					<input type="checkbox" checked />
-					<span>Panel Layout</span>
-				</div>
-				<div class="layer-item">
-					<input type="checkbox" />
-					<span>Shadows</span>
-				</div>
-				<div class="layer-item">
-					<input type="checkbox" />
-					<span>Cable Routes</span>
-				</div>
-			</div>
-		{:else if activeTab === 'components'}
-			<p class="empty-state">Drag components from the asset library to place them on the map.</p>
-		{/if}
-	</div>
+		</div>
+	{:else if $activeView === 'simulate'}
+		<div class="inspector-content">
+			<SimulationPanel on:timeChange={handleTimeChange} on:toggleShadows={handleToggleShadows} />
+		</div>
+	{:else if $activeView === 'electrical'}
+		<div class="inspector-content">
+			<ElectricalPanel />
+		</div>
+	{:else if $activeView === 'reports'}
+		<div class="inspector-content">
+			<ReportsPanel />
+		</div>
+	{/if}
 </div>
 
 <style>
