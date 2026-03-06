@@ -1,27 +1,29 @@
 -- name: CreateAsset :one
-INSERT INTO assets (id, name, manufacturer, model, category, width_mm, height_mm, depth_mm, weight_kg,
-    electrical_params, model_3d_path, datasheet_path, metadata, created_at, updated_at)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+INSERT INTO assets (id, name, manufacturer, model, category, dimensions, electrical_params, model_3d_path, datasheet_path, metadata)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
 RETURNING *;
 
--- name: GetAsset :one
+-- name: GetAssetByID :one
 SELECT * FROM assets WHERE id = $1;
 
 -- name: ListAssets :many
-SELECT * FROM assets ORDER BY name LIMIT $1 OFFSET $2;
+SELECT * FROM assets ORDER BY category, name;
 
 -- name: ListAssetsByCategory :many
-SELECT * FROM assets WHERE category = $1 ORDER BY name LIMIT $2 OFFSET $3;
+SELECT * FROM assets WHERE category = $1 ORDER BY name;
 
--- name: CountAssets :one
-SELECT COUNT(*) FROM assets;
-
--- name: CountAssetsByCategory :one
-SELECT COUNT(*) FROM assets WHERE category = $1;
+-- name: SearchAssets :many
+SELECT * FROM assets
+WHERE ($1::asset_category IS NULL OR category = $1)
+  AND ($2::text IS NULL OR manufacturer ILIKE '%' || $2 || '%')
+  AND ($3::text IS NULL OR name ILIKE '%' || $3 || '%' OR model ILIKE '%' || $3 || '%')
+ORDER BY category, name;
 
 -- name: UpdateAsset :exec
-UPDATE assets SET name=$2, manufacturer=$3, model=$4, width_mm=$5, height_mm=$6,
-    depth_mm=$7, weight_kg=$8, electrical_params=$9, model_3d_path=$10, metadata=$11, updated_at=$12
+UPDATE assets
+SET name = $2, manufacturer = $3, model = $4, category = $5,
+    dimensions = $6, electrical_params = $7, model_3d_path = $8,
+    datasheet_path = $9, metadata = $10
 WHERE id = $1;
 
 -- name: DeleteAsset :exec

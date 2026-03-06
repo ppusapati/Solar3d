@@ -1,19 +1,20 @@
-CREATE TABLE IF NOT EXISTS assets (
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE TYPE asset_category AS ENUM ('panel', 'inverter', 'transformer', 'tracker', 'cable', 'mounting', 'meter', 'other');
+
+CREATE TABLE assets (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(255) NOT NULL,
-    manufacturer VARCHAR(255),
-    model VARCHAR(255),
-    category VARCHAR(50) NOT NULL,
-    width_mm DOUBLE PRECISION,
-    height_mm DOUBLE PRECISION,
-    depth_mm DOUBLE PRECISION,
-    weight_kg DOUBLE PRECISION,
-    electrical_params JSONB,
-    model_3d_path VARCHAR(1024),
-    datasheet_path VARCHAR(1024),
-    metadata JSONB,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    manufacturer VARCHAR(255) NOT NULL DEFAULT '',
+    model VARCHAR(255) NOT NULL DEFAULT '',
+    category asset_category NOT NULL,
+    dimensions JSONB NOT NULL DEFAULT '{}',
+    electrical_params JSONB NOT NULL DEFAULT '{}',
+    model_3d_path VARCHAR(1024) NOT NULL DEFAULT '',
+    datasheet_path VARCHAR(1024) NOT NULL DEFAULT '',
+    metadata JSONB
 );
 
-CREATE INDEX IF NOT EXISTS idx_assets_category ON assets(category);
+CREATE INDEX idx_assets_category ON assets(category);
+CREATE INDEX idx_assets_manufacturer ON assets(manufacturer);
+CREATE INDEX idx_assets_name_trgm ON assets USING gin (name gin_trgm_ops);
