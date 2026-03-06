@@ -16,6 +16,10 @@
 	import MapSearch from '$lib/components/MapSearch.svelte';
 	import StatusBar from '$lib/components/StatusBar.svelte';
 	import ToastNotification from '$lib/components/ToastNotification.svelte';
+	import KeyboardShortcuts from '$lib/components/KeyboardShortcuts.svelte';
+	import Minimap from '$lib/components/Minimap.svelte';
+	import CursorOverlay from '$lib/modules/map/CursorOverlay.svelte';
+	import SnapGrid from '$lib/modules/map/SnapGrid.svelte';
 	import {
 		isMapReady,
 		activeLayout,
@@ -24,6 +28,8 @@
 		camera,
 		isGenerating,
 		activeTool,
+		activeView,
+		selectedEntityId,
 		undo,
 		redo,
 		canUndo,
@@ -37,6 +43,7 @@
 	let use3DPanels = true;
 	let showTerrainHeatmap = false;
 	let terrainHeatmapMode: 'elevation' | 'slope' | 'aspect' = 'elevation';
+	let showShortcuts = false;
 
 	let cesiumViewer: CesiumViewer;
 	let viewer: any;
@@ -56,12 +63,58 @@
 	// Keyboard shortcuts
 	onMount(() => {
 		function handleKeyboard(e: KeyboardEvent) {
+			// Skip if user is typing in an input
+			const tag = (e.target as HTMLElement)?.tagName;
+			if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+
+			// Undo/Redo
 			if ((e.metaKey || e.ctrlKey) && e.key === 'z' && !e.shiftKey) {
 				e.preventDefault();
 				undo();
-			} else if ((e.metaKey || e.ctrlKey) && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
+				return;
+			}
+			if ((e.metaKey || e.ctrlKey) && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
 				e.preventDefault();
 				redo();
+				return;
+			}
+
+			// Tool shortcuts
+			switch (e.key.toLowerCase()) {
+				case 'v': activeTool.set('select'); break;
+				case 'h': activeTool.set('pan'); break;
+				case 'b': activeTool.set('draw-boundary'); break;
+				case 'a': activeTool.set('draw-area'); break;
+				case 'p': activeTool.set('place-component'); break;
+				case 'm': activeTool.set('measure'); break;
+				// View shortcuts
+				case '1': activeView.set('design'); break;
+				case '2': activeView.set('simulate'); break;
+				case '3': activeView.set('electrical'); break;
+				case '4': activeView.set('reports'); break;
+				case '5': activeView.set('financial'); break;
+				// Help
+				case '?': showShortcuts = !showShortcuts; break;
+				// Escape
+				case 'escape':
+					selectedEntityId.set(null);
+					activeTool.set('select');
+					showShortcuts = false;
+					break;
+				// Delete
+				case 'delete':
+					if ($selectedEntityId) {
+						// Entity deletion would go through entity manager
+						toast.info('Delete entity: ' + $selectedEntityId.substring(0, 8));
+						selectedEntityId.set(null);
+					}
+					break;
+				// Focus on selection
+				case 'f':
+					if ($selectedEntityId && cesiumViewer) {
+						cesiumViewer.flyTo($camera.longitude, $camera.latitude);
+					}
+					break;
 			}
 		}
 		window.addEventListener('keydown', handleKeyboard);
@@ -159,6 +212,12 @@
 	function handleOpenProject() {
 		showDashboard = false;
 	}
+
+	function handleMinimapNavigate(e: CustomEvent<{ longitude: number; latitude: number }>) {
+		if (cesiumViewer) {
+			cesiumViewer.flyTo(e.detail.longitude, e.detail.latitude);
+		}
+	}
 </script>
 
 <svelte:head>
@@ -225,7 +284,13 @@
 					projectId={$activeProject?.id ?? ''}
 					mode={terrainHeatmapMode}
 				/>
+				<CursorOverlay {viewer} />
+				<SnapGrid {viewer} />
 			{/if}
+
+			<div class="minimap-wrapper">
+				<Minimap on:navigate={handleMinimapNavigate} />
+			</div>
 		</div>
 
 		<InspectorPanel
@@ -240,6 +305,7 @@
 </div>
 
 <ToastNotification />
+<KeyboardShortcuts bind:open={showShortcuts} />
 
 <style>
 	.app-container {
@@ -304,5 +370,12 @@
 	.ur-btn:disabled {
 		opacity: 0.3;
 		cursor: not-allowed;
+	}
+
+	.minimap-wrapper {
+		position: absolute;
+		bottom: 48px;
+		right: 12px;
+		z-index: 40;
 	}
 </style>

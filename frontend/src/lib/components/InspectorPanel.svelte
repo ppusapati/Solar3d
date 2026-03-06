@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { activeProject, activeLayout, activeView, layerVisibility } from '$lib/core/stores';
+	import { activeProject, activeLayout, activeView, layerVisibility, selectedEntityId } from '$lib/core/stores';
 	import AssetLibrary from './AssetLibrary.svelte';
 	import PanelGeneratorForm from './PanelGeneratorForm.svelte';
 	import SimulationPanel from './SimulationPanel.svelte';
@@ -8,6 +8,8 @@
 	import FinancialPanel from './FinancialPanel.svelte';
 	import WeatherOverlay from './WeatherOverlay.svelte';
 	import ExportPanel from './ExportPanel.svelte';
+	import EntityEditor from './EntityEditor.svelte';
+	import CollaborationPanel from './CollaborationPanel.svelte';
 	import { createEventDispatcher } from 'svelte';
 
 	const dispatch = createEventDispatcher();
@@ -57,6 +59,10 @@
 
 		<div class="inspector-content">
 			{#if activeTab === 'properties'}
+				{#if $selectedEntityId}
+					<EntityEditor entityType="panel" entityData={{}} />
+					<div class="divider"></div>
+				{/if}
 				{#if $activeProject}
 					<div class="property-group">
 						<h4>Project</h4>
@@ -154,6 +160,10 @@
 			<FinancialPanel />
 		</div>
 	{/if}
+
+	<div class="collab-section">
+		<CollaborationPanel />
+	</div>
 </div>
 
 <style>
@@ -268,5 +278,16 @@
 		font-size: 13px;
 		text-align: center;
 		padding: 24px 0;
+	}
+
+	.collab-section {
+		border-top: 1px solid rgba(255, 255, 255, 0.1);
+		margin-top: auto;
+	}
+
+	.divider {
+		height: 1px;
+		background: rgba(255, 255, 255, 0.1);
+		margin: 12px 0;
 	}
 </style>
