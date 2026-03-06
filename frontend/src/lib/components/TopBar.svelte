@@ -5,7 +5,8 @@
 		{ id: 'design', label: 'Design' },
 		{ id: 'simulate', label: 'Simulate' },
 		{ id: 'electrical', label: 'Electrical' },
-		{ id: 'reports', label: 'Reports' }
+		{ id: 'reports', label: 'Reports' },
+		{ id: 'financial', label: 'Financial' }
 	];
 
 	function setView(id: AppView) {

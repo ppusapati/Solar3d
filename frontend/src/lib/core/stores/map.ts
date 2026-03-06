@@ -40,7 +40,7 @@ export const viewport = writable<ViewportBounds>({
 	north: 36
 });
 
-export type AppView = 'design' | 'simulate' | 'electrical' | 'reports';
+export type AppView = 'design' | 'simulate' | 'electrical' | 'reports' | 'financial';
 
 export const activeTool = writable<MapTool>('select');
 export const selectedEntityId = writable<string | null>(null);

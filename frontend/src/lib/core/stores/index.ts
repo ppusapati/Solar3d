@@ -35,3 +35,14 @@ export {
 	loadTilesForViewport,
 	loadComponents
 } from './layout';
+
+export {
+	pushAction,
+	undo,
+	redo,
+	canUndo,
+	canRedo,
+	lastAction,
+	clearHistory,
+	type HistoryAction
+} from './history';

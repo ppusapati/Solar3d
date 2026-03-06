@@ -5,6 +5,7 @@
 	import SimulationPanel from './SimulationPanel.svelte';
 	import ElectricalPanel from './ElectricalPanel.svelte';
 	import ReportsPanel from './ReportsPanel.svelte';
+	import FinancialPanel from './FinancialPanel.svelte';
 	import { createEventDispatcher } from 'svelte';
 
 	const dispatch = createEventDispatcher();
@@ -141,6 +142,10 @@
 	{:else if $activeView === 'reports'}
 		<div class="inspector-content">
 			<ReportsPanel />
+		</div>
+	{:else if $activeView === 'financial'}
+		<div class="inspector-content">
+			<FinancialPanel />
 		</div>
 	{/if}
 </div>
