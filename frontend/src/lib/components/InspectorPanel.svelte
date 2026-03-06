@@ -6,6 +6,8 @@
 	import ElectricalPanel from './ElectricalPanel.svelte';
 	import ReportsPanel from './ReportsPanel.svelte';
 	import FinancialPanel from './FinancialPanel.svelte';
+	import WeatherOverlay from './WeatherOverlay.svelte';
+	import ExportPanel from './ExportPanel.svelte';
 	import { createEventDispatcher } from 'svelte';
 
 	const dispatch = createEventDispatcher();
@@ -134,6 +136,8 @@
 	{:else if $activeView === 'simulate'}
 		<div class="inspector-content">
 			<SimulationPanel on:timeChange={handleTimeChange} on:toggleShadows={handleToggleShadows} />
+			<div class="divider"></div>
+			<WeatherOverlay />
 		</div>
 	{:else if $activeView === 'electrical'}
 		<div class="inspector-content">
@@ -142,6 +146,8 @@
 	{:else if $activeView === 'reports'}
 		<div class="inspector-content">
 			<ReportsPanel />
+			<div class="divider"></div>
+			<ExportPanel />
 		</div>
 	{:else if $activeView === 'financial'}
 		<div class="inspector-content">
@@ -249,6 +255,12 @@
 		gap: 8px;
 		font-size: 13px;
 		color: #e2e8f0;
+	}
+
+	.divider {
+		height: 1px;
+		background: rgba(255, 255, 255, 0.1);
+		margin: 16px 0;
 	}
 
 	.empty-state {

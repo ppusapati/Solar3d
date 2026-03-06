@@ -20,3 +20,7 @@ export type {
 	SunPosition,
 	ShadowPolygon
 } from './simulation';
+export { routingApi } from './routing';
+export type { Route, Waypoint, RouteConstraints } from './routing';
+export { electricalApi } from './electrical';
+export type { ElectricalNetwork, PanelString, LossBreakdown } from './electrical';

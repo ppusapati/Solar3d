@@ -46,3 +46,6 @@ export {
 	clearHistory,
 	type HistoryAction
 } from './history';
+
+export { toasts, addToast, removeToast, toast } from './toast';
+export type { Toast } from './toast';

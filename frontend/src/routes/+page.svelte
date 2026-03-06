@@ -9,9 +9,13 @@
 	import ShadowRenderer from '$lib/modules/map/ShadowRenderer.svelte';
 	import ComponentRenderer from '$lib/modules/map/ComponentRenderer.svelte';
 	import RouteRenderer from '$lib/modules/map/RouteRenderer.svelte';
+	import TiltedPanelRenderer from '$lib/modules/map/TiltedPanelRenderer.svelte';
+	import TerrainHeatmap from '$lib/modules/map/TerrainHeatmap.svelte';
+	import DragDropHandler from '$lib/modules/map/DragDropHandler.svelte';
 	import ProjectDashboard from '$lib/components/ProjectDashboard.svelte';
 	import MapSearch from '$lib/components/MapSearch.svelte';
 	import StatusBar from '$lib/components/StatusBar.svelte';
+	import ToastNotification from '$lib/components/ToastNotification.svelte';
 	import {
 		isMapReady,
 		activeLayout,
@@ -24,10 +28,15 @@
 		redo,
 		canUndo,
 		canRedo,
-		pushAction
+		pushAction,
+		toast
 	} from '$lib/core/stores';
 	import { layoutApi, type PanelArrayParams } from '$lib/core/api';
 	import { loadTilesForViewport } from '$lib/core/stores';
+
+	let use3DPanels = true;
+	let showTerrainHeatmap = false;
+	let terrainHeatmapMode: 'elevation' | 'slope' | 'aspect' = 'elevation';
 
 	let cesiumViewer: CesiumViewer;
 	let viewer: any;
@@ -70,6 +79,7 @@
 			undo: () => { /* would remove the boundary entity */ },
 			redo: () => { /* would re-add it */ }
 		});
+		toast.success('Site boundary drawn');
 	}
 
 	function handleAreaComplete(e: CustomEvent<{ positions: { longitude: number; latitude: number }[] }>) {
@@ -83,6 +93,7 @@
 			undo: () => { fillAreaGeoJson = ''; },
 			redo: () => { fillAreaGeoJson = JSON.stringify({ type: 'Polygon', coordinates: [coords] }); }
 		});
+		toast.success('Panel area selected - configure and generate in the Properties panel');
 	}
 
 	function handleMeasureComplete(e: CustomEvent<{ distance: number }>) {
@@ -90,7 +101,19 @@
 	}
 
 	function handleComponentPlace(e: CustomEvent<{ longitude: number; latitude: number }>) {
-		console.log('Place component at:', e.detail);
+		toast.info(`Component placed at ${e.detail.latitude.toFixed(4)}, ${e.detail.longitude.toFixed(4)}`);
+	}
+
+	function handleDrop(e: CustomEvent<{ type: string; name: string; longitude: number; latitude: number }>) {
+		const { type, name, longitude, latitude } = e.detail;
+		toast.success(`Placed ${name} at ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
+
+		pushAction({
+			type: 'place-component',
+			description: `Place ${name}`,
+			undo: () => { /* would remove the component */ },
+			redo: () => { /* would re-add it */ }
+		});
 	}
 
 	async function handleGenerate(e: CustomEvent<PanelArrayParams>) {
@@ -110,8 +133,10 @@
 				undo: () => { /* would delete the generated panels */ },
 				redo: () => { /* would regenerate */ }
 			});
+			toast.success('Panel array generated successfully');
 		} catch (err) {
 			console.error('Panel generation failed:', err);
+			toast.error('Panel generation failed. Check console for details.');
 		} finally {
 			isGenerating.set(false);
 		}
@@ -165,7 +190,9 @@
 		</div>
 
 		<div class="map-container">
-			<CesiumViewer bind:this={cesiumViewer} />
+			<DragDropHandler {viewer} on:drop={handleDrop}>
+				<CesiumViewer bind:this={cesiumViewer} />
+			</DragDropHandler>
 
 			{#if viewer}
 				<DrawingManager
@@ -176,7 +203,11 @@
 					on:componentPlace={handleComponentPlace}
 				/>
 
-				<PanelRenderer {viewer} visible={$layerVisibility.panels} />
+				{#if use3DPanels}
+					<TiltedPanelRenderer {viewer} visible={$layerVisibility.panels} show3D={true} />
+				{:else}
+					<PanelRenderer {viewer} visible={$layerVisibility.panels} />
+				{/if}
 
 				<ShadowRenderer
 					{viewer}
@@ -188,6 +219,12 @@
 
 				<ComponentRenderer {viewer} visible={true} />
 				<RouteRenderer {viewer} visible={$layerVisibility.cables} />
+				<TerrainHeatmap
+					{viewer}
+					visible={showTerrainHeatmap}
+					projectId={$activeProject?.id ?? ''}
+					mode={terrainHeatmapMode}
+				/>
 			{/if}
 		</div>
 
@@ -201,6 +238,8 @@
 
 	<StatusBar />
 </div>
+
+<ToastNotification />
 
 <style>
 	.app-container {
