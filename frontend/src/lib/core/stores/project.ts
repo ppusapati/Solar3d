@@ -5,6 +5,7 @@ import { projectsApi } from '../api';
 export const projects = writable<Project[]>([]);
 export const activeProjectId = writable<string | null>(null);
 export const isLoading = writable(false);
+export const loadError = writable<string | null>(null);
 
 export const activeProject = derived(
 	[projects, activeProjectId],
@@ -16,9 +17,14 @@ export const activeProject = derived(
 
 export async function loadProjects() {
 	isLoading.set(true);
+	loadError.set(null);
 	try {
 		const response = await projectsApi.list();
 		projects.set(response.projects || []);
+	} catch (err) {
+		const message = err instanceof Error ? err.message : 'Failed to load projects';
+		loadError.set(message);
+		console.error('loadProjects failed:', err);
 	} finally {
 		isLoading.set(false);
 	}

@@ -43,6 +43,7 @@
 				`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`,
 				{ headers: { 'Accept-Language': 'en' } }
 			);
+			if (!response.ok) throw new Error(`Geocoding failed: ${response.status}`);
 			const data = await response.json();
 			results = data.map((r: any) => ({
 				name: r.display_name.split(',').slice(0, 3).join(','),

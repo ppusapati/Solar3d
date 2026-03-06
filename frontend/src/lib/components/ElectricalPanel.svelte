@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { activeLayout } from '$lib/core/stores';
+	import { activeLayout, activeProject } from '$lib/core/stores';
+	import { electricalApi } from '$lib/core/api';
 
-	// Placeholder electrical network data
 	let networkSummary = {
 		totalStrings: 0,
 		totalInverters: 0,
@@ -19,14 +19,55 @@
 		}
 	};
 
-	$: if ($activeLayout) {
-		const cap = $activeLayout.total_capacity_kw;
+	let networkId: string | null = null;
+
+	// Load electrical network data from API when layout changes
+	$: if ($activeLayout && $activeProject) {
+		loadElectricalData($activeProject.id, $activeLayout);
+	}
+
+	async function loadElectricalData(projectId: string, layout: { total_panels: number; total_capacity_kw: number }) {
+		try {
+			const resp = await electricalApi.listNetworks(projectId);
+			const networks = resp.networks || [];
+			if (networks.length > 0) {
+				const network = networks[0];
+				networkId = network.id;
+				networkSummary = {
+					totalStrings: network.total_strings,
+					totalInverters: network.total_inverters,
+					dcCapacity: network.total_dc_capacity_kw,
+					acCapacity: network.total_ac_capacity_kw,
+					dcAcRatio: network.dc_ac_ratio,
+					losses: networkSummary.losses
+				};
+				// Fetch losses from API
+				try {
+					const lossResp = await electricalApi.calculateLosses(network.id);
+					if (lossResp.losses) {
+						networkSummary.losses = {
+							soiling: lossResp.losses.soiling_percent,
+							shading: lossResp.losses.shading_percent,
+							mismatch: lossResp.losses.mismatch_percent,
+							wiring: lossResp.losses.wiring_percent,
+							inverter: lossResp.losses.inverter_percent,
+							transformer: lossResp.losses.transformer_percent,
+							total: lossResp.losses.total_loss_percent
+						};
+					}
+				} catch { /* use defaults if losses unavailable */ }
+				return;
+			}
+		} catch { /* API unavailable, use computed defaults */ }
+
+		// Fallback: derive from layout metadata
+		const cap = layout.total_capacity_kw;
 		networkSummary = {
-			totalStrings: Math.ceil($activeLayout.total_panels / 28),
+			totalStrings: Math.ceil(layout.total_panels / 28),
 			totalInverters: Math.ceil(cap / 500),
 			dcCapacity: cap,
 			acCapacity: cap * 0.85,
-			dcAcRatio: 1.18,
+			dcAcRatio: cap > 0 ? cap / (cap * 0.85) : 0,
 			losses: networkSummary.losses
 		};
 	}

@@ -34,20 +34,20 @@ spec:
               value: "info"
           resources:
             requests:
-              memory: "128Mi"
-              cpu: "100m"
+              memory: "256Mi"
+              cpu: "250m"
             limits:
-              memory: "512Mi"
-              cpu: "500m"
+              memory: "1Gi"
+              cpu: "1000m"
           livenessProbe:
             httpGet:
-              path: /health
+              path: /healthz
               port: ${SERVICE_PORT}
             initialDelaySeconds: 10
             periodSeconds: 30
           readinessProbe:
             httpGet:
-              path: /health
+              path: /healthz
               port: ${SERVICE_PORT}
             initialDelaySeconds: 5
             periodSeconds: 10

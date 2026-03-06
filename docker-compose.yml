@@ -8,16 +8,16 @@ services:
   postgres:
     image: postgis/postgis:16-3.4
     environment:
-      POSTGRES_DB: solar3d
-      POSTGRES_USER: solar3d
-      POSTGRES_PASSWORD: solar3d_dev
+      POSTGRES_DB: ${POSTGRES_DB:-solar3d}
+      POSTGRES_USER: ${POSTGRES_USER:-solar3d}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./migrations:/docker-entrypoint-initdb.d
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U solar3d"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-solar3d}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -26,8 +26,8 @@ services:
     image: minio/minio:latest
     command: server /data --console-address ":9001"
     environment:
-      MINIO_ROOT_USER: solar3d
-      MINIO_ROOT_PASSWORD: solar3d_dev
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-solar3d}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?MINIO_ROOT_PASSWORD must be set}
     ports:
       - "9000:9000"
       - "9001:9001"
@@ -44,8 +44,9 @@ services:
       dockerfile: Dockerfile
     environment:
       PORT: "8080"
-      DATABASE_URL: "postgres://solar3d:solar3d_dev@postgres:5432/solar3d?sslmode=disable"
-      LOG_LEVEL: "debug"
+      DATABASE_URL: "postgres://${POSTGRES_USER:-solar3d}:${POSTGRES_PASSWORD:?err}@postgres:5432/${POSTGRES_DB:-solar3d}?sslmode=${DB_SSLMODE:-disable}"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
+      CORS_ALLOWED_ORIGIN: "${CORS_ALLOWED_ORIGIN:-*}"
     ports:
       - "8080:8080"
     depends_on:
@@ -58,10 +59,10 @@ services:
       dockerfile: Dockerfile
     environment:
       PORT: "8081"
-      DATABASE_URL: "postgres://solar3d:solar3d_dev@postgres:5432/solar3d?sslmode=disable"
+      DATABASE_URL: "postgres://${POSTGRES_USER:-solar3d}:${POSTGRES_PASSWORD:?err}@postgres:5432/${POSTGRES_DB:-solar3d}?sslmode=${DB_SSLMODE:-disable}"
       S3_ENDPOINT: "http://minio:9000"
       S3_BUCKET: "terrain"
-      LOG_LEVEL: "debug"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
     ports:
       - "8081:8081"
     depends_on:
@@ -74,9 +75,9 @@ services:
       dockerfile: Dockerfile
     environment:
       PORT: "8082"
-      DATABASE_URL: "postgres://solar3d:solar3d_dev@postgres:5432/solar3d?sslmode=disable"
+      DATABASE_URL: "postgres://${POSTGRES_USER:-solar3d}:${POSTGRES_PASSWORD:?err}@postgres:5432/${POSTGRES_DB:-solar3d}?sslmode=${DB_SSLMODE:-disable}"
       TILE_SIZE: "100.0"
-      LOG_LEVEL: "debug"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
     ports:
       - "8082:8082"
     depends_on:
@@ -89,8 +90,8 @@ services:
       dockerfile: Dockerfile
     environment:
       PORT: "8083"
-      DATABASE_URL: "postgres://solar3d:solar3d_dev@postgres:5432/solar3d?sslmode=disable"
-      LOG_LEVEL: "debug"
+      DATABASE_URL: "postgres://${POSTGRES_USER:-solar3d}:${POSTGRES_PASSWORD:?err}@postgres:5432/${POSTGRES_DB:-solar3d}?sslmode=${DB_SSLMODE:-disable}"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
     ports:
       - "8083:8083"
     depends_on:
@@ -103,8 +104,8 @@ services:
       dockerfile: Dockerfile
     environment:
       PORT: "8084"
-      DATABASE_URL: "postgres://solar3d:solar3d_dev@postgres:5432/solar3d?sslmode=disable"
-      LOG_LEVEL: "debug"
+      DATABASE_URL: "postgres://${POSTGRES_USER:-solar3d}:${POSTGRES_PASSWORD:?err}@postgres:5432/${POSTGRES_DB:-solar3d}?sslmode=${DB_SSLMODE:-disable}"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
     ports:
       - "8084:8084"
     depends_on:
@@ -117,8 +118,8 @@ services:
       dockerfile: Dockerfile
     environment:
       PORT: "8085"
-      DATABASE_URL: "postgres://solar3d:solar3d_dev@postgres:5432/solar3d?sslmode=disable"
-      LOG_LEVEL: "debug"
+      DATABASE_URL: "postgres://${POSTGRES_USER:-solar3d}:${POSTGRES_PASSWORD:?err}@postgres:5432/${POSTGRES_DB:-solar3d}?sslmode=${DB_SSLMODE:-disable}"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
     ports:
       - "8085:8085"
     depends_on:
@@ -131,10 +132,10 @@ services:
       dockerfile: Dockerfile
     environment:
       PORT: "8086"
-      DATABASE_URL: "postgres://solar3d:solar3d_dev@postgres:5432/solar3d?sslmode=disable"
+      DATABASE_URL: "postgres://${POSTGRES_USER:-solar3d}:${POSTGRES_PASSWORD:?err}@postgres:5432/${POSTGRES_DB:-solar3d}?sslmode=${DB_SSLMODE:-disable}"
       S3_ENDPOINT: "http://minio:9000"
       S3_BUCKET: "reports"
-      LOG_LEVEL: "debug"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
     ports:
       - "8086:8086"
     depends_on:
@@ -147,8 +148,8 @@ services:
       dockerfile: Dockerfile
     environment:
       PORT: "8087"
-      DATABASE_URL: "postgres://solar3d:solar3d_dev@postgres:5432/solar3d?sslmode=disable"
-      LOG_LEVEL: "debug"
+      DATABASE_URL: "postgres://${POSTGRES_USER:-solar3d}:${POSTGRES_PASSWORD:?err}@postgres:5432/${POSTGRES_DB:-solar3d}?sslmode=${DB_SSLMODE:-disable}"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
     ports:
       - "8087:8087"
     depends_on:
@@ -166,7 +167,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      VITE_API_BASE_URL: "http://localhost:8080"
+      VITE_API_BASE_URL: "${VITE_API_BASE_URL:-http://localhost:8080}"
 
 volumes:
   postgres_data:

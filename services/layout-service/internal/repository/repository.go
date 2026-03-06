@@ -115,10 +115,16 @@ func (r *Repository) CreateComponent(ctx context.Context, c *domain.Component) e
 	c.ID = uuid.New()
 	c.CreatedAt = time.Now().UTC()
 
-	posJSON, _ := json.Marshal(c.Position)
-	rotJSON, _ := json.Marshal(c.Rotation)
+	posJSON, err := json.Marshal(c.Position)
+	if err != nil {
+		return fmt.Errorf("marshal position: %w", err)
+	}
+	rotJSON, err := json.Marshal(c.Rotation)
+	if err != nil {
+		return fmt.Errorf("marshal rotation: %w", err)
+	}
 
-	_, err := r.pool.Exec(ctx, `
+	_, err = r.pool.Exec(ctx, `
 		INSERT INTO components (id, layout_id, asset_id, component_type, position, rotation, metadata, created_at)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
 		c.ID, c.LayoutID, c.AssetID, c.ComponentType, posJSON, rotJSON, c.Metadata, c.CreatedAt,
@@ -140,8 +146,12 @@ func (r *Repository) GetComponent(ctx context.Context, id uuid.UUID) (*domain.Co
 	if err != nil {
 		return nil, fmt.Errorf("get component: %w", err)
 	}
-	_ = json.Unmarshal(posJSON, &c.Position)
-	_ = json.Unmarshal(rotJSON, &c.Rotation)
+	if err := json.Unmarshal(posJSON, &c.Position); err != nil {
+		return nil, fmt.Errorf("unmarshal component position: %w", err)
+	}
+	if err := json.Unmarshal(rotJSON, &c.Rotation); err != nil {
+		return nil, fmt.Errorf("unmarshal component rotation: %w", err)
+	}
 	return c, nil
 }
 
@@ -163,8 +173,12 @@ func (r *Repository) ListComponentsByLayout(ctx context.Context, layoutID uuid.U
 		if err := rows.Scan(&c.ID, &c.LayoutID, &c.AssetID, &c.ComponentType, &posJSON, &rotJSON, &c.Metadata, &c.CreatedAt); err != nil {
 			return nil, fmt.Errorf("scan component: %w", err)
 		}
-		_ = json.Unmarshal(posJSON, &c.Position)
-		_ = json.Unmarshal(rotJSON, &c.Rotation)
+		if err := json.Unmarshal(posJSON, &c.Position); err != nil {
+			return nil, fmt.Errorf("unmarshal component position: %w", err)
+		}
+		if err := json.Unmarshal(rotJSON, &c.Rotation); err != nil {
+			return nil, fmt.Errorf("unmarshal component rotation: %w", err)
+		}
 		components = append(components, c)
 	}
 	return components, rows.Err()

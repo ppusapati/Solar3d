@@ -120,11 +120,15 @@ func main() {
 	logger.Info().Msg("server stopped")
 }
 
-// corsMiddleware adds permissive CORS headers for development.
-// In production this should be replaced with a stricter policy.
+// corsMiddleware adds CORS headers. The allowed origin is controlled by the
+// CORS_ALLOWED_ORIGIN environment variable (defaults to "*" for development).
 func corsMiddleware(next http.Handler) http.Handler {
+	allowedOrigin := os.Getenv("CORS_ALLOWED_ORIGIN")
+	if allowedOrigin == "" {
+		allowedOrigin = "*"
+	}
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Origin", allowedOrigin)
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Connect-Protocol-Version, Connect-Timeout-Ms")
 		w.Header().Set("Access-Control-Max-Age", "86400")
