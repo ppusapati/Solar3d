@@ -44,8 +44,8 @@ export function generateDxf(
 					points: geojson.coordinates[0].map((c: number[]) => [c[0], c[1]] as [number, number])
 				});
 			}
-		} catch {
-			// skip invalid
+		} catch (err) {
+			console.warn('Skipping panel with invalid GeoJSON:', err);
 		}
 	}
 
@@ -201,8 +201,8 @@ export function generateKml(
 			kml.push(geojson.coordinates[0].map((c: number[]) => `${c[0]},${c[1]},0`).join(' '));
 			kml.push('</coordinates></LinearRing></outerBoundaryIs></Polygon>');
 			kml.push('</Placemark>');
-		} catch {
-			// skip
+		} catch (err) {
+			console.warn('Skipping entry with invalid GeoJSON:', err);
 		}
 	}
 	kml.push('</Folder>');
@@ -255,8 +255,8 @@ export function generateGeoJson(
 				},
 				geometry: JSON.parse(panel.geometry_geojson)
 			});
-		} catch {
-			// skip
+		} catch (err) {
+			console.warn('Skipping entry with invalid GeoJSON:', err);
 		}
 	}
 

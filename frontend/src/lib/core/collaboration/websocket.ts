@@ -225,5 +225,10 @@ function attemptReconnect(projectId: string, userName: string) {
 }
 
 function generateUserId(): string {
-	return 'user_' + Math.random().toString(36).substring(2, 10);
+	if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+		return 'user_' + crypto.randomUUID().substring(0, 8);
+	}
+	const bytes = new Uint8Array(8);
+	crypto.getRandomValues(bytes);
+	return 'user_' + Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('').substring(0, 8);
 }

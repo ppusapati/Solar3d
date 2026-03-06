@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"strconv"
 )
@@ -22,12 +23,12 @@ type Config struct {
 }
 
 // Load reads configuration from environment variables with sensible defaults.
-func Load() *Config {
+// DATABASE_URL must be set via the environment; no default credentials are embedded.
+func Load() (*Config, error) {
 	cfg := &Config{
-		Port:        8082,
-		DatabaseURL: "postgres://solar3d:solar3d@localhost:5432/solar3d_layout?sslmode=disable",
-		TileSize:    100.0,
-		LogLevel:    "info",
+		Port:     8082,
+		TileSize: 100.0,
+		LogLevel: "info",
 	}
 
 	if v := os.Getenv("PORT"); v != "" {
@@ -36,8 +37,9 @@ func Load() *Config {
 		}
 	}
 
-	if v := os.Getenv("DATABASE_URL"); v != "" {
-		cfg.DatabaseURL = v
+	cfg.DatabaseURL = os.Getenv("DATABASE_URL")
+	if cfg.DatabaseURL == "" {
+		return nil, fmt.Errorf("DATABASE_URL environment variable is required")
 	}
 
 	if v := os.Getenv("TILE_SIZE"); v != "" {
@@ -50,5 +52,5 @@ func Load() *Config {
 		cfg.LogLevel = v
 	}
 
-	return cfg
+	return cfg, nil
 }

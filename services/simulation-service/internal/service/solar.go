@@ -46,8 +46,9 @@ func CalculateSunPosition(lat, lon float64, ts time.Time) domain.SunPosition {
 	// Sun's true anomaly (degrees)
 	sunTrueAnom := geomMeanAnomSun + sunEqOfCenter
 
-	// Sun's radius vector (AU)
-	_ = (1.000001018 * (1 - eccentEarthOrbit*eccentEarthOrbit)) /
+	// Sun's radius vector (AU) — Earth-Sun distance used for irradiance correction.
+	// The extraterrestrial irradiance scales as 1/R^2.
+	sunRadiusVector := (1.000001018 * (1 - eccentEarthOrbit*eccentEarthOrbit)) /
 		(1 + eccentEarthOrbit*math.Cos(sunTrueAnom*degToRad))
 
 	// Sun's apparent longitude (degrees)
@@ -137,11 +138,12 @@ func CalculateSunPosition(lat, lon float64, ts time.Time) domain.SunPosition {
 	}
 
 	return domain.SunPosition{
-		Azimuth:   azimuth,
-		Elevation: elevation,
-		Zenith:    zenith,
-		HourAngle: hourAngle,
-		Timestamp: ts,
+		Azimuth:         azimuth,
+		Elevation:       elevation,
+		Zenith:          zenith,
+		HourAngle:       hourAngle,
+		SunRadiusVector: sunRadiusVector,
+		Timestamp:       ts,
 	}
 }
 

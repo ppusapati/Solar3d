@@ -19,7 +19,7 @@ type Config struct {
 func Load() (*Config, error) {
 	cfg := &Config{
 		Port:        8081,
-		DatabaseURL: getEnv("DATABASE_URL", "postgres://postgres:postgres@localhost:5432/solar3d?sslmode=disable"),
+		DatabaseURL: os.Getenv("DATABASE_URL"),
 		S3Endpoint:  getEnv("S3_ENDPOINT", "http://localhost:9000"),
 		S3Bucket:    getEnv("S3_BUCKET", "terrain-data"),
 		LogLevel:    getEnv("LOG_LEVEL", "info"),

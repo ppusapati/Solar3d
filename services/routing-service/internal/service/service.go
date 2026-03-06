@@ -205,7 +205,6 @@ func (s *RoutingService) OptimizeRoutes(ctx context.Context, projectID uuid.UUID
 		byType[r.RouteType] = append(byType[r.RouteType], i)
 	}
 
-	totalSaved := 0.0
 	for routeType, indices := range byType {
 		if len(indices) <= 2 {
 			continue
@@ -236,7 +235,6 @@ func (s *RoutingService) OptimizeRoutes(ctx context.Context, projectID uuid.UUID
 			Str("route_type", string(routeType)).
 			Int("count", len(indices)).
 			Msg("routes optimized with nearest-neighbor + 2-opt")
-		_ = totalSaved
 	}
 
 	log.Info().

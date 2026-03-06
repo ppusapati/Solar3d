@@ -3,6 +3,8 @@ package repository
 import (
 	"context"
 	"fmt"
+	"os"
+	"path/filepath"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
@@ -13,6 +15,20 @@ import (
 
 type ReportRepository struct {
 	pool *pgxpool.Pool
+}
+
+// StoreContent writes report content to the local filesystem at the given path.
+// In a production deployment this would write to S3/MinIO via the configured
+// object storage client.
+func (r *ReportRepository) StoreContent(ctx context.Context, path string, content []byte) error {
+	dir := filepath.Dir(path)
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		return fmt.Errorf("creating report directory %s: %w", dir, err)
+	}
+	if err := os.WriteFile(path, content, 0o644); err != nil {
+		return fmt.Errorf("writing report content to %s: %w", path, err)
+	}
+	return nil
 }
 
 func NewReportRepository(pool *pgxpool.Pool) *ReportRepository {

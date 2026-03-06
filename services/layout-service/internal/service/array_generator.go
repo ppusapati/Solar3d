@@ -243,6 +243,13 @@ func partitionIntoTiles(panels []*generatedPanel, layoutID uuid.UUID, tileSize f
 	nCols := int(math.Ceil((maxX-originX)/tileSize)) + 1
 	nRows := int(math.Ceil((maxY-originY)/tileSize)) + 1
 
+	log.Info().
+		Int("grid_cols", nCols).
+		Int("grid_rows", nRows).
+		Float64("origin_x", originX).
+		Float64("origin_y", originY).
+		Msg("tile grid dimensions computed")
+
 	// Map tile grid index -> list of panels.
 	type tileKey struct{ col, row int }
 	tilePanels := make(map[tileKey][]*generatedPanel)
@@ -278,9 +285,6 @@ func partitionIntoTiles(panels []*generatedPanel, layoutID uuid.UUID, tileSize f
 			return 0
 		}
 	}
-	_ = nCols
-	_ = nRows
-
 	var domainTiles []*domain.LayoutTile
 	var domainPanels []*domain.Panel
 

@@ -59,8 +59,8 @@
 					// Flat panel on ground
 					renderFlatPanel(panel, coords);
 				}
-			} catch {
-				// skip invalid
+			} catch (err) {
+				console.warn('Skipping panel with invalid geometry:', err);
 			}
 		}
 	}

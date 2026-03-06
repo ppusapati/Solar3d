@@ -55,11 +55,12 @@ type SimulationResult struct {
 }
 
 type SunPosition struct {
-	Azimuth   float64   `json:"azimuth"`
-	Elevation float64   `json:"elevation"`
-	Zenith    float64   `json:"zenith"`
-	HourAngle float64   `json:"hour_angle"`
-	Timestamp time.Time `json:"timestamp"`
+	Azimuth         float64   `json:"azimuth"`
+	Elevation       float64   `json:"elevation"`
+	Zenith          float64   `json:"zenith"`
+	HourAngle       float64   `json:"hour_angle"`
+	SunRadiusVector float64   `json:"sun_radius_vector_au"` // Earth-Sun distance in AU; used for irradiance correction (1/R^2)
+	Timestamp       time.Time `json:"timestamp"`
 }
 
 type CreateSimulationRequest struct {

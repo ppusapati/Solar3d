@@ -196,21 +196,29 @@ func (s *ReportService) GenerateBOM(ctx context.Context, req domain.GenerateBOMR
 	bom.TotalCost = totalCost
 
 	// Save as a report
-	bomJSON, _ := json.Marshal(bom)
+	bomJSON, err := json.Marshal(bom)
+	if err != nil {
+		return nil, fmt.Errorf("marshaling BOM: %w", err)
+	}
+
+	filePath := fmt.Sprintf("/reports/%s/bom-%s.json", req.ProjectID, time.Now().Format("20060102"))
 	report := &domain.Report{
 		ID:         uuid.New(),
 		ProjectID:  req.ProjectID,
 		Name:       "Bill of Materials",
 		ReportType: domain.ReportTypeBOM,
 		Format:     domain.ReportFormatJSON,
-		FilePath:   fmt.Sprintf("/reports/%s/bom-%s.json", req.ProjectID, time.Now().Format("20060102")),
+		FilePath:   filePath,
 		Status:     domain.ReportStatusCompleted,
 		CreatedAt:  time.Now().UTC(),
 	}
 	now := time.Now().UTC()
 	report.CompletedAt = &now
 
-	_ = bomJSON // In production, write to storage
+	// Store report content via repository (written to configured storage backend)
+	if err := s.repo.StoreContent(ctx, filePath, bomJSON); err != nil {
+		log.Warn().Err(err).Str("path", filePath).Msg("failed to store BOM content; report metadata still persisted")
+	}
 	if err := s.repo.Create(ctx, report); err != nil {
 		log.Warn().Err(err).Msg("failed to persist BOM report record")
 	}

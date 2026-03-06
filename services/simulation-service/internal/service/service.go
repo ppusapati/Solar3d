@@ -73,7 +73,9 @@ func (s *SimulationService) RunSimulation(ctx context.Context, id uuid.UUID) (*d
 
 	result, err := s.computeSimulation(sim)
 	if err != nil {
-		_ = s.repo.UpdateStatus(ctx, id, domain.SimulationStatusFailed)
+		if statusErr := s.repo.UpdateStatus(ctx, id, domain.SimulationStatusFailed); statusErr != nil {
+			log.Error().Err(statusErr).Str("simulation_id", id.String()).Msg("failed to update simulation status to failed")
+		}
 		return nil, fmt.Errorf("computing simulation: %w", err)
 	}
 

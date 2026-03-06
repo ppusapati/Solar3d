@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -198,11 +199,9 @@ func writeError(w http.ResponseWriter, status int, message string) {
 }
 
 func parseFloat(s string) (float64, error) {
-	var f float64
-	_, err := json.Number(s).Float64()
+	f, err := json.Number(s).Float64()
 	if err != nil {
-		return 0, err
+		return 0, fmt.Errorf("invalid float %q: %w", s, err)
 	}
-	f, _ = json.Number(s).Float64()
 	return f, nil
 }

@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -146,7 +147,12 @@ func (h *ProjectHandler) ListProjects(w http.ResponseWriter, r *http.Request) {
 	// Also accept query params for convenience.
 	if req.Limit == 0 {
 		if v := r.URL.Query().Get("limit"); v != "" {
-			req.Limit, _ = strconv.Atoi(v)
+			parsed, err := strconv.Atoi(v)
+			if err != nil {
+				h.handleError(w, fmt.Errorf("invalid limit parameter: %w", err))
+				return
+			}
+			req.Limit = parsed
 		}
 	}
 
