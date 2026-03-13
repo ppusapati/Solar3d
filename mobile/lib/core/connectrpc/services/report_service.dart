@@ -2,7 +2,7 @@ import '../../models/report.dart';
 import '../transport.dart';
 
 class ReportServiceClient {
-  static const _service = 'report.v1.ReportService';
+  static const _service = 'solar.report.v1.ReportService';
   final ConnectRpcTransport _transport;
 
   ReportServiceClient(this._transport);

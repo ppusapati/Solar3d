@@ -2,7 +2,7 @@ import '../../models/layout.dart';
 import '../transport.dart';
 
 class LayoutServiceClient {
-  static const _service = 'layout.v1.LayoutService';
+  static const _service = 'solar.layout.v1.LayoutService';
   final ConnectRpcTransport _transport;
 
   LayoutServiceClient(this._transport);

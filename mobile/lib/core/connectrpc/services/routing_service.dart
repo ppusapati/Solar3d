@@ -2,7 +2,7 @@ import '../../models/route.dart';
 import '../transport.dart';
 
 class RoutingServiceClient {
-  static const _service = 'routing.v1.RoutingService';
+  static const _service = 'solar.routing.v1.RoutingService';
   final ConnectRpcTransport _transport;
 
   RoutingServiceClient(this._transport);

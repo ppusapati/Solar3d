@@ -2,7 +2,7 @@ import '../../models/electrical.dart';
 import '../transport.dart';
 
 class ElectricalServiceClient {
-  static const _service = 'electrical.v1.ElectricalService';
+  static const _service = 'solar.electrical.v1.ElectricalService';
   final ConnectRpcTransport _transport;
 
   ElectricalServiceClient(this._transport);

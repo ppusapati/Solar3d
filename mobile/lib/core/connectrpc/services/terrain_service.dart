@@ -2,7 +2,7 @@ import '../../models/terrain.dart';
 import '../transport.dart';
 
 class TerrainServiceClient {
-  static const _service = 'terrain.v1.TerrainService';
+  static const _service = 'solar.terrain.v1.TerrainService';
   final ConnectRpcTransport _transport;
 
   TerrainServiceClient(this._transport);

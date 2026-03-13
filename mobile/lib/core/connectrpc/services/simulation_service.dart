@@ -2,7 +2,7 @@ import '../../models/simulation.dart';
 import '../transport.dart';
 
 class SimulationServiceClient {
-  static const _service = 'simulation.v1.SimulationService';
+  static const _service = 'solar.simulation.v1.SimulationService';
   final ConnectRpcTransport _transport;
 
   SimulationServiceClient(this._transport);

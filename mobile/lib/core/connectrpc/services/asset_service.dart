@@ -2,7 +2,7 @@ import '../../models/asset.dart';
 import '../transport.dart';
 
 class AssetServiceClient {
-  static const _service = 'asset.v1.AssetService';
+  static const _service = 'solar.asset.v1.AssetService';
   final ConnectRpcTransport _transport;
 
   AssetServiceClient(this._transport);
