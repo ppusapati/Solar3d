@@ -16,11 +16,13 @@ import (
 	"github.com/solar3d/solar3d/services/project-service/internal/handler"
 	"github.com/solar3d/solar3d/services/project-service/internal/repository"
 	"github.com/solar3d/solar3d/services/project-service/internal/service"
+	mw "github.com/solar3d/solar3d/services/shared/middleware"
 )
 
 func main() {
 	// ── Logger ────────────────────────────────────────────────────────────
-	logger := zerolog.New(zerolog.ConsoleWriter{Out: os.Stdout, TimeFormat: time.RFC3339}).
+	zerolog.TimeFieldFormat = time.RFC3339
+	logger := zerolog.New(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.RFC3339}).
 		With().Timestamp().Caller().Logger()
 
 	// ── Config ────────────────────────────────────────────────────────────
@@ -82,12 +84,19 @@ func main() {
 	// Register ConnectRPC-style routes.
 	h.Register(mux)
 
-	// Wrap with CORS middleware.
-	corsHandler := corsMiddleware(mux)
+	// Apply middleware chain: Recovery → RequestID → CORS → Logging → RateLimit
+	limiter := mw.NewRateLimiter(100, 200)
+	chain := mw.Chain(
+		mw.Recovery(logger),
+		mw.RequestID,
+		mw.CORS,
+		mw.Logging(logger),
+		limiter.Middleware,
+	)
 
 	srv := &http.Server{
 		Addr:              fmt.Sprintf(":%d", cfg.Port),
-		Handler:           corsHandler,
+		Handler:           chain(mux),
 		ReadHeaderTimeout: 10 * time.Second,
 		ReadTimeout:       30 * time.Second,
 		WriteTimeout:      30 * time.Second,
@@ -118,26 +127,4 @@ func main() {
 		logger.Error().Err(err).Msg("forced shutdown")
 	}
 	logger.Info().Msg("server stopped")
-}
-
-// corsMiddleware adds CORS headers. The allowed origin is controlled by the
-// CORS_ALLOWED_ORIGIN environment variable (defaults to "*" for development).
-func corsMiddleware(next http.Handler) http.Handler {
-	allowedOrigin := os.Getenv("CORS_ALLOWED_ORIGIN")
-	if allowedOrigin == "" {
-		allowedOrigin = "*"
-	}
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", allowedOrigin)
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Connect-Protocol-Version, Connect-Timeout-Ms")
-		w.Header().Set("Access-Control-Max-Age", "86400")
-
-		if r.Method == http.MethodOptions {
-			w.WriteHeader(http.StatusNoContent)
-			return
-		}
-
-		next.ServeHTTP(w, r)
-	})
 }

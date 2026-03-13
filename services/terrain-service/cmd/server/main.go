@@ -16,6 +16,7 @@ import (
 	"github.com/solar3d/solar3d/services/terrain-service/internal/handler"
 	"github.com/solar3d/solar3d/services/terrain-service/internal/repository"
 	"github.com/solar3d/solar3d/services/terrain-service/internal/service"
+	mw "github.com/solar3d/solar3d/services/shared/middleware"
 )
 
 func main() {
@@ -26,30 +27,29 @@ func main() {
 }
 
 func run() error {
-	// Load configuration.
+	// ── Logger ────────────────────────────────────────────────────────────
+	zerolog.TimeFieldFormat = time.RFC3339
+	logger := zerolog.New(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.RFC3339}).
+		With().Timestamp().Caller().Logger()
+
+	// ── Config ────────────────────────────────────────────────────────────
 	cfg, err := config.Load()
 	if err != nil {
 		return fmt.Errorf("load config: %w", err)
 	}
 
-	// Initialize structured logger.
 	level, err := zerolog.ParseLevel(cfg.LogLevel)
 	if err != nil {
 		level = zerolog.InfoLevel
 	}
-	logger := zerolog.New(os.Stdout).
-		Level(level).
-		With().
-		Timestamp().
-		Str("service", "terrain-service").
-		Logger()
+	zerolog.SetGlobalLevel(level)
 
 	logger.Info().
 		Int("port", cfg.Port).
 		Str("log_level", cfg.LogLevel).
 		Msg("starting terrain service")
 
-	// Create database connection pool.
+	// ── Database ──────────────────────────────────────────────────────────
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -72,12 +72,12 @@ func run() error {
 	}
 	logger.Info().Msg("database connection established")
 
-	// Initialize layers: repository -> service -> handler.
+	// ── Application layers ────────────────────────────────────────────────
 	repo := repository.New(pool, logger)
 	svc := service.New(repo, logger)
 	h := handler.New(svc, logger)
 
-	// Build HTTP server.
+	// ── HTTP Server ───────────────────────────────────────────────────────
 	mux := http.NewServeMux()
 
 	// Health check endpoint.
@@ -90,21 +90,32 @@ func run() error {
 	// Register terrain API routes.
 	h.RegisterRoutes(mux)
 
+	// Apply middleware chain: Recovery → RequestID → CORS → Logging → RateLimit
+	limiter := mw.NewRateLimiter(100, 200)
+	chain := mw.Chain(
+		mw.Recovery(logger),
+		mw.RequestID,
+		mw.CORS,
+		mw.Logging(logger),
+		limiter.Middleware,
+	)
+
 	server := &http.Server{
-		Addr:         cfg.Addr(),
-		Handler:      mux,
-		ReadTimeout:  15 * time.Second,
-		WriteTimeout: 30 * time.Second,
-		IdleTimeout:  60 * time.Second,
+		Addr:              cfg.Addr(),
+		Handler:           chain(mux),
+		ReadHeaderTimeout: 10 * time.Second,
+		ReadTimeout:       15 * time.Second,
+		WriteTimeout:      30 * time.Second,
+		IdleTimeout:       120 * time.Second,
 	}
 
-	// Graceful shutdown.
+	// ── Graceful shutdown ─────────────────────────────────────────────────
 	shutdownCh := make(chan os.Signal, 1)
 	signal.Notify(shutdownCh, syscall.SIGINT, syscall.SIGTERM)
 
 	errCh := make(chan error, 1)
 	go func() {
-		logger.Info().Str("addr", server.Addr).Msg("HTTP server listening")
+		logger.Info().Str("addr", server.Addr).Msg("listening")
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			errCh <- fmt.Errorf("http server: %w", err)
 		}
@@ -117,8 +128,8 @@ func run() error {
 		return err
 	}
 
-	// Allow 10 seconds for in-flight requests to complete.
-	shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 10*time.Second)
+	// Allow 15 seconds for in-flight requests to complete.
+	shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer shutdownCancel()
 
 	if err := server.Shutdown(shutdownCtx); err != nil {

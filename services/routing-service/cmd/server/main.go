@@ -16,15 +16,20 @@ import (
 	"github.com/solar3d/solar3d/services/routing-service/internal/handler"
 	"github.com/solar3d/solar3d/services/routing-service/internal/repository"
 	"github.com/solar3d/solar3d/services/routing-service/internal/service"
+	mw "github.com/solar3d/solar3d/services/shared/middleware"
 )
 
 func main() {
-	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
-	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	// ── Logger ────────────────────────────────────────────────────────────
+	zerolog.TimeFieldFormat = time.RFC3339
+	logger := zerolog.New(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.RFC3339}).
+		With().Timestamp().Caller().Logger()
+	log.Logger = logger
 
+	// ── Config ────────────────────────────────────────────────────────────
 	cfg, err := config.Load()
 	if err != nil {
-		log.Fatal().Err(err).Msg("failed to load configuration")
+		logger.Fatal().Err(err).Msg("failed to load configuration")
 	}
 
 	level, err := zerolog.ParseLevel(cfg.LogLevel)
@@ -33,52 +38,76 @@ func main() {
 	}
 	zerolog.SetGlobalLevel(level)
 
+	logger.Info().Str("port", cfg.Port).Msg("starting routing-service")
+
+	// ── Database ──────────────────────────────────────────────────────────
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
 	pool, err := db.NewPool(ctx, cfg.DatabaseURL)
 	if err != nil {
-		log.Fatal().Err(err).Msg("failed to connect to database")
+		logger.Fatal().Err(err).Msg("failed to connect to database")
 	}
 	defer pool.Close()
 
+	// ── Application layers ────────────────────────────────────────────────
 	repo := repository.NewRouteRepository(pool)
 	svc := service.NewRoutingService(repo)
 	h := handler.NewRoutingHandler(svc)
 
+	// ── HTTP Server ───────────────────────────────────────────────────────
 	mux := http.NewServeMux()
 	h.RegisterRoutes(mux)
 
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(`{"status":"ok"}`))
 	})
 
+	// Apply middleware chain: Recovery → RequestID → CORS → Logging → RateLimit
+	limiter := mw.NewRateLimiter(100, 200)
+	chain := mw.Chain(
+		mw.Recovery(logger),
+		mw.RequestID,
+		mw.CORS,
+		mw.Logging(logger),
+		limiter.Middleware,
+	)
+
 	srv := &http.Server{
-		Addr:         ":" + cfg.Port,
-		Handler:      mux,
-		ReadTimeout:  15 * time.Second,
-		WriteTimeout: 30 * time.Second,
-		IdleTimeout:  60 * time.Second,
+		Addr:              ":" + cfg.Port,
+		Handler:           chain(mux),
+		ReadHeaderTimeout: 10 * time.Second,
+		ReadTimeout:       15 * time.Second,
+		WriteTimeout:      30 * time.Second,
+		IdleTimeout:       120 * time.Second,
 	}
 
+	// ── Graceful shutdown ─────────────────────────────────────────────────
+	errCh := make(chan error, 1)
 	go func() {
-		log.Info().Str("port", cfg.Port).Msg("routing-service starting")
-		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatal().Err(err).Msg("server failed")
-		}
+		logger.Info().Str("addr", srv.Addr).Msg("listening")
+		errCh <- srv.ListenAndServe()
 	}()
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-	<-quit
 
-	log.Info().Msg("shutting down server")
-	shutdownCtx, shutdownCancel := context.WithTimeout(ctx, 10*time.Second)
+	select {
+	case sig := <-quit:
+		logger.Info().Str("signal", sig.String()).Msg("shutting down")
+	case err := <-errCh:
+		if err != nil && err != http.ErrServerClosed {
+			logger.Error().Err(err).Msg("server error")
+		}
+	}
+
+	shutdownCtx, shutdownCancel := context.WithTimeout(ctx, 15*time.Second)
 	defer shutdownCancel()
 
 	if err := srv.Shutdown(shutdownCtx); err != nil {
-		log.Fatal().Err(err).Msg("server forced to shutdown")
+		logger.Error().Err(err).Msg("forced shutdown")
 	}
-	log.Info().Msg("server stopped")
+	logger.Info().Msg("server stopped")
 }

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { camera, activeLayout, activeTool, activeView } from '$lib/core/stores';
 	import { writable } from 'svelte/store';
+	import ConnectivityIndicator from './ConnectivityIndicator.svelte';
 
 	/** Store for live cursor geo-coordinates, updated by map mouse-move handlers. */
 	export const cursorPosition = writable<{ longitude: number; latitude: number }>({
@@ -66,6 +67,7 @@
 	{/if}
 
 	<div class="status-right">
+		<ConnectivityIndicator />
 		<span class="tool-indicator">{$activeTool}</span>
 		<span class="view-indicator">{$activeView}</span>
 	</div>
