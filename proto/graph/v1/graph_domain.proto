@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package graph.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/graph/v1;graphv1";
+
+import "common/v1/primitives.proto";
+
+message GraphNode {
+  string node_id = 1;
+  common.v1.Point3D position = 2;
+  string kind = 3;
+  map<string, double> scalar_attributes = 4;
+  map<string, string> tags = 5;
+}
+
+message WeightedEdge {
+  string edge_id = 1;
+  string from_node_id = 2;
+  string to_node_id = 3;
+  double weight = 4;
+  bool directed = 5;
+  double capacity = 6;
+  map<string, double> scalar_attributes = 7;
+}
+
+message GraphTopology {
+  string graph_id = 1;
+  repeated GraphNode nodes = 2;
+  repeated WeightedEdge edges = 3;
+  string coordinate_system = 4;
+  common.v1.ContractMetadata contract = 5;
+}
+
+message TerminalSet {
+  repeated string node_ids = 1;
+}
+
+message GraphConstraint {
+  common.v1.NumericRange max_degree = 1;
+  common.v1.NumericRange max_path_length = 2;
+  bool enforce_connectivity = 3;
+  repeated string forbidden_edge_ids = 4;
+}

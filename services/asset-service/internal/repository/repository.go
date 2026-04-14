@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"strings"
@@ -10,7 +11,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"github.com/solar3d/solar3d/services/asset-service/internal/domain"
+	"solar3d/asset-service/internal/domain"
 )
 
 type AssetRepository struct {
@@ -148,17 +149,26 @@ func (r *AssetRepository) Delete(ctx context.Context, id uuid.UUID) error {
 func (r *AssetRepository) scanAsset(row pgx.Row) (*domain.Asset, error) {
 	var asset domain.Asset
 	var dimJSON, elecJSON []byte
+	var model3dPath, datasheetPath sql.NullString
 
 	err := row.Scan(
 		&asset.ID, &asset.Name, &asset.Manufacturer, &asset.Model,
 		&asset.Category, &dimJSON, &elecJSON,
-		&asset.Model3DPath, &asset.DatasheetPath, &asset.Metadata,
+		&model3dPath, &datasheetPath, &asset.Metadata,
 	)
 	if err != nil {
 		if err == pgx.ErrNoRows {
 			return nil, fmt.Errorf("asset not found")
 		}
 		return nil, fmt.Errorf("scanning asset: %w", err)
+	}
+
+	// Convert sql.NullString to *string
+	if model3dPath.Valid {
+		asset.Model3DPath = &model3dPath.String
+	}
+	if datasheetPath.Valid {
+		asset.DatasheetPath = &datasheetPath.String
 	}
 
 	if err := json.Unmarshal(dimJSON, &asset.Dimensions); err != nil {
@@ -182,13 +192,22 @@ func (r *AssetRepository) queryAssets(ctx context.Context, query string, args ..
 	for rows.Next() {
 		var asset domain.Asset
 		var dimJSON, elecJSON []byte
+		var model3dPath, datasheetPath sql.NullString
 
 		if err := rows.Scan(
 			&asset.ID, &asset.Name, &asset.Manufacturer, &asset.Model,
 			&asset.Category, &dimJSON, &elecJSON,
-			&asset.Model3DPath, &asset.DatasheetPath, &asset.Metadata,
+			&model3dPath, &datasheetPath, &asset.Metadata,
 		); err != nil {
 			return nil, fmt.Errorf("scanning asset: %w", err)
+		}
+
+		// Convert sql.NullString to *string
+		if model3dPath.Valid {
+			asset.Model3DPath = &model3dPath.String
+		}
+		if datasheetPath.Valid {
+			asset.DatasheetPath = &datasheetPath.String
 		}
 
 		if err := json.Unmarshal(dimJSON, &asset.Dimensions); err != nil {
@@ -202,3 +221,4 @@ func (r *AssetRepository) queryAssets(ctx context.Context, query string, args ..
 	}
 	return assets, nil
 }
+

@@ -16,6 +16,13 @@ service SimulationService {
   rpc DeleteSimulation(DeleteSimulationRequest) returns (DeleteSimulationResponse);
 }
 
+// SimulationComputeService exposes only stateless compute-style simulation operations.
+// Lifecycle/storage operations remain in SimulationService.
+service SimulationComputeService {
+  rpc GetSunPosition(GetSunPositionRequest) returns (GetSunPositionResponse);
+  rpc GetShadowMap(GetShadowMapRequest) returns (GetShadowMapResponse);
+}
+
 message Simulation {
   string id = 1;
   string project_id = 2;

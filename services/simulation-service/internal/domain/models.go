@@ -76,3 +76,4 @@ type SunPositionRequest struct {
 	Lon       float64   `json:"lon"`
 	Timestamp time.Time `json:"timestamp"`
 }
+

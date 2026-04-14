@@ -1,4 +1,6 @@
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+// In dev the Vite server proxy routes each /package.v1.* path to the correct backend port.
+// Set VITE_API_BASE_URL only when pointing directly at a remote API (production/staging).
+export const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '';
 
 interface RequestOptions {
 	method?: string;

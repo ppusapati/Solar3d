@@ -14,6 +14,7 @@ The platform is implemented as independent microservices:
 | simulation-service | Go + Rust | Solar position, shadow analysis |
 | electrical-service | Go | String sizing, inverter grouping, DC/AC ratios |
 | routing-service | Go + Rust | Cable/road routing with A* pathfinding |
+| compute-orchestration-service | Go | Long-running compute job queue, retries, and artifact tracking |
 | report-service | Go | BOM, PDF/CSV/Excel export |
 | asset-service | Go | Solar component catalog management |
 
@@ -47,6 +48,7 @@ Solar3d/
 │   ├── simulation-service/
 │   ├── electrical-service/
 │   ├── routing-service/
+│   ├── compute-orchestration-service/
 │   ├── report-service/
 │   └── asset-service/
 ├── compute/                  # Rust compute modules

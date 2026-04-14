@@ -6,12 +6,21 @@ edition = "2021"
 [lib]
 crate-type = ["cdylib", "rlib"]
 
+[[bin]]
+name = "solar_http_bridge"
+path = "src/bin/http_bridge.rs"
+
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 rayon = "1.10"
 chrono = { version = "0.4", features = ["serde"] }
+tiny_http = "0.12"
+bridge-core = { path = "../bridge-core" }
 
-[profile.release]
-opt-level = 3
-lto = true
+[dev-dependencies]
+criterion = { version = "0.5", features = ["html_reports"] }
+
+[[bench]]
+name = "solar_bench"
+harness = false

@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package geo.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/geo/v1;geov1";
+
+// GeoService exposes geometry and raster algorithms built on geo-compute.
+service GeoService {
+  // BufferPoint generates a polygonal buffer around a point.
+  rpc BufferPoint(BufferPointRequest) returns (BufferPointResponse);
+  // NearestPoint returns the closest candidate point to the query point.
+  rpc NearestPoint(NearestPointRequest) returns (NearestPointResponse);
+  // GenerateContours derives contour lines from an input raster grid.
+  rpc GenerateContours(GenerateContoursRequest) returns (GenerateContoursResponse);
+}
+
+message Point2D {
+  double x = 1;
+  double y = 2;
+}
+
+message Polygon {
+  repeated Point2D ring = 1;
+}
+
+message BufferPointRequest {
+  Point2D center = 1;
+  double radius = 2;
+  int32 segments = 3;
+}
+
+message BufferPointResponse {
+  Polygon polygon = 1;
+}
+
+message NearestPointRequest {
+  Point2D query = 1;
+  repeated Point2D candidates = 2;
+}
+
+message NearestPointResponse {
+  int32 index = 1;
+  double distance = 2;
+  Point2D point = 3;
+}
+
+message GenerateContoursRequest {
+  int32 width = 1;
+  int32 height = 2;
+  double resolution = 3;
+  double origin_x = 4;
+  double origin_y = 5;
+  double no_data = 6;
+  repeated double data = 7;
+  double interval = 8;
+}
+
+message ContourLine {
+  double elevation = 1;
+  repeated Point2D points = 2;
+}
+
+message GenerateContoursResponse {
+  repeated ContourLine contours = 1;
+}

@@ -10,13 +10,14 @@ import (
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
+	electricalv1connect "github.com/solar3d/solar3d/gen/electrical/v1/electricalv1connect"
 
-	"github.com/solar3d/solar3d/services/electrical-service/internal/config"
-	"github.com/solar3d/solar3d/services/electrical-service/internal/db"
-	"github.com/solar3d/solar3d/services/electrical-service/internal/handler"
-	"github.com/solar3d/solar3d/services/electrical-service/internal/repository"
-	"github.com/solar3d/solar3d/services/electrical-service/internal/service"
-	mw "github.com/solar3d/solar3d/services/shared/middleware"
+	"solar3d/electrical-service/internal/config"
+	"solar3d/electrical-service/internal/db"
+	"solar3d/electrical-service/internal/handler"
+	"solar3d/electrical-service/internal/repository"
+	"solar3d/electrical-service/internal/service"
+	mw "solar3d/shared/middleware"
 )
 
 func main() {
@@ -52,12 +53,14 @@ func main() {
 
 	// ── Application layers ────────────────────────────────────────────────
 	repo := repository.NewElectricalRepository(pool)
-	svc := service.NewElectricalService(repo)
-	h := handler.NewElectricalHandler(svc)
+	svc := service.NewElectricalService(repo, cfg.OrchestrationURL)
+	h := handler.NewElectricalHandler(svc, logger)
 
 	// ── HTTP Server ───────────────────────────────────────────────────────
 	mux := http.NewServeMux()
 	h.RegisterRoutes(mux)
+	connectPath, connectHandler := electricalv1connect.NewElectricalServiceHandler(handler.NewConnectElectricalService(svc))
+	mux.Handle(connectPath, connectHandler)
 
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
@@ -69,7 +72,7 @@ func main() {
 	limiter := mw.NewRateLimiter(100, 200)
 	chain := mw.Chain(
 		mw.Recovery(logger),
-		mw.RequestID,
+		mw.IDempotencyKeyMiddleware,
 		mw.CORS,
 		mw.Logging(logger),
 		limiter.Middleware,
@@ -111,3 +114,4 @@ func main() {
 	}
 	logger.Info().Msg("server stopped")
 }
+

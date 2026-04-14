@@ -24,6 +24,13 @@ func (r *statusRecorder) Write(b []byte) (int, error) {
 	return n, err
 }
 
+// Flush implements http.Flusher for streaming responses (e.g., ConnectRPC server streams)
+func (r *statusRecorder) Flush() {
+	if flusher, ok := r.ResponseWriter.(http.Flusher); ok {
+		flusher.Flush()
+	}
+}
+
 // Logging is structured HTTP request/response logging middleware.
 func Logging(logger zerolog.Logger) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
@@ -59,3 +66,4 @@ func Logging(logger zerolog.Logger) func(http.Handler) http.Handler {
 		})
 	}
 }
+

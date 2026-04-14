@@ -37,7 +37,22 @@
 			const allEntities = getAllEntitiesForExport();
 			const routes = allEntities
 				.filter((e) => e.type === 'component' && e.properties?.type === 'route')
-				.map((e) => ({ geometry_geojson: e.geojson, ...e.properties }));
+				.map((e) => {
+					try {
+						const geojson = JSON.parse(e.geojson) as { type?: string; coordinates?: number[][] };
+						if (geojson.type !== 'LineString' || !Array.isArray(geojson.coordinates)) {
+							return null;
+						}
+
+						return {
+							route_type: e.properties?.route_type ?? 'cable',
+							waypoints: geojson.coordinates.map(([longitude, latitude]) => ({ longitude, latitude }))
+						};
+					} catch {
+						return null;
+					}
+				})
+				.filter((route): route is { route_type: string; waypoints: { longitude: number; latitude: number }[] } => Boolean(route));
 
 			let content: string;
 			let filename: string;

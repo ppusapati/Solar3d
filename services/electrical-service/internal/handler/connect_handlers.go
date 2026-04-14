@@ -5,18 +5,22 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
-	"github.com/rs/zerolog/log"
+	"github.com/rs/zerolog"
 
-	"github.com/solar3d/solar3d/services/electrical-service/internal/domain"
-	"github.com/solar3d/solar3d/services/electrical-service/internal/service"
+	"solar3d/electrical-service/internal/domain"
+	"solar3d/electrical-service/internal/service"
 )
 
 type ElectricalHandler struct {
-	svc *service.ElectricalService
+	svc    *service.ElectricalService
+	logger zerolog.Logger
 }
 
-func NewElectricalHandler(svc *service.ElectricalService) *ElectricalHandler {
-	return &ElectricalHandler{svc: svc}
+func NewElectricalHandler(svc *service.ElectricalService, logger zerolog.Logger) *ElectricalHandler {
+	return &ElectricalHandler{
+		svc:    svc,
+		logger: logger.With().Str("component", "handler").Logger(),
+	}
 }
 
 func (h *ElectricalHandler) RegisterRoutes(mux *http.ServeMux) {
@@ -29,6 +33,9 @@ func (h *ElectricalHandler) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /api/v1/networks/{id}/dc-capacity", h.CalculateDCCapacity)
 	mux.HandleFunc("GET /api/v1/networks/{id}/ac-capacity", h.CalculateACCapacity)
 	mux.HandleFunc("GET /api/v1/networks/{id}/losses", h.CalculateLosses)
+	mux.HandleFunc("POST /api/v1/networks/{id}/validate-sizing", h.ValidateSizing)
+	mux.HandleFunc("POST /api/v1/networks/{id}/validate", h.ValidateNetwork)
+	mux.HandleFunc("POST /api/v1/networks/{id}/bom", h.GenerateNetworkBOM)
 }
 
 func (h *ElectricalHandler) CreateNetwork(w http.ResponseWriter, r *http.Request) {
@@ -40,12 +47,12 @@ func (h *ElectricalHandler) CreateNetwork(w http.ResponseWriter, r *http.Request
 
 	net, err := h.svc.CreateNetwork(r.Context(), req)
 	if err != nil {
-		log.Error().Err(err).Msg("failed to create network")
+		h.logger.Error().Err(err).Msg("failed to create network")
 		writeError(w, http.StatusInternalServerError, "failed to create network")
 		return
 	}
 
-	writeJSON(w, http.StatusCreated, net)
+	h.writeJSON(w, http.StatusCreated, net)
 }
 
 func (h *ElectricalHandler) GetNetwork(w http.ResponseWriter, r *http.Request) {
@@ -61,7 +68,7 @@ func (h *ElectricalHandler) GetNetwork(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	writeJSON(w, http.StatusOK, net)
+	h.writeJSON(w, http.StatusOK, net)
 }
 
 func (h *ElectricalHandler) ListNetworks(w http.ResponseWriter, r *http.Request) {
@@ -73,12 +80,12 @@ func (h *ElectricalHandler) ListNetworks(w http.ResponseWriter, r *http.Request)
 
 	networks, err := h.svc.ListNetworks(r.Context(), projectID)
 	if err != nil {
-		log.Error().Err(err).Msg("failed to list networks")
+		h.logger.Error().Err(err).Msg("failed to list networks")
 		writeError(w, http.StatusInternalServerError, "failed to list networks")
 		return
 	}
 
-	writeJSON(w, http.StatusOK, networks)
+	h.writeJSON(w, http.StatusOK, networks)
 }
 
 func (h *ElectricalHandler) DeleteNetwork(w http.ResponseWriter, r *http.Request) {
@@ -105,12 +112,12 @@ func (h *ElectricalHandler) CreateString(w http.ResponseWriter, r *http.Request)
 
 	ps, err := h.svc.CreateString(r.Context(), req)
 	if err != nil {
-		log.Error().Err(err).Msg("failed to create string")
+		h.logger.Error().Err(err).Msg("failed to create string")
 		writeError(w, http.StatusInternalServerError, "failed to create string")
 		return
 	}
 
-	writeJSON(w, http.StatusCreated, ps)
+	h.writeJSON(w, http.StatusCreated, ps)
 }
 
 func (h *ElectricalHandler) AutoGenerateStrings(w http.ResponseWriter, r *http.Request) {
@@ -129,12 +136,12 @@ func (h *ElectricalHandler) AutoGenerateStrings(w http.ResponseWriter, r *http.R
 
 	net, err := h.svc.AutoGenerateStrings(r.Context(), req)
 	if err != nil {
-		log.Error().Err(err).Msg("failed to auto-generate strings")
+		h.logger.Error().Err(err).Msg("failed to auto-generate strings")
 		writeError(w, http.StatusInternalServerError, "failed to auto-generate strings")
 		return
 	}
 
-	writeJSON(w, http.StatusOK, net)
+	h.writeJSON(w, http.StatusOK, net)
 }
 
 func (h *ElectricalHandler) CalculateDCCapacity(w http.ResponseWriter, r *http.Request) {
@@ -146,12 +153,12 @@ func (h *ElectricalHandler) CalculateDCCapacity(w http.ResponseWriter, r *http.R
 
 	dcKW, err := h.svc.CalculateDCCapacity(r.Context(), id)
 	if err != nil {
-		log.Error().Err(err).Msg("failed to calculate DC capacity")
+		h.logger.Error().Err(err).Msg("failed to calculate DC capacity")
 		writeError(w, http.StatusInternalServerError, "failed to calculate DC capacity")
 		return
 	}
 
-	writeJSON(w, http.StatusOK, map[string]float64{"dc_capacity_kw": dcKW})
+	h.writeJSON(w, http.StatusOK, map[string]float64{"dc_capacity_kw": dcKW})
 }
 
 func (h *ElectricalHandler) CalculateACCapacity(w http.ResponseWriter, r *http.Request) {
@@ -163,12 +170,12 @@ func (h *ElectricalHandler) CalculateACCapacity(w http.ResponseWriter, r *http.R
 
 	acKW, err := h.svc.CalculateACCapacity(r.Context(), id)
 	if err != nil {
-		log.Error().Err(err).Msg("failed to calculate AC capacity")
+		h.logger.Error().Err(err).Msg("failed to calculate AC capacity")
 		writeError(w, http.StatusInternalServerError, "failed to calculate AC capacity")
 		return
 	}
 
-	writeJSON(w, http.StatusOK, map[string]float64{"ac_capacity_kw": acKW})
+	h.writeJSON(w, http.StatusOK, map[string]float64{"ac_capacity_kw": acKW})
 }
 
 func (h *ElectricalHandler) CalculateLosses(w http.ResponseWriter, r *http.Request) {
@@ -180,26 +187,96 @@ func (h *ElectricalHandler) CalculateLosses(w http.ResponseWriter, r *http.Reque
 
 	losses, err := h.svc.CalculateLosses(r.Context(), id)
 	if err != nil {
-		log.Error().Err(err).Msg("failed to calculate losses")
+		h.logger.Error().Err(err).Msg("failed to calculate losses")
 		writeError(w, http.StatusInternalServerError, "failed to calculate losses")
 		return
 	}
 
-	writeJSON(w, http.StatusOK, losses)
+	h.writeJSON(w, http.StatusOK, losses)
 }
 
-func writeJSON(w http.ResponseWriter, status int, data any) {
+func (h *ElectricalHandler) ValidateSizing(w http.ResponseWriter, r *http.Request) {
+	networkID, err := uuid.Parse(r.PathValue("id"))
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid network ID")
+		return
+	}
+
+	var req domain.ValidateSizingRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid request body")
+		return
+	}
+	req.NetworkID = networkID
+
+	result, err := h.svc.ValidateSizing(r.Context(), req)
+	if err != nil {
+		h.logger.Error().Err(err).Msg("failed to validate sizing")
+		writeError(w, http.StatusInternalServerError, "failed to validate sizing")
+		return
+	}
+
+	h.writeJSON(w, http.StatusOK, result)
+}
+
+func (h *ElectricalHandler) writeJSON(w http.ResponseWriter, status int, data any) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	if err := json.NewEncoder(w).Encode(data); err != nil {
-		log.Error().Err(err).Msg("failed to encode response")
+		h.logger.Error().Err(err).Msg("failed to encode response")
 	}
 }
 
 func writeError(w http.ResponseWriter, status int, message string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
-	if err := json.NewEncoder(w).Encode(map[string]string{"error": message}); err != nil {
-		log.Error().Err(err).Str("message", message).Msg("failed to encode error response")
+	_ = json.NewEncoder(w).Encode(map[string]string{"error": message})
+}
+
+func (h *ElectricalHandler) ValidateNetwork(w http.ResponseWriter, r *http.Request) {
+	networkID, err := uuid.Parse(r.PathValue("id"))
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid network ID")
+		return
 	}
+
+	var req domain.ValidateNetworkRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid request body")
+		return
+	}
+	req.NetworkID = networkID
+
+	result, err := h.svc.ValidateNetwork(r.Context(), req)
+	if err != nil {
+		h.logger.Error().Err(err).Msg("failed to validate network")
+		writeError(w, http.StatusInternalServerError, "failed to validate network")
+		return
+	}
+
+	h.writeJSON(w, http.StatusOK, result)
+}
+
+func (h *ElectricalHandler) GenerateNetworkBOM(w http.ResponseWriter, r *http.Request) {
+	networkID, err := uuid.Parse(r.PathValue("id"))
+	if err != nil {
+		writeError(w, http.StatusBadRequest, "invalid network ID")
+		return
+	}
+
+	var req domain.GenerateNetworkBOMRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid request body")
+		return
+	}
+	req.NetworkID = networkID
+
+	bom, err := h.svc.GenerateNetworkBOM(r.Context(), req)
+	if err != nil {
+		h.logger.Error().Err(err).Msg("failed to generate network BOM")
+		writeError(w, http.StatusInternalServerError, "failed to generate network BOM")
+		return
+	}
+
+	h.writeJSON(w, http.StatusOK, bom)
 }

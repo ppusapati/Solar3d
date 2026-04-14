@@ -23,11 +23,9 @@
 	}
 
 	// React to visibility toggle
-	$: if (viewer) {
-		panelEntities.forEach((e) => {
-			e.show = visible;
-		});
-	}
+	$: panelEntities.forEach((e) => {
+		e.show = visible;
+	});
 
 	async function loadPanelsForTiles(tiles: any[]) {
 		for (const tile of tiles) {
@@ -54,20 +52,27 @@
 				if (!geojson.coordinates || !geojson.coordinates[0]) continue;
 
 				const coords = geojson.coordinates[0];
+				const centerLon = coords.reduce((sum: number, c: number[]) => sum + c[0], 0) / coords.length;
+				const centerLat = coords.reduce((sum: number, c: number[]) => sum + c[1], 0) / coords.length;
 				const positions = coords.map((c: number[]) =>
 					Cesium.Cartesian3.fromDegrees(c[0], c[1], panel.elevation || 0)
 				);
 
 				const entity = viewer.entities.add({
+					position: Cesium.Cartesian3.fromDegrees(centerLon, centerLat, panel.elevation || 0),
 					polygon: {
 						hierarchy: new Cesium.PolygonHierarchy(positions),
 						material: getPanelColor(panel.tilt),
+						heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
 						outline: true,
 						outlineColor: Cesium.Color.fromCssColorString('#1e3a5f').withAlpha(0.8),
-						outlineWidth: 1,
-						heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND,
-						extrudedHeight: panel.elevation + 0.1,
-						height: panel.elevation
+						outlineWidth: 1
+					},
+					point: {
+						pixelSize: 2,
+						color: Cesium.Color.fromCssColorString('#60a5fa').withAlpha(0.9),
+						heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+						disableDepthTestDistance: Number.POSITIVE_INFINITY
 					},
 					properties: {
 						type: 'panel',

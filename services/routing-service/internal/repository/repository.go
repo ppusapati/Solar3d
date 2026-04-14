@@ -8,7 +8,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"github.com/solar3d/solar3d/services/routing-service/internal/domain"
+	"solar3d/routing-service/internal/domain"
 )
 
 type RouteRepository struct {
@@ -114,3 +114,4 @@ func (r *RouteRepository) Delete(ctx context.Context, id uuid.UUID) error {
 	}
 	return nil
 }
+

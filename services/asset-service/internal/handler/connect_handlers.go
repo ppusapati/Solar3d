@@ -7,8 +7,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 
-	"github.com/solar3d/solar3d/services/asset-service/internal/domain"
-	"github.com/solar3d/solar3d/services/asset-service/internal/service"
+	"solar3d/asset-service/internal/domain"
+	"solar3d/asset-service/internal/service"
 )
 
 type AssetHandler struct {
@@ -165,3 +165,4 @@ func writeError(w http.ResponseWriter, status int, message string) {
 		log.Error().Err(err).Str("message", message).Msg("failed to encode error response")
 	}
 }
+

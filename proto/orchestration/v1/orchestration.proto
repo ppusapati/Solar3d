@@ -1,0 +1,143 @@
+syntax = "proto3";
+
+package orchestration.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/orchestration/v1;orchestrationv1";
+
+import "google/protobuf/timestamp.proto";
+
+// ComputeOrchestrationService manages long-running compute jobs, retries, and artifacts.
+service ComputeOrchestrationService {
+  // SubmitJob enqueues a new compute job for asynchronous processing.
+  rpc SubmitJob(SubmitJobRequest) returns (SubmitJobResponse);
+  // GetJob returns the latest state of a compute job.
+  rpc GetJob(GetJobRequest) returns (GetJobResponse);
+  // ListJobs returns jobs optionally filtered by status.
+  rpc ListJobs(ListJobsRequest) returns (ListJobsResponse);
+  // RetryJob retries a failed or canceled job.
+  rpc RetryJob(RetryJobRequest) returns (RetryJobResponse);
+  // CancelJob requests cancelation for a queued or running job.
+  rpc CancelJob(CancelJobRequest) returns (CancelJobResponse);
+  // ListDeadLetters returns dead-lettered jobs for a project.
+  rpc ListDeadLetters(ListDeadLettersRequest) returns (ListDeadLettersResponse);
+  // GetDeadLetter returns details of a specific dead-lettered job.
+  rpc GetDeadLetter(GetDeadLetterRequest) returns (GetDeadLetterResponse);
+}
+
+enum JobType {
+  JOB_TYPE_UNSPECIFIED = 0;
+  JOB_TYPE_REGENERATE = 1;
+  JOB_TYPE_IMPORT = 2;
+  JOB_TYPE_PUBLISH = 3;
+  JOB_TYPE_SIMULATION = 4;
+  JOB_TYPE_OPTIMIZATION = 5;
+  JOB_TYPE_CUSTOM = 6;
+  JOB_TYPE_STRUCTURAL_LOAD_ANALYSIS = 7;
+  JOB_TYPE_PROTECTION_STUDY = 8;
+  JOB_TYPE_COMMISSIONING = 9;
+}
+
+enum JobStatus {
+  JOB_STATUS_UNSPECIFIED = 0;
+  JOB_STATUS_QUEUED = 1;
+  JOB_STATUS_RUNNING = 2;
+  JOB_STATUS_SUCCEEDED = 3;
+  JOB_STATUS_FAILED = 4;
+  JOB_STATUS_CANCELED = 5;
+  JOB_STATUS_RETRY_PENDING = 6;
+}
+
+message Artifact {
+  string kind = 1;
+  string uri = 2;
+  string checksum = 3;
+  int64 size_bytes = 4;
+}
+
+message Job {
+  string id = 1;
+  string project_id = 2;
+  JobType type = 3;
+  JobStatus status = 4;
+  int32 priority = 5;
+  int32 attempts = 6;
+  int32 max_attempts = 7;
+  string payload_json = 8;
+  string error_message = 9;
+  repeated Artifact artifacts = 10;
+  google.protobuf.Timestamp created_at = 11;
+  google.protobuf.Timestamp started_at = 12;
+  google.protobuf.Timestamp completed_at = 13;
+  google.protobuf.Timestamp next_retry_at = 14;
+}
+
+message SubmitJobRequest {
+  string project_id = 1;
+  JobType type = 2;
+  int32 priority = 3;
+  int32 max_attempts = 4;
+  string payload_json = 5;
+}
+
+message SubmitJobResponse {
+  Job job = 1;
+}
+
+message GetJobRequest {
+  string id = 1;
+}
+
+message GetJobResponse {
+  Job job = 1;
+}
+
+message ListJobsRequest {
+  string project_id = 1;
+  JobStatus status_filter = 2;
+  int32 limit = 3;
+}
+
+message ListJobsResponse {
+  repeated Job jobs = 1;
+}
+
+message RetryJobRequest {
+  string id = 1;
+}
+
+message RetryJobResponse {
+  Job job = 1;
+}
+
+message CancelJobRequest {
+  string id = 1;
+}
+
+message CancelJobResponse {
+  Job job = 1;
+}
+
+message DeadLetter {
+  string id = 1;
+  string job_id = 2;
+  string reason = 3;
+  string payload_json = 4;
+  google.protobuf.Timestamp created_at = 5;
+}
+
+message ListDeadLettersRequest {
+  string project_id = 1;
+  int32 limit = 2;
+}
+
+message ListDeadLettersResponse {
+  repeated DeadLetter dead_letters = 1;
+}
+
+message GetDeadLetterRequest {
+  string job_id = 1;
+}
+
+message GetDeadLetterResponse {
+  DeadLetter dead_letter = 1;
+}

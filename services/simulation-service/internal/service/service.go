@@ -2,22 +2,28 @@ package service
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 
-	"github.com/solar3d/solar3d/services/simulation-service/internal/domain"
-	"github.com/solar3d/solar3d/services/simulation-service/internal/repository"
+	"solar3d/shared/orchestration"
+	"solar3d/simulation-service/internal/domain"
+	"solar3d/simulation-service/internal/repository"
 )
 
 type SimulationService struct {
-	repo *repository.SimulationRepository
+	repo       *repository.SimulationRepository
+	orchClient *orchestration.Client
 }
 
-func NewSimulationService(repo *repository.SimulationRepository) *SimulationService {
-	return &SimulationService{repo: repo}
+func NewSimulationService(repo *repository.SimulationRepository, orchestrationURL string) *SimulationService {
+	return &SimulationService{
+		repo:       repo,
+		orchClient: orchestration.NewClient(orchestrationURL),
+	}
 }
 
 func (s *SimulationService) Create(ctx context.Context, req domain.CreateSimulationRequest) (*domain.Simulation, error) {
@@ -71,6 +77,8 @@ func (s *SimulationService) RunSimulation(ctx context.Context, id uuid.UUID) (*d
 		Str("type", string(sim.SimulationType)).
 		Msg("starting simulation")
 
+	s.submitSimulationJob(ctx, sim)
+
 	result, err := s.computeSimulation(sim)
 	if err != nil {
 		if statusErr := s.repo.UpdateStatus(ctx, id, domain.SimulationStatusFailed); statusErr != nil {
@@ -94,6 +102,30 @@ func (s *SimulationService) RunSimulation(ctx context.Context, id uuid.UUID) (*d
 		Msg("simulation completed")
 
 	return sim, nil
+}
+
+func (s *SimulationService) submitSimulationJob(ctx context.Context, sim *domain.Simulation) {
+	payload, _ := json.Marshal(map[string]string{
+		"domain":          "simulation",
+		"simulation_id":   sim.ID.String(),
+		"simulation_type": string(sim.SimulationType),
+		"layout_id":       sim.LayoutID.String(),
+	})
+
+	jobID, err := s.orchClient.SubmitJob(
+		ctx,
+		sim.ProjectID.String(),
+		"simulation",
+		3,
+		string(payload),
+		fmt.Sprintf("simulation:run:%s", sim.ID.String()),
+	)
+	if err != nil {
+		log.Warn().Err(err).Str("simulation_id", sim.ID.String()).Msg("failed to submit simulation orchestration job; continuing inline compute")
+		return
+	}
+
+	log.Info().Str("simulation_id", sim.ID.String()).Str("job_id", jobID).Msg("submitted simulation compute job")
 }
 
 func (s *SimulationService) computeSimulation(sim *domain.Simulation) (*domain.SimulationResult, error) {
@@ -180,3 +212,4 @@ func (s *SimulationService) GetShadowMap(ctx context.Context, lat, lon float64, 
 	}
 	return positions, nil
 }
+

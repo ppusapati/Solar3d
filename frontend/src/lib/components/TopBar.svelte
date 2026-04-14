@@ -1,16 +1,48 @@
 <script lang="ts">
-	import { activeProject, activeView, type AppView } from '$lib/core/stores';
+	import { createEventDispatcher } from 'svelte';
+import { activeProject, activeView, userRole, setUserRole, type AppView } from '$lib/core/stores';
+import type { UserRole } from '$lib/core/domain/workflowGuards';
+
+	type ViewGuard = { enabled: boolean; reason: string };
+
+	export let viewGuards: Partial<Record<AppView, ViewGuard>> = {};
+	export let phaseLabel = '';
+
+	const dispatch = createEventDispatcher<{ blockedNav: { view: AppView; reason: string } }>();
 
 	const views: { id: AppView; label: string }[] = [
 		{ id: 'design', label: 'Design' },
+		{ id: 'cad', label: 'CAD' },
 		{ id: 'simulate', label: 'Simulate' },
 		{ id: 'electrical', label: 'Electrical' },
+		{ id: 'transmission', label: 'Transmission' },
+		{ id: 'commissioning', label: 'Commissioning' },
 		{ id: 'reports', label: 'Reports' },
 		{ id: 'financial', label: 'Financial' }
 	];
 
 	function setView(id: AppView) {
+		const guard = viewGuards[id];
+		if (guard && !guard.enabled) {
+			dispatch('blockedNav', { view: id, reason: guard.reason });
+			return;
+		}
 		activeView.set(id);
+	}
+
+	function isEnabled(id: AppView): boolean {
+		return viewGuards[id]?.enabled ?? true;
+	}
+
+	function guardReason(id: AppView): string {
+		const reason = viewGuards[id]?.reason;
+		if (!reason) return '';
+		return reason;
+	}
+
+	function onRoleChange(event: Event) {
+		const value = (event.target as HTMLSelectElement).value as UserRole;
+		setUserRole(value);
 	}
 </script>
 
@@ -24,6 +56,17 @@
 		{#if $activeProject}
 			<span class="project-name">{$activeProject.name}</span>
 			<span class="project-status">{$activeProject.status}</span>
+			{#if phaseLabel}
+				<span class="phase-status">{phaseLabel}</span>
+			{/if}
+			<select class="role-select" value={$userRole} on:change={onRoleChange} title="Operator role for UI access guard validation">
+				<option value="planner">Planner</option>
+				<option value="engineer">Engineer</option>
+				<option value="reviewer">Reviewer</option>
+				<option value="approver">Approver</option>
+				<option value="operator">Operator</option>
+				<option value="admin">Admin</option>
+			</select>
 		{:else}
 			<span class="no-project">No project loaded</span>
 		{/if}
@@ -34,6 +77,8 @@
 			<button
 				class="nav-btn"
 				class:active={$activeView === view.id}
+				disabled={!isEnabled(view.id)}
+				title={isEnabled(view.id) ? view.label : guardReason(view.id)}
 				on:click={() => setView(view.id)}
 			>
 				{view.label}
@@ -101,6 +146,24 @@
 		font-weight: 500;
 	}
 
+	.phase-status {
+		background: rgba(59, 130, 246, 0.2);
+		color: #93c5fd;
+		padding: 2px 8px;
+		border-radius: 4px;
+		font-size: 11px;
+		font-weight: 500;
+	}
+
+	.role-select {
+		padding: 2px 6px;
+		border: 1px solid rgba(148, 163, 184, 0.35);
+		background: rgba(15, 23, 42, 0.55);
+		color: #cbd5e1;
+		border-radius: 4px;
+		font-size: 11px;
+	}
+
 	.no-project {
 		color: #64748b;
 		font-size: 14px;
@@ -130,5 +193,12 @@
 	.nav-btn.active {
 		background: rgba(245, 158, 11, 0.2);
 		color: #f59e0b;
+	}
+
+	.nav-btn:disabled {
+		opacity: 0.45;
+		cursor: not-allowed;
+		background: transparent;
+		color: #64748b;
 	}
 </style>

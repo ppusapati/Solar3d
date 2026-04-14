@@ -1,0 +1,167 @@
+syntax = "proto3";
+
+package telemetry.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/telemetry/v1;telemetryv1";
+
+import "google/protobuf/timestamp.proto";
+
+// TelemetryService manages ingestion and retrieval of time-series sensor readings
+// from provisioned digital twins.  Storage backend uses PostgreSQL with a
+// TimescaleDB hypertable partitioned on recorded_at (Option A per Pre-Implementation
+// Locked Decisions).  Ingest batches are atomic: all readings succeed or none persist.
+service TelemetryService {
+  // IngestReadings stores a batch of sensor readings for a twin in a single
+  // atomic transaction.  Returns the count of accepted readings.
+  // Returns NOT_FOUND if the twin_id does not correspond to an ACTIVE twin.
+  rpc IngestReadings(IngestReadingsRequest) returns (IngestReadingsResponse);
+
+  // GetLatestReadings returns the single most recent reading per metric for a twin.
+  // Useful for dashboard snapshots; does not paginate.
+  rpc GetLatestReadings(GetLatestReadingsRequest) returns (GetLatestReadingsResponse);
+
+  // ListReadings returns readings for a twin within a time window, optionally
+  // filtered by metric. Results are ordered by recorded_at ascending.
+  // Maximum 1000 readings per call; use page_token for continuation.
+  rpc ListReadings(ListReadingsRequest) returns (ListReadingsResponse);
+
+  // GetAggregatedMetrics returns min/max/avg/sum aggregates over a time window
+  // for a specified metric and twin.  Window is inclusive on both ends.
+  rpc GetAggregatedMetrics(GetAggregatedMetricsRequest) returns (GetAggregatedMetricsResponse);
+}
+
+// ── Enums ────────────────────────────────────────────────────────────────────
+
+// TelemetryMetric enumerates the measurable quantities producible by solar plant
+// sensors, SCADA systems, and protection relays.  Aligned with IEC 61724-1
+// performance monitoring terminology where applicable.
+enum TelemetryMetric {
+  TELEMETRY_METRIC_UNSPECIFIED = 0;
+  // AC power output of inverter or plant aggregate (kW).
+  TELEMETRY_METRIC_POWER_KW = 1;
+  // Cumulative energy production (kWh).
+  TELEMETRY_METRIC_ENERGY_KWH = 2;
+  // Global horizontal or plane-of-array irradiance (W/m²).
+  TELEMETRY_METRIC_IRRADIANCE_W_M2 = 3;
+  // Ambient air temperature (°C).
+  TELEMETRY_METRIC_AMBIENT_TEMP_C = 4;
+  // PV module back-sheet temperature (°C).
+  TELEMETRY_METRIC_MODULE_TEMP_C = 5;
+  // Wind speed at hub height (m/s).
+  TELEMETRY_METRIC_WIND_SPEED_MS = 6;
+  // DC string or combiner bus voltage (V).
+  TELEMETRY_METRIC_DC_VOLTAGE_V = 7;
+  // DC string current (A).
+  TELEMETRY_METRIC_DC_CURRENT_A = 8;
+  // AC bus voltage (V).
+  TELEMETRY_METRIC_AC_VOLTAGE_V = 9;
+  // AC output current (A).
+  TELEMETRY_METRIC_AC_CURRENT_A = 10;
+  // Inverter conversion efficiency [0, 1].
+  TELEMETRY_METRIC_INVERTER_EFFICIENCY = 11;
+  // Plant availability fraction [0, 1] per IEC 61724-1.
+  TELEMETRY_METRIC_AVAILABILITY = 12;
+}
+
+// ReadingQuality indicates the confidence level of individual sensor readings.
+// Aligned with IEC 61968 data quality classifications.
+enum ReadingQuality {
+  READING_QUALITY_UNSPECIFIED = 0;
+  // READING_QUALITY_GOOD: Reading within expected sensor range; no anomalies detected.
+  READING_QUALITY_GOOD = 1;
+  // READING_QUALITY_SUSPECT: Reading is outside expected range or came from a
+  // sensor with a recent calibration gap; use with caution.
+  READING_QUALITY_SUSPECT = 2;
+  // READING_QUALITY_BAD: Sensor hardware fault or communication error; value unreliable.
+  READING_QUALITY_BAD = 3;
+}
+
+// ── Domain messages ──────────────────────────────────────────────────────────
+
+// SensorReading is a single time-stamped measurement from a physical or virtual
+// sensor associated with a digital twin.
+message SensorReading {
+  string id = 1;
+  // twin_id: The digital twin this reading belongs to.
+  string twin_id = 2;
+  // sensor_id: Physical sensor identifier (e.g., SCADA tag, meter serial + channel).
+  string sensor_id = 3;
+  // asset_identity_id: Optional link to the AssetIdentity record for the physical asset.
+  string asset_identity_id = 4;
+  TelemetryMetric metric = 5;
+  double value = 6;
+  // unit: SI unit string (e.g., "kW", "kWh", "°C", "V", "A", "W/m²").
+  string unit = 7;
+  ReadingQuality quality = 8;
+  // recorded_at: When the physical sensor captured the measurement.
+  google.protobuf.Timestamp recorded_at = 9;
+  // ingested_at: Server receive timestamp; set by the service on write.
+  google.protobuf.Timestamp ingested_at = 10;
+}
+
+// AggregatedMetric holds pre-computed statistics for a metric over a time window.
+message AggregatedMetric {
+  string twin_id = 1;
+  TelemetryMetric metric = 2;
+  google.protobuf.Timestamp window_start = 3;
+  google.protobuf.Timestamp window_end = 4;
+  double min_value = 5;
+  double max_value = 6;
+  double avg_value = 7;
+  double sum_value = 8;
+  int32 reading_count = 9;
+}
+
+// ── RPC Request / Response Messages ─────────────────────────────────────────
+
+message IngestReadingsRequest {
+  // twin_id: Must correspond to an ACTIVE DigitalTwin; rejected otherwise.
+  string twin_id = 1;
+  repeated SensorReading readings = 2;
+}
+
+message IngestReadingsResponse {
+  int32 accepted_count = 1;
+  // rejected_count: Readings that failed validation (bad format, unknown metric).
+  // Partial failures are not supported; if any reading is invalid the entire batch
+  // is rejected and accepted_count = 0.
+  int32 rejected_count = 2;
+}
+
+message GetLatestReadingsRequest {
+  string twin_id = 1;
+  // metric_filter: If empty, returns latest reading for all available metrics.
+  repeated TelemetryMetric metric_filter = 2;
+}
+
+message GetLatestReadingsResponse {
+  // readings: One entry per distinct metric; ordered by metric enum value.
+  repeated SensorReading readings = 1;
+}
+
+message ListReadingsRequest {
+  string twin_id = 1;
+  // metric_filter: If empty, returns readings for all metrics in window.
+  TelemetryMetric metric_filter = 2;
+  google.protobuf.Timestamp window_start = 3;
+  google.protobuf.Timestamp window_end = 4;
+  int32 page_size = 5;
+  string page_token = 6;
+}
+
+message ListReadingsResponse {
+  repeated SensorReading readings = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message GetAggregatedMetricsRequest {
+  string twin_id = 1;
+  TelemetryMetric metric = 2;
+  google.protobuf.Timestamp window_start = 3;
+  google.protobuf.Timestamp window_end = 4;
+}
+
+message GetAggregatedMetricsResponse {
+  AggregatedMetric aggregated_metric = 1;
+}

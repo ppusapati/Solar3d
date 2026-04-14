@@ -4,7 +4,7 @@ import (
 	"math"
 	"time"
 
-	"github.com/solar3d/solar3d/services/simulation-service/internal/domain"
+	"solar3d/simulation-service/internal/domain"
 )
 
 const (
@@ -174,3 +174,4 @@ func sinDeg(deg float64) float64 {
 func pow(base, exp float64) float64 {
 	return math.Pow(base, exp)
 }
+

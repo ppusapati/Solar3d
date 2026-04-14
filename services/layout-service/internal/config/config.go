@@ -20,15 +20,20 @@ type Config struct {
 
 	// LogLevel controls zerolog verbosity (debug, info, warn, error). Default: info.
 	LogLevel string
+
+	// MaxPanels caps generated panel count per request to prevent OOM.
+	// Set to 0 to disable the cap. Default: 200000.
+	MaxPanels int
 }
 
 // Load reads configuration from environment variables with sensible defaults.
 // DATABASE_URL must be set via the environment; no default credentials are embedded.
 func Load() (*Config, error) {
 	cfg := &Config{
-		Port:     8082,
-		TileSize: 100.0,
-		LogLevel: "info",
+		Port:      8082,
+		TileSize:  100.0,
+		LogLevel:  "info",
+		MaxPanels: 1000000,
 	}
 
 	if v := os.Getenv("PORT"); v != "" {
@@ -52,5 +57,12 @@ func Load() (*Config, error) {
 		cfg.LogLevel = v
 	}
 
+	if v := os.Getenv("MAX_PANELS"); v != "" {
+		if maxPanels, err := strconv.Atoi(v); err == nil && maxPanels >= 0 {
+			cfg.MaxPanels = maxPanels
+		}
+	}
+
 	return cfg, nil
 }
+

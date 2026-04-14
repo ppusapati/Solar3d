@@ -137,10 +137,10 @@ fn fractional_year(day_of_year: u32, hour: f64) -> f64 {
 
 fn solar_declination(fractional_year: f64) -> f64 {
     let fy = fractional_year;
-    (0.006918 - 0.399912 * fy.cos() + 0.070257 * fy.sin() - 0.006758 * (2.0 * fy).cos()
+    0.006918 - 0.399912 * fy.cos() + 0.070257 * fy.sin() - 0.006758 * (2.0 * fy).cos()
         + 0.000907 * (2.0 * fy).sin()
         - 0.002697 * (3.0 * fy).cos()
-        + 0.00148 * (3.0 * fy).sin())
+        + 0.00148 * (3.0 * fy).sin()
 }
 
 fn equation_of_time(fractional_year: f64) -> f64 {

@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package ml_inference.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/ml_inference/v1;mlinferencev1";
+
+import "common/v1/primitives.proto";
+import "google/protobuf/timestamp.proto";
+
+enum FeatureDataType {
+  FEATURE_DATA_TYPE_UNSPECIFIED = 0;
+  FEATURE_DATA_TYPE_FLOAT64 = 1;
+  FEATURE_DATA_TYPE_INT64 = 2;
+  FEATURE_DATA_TYPE_BOOL = 3;
+  FEATURE_DATA_TYPE_STRING = 4;
+}
+
+message FeatureSpec {
+  string name = 1;
+  FeatureDataType data_type = 2;
+  bool required = 3;
+  string unit = 4;
+  common.v1.NumericRange expected_range = 5;
+}
+
+message FeatureSchema {
+  string schema_id = 1;
+  string schema_hash = 2;
+  string task_type = 3;
+  repeated FeatureSpec features = 4;
+  google.protobuf.Timestamp created_at = 5;
+  common.v1.ContractMetadata contract = 6;
+}
+
+message FeatureValue {
+  string name = 1;
+  oneof value {
+    double double_value = 2;
+    int64 int64_value = 3;
+    bool bool_value = 4;
+    string string_value = 5;
+  }
+}
+
+message FeaturePayload {
+  string payload_id = 1;
+  string task_type = 2;
+  FeatureSchema schema = 3;
+  repeated FeatureValue values = 4;
+  google.protobuf.Timestamp observed_at = 5;
+  string site_id = 6;
+}
+
+message LabeledFeatureSample {
+  string sample_id = 1;
+  FeaturePayload payload = 2;
+  double label = 3;
+  string label_source = 4;
+  google.protobuf.Timestamp labeled_at = 5;
+}

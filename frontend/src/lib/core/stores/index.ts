@@ -3,9 +3,11 @@ export {
 	activeProject,
 	activeProjectId,
 	isLoading,
+	loadError,
 	loadProjects,
 	createProject,
-	deleteProject
+	deleteProject,
+	updateProject
 } from './project';
 
 export {
@@ -33,7 +35,8 @@ export {
 	loadLayouts,
 	createLayout,
 	loadTilesForViewport,
-	loadComponents
+	loadComponents,
+	applyLayoutGenerationSummary
 } from './layout';
 
 export {
@@ -42,6 +45,7 @@ export {
 	redo,
 	canUndo,
 	canRedo,
+	commandStack,
 	lastAction,
 	clearHistory,
 	type HistoryAction
@@ -62,3 +66,73 @@ export {
 	getAllEntitiesForExport,
 	type MapEntity
 } from './entities';
+
+export {
+	cadWorkspace,
+	cadDrawing,
+	cadRevision,
+	cadReady,
+	cadBusy,
+	cadError,
+	cadBlockDefinitions,
+	selectedCadBlockDefinitionId,
+	cadPendingMapInsertBlockId,
+	cadLastMaterializationResults,
+	cadElectricalDiagnostics,
+	cadMaterializationHistory,
+	cadDiagnosticsConfig,
+	cadDiagnosticsConfigMeta,
+	cadDiagnosticsConfigHistory,
+	cadElectricalDiagnosticsHistory,
+	cadElectricalRegressionAlert,
+	cadElectricalDiagnosticsIntelligence,
+	setCadDiagnosticsConfig,
+	resetCadDiagnosticsConfig,
+	applyCadDiagnosticsPreset,
+	restoreCadDiagnosticsConfigHistoryEntry,
+	getCadBlockDefinitions,
+	initializeCadWorkspace,
+	refreshCadWorkspace,
+	createCadLayer,
+	createCadBlockDefinition,
+	insertCadBlockReference,
+	createCadSheet,
+	createCadDimensionFromMap,
+	materializeTransmissionRouteToCad,
+	materializeElectricalNetworkToCad,
+	materializeTerrainAnalysisToCad,
+	materializeLayoutToCad,
+	runCadMaterializationPipeline,
+	publishCadSheets,
+	exportCadDrawing,
+	selectCadBlockDefinition,
+	armCadMapBlockInsertion,
+	disarmCadMapBlockInsertion,
+	clearCadWorkspace
+} from './cad';
+
+export {
+	snapEnabled,
+	snapGridVisible,
+	snapGridSizeM,
+	snapDistanceM
+} from './snap';
+
+export {
+	transmissionRoutes,
+	activeTransmissionRouteId,
+	activeTransmissionRoute,
+	setTransmissionRoutes,
+	upsertTransmissionRoute,
+	removeTransmissionRoute
+} from './transmission';
+
+export {
+	workflowState,
+	isWorkflowBlocked,
+	refreshWorkflowState,
+	bindWorkflowProject,
+	setWorkflowRealtimeSync
+} from './workflow';
+
+export { userRole, setUserRole } from './session';

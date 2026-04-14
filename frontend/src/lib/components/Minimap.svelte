@@ -158,7 +158,7 @@
 		{height}
 		on:click={handleClick}
 		class="minimap-canvas"
-	/>
+	></canvas>
 	<span class="minimap-label">Overview</span>
 </div>
 

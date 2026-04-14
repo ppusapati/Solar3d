@@ -9,7 +9,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 
-	"github.com/solar3d/solar3d/services/layout-service/internal/domain"
+	"solar3d/layout-service/internal/domain"
 )
 
 // ArrayGenerator produces panel arrays that fill a polygon with optimally
@@ -18,6 +18,10 @@ import (
 type ArrayGenerator struct {
 	// TileSize is the spatial tile edge length in meters.
 	TileSize float64
+
+	// MaxPanels is a hard guardrail for generated panel count.
+	// Set to 0 to disable the cap.
+	MaxPanels int
 }
 
 // Point2D is a 2D coordinate in project-local space (meters).
@@ -64,7 +68,10 @@ func (ag *ArrayGenerator) GenerateArray(params domain.PanelArrayParams, layoutID
 		Msg("array spacing computed")
 
 	// Generate panels within the polygon.
-	panels := createPanelGrid(poly, params, rowSpacing, colSpacing)
+	panels, err := createPanelGrid(poly, params, rowSpacing, colSpacing, ag.MaxPanels)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	if len(panels) == 0 {
 		return nil, nil, fmt.Errorf("no panels fit within the fill area")
@@ -73,7 +80,7 @@ func (ag *ArrayGenerator) GenerateArray(params domain.PanelArrayParams, layoutID
 	log.Debug().Int("raw_panels", len(panels)).Msg("panel grid generated")
 
 	// Partition into spatial tiles.
-	tiles, panelsWithTiles := partitionIntoTiles(panels, layoutID, ag.TileSize)
+	tiles, panelsWithTiles := partitionIntoTiles(panels, layoutID, ag.TileSize, params)
 
 	log.Info().
 		Int("tiles", len(tiles)).
@@ -110,7 +117,7 @@ func computeRowSpacing(panelHeight, tiltAngleDeg float64) float64 {
 // createPanelGrid generates panel positions within the fill polygon.
 // It creates rows along the azimuth direction, filling each row with panels
 // that have their centroids inside the polygon.
-func createPanelGrid(poly *Polygon2D, params domain.PanelArrayParams, rowSpacing, colSpacing float64) []*generatedPanel {
+func createPanelGrid(poly *Polygon2D, params domain.PanelArrayParams, rowSpacing, colSpacing float64, maxPanels int) ([]*generatedPanel, error) {
 	// Compute the bounding box of the polygon.
 	bbox := polygonBBox(poly)
 
@@ -176,16 +183,21 @@ func createPanelGrid(poly *Polygon2D, params domain.PanelArrayParams, rowSpacing
 			cx := rowPos*rowDirX + colPos*colDirX
 			cy := rowPos*rowDirY + colPos*colDirY
 
-			// Check if the panel centroid is inside the polygon.
-			if !pointInPolygon(Point2D{cx, cy}, poly) {
+			// Keep a panel only if its full footprint stays inside the polygon.
+			// Center-only checks can place panels that protrude past the boundary.
+			corners := panelCorners(cx, cy, params.PanelWidth, params.PanelHeight, azRad)
+			if !allCornersInsidePolygon(corners, poly) {
 				continue
 			}
 
 			panelIdx++
+			if maxPanels > 0 && panelIdx > maxPanels {
+				return nil, fmt.Errorf("%w: generated more than %d panels; reduce area or increase panel spacing", domain.ErrPanelArrayTooLarge, maxPanels)
+			}
 			panelsInString++
 
 			// Build the panel geometry as a GeoJSON Polygon (4 corners of the panel).
-			geom := panelGeometry(cx, cy, params.PanelWidth, params.PanelHeight, azRad)
+			geom := panelGeometryFromCorners(corners)
 
 			panels = append(panels, &generatedPanel{
 				CenterX:  cx,
@@ -198,7 +210,7 @@ func createPanelGrid(poly *Polygon2D, params domain.PanelArrayParams, rowSpacing
 		}
 	}
 
-	return panels
+	return panels, nil
 }
 
 // generatedPanel is an intermediate representation before tile assignment.
@@ -213,7 +225,7 @@ type generatedPanel struct {
 
 // partitionIntoTiles assigns panels to spatial tiles based on tile size.
 // Tiles are axis-aligned squares covering the extent of all panels.
-func partitionIntoTiles(panels []*generatedPanel, layoutID uuid.UUID, tileSize float64) ([]*domain.LayoutTile, []*domain.Panel) {
+func partitionIntoTiles(panels []*generatedPanel, layoutID uuid.UUID, tileSize float64, params domain.PanelArrayParams) ([]*domain.LayoutTile, []*domain.Panel) {
 	if len(panels) == 0 {
 		return nil, nil
 	}
@@ -296,8 +308,8 @@ func partitionIntoTiles(panels []*generatedPanel, layoutID uuid.UUID, tileSize f
 		tileMaxX := tileMinX + tileSize
 		tileMaxY := tileMinY + tileSize
 
-		// Create a tile with a pre-allocated UUID. BulkInsertTiles will overwrite
-		// this, but we need it now so panels can reference the tile.
+		// Create the tile with a stable UUID. Panels will reference this same ID,
+		// so it must not be changed during bulk insert.
 		tileID := uuid.New()
 
 		tile := &domain.LayoutTile{
@@ -314,6 +326,23 @@ func partitionIntoTiles(panels []*generatedPanel, layoutID uuid.UUID, tileSize f
 		}
 		domainTiles = append(domainTiles, tile)
 
+		var moduleMeta json.RawMessage
+		if params.PanelAssetID != "" || params.PanelModel != "" || params.PanelRatedPowerW > 0 {
+			meta := map[string]any{}
+			if params.PanelAssetID != "" {
+				meta["panel_asset_id"] = params.PanelAssetID
+			}
+			if params.PanelModel != "" {
+				meta["panel_model"] = params.PanelModel
+			}
+			if params.PanelRatedPowerW > 0 {
+				meta["panel_rated_power_w"] = params.PanelRatedPowerW
+			}
+			if raw, err := json.Marshal(meta); err == nil {
+				moduleMeta = raw
+			}
+		}
+
 		for _, p := range gp {
 			domainPanels = append(domainPanels, &domain.Panel{
 				TileID:          tileID,
@@ -322,6 +351,7 @@ func partitionIntoTiles(panels []*generatedPanel, layoutID uuid.UUID, tileSize f
 				Tilt:            p.Tilt,
 				Azimuth:         p.Azimuth,
 				Elevation:       0, // Ground-mount default
+				Metadata:        moduleMeta,
 			})
 		}
 	}
@@ -409,7 +439,25 @@ func pointInPolygon(pt Point2D, poly *Polygon2D) bool {
 
 // panelGeometry produces a GeoJSON Polygon for a single panel, given its
 // center, dimensions, and azimuth rotation.
-func panelGeometry(cx, cy, width, height float64, azRad float64) json.RawMessage {
+func panelGeometryFromCorners(corners [4]Point2D) json.RawMessage {
+	coords := make([][2]float64, 5) // 4 corners + close
+	for i, c := range corners {
+		coords[i] = [2]float64{c.X, c.Y}
+	}
+	coords[4] = coords[0] // Close the ring.
+
+	geojson := struct {
+		Type        string         `json:"type"`
+		Coordinates [][][2]float64 `json:"coordinates"`
+	}{
+		Type:        "Polygon",
+		Coordinates: [][][2]float64{coords[:]},
+	}
+	data, _ := json.Marshal(geojson)
+	return data
+}
+
+func panelCorners(cx, cy, width, height float64, azRad float64) [4]Point2D {
 	hw := width / 2.0
 	hh := height / 2.0
 
@@ -424,22 +472,22 @@ func panelGeometry(cx, cy, width, height float64, azRad float64) json.RawMessage
 	cosA := math.Cos(azRad)
 	sinA := math.Sin(azRad)
 
-	coords := make([][2]float64, 5) // 4 corners + close
+	var corners [4]Point2D
 	for i, lc := range localCorners {
 		// Rotate by azimuth around center.
 		rx := lc.X*cosA - lc.Y*sinA + cx
 		ry := lc.X*sinA + lc.Y*cosA + cy
-		coords[i] = [2]float64{rx, ry}
+		corners[i] = Point2D{X: rx, Y: ry}
 	}
-	coords[4] = coords[0] // Close the ring.
 
-	geojson := struct {
-		Type        string          `json:"type"`
-		Coordinates [][][2]float64  `json:"coordinates"`
-	}{
-		Type:        "Polygon",
-		Coordinates: [][][2]float64{coords[:]},
+	return corners
+}
+
+func allCornersInsidePolygon(corners [4]Point2D, poly *Polygon2D) bool {
+	for _, c := range corners {
+		if !pointInPolygon(c, poly) {
+			return false
+		}
 	}
-	data, _ := json.Marshal(geojson)
-	return data
+	return true
 }

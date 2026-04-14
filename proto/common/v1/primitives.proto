@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package common.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/common/v1;commonv1";
+
+import "google/protobuf/timestamp.proto";
+
+// Semantic version carried in API payloads for compatibility checks.
+message ApiVersion {
+  uint32 major = 1;
+  uint32 minor = 2;
+  uint32 patch = 3;
+}
+
+// Metadata shared across contracts to support tracing and lineage.
+message ContractMetadata {
+  ApiVersion schema_version = 1;
+  string schema_id = 2;
+  string schema_hash = 3;
+  string producer = 4;
+  string correlation_id = 5;
+  google.protobuf.Timestamp created_at = 6;
+}
+
+message Point2D {
+  double x = 1;
+  double y = 2;
+}
+
+message Point3D {
+  double x = 1;
+  double y = 2;
+  double z = 3;
+}
+
+message BoundingBox2D {
+  double min_x = 1;
+  double min_y = 2;
+  double max_x = 3;
+  double max_y = 4;
+}
+
+message LineString2D {
+  repeated Point2D points = 1;
+}
+
+message Polygon2D {
+  // First ring is outer shell, remaining rings are holes.
+  repeated LineString2D rings = 1;
+}
+
+message MultiPolygon2D {
+  repeated Polygon2D polygons = 1;
+}
+
+message NumericRange {
+  double min = 1;
+  double max = 2;
+}

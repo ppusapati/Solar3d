@@ -1,6 +1,18 @@
 [workspace]
 resolver = "2"
 members = [
+    "bridge-core",
+    "common",
+    "geo-compute",
+    "graph-compute",
+    "optimization-compute",
+    "ml-inference",
+    "extended-compute",
     "solar-compute",
     "terrain-compute",
+    "orchestration-compute",
 ]
+
+[profile.release]
+opt-level = 3
+lto = true

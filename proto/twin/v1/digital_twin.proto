@@ -1,0 +1,155 @@
+syntax = "proto3";
+
+package twin.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/twin/v1;twinv1";
+
+import "google/protobuf/timestamp.proto";
+
+// DigitalTwinService manages the lifecycle of digital twins provisioned from
+// approved solar project lineage.  A twin is provisioned exactly once per
+// approved project revision; it holds operational state and links design asset
+// IDs to physical/operational identities via the AssetIdentityService.
+service DigitalTwinService {
+  // ProvisionTwin creates a new digital twin from an approved project lineage.
+  // Requires an approved project_id and the IDs of the three design artifacts
+  // (layout, electrical network, transmission route) that form the approved revision.
+  rpc ProvisionTwin(ProvisionTwinRequest) returns (ProvisionTwinResponse);
+
+  // GetTwinState retrieves the current twin including its operational state.
+  // Returns NOT_FOUND if the twin_id does not exist.
+  rpc GetTwinState(GetTwinStateRequest) returns (GetTwinStateResponse);
+
+  // UpdateTwinState patches the mutable operational state fields (power, availability,
+  // active fault count, health score).  All other fields are immutable after provisioning.
+  rpc UpdateTwinState(UpdateTwinStateRequest) returns (UpdateTwinStateResponse);
+
+  // DeprovisionTwin marks a twin as decommissioned.  Decommissioned twins are
+  // immutable; telemetry ingestion is rejected for decommissioned twins.
+  rpc DeprovisionTwin(DeprovisionTwinRequest) returns (DeprovisionTwinResponse);
+
+  // ListTwinsByProject returns all twins for a project ordered by provisioned_at desc.
+  rpc ListTwinsByProject(ListTwinsByProjectRequest) returns (ListTwinsByProjectResponse);
+}
+
+// ── Enums ────────────────────────────────────────────────────────────────────
+
+enum TwinStatus {
+  TWIN_STATUS_UNSPECIFIED = 0;
+  // TWIN_STATUS_PROVISIONING: Twin record created; asset identity linking in progress.
+  TWIN_STATUS_PROVISIONING = 1;
+  // TWIN_STATUS_ACTIVE: Twin fully provisioned and accepting telemetry.
+  TWIN_STATUS_ACTIVE = 2;
+  // TWIN_STATUS_SUSPENDED: Temporarily offline; telemetry accepted but not processed.
+  TWIN_STATUS_SUSPENDED = 3;
+  // TWIN_STATUS_DECOMMISSIONED: Final immutable terminal state; no further updates accepted.
+  TWIN_STATUS_DECOMMISSIONED = 4;
+}
+
+// ── Domain messages ──────────────────────────────────────────────────────────
+
+// OperationalState holds the mutable runtime metrics for a digital twin.
+// Values are updated by telemetry ingestion and fault reporting.
+message OperationalState {
+  // power_output_kw: Current AC output power in kilowatts.
+  double power_output_kw = 1;
+  // availability_percent: Plant availability [0, 100].
+  double availability_percent = 2;
+  // active_fault_count: Number of unresolved faults currently active.
+  int32 active_fault_count = 3;
+  // health_score: Composite health indicator [0, 1] where 1 = nominal.
+  double health_score = 4;
+  // last_inspected_at: Timestamp of last manual or automated inspection.
+  google.protobuf.Timestamp last_inspected_at = 5;
+}
+
+// DigitalTwin is the canonical representation of a provisioned project twin.
+// Immutable fields: id, project_id, layout_id, electrical_network_id,
+// transmission_route_id, approved_revision_id, provisioned_by_actor_id, provisioned_at.
+// Mutable fields: status, operational_state, last_telemetry_at, decommissioned_at,
+// asset_identity_link_count, metadata_json.
+message DigitalTwin {
+  string id = 1;
+  string project_id = 2;
+  // layout_id: ID of the approved layout artifact this twin was provisioned from.
+  string layout_id = 3;
+  // electrical_network_id: ID of the validated electrical network artifact.
+  string electrical_network_id = 4;
+  // transmission_route_id: ID of the approved transmission route artifact.
+  string transmission_route_id = 5;
+  // approved_revision_id: Identifier of the approval record (StakeholderApproval evidence ID).
+  string approved_revision_id = 6;
+  TwinStatus status = 7;
+  OperationalState operational_state = 8;
+  string provisioned_by_actor_id = 9;
+  google.protobuf.Timestamp provisioned_at = 10;
+  // last_telemetry_at: Timestamp of most recently ingested sensor reading.
+  google.protobuf.Timestamp last_telemetry_at = 11;
+  // decommissioned_at: Set only when status = TWIN_STATUS_DECOMMISSIONED.
+  google.protobuf.Timestamp decommissioned_at = 12;
+  // asset_identity_link_count: Number of AssetIdentity records linked to this twin.
+  int32 asset_identity_link_count = 13;
+  // metadata_json: Free-form JSON for SCADA integration metadata, site codes, etc.
+  string metadata_json = 14;
+  google.protobuf.Timestamp created_at = 15;
+  google.protobuf.Timestamp updated_at = 16;
+}
+
+// ── RPC Request / Response Messages ─────────────────────────────────────────
+
+message ProvisionTwinRequest {
+  string project_id = 1;
+  string layout_id = 2;
+  string electrical_network_id = 3;
+  string transmission_route_id = 4;
+  // approved_revision_id: Stakeholder approval evidence record ID from the workflow.
+  string approved_revision_id = 5;
+  string provisioned_by_actor_id = 6;
+  // metadata_json: Optional SCADA/site integration metadata in JSON format.
+  string metadata_json = 7;
+}
+
+message ProvisionTwinResponse {
+  DigitalTwin twin = 1;
+}
+
+message GetTwinStateRequest {
+  string twin_id = 1;
+}
+
+message GetTwinStateResponse {
+  DigitalTwin twin = 1;
+}
+
+message UpdateTwinStateRequest {
+  string twin_id = 1;
+  OperationalState operational_state = 2;
+  // last_telemetry_at: Updated by TelemetryService after each successful ingest.
+  google.protobuf.Timestamp last_telemetry_at = 3;
+}
+
+message UpdateTwinStateResponse {
+  DigitalTwin twin = 1;
+}
+
+message DeprovisionTwinRequest {
+  string twin_id = 1;
+  string actor_id = 2;
+  string reason = 3;
+}
+
+message DeprovisionTwinResponse {
+  DigitalTwin twin = 1;
+}
+
+message ListTwinsByProjectRequest {
+  string project_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+}
+
+message ListTwinsByProjectResponse {
+  repeated DigitalTwin twins = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}

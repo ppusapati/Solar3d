@@ -8,21 +8,23 @@ import (
 
 // Config holds all configuration for the terrain service.
 type Config struct {
-	Port        int    `json:"port"`
-	DatabaseURL string `json:"database_url"`
-	S3Endpoint  string `json:"s3_endpoint"`
-	S3Bucket    string `json:"s3_bucket"`
-	LogLevel    string `json:"log_level"`
+	Port             int    `json:"port"`
+	DatabaseURL      string `json:"database_url"`
+	S3Endpoint       string `json:"s3_endpoint"`
+	S3Bucket         string `json:"s3_bucket"`
+	OrchestrationURL string `json:"orchestration_url"`
+	LogLevel         string `json:"log_level"`
 }
 
 // Load reads configuration from environment variables with sensible defaults.
 func Load() (*Config, error) {
 	cfg := &Config{
-		Port:        8081,
-		DatabaseURL: os.Getenv("DATABASE_URL"),
-		S3Endpoint:  getEnv("S3_ENDPOINT", "http://localhost:9000"),
-		S3Bucket:    getEnv("S3_BUCKET", "terrain-data"),
-		LogLevel:    getEnv("LOG_LEVEL", "info"),
+		Port:             8081,
+		DatabaseURL:      os.Getenv("DATABASE_URL"),
+		S3Endpoint:       getEnv("S3_ENDPOINT", "http://localhost:9000"),
+		S3Bucket:         getEnv("S3_BUCKET", "terrain-data"),
+		OrchestrationURL: getEnv("ORCHESTRATION_URL", "http://127.0.0.1:50059"),
+		LogLevel:         getEnv("LOG_LEVEL", "info"),
 	}
 
 	if portStr := os.Getenv("PORT"); portStr != "" {
@@ -54,3 +56,4 @@ func getEnv(key, fallback string) string {
 	}
 	return fallback
 }
+

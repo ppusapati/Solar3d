@@ -12,11 +12,13 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
 
-	"github.com/solar3d/solar3d/services/project-service/internal/config"
-	"github.com/solar3d/solar3d/services/project-service/internal/handler"
-	"github.com/solar3d/solar3d/services/project-service/internal/repository"
-	"github.com/solar3d/solar3d/services/project-service/internal/service"
-	mw "github.com/solar3d/solar3d/services/shared/middleware"
+	projectv1connect "github.com/solar3d/solar3d/gen/project/v1/projectv1connect"
+
+	"solar3d/project-service/internal/config"
+	"solar3d/project-service/internal/handler"
+	"solar3d/project-service/internal/repository"
+	"solar3d/project-service/internal/service"
+	mw "solar3d/shared/middleware"
 )
 
 func main() {
@@ -83,12 +85,14 @@ func main() {
 
 	// Register ConnectRPC-style routes.
 	h.Register(mux)
+	connectPath, connectHandler := projectv1connect.NewProjectServiceHandler(handler.NewConnectProjectService(svc))
+	mux.Handle(connectPath, connectHandler)
 
 	// Apply middleware chain: Recovery → RequestID → CORS → Logging → RateLimit
 	limiter := mw.NewRateLimiter(100, 200)
 	chain := mw.Chain(
 		mw.Recovery(logger),
-		mw.RequestID,
+		mw.IDempotencyKeyMiddleware,
 		mw.CORS,
 		mw.Logging(logger),
 		limiter.Middleware,
@@ -128,3 +132,4 @@ func main() {
 	}
 	logger.Info().Msg("server stopped")
 }
+

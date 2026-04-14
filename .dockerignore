@@ -1,0 +1,35 @@
+# VCS
+.git
+.gitignore
+
+# Frontend artifacts/deps (backend services use repo root context)
+frontend/node_modules
+frontend/.svelte-kit
+frontend/build
+frontend/dist
+frontend/.vite
+
+# Generic JS artifacts
+**/node_modules
+**/dist
+**/build
+**/.cache
+
+# Go/Rust local artifacts
+**/bin
+**/target
+**/*.exe
+**/*.dll
+**/*.pdb
+**/*.obj
+**/*.out
+!compute/ml-inference/src/bin/
+!compute/ml-inference/src/bin/**
+
+# Go vendor directory - not used in Docker builds (services fetch deps via go mod)
+services/vendor
+
+# Logs and temp
+**/*.log
+**/tmp
+**/.DS_Store

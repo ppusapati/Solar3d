@@ -1,0 +1,170 @@
+syntax = "proto3";
+
+package asset.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/asset/v1;assetv1";
+
+import "google/protobuf/timestamp.proto";
+
+// AssetIdentityService manages the linkage of design-time asset IDs (from
+// layout, electrical, and transmission services) to physical/operational asset
+// identities (manufacturer serial numbers, SCADA tags, IEC 62446-1 commissioning
+// references).  Identity records are created during the commissioning handover
+// step and consumed by TelemetryService and FaultService for event correlation.
+service AssetIdentityService {
+  // LinkAssetIdentity creates an identity link between a design asset and its
+  // physical installation instance.  Requires an ACTIVE twin_id.
+  // Returns ALREADY_EXISTS if a link for the same design_asset_id already exists
+  // within the same twin.
+  rpc LinkAssetIdentity(LinkAssetIdentityRequest) returns (LinkAssetIdentityResponse);
+
+  // GetAssetIdentity returns a single identity link by its unique ID.
+  rpc GetAssetIdentity(GetAssetIdentityRequest) returns (GetAssetIdentityResponse);
+
+  // ListAssetIdentitiesByProject returns all identity links for a project across
+  // all provisioned twins, ordered by linked_at descending.
+  rpc ListAssetIdentitiesByProject(ListAssetIdentitiesByProjectRequest) returns (ListAssetIdentitiesByProjectResponse);
+
+  // ListAssetIdentitiesByTwin returns all identity links for a specific twin,
+  // optionally filtered by design asset type.
+  rpc ListAssetIdentitiesByTwin(ListAssetIdentitiesByTwinRequest) returns (ListAssetIdentitiesByTwinResponse);
+
+  // UpdateAssetIdentity patches the mutable physical identity fields
+  // (physical_serial_number, installation_notes, commissioning_reference).
+  // Design asset linkage fields (design_asset_id, design_asset_type) are immutable.
+  rpc UpdateAssetIdentity(UpdateAssetIdentityRequest) returns (UpdateAssetIdentityResponse);
+
+  // UnlinkAssetIdentity permanently removes an identity link.
+  // Records referenced by active TelemetryService readings cannot be unlinked.
+  rpc UnlinkAssetIdentity(UnlinkAssetIdentityRequest) returns (UnlinkAssetIdentityResponse);
+}
+
+// ── Enums ────────────────────────────────────────────────────────────────────
+
+// DesignAssetType identifies the class of design artifact that an AssetIdentity
+// record links to a physical installation instance.
+enum DesignAssetType {
+  DESIGN_ASSET_TYPE_UNSPECIFIED = 0;
+  // DESIGN_ASSET_TYPE_SOLAR_PANEL: Individual PV module (from layout service tile/panel record).
+  DESIGN_ASSET_TYPE_SOLAR_PANEL = 1;
+  // DESIGN_ASSET_TYPE_INVERTER: String or central inverter (from electrical network inverter group).
+  DESIGN_ASSET_TYPE_INVERTER = 2;
+  // DESIGN_ASSET_TYPE_STRING: Panel string (from electrical network string record).
+  DESIGN_ASSET_TYPE_STRING = 3;
+  // DESIGN_ASSET_TYPE_TRANSFORMER: MV/LV transformer (from electrical network or layout zone).
+  DESIGN_ASSET_TYPE_TRANSFORMER = 4;
+  // DESIGN_ASSET_TYPE_CABLE_RUN: DC or AC cable run (from electrical BOM or transmission route).
+  DESIGN_ASSET_TYPE_CABLE_RUN = 5;
+  // DESIGN_ASSET_TYPE_COMBINER_BOX: DC combiner or junction box.
+  DESIGN_ASSET_TYPE_COMBINER_BOX = 6;
+  // DESIGN_ASSET_TYPE_PROTECTION_RELAY: IEC 60255 protection relay (from protection study).
+  DESIGN_ASSET_TYPE_PROTECTION_RELAY = 7;
+  // DESIGN_ASSET_TYPE_TRANSMISSION_TOWER: Overhead line tower (from transmission route tower position).
+  DESIGN_ASSET_TYPE_TRANSMISSION_TOWER = 8;
+  // DESIGN_ASSET_TYPE_OTHER: Any asset class not covered by the above types.
+  DESIGN_ASSET_TYPE_OTHER = 9;
+}
+
+// ── Domain messages ──────────────────────────────────────────────────────────
+
+// AssetIdentity is an immutable linkage record connecting a design-time asset ID
+// to a physical installation instance.  The linked_at, design_asset_id, and
+// design_asset_type fields are immutable after creation.
+message AssetIdentity {
+  string id = 1;
+  string project_id = 2;
+  // twin_id: The provisioned DigitalTwin this identity belongs to.
+  string twin_id = 3;
+  // design_asset_id: UUID of the asset in the originating design service
+  // (e.g., layout tile ID, electrical string ID, transmission tower position ID).
+  string design_asset_id = 4;
+  DesignAssetType design_asset_type = 5;
+  // physical_serial_number: Manufacturer serial number of the installed unit.
+  string physical_serial_number = 6;
+  string manufacturer = 7;
+  string model = 8;
+  // installation_date: Date the physical asset was installed on-site.
+  google.protobuf.Timestamp installation_date = 9;
+  // commissioning_reference: IEC 62446-1 commissioning record reference for the asset.
+  string commissioning_reference = 10;
+  // installation_notes: Free-form field for installer notes, tag numbers, bay identifiers.
+  string installation_notes = 11;
+  string linked_by_actor_id = 12;
+  google.protobuf.Timestamp linked_at = 13;
+  google.protobuf.Timestamp updated_at = 14;
+}
+
+// ── RPC Request / Response Messages ─────────────────────────────────────────
+
+message LinkAssetIdentityRequest {
+  string project_id = 1;
+  string twin_id = 2;
+  string design_asset_id = 3;
+  DesignAssetType design_asset_type = 4;
+  string physical_serial_number = 5;
+  string manufacturer = 6;
+  string model = 7;
+  google.protobuf.Timestamp installation_date = 8;
+  string commissioning_reference = 9;
+  string installation_notes = 10;
+  string linked_by_actor_id = 11;
+}
+
+message LinkAssetIdentityResponse {
+  AssetIdentity asset_identity = 1;
+}
+
+message GetAssetIdentityRequest {
+  string id = 1;
+}
+
+message GetAssetIdentityResponse {
+  AssetIdentity asset_identity = 1;
+}
+
+message ListAssetIdentitiesByProjectRequest {
+  string project_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+}
+
+message ListAssetIdentitiesByProjectResponse {
+  repeated AssetIdentity asset_identities = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message ListAssetIdentitiesByTwinRequest {
+  string twin_id = 1;
+  // type_filter: If UNSPECIFIED, returns all asset types.
+  DesignAssetType type_filter = 2;
+  int32 page_size = 3;
+  string page_token = 4;
+}
+
+message ListAssetIdentitiesByTwinResponse {
+  repeated AssetIdentity asset_identities = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message UpdateAssetIdentityRequest {
+  string id = 1;
+  string physical_serial_number = 2;
+  string commissioning_reference = 3;
+  string installation_notes = 4;
+}
+
+message UpdateAssetIdentityResponse {
+  AssetIdentity asset_identity = 1;
+}
+
+message UnlinkAssetIdentityRequest {
+  string id = 1;
+  string actor_id = 2;
+}
+
+message UnlinkAssetIdentityResponse {
+  // id: The ID of the unlinked record, confirming deletion.
+  string id = 1;
+}

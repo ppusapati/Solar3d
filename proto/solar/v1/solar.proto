@@ -1,0 +1,152 @@
+syntax = "proto3";
+
+package solar.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/solar/v1;solarv1";
+
+import "common/v1/primitives.proto";
+
+// SolarService exposes solar position, irradiance, and shadow algorithms.
+service SolarService {
+  // CalculateSolarPosition computes elevation and azimuth angles.
+  rpc CalculateSolarPosition(SolarPositionRequest) returns (SolarPositionResponse);
+  // CastShadows projects shadows from obstacles given sun position.
+  rpc CastShadows(CastShadowsRequest) returns (CastShadowsResponse);
+  // CalculateDNI computes direct normal irradiance.
+  rpc CalculateDNI(DNIRequest) returns (DNIResponse);
+  // CalculateDHI computes diffuse horizontal irradiance.
+  rpc CalculateDHI(DHIRequest) returns (DHIResponse);
+  // BulkSolarPosition computes positions for multiple timestamps (optimized).
+  rpc BulkSolarPosition(BulkSolarPositionRequest) returns (BulkSolarPositionResponse);
+}
+
+// Describes sun position in sky (equatorial coordinates).
+message SolarPosition {
+  // Elevation angle above horizon (degrees, 0-90).
+  double elevation_angle_deg = 1;
+  // Azimuth angle measured from North clockwise (degrees, 0-360).
+  double azimuth_angle_deg = 2;
+  // Air mass index (> 1.0 when sun below overhead).
+  double air_mass = 3;
+  // Zenith angle from observer vertical (degrees, 0-90).
+  double zenith_angle_deg = 4;
+}
+
+message SolarPositionRequest {
+  // Unix timestamp (seconds since epoch).
+  double timestamp_seconds = 1;
+  // Observer latitude (degrees, -90 to 90).
+  double latitude_deg = 2;
+  // Observer longitude (degrees, -180 to 180).
+  double longitude_deg = 3;
+  // UTC offset in hours for local time.
+  double utc_offset_hours = 4;
+}
+
+message SolarPositionResponse {
+  SolarPosition position = 1;
+  // True if sun is below horizon (night time).
+  bool is_night = 2;
+  // Correlation ID for tracing.
+  common.v1.ContractMetadata contract = 10;
+}
+
+// Obstacle geometry in site coordinates.
+message Obstacle {
+  // Obstacle identifier.
+  string id = 1;
+  // Base position (x, y, elevation_m).
+  common.v1.Point3D base = 2;
+  // Height above base (meters).
+  double height_m = 3;
+  // Optional max extent radius for culling (meters).
+  double extent_m = 4;
+}
+
+message ShadowPolygon {
+  // Obstacle receiving shadow.
+  string obstacle_id = 1;
+  // Ground projection of shadow (2D polygon).
+  repeated common.v1.Point2D shadow_vertices = 2;
+  // Shadow length from obstacle base (meters).
+  double shadow_length_m = 3;
+  // Sun elevation when cast (degrees).
+  double sun_elevation_deg = 4;
+}
+
+message CastShadowsRequest {
+  // List of obstacles in scene.
+  repeated Obstacle obstacles = 1;
+  // Current sun elevation (degrees).
+  double sun_elevation_deg = 2;
+  // Current sun azimuth (degrees from North).
+  double sun_azimuth_deg = 3;
+  // Vertical exaggeration for visualization (default 1.0).
+  double exaggeration = 4;
+}
+
+message CastShadowsResponse {
+  // Shadow polygons one per obstacle.
+  repeated ShadowPolygon shadows = 1;
+  // Number of shadows cast (> 0 only if sun above horizon).
+  int32 shadow_count = 2;
+  // Tracing/versioning.
+  common.v1.ContractMetadata contract = 10;
+}
+
+message DNIRequest {
+  // Air mass factor (typically 1.0 - 6.0).
+  double air_mass = 1;
+  // Sun zenith angle (0-90 degrees).
+  double zenith_angle_deg = 2;
+  // Atmospheric turbidity factor (optional, default 2.0).
+  double turbidity = 3;
+}
+
+message DNIResponse {
+  // Direct normal irradiance (W/m²).
+  double dni_w_m2 = 1;
+  // True if calculation succeeded.
+  bool valid = 2;
+}
+
+message DHIRequest {
+  // Sun zenith angle (0-90 degrees).
+  double zenith_angle_deg = 1;
+  // Clearness index empirical factor (0-1).
+  double clearness_index = 2;
+}
+
+message DHIResponse {
+  // Diffuse horizontal irradiance (W/m²).
+  double dhi_w_m2 = 1;
+  // True if calculation succeeded.
+  bool valid = 2;
+}
+
+message TimestampPosition {
+  // Input timestamp.
+  double timestamp_seconds = 1;
+  // Computed solar position.
+  SolarPosition position = 2;
+}
+
+message BulkSolarPositionRequest {
+  // Timestamps to compute (must be sorted).
+  repeated double timestamp_seconds = 1;
+  // Observer latitude (degrees).
+  double latitude_deg = 2;
+  // Observer longitude (degrees).
+  double longitude_deg = 3;
+  // UTC offset hours.
+  double utc_offset_hours = 4;
+}
+
+message BulkSolarPositionResponse {
+  // Positions in same order as request timestamps.
+  repeated TimestampPosition results = 1;
+  // Count of night timestamps (sun below horizon).
+  int32 night_count = 2;
+  // Contract metadata.
+  common.v1.ContractMetadata contract = 10;
+}

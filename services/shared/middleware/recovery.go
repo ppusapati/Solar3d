@@ -38,3 +38,4 @@ func Recovery(logger zerolog.Logger) func(http.Handler) http.Handler {
 		})
 	}
 }
+

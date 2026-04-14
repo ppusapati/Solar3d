@@ -3,25 +3,45 @@ package service
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 
-	"github.com/solar3d/solar3d/services/report-service/internal/domain"
-	"github.com/solar3d/solar3d/services/report-service/internal/repository"
+	"solar3d/report-service/internal/domain"
+	"solar3d/report-service/internal/repository"
+	"solar3d/shared/audit"
 )
 
 type ReportService struct {
 	repo *repository.ReportRepository
 }
 
+var ErrApprovalRequired = errors.New("approved engineering output is required")
+var ErrLOD400GateNotPassed = errors.New("LOD 400 assessment must pass before export")
+
 func NewReportService(repo *repository.ReportRepository) *ReportService {
 	return &ReportService{repo: repo}
 }
 
 func (s *ReportService) GenerateReport(ctx context.Context, req domain.GenerateReportRequest) (*domain.Report, error) {
+	var approvedAt time.Time
+	if requiresApprovedOutput(req.ReportType) {
+		var err error
+		approvedAt, err = validateApprovedOutput(req.ApprovalStatus, req.ApprovedBy, req.ApprovedAtRFC3339)
+		if err != nil {
+			return nil, fmt.Errorf("%w: %v", ErrApprovalRequired, err)
+		}
+	}
+	if requiresLOD400Gate(req.ReportType) {
+		if err := validateLOD400Ready(ctx, req.LayoutID, s.repo); err != nil {
+			return nil, err
+		}
+	}
+
 	report := &domain.Report{
 		ID:         uuid.New(),
 		ProjectID:  req.ProjectID,
@@ -63,6 +83,21 @@ func (s *ReportService) GenerateReport(ctx context.Context, req domain.GenerateR
 		Str("file_path", filePath).
 		Msg("report generation completed")
 
+	event := audit.NewAuditEvent(audit.EventCreated, "report", report.ID.String(), actorIDFromContext(ctx, "report-service"))
+	event.RecordMetadata("project_id", report.ProjectID.String())
+	event.RecordMetadata("format", string(report.Format))
+	event.RecordMetadata("type", string(report.ReportType))
+	if requiresApprovedOutput(req.ReportType) {
+		event.RecordMetadata("approval_status", strings.ToLower(strings.TrimSpace(req.ApprovalStatus)))
+		event.RecordMetadata("approved_by", strings.TrimSpace(req.ApprovedBy))
+		event.RecordMetadata("approved_at", approvedAt.UTC().Format(time.RFC3339))
+	}
+	if requiresLOD400Gate(req.ReportType) && req.LayoutID != uuid.Nil {
+		event.RecordMetadata("layout_id", req.LayoutID.String())
+		event.RecordMetadata("lod400_gate", "passed")
+	}
+	audit.LogToContext(ctx, event)
+
 	return report, nil
 }
 
@@ -75,7 +110,12 @@ func (s *ReportService) ListReports(ctx context.Context, projectID uuid.UUID) ([
 }
 
 func (s *ReportService) DeleteReport(ctx context.Context, id uuid.UUID) error {
-	return s.repo.Delete(ctx, id)
+	if err := s.repo.Delete(ctx, id); err != nil {
+		return err
+	}
+	event := audit.NewAuditEvent(audit.EventDeleted, "report", id.String(), actorIDFromContext(ctx, "report-service"))
+	audit.LogToContext(ctx, event)
+	return nil
 }
 
 func (s *ReportService) GenerateBOM(ctx context.Context, req domain.GenerateBOMRequest) (*domain.BillOfMaterials, error) {
@@ -228,10 +268,23 @@ func (s *ReportService) GenerateBOM(ctx context.Context, req domain.GenerateBOMR
 		Int("item_count", len(bom.Items)).
 		Msg("BOM generated")
 
+	event := audit.NewAuditEvent(audit.EventCreated, "report", report.ID.String(), actorIDFromContext(ctx, "report-service"))
+	event.RecordMetadata("project_id", req.ProjectID.String())
+	event.RecordMetadata("report_kind", "bom")
+	audit.LogToContext(ctx, event)
+
 	return bom, nil
 }
 
 func (s *ReportService) ExportLayout(ctx context.Context, req domain.ExportLayoutRequest) (*domain.Report, error) {
+	approvedAt, err := validateApprovedOutput(req.ApprovalStatus, req.ApprovedBy, req.ApprovedAtRFC3339)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", ErrApprovalRequired, err)
+	}
+	if err := validateLOD400Ready(ctx, req.LayoutID, s.repo); err != nil {
+		return nil, err
+	}
+
 	report := &domain.Report{
 		ID:         uuid.New(),
 		ProjectID:  req.ProjectID,
@@ -254,5 +307,66 @@ func (s *ReportService) ExportLayout(ctx context.Context, req domain.ExportLayou
 		Str("format", string(req.Format)).
 		Msg("layout exported")
 
+	event := audit.NewAuditEvent(audit.EventCreated, "report", report.ID.String(), actorIDFromContext(ctx, "report-service"))
+	event.RecordMetadata("project_id", req.ProjectID.String())
+	event.RecordMetadata("report_kind", "layout_export")
+	event.RecordMetadata("approval_status", strings.ToLower(strings.TrimSpace(req.ApprovalStatus)))
+	event.RecordMetadata("approved_by", strings.TrimSpace(req.ApprovedBy))
+	event.RecordMetadata("approved_at", approvedAt.UTC().Format(time.RFC3339))
+	if req.LayoutID != uuid.Nil {
+		event.RecordMetadata("layout_id", req.LayoutID.String())
+		event.RecordMetadata("lod400_gate", "passed")
+	}
+	audit.LogToContext(ctx, event)
+
 	return report, nil
+}
+
+func actorIDFromContext(ctx context.Context, fallback string) string {
+	if v, ok := ctx.Value("actor_id").(string); ok && v != "" {
+		return v
+	}
+	return fallback
+}
+
+func requiresApprovedOutput(reportType domain.ReportType) bool {
+	return reportType != domain.ReportTypeBOM
+}
+
+func requiresLOD400Gate(reportType domain.ReportType) bool {
+	return reportType != domain.ReportTypeBOM
+}
+
+// validateLOD400Ready checks that the most recent LOD 400 assessment for the given
+// layout has is_lod400_ready = true.  If layoutID is uuid.Nil, the check is skipped
+// for backward compatibility with callers that have not yet wired a layout_id.
+func validateLOD400Ready(ctx context.Context, layoutID uuid.UUID, repo *repository.ReportRepository) error {
+	if layoutID == uuid.Nil {
+		return nil
+	}
+	ready, err := repo.GetLatestLOD400ReadyStatus(ctx, layoutID)
+	if err != nil {
+		if errors.Is(err, repository.ErrNoLOD400Assessment) {
+			return fmt.Errorf("%w: no LOD 400 assessment found for layout %s", ErrLOD400GateNotPassed, layoutID)
+		}
+		return fmt.Errorf("querying LOD 400 status: %w", err)
+	}
+	if !ready {
+		return fmt.Errorf("%w: layout %s has not passed LOD 400 assessment", ErrLOD400GateNotPassed, layoutID)
+	}
+	return nil
+}
+
+func validateApprovedOutput(status string, approvedBy string, approvedAtRFC3339 string) (time.Time, error) {
+	if strings.ToLower(strings.TrimSpace(status)) != "approved" {
+		return time.Time{}, fmt.Errorf("approval_status must be approved")
+	}
+	if strings.TrimSpace(approvedBy) == "" {
+		return time.Time{}, fmt.Errorf("approved_by is required")
+	}
+	approvedAt, err := time.Parse(time.RFC3339, strings.TrimSpace(approvedAtRFC3339))
+	if err != nil {
+		return time.Time{}, fmt.Errorf("approved_at_rfc3339 must be RFC3339")
+	}
+	return approvedAt.UTC(), nil
 }

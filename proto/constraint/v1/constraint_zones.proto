@@ -1,0 +1,259 @@
+syntax = "proto3";
+
+package constraint.v1;
+
+import "google/protobuf/timestamp.proto";
+import "common/v1/primitives.proto";
+
+option go_package = "github.com/solar3d/solar3d/gen/constraint/v1;constraintv1";
+
+// ConstraintZoneService provides zone management and siting conflict analysis.
+service ConstraintZoneService {
+  // CreateZone creates a new constraint zone.
+  rpc CreateZone(CreateZoneRequest) returns (CreateZoneResponse);
+  
+  // UpdateZone updates an existing zone.
+  rpc UpdateZone(UpdateZoneRequest) returns (UpdateZoneResponse);
+  
+  // DeleteZone removes a zone (soft delete with audit trail).
+  rpc DeleteZone(DeleteZoneRequest) returns (DeleteZoneResponse);
+  
+  // GetZone retrieves a single zone by ID.
+  rpc GetZone(GetZoneRequest) returns (GetZoneResponse);
+  
+  // ListZones lists zones with filtering and pagination.
+  rpc ListZones(ListZonesRequest) returns (ListZonesResponse);
+  
+  // QueryZonesByLocation finds zones intersecting/containing a location or geometry.
+  rpc QueryZonesByLocation(QueryZonesByLocationRequest) returns (QueryZonesByLocationResponse);
+  
+  // CheckSitingConflicts analyzes proposed landing site against constraint zones.
+  rpc CheckSitingConflicts(CheckSitingConflictsRequest) returns (CheckSitingConflictsResponse);
+  
+  // ListZoneCategories returns available zone category taxonomy.
+  rpc ListZoneCategories(ListZoneCategoriesRequest) returns (ListZoneCategoriesResponse);
+}
+
+// ================== Enums ==================
+
+enum ZoneType {
+  ZONE_TYPE_UNSPECIFIED = 0;
+  ZONE_TYPE_EXCLUSION = 1; // Landing sites cannot be placed here
+  ZONE_TYPE_INCLUSION = 2; // Landing sites must be within this zone
+  ZONE_TYPE_BUFFER = 3; // Safety distance from critical feature
+}
+
+enum ZoneCategory {
+  ZONE_CATEGORY_UNSPECIFIED = 0;
+  ZONE_CATEGORY_GEOLOGICAL = 1; // Seismic zones, fault lines, subsidence areas
+  ZONE_CATEGORY_ENVIRONMENTAL = 2; // Wetlands, wildlife habitat, sensitive ecosystems
+  ZONE_CATEGORY_REGULATORY = 3; // Zoning laws, protected areas, permits required
+  ZONE_CATEGORY_INFRASTRUCTURE = 4; // Power lines, roads, water systems
+  ZONE_CATEGORY_MILITARY = 5; // Military bases, restricted airspace
+  ZONE_CATEGORY_PROTECTED = 6; // National parks, nature reserves, cultural sites
+}
+
+enum ConflictSeverity {
+  CONFLICT_SEVERITY_UNSPECIFIED = 0;
+  CONFLICT_SEVERITY_INFO = 1; // Informational, no action required
+  CONFLICT_SEVERITY_WARNING = 2; // Caution needed, may be acceptable with mitigation
+  CONFLICT_SEVERITY_ERROR = 3; // Conflict, site placement likely denied
+  CONFLICT_SEVERITY_BLOCKER = 4; // Fatal conflict, impossible to resolve
+}
+
+enum ZoneStatus {
+  ZONE_STATUS_UNSPECIFIED = 0;
+  ZONE_STATUS_ACTIVE = 1; // Zone is in effect
+  ZONE_STATUS_INACTIVE = 2; // Zone is disabled but retained (audit trail)
+  ZONE_STATUS_EXPIRED = 3; // Zone date range has ended
+  ZONE_STATUS_PENDING = 4; // Zone awaiting approval
+}
+
+// ================== Message Types ==================
+
+// Zone represents a constraint zone (exclusion, inclusion, or buffer).
+message Zone {
+  string zone_id = 1; // UUID
+  string name = 2;
+  string description = 3;
+  ZoneType zone_type = 4;
+  ZoneCategory zone_category = 5;
+  ZoneStatus zone_status = 6;
+  
+  // Geometry (WKT format or PostGIS reference)
+  string geometry_wkt = 7;
+  string geometry_type = 8; // POINT, LINESTRING, POLYGON, MULTIPOLYGON
+  common.v1.BoundingBox2D bounding_box = 9;
+  
+  // Temporal constraints
+  google.protobuf.Timestamp effective_start = 10;
+  google.protobuf.Timestamp effective_end = 11;
+  
+  // Metadata
+  string source = 12; // Data source (e.g., "regulatory_db", "user_defined")
+  string source_id = 13; // Reference to external system
+  float buffer_distance_meters = 14; // For buffer zones: distance from feature
+  repeated string tags = 15; // Classification tags
+  map<string, string> metadata = 16; // Custom key-value pairs
+  
+  // Permissions
+  string created_by = 17; // User ID
+  string project_id = 18; // Associated project
+  bool is_public = 19; // Visibility scope
+  
+  // Audit
+  google.protobuf.Timestamp created_at = 20;
+  google.protobuf.Timestamp updated_at = 21;
+  google.protobuf.Timestamp deleted_at = 22;
+}
+
+// SitingConflict represents a conflict between a proposed site and a constraint zone.
+message SitingConflict {
+  string conflict_id = 1; // UUID
+  string zone_id = 2;
+  Zone conflicting_zone = 3;
+  ConflictSeverity severity = 4;
+  string conflict_reason = 5; // e.g., "Site inside exclusion zone"
+  float distance_meters = 6; // Distance to zone (if not intersecting, 0 if inside)
+  float overlap_area_sqm = 7; // For polygons: overlap area in m²
+  repeated string mitigation_suggestions = 8; // Recommendations to resolve
+}
+
+// RiskScore aggregates conflict severity for siting decision.
+message RiskScore {
+  int32 total_conflicts = 1;
+  int32 blocker_count = 2;
+  int32 error_count = 3;
+  int32 warning_count = 4;
+  float overall_risk_percentage = 5; // 0-100, higher = more restrictive
+  bool is_siteable = 6; // True if score allows placement
+}
+
+// ZoneCategory represents a category in the taxonomy.
+message CategoryDef {
+  ZoneCategory category = 1;
+  string display_name = 2;
+  string description = 3;
+  repeated string allowed_tags = 4;
+  repeated string associated_regulations = 5;
+}
+
+// ================== Request/Response Messages ==================
+
+message CreateZoneRequest {
+  string name = 1;
+  string description = 2;
+  ZoneType zone_type = 3;
+  ZoneCategory zone_category = 4;
+  string geometry_wkt = 5;
+  string geometry_type = 6;
+  google.protobuf.Timestamp effective_start = 7;
+  google.protobuf.Timestamp effective_end = 8;
+  string source = 9;
+  string source_id = 10;
+  float buffer_distance_meters = 11;
+  repeated string tags = 12;
+  map<string, string> metadata = 13;
+  string project_id = 14;
+  bool is_public = 15;
+}
+
+message CreateZoneResponse {
+  string zone_id = 1;
+  Zone zone = 2;
+  google.protobuf.Timestamp created_at = 3;
+}
+
+message UpdateZoneRequest {
+  string zone_id = 1;
+  string name = 2;
+  string description = 3;
+  ZoneType zone_type = 4;
+  ZoneCategory zone_category = 5;
+  ZoneStatus zone_status = 6;
+  string geometry_wkt = 7;
+  google.protobuf.Timestamp effective_start = 8;
+  google.protobuf.Timestamp effective_end = 9;
+  float buffer_distance_meters = 10;
+  repeated string tags = 11;
+  map<string, string> metadata = 12;
+  bool is_public = 13;
+}
+
+message UpdateZoneResponse {
+  Zone zone = 1;
+  google.protobuf.Timestamp updated_at = 2;
+}
+
+message DeleteZoneRequest {
+  string zone_id = 1;
+  string reason = 2; // Audit: why zone is being deleted
+}
+
+message DeleteZoneResponse {
+  string zone_id = 1;
+  google.protobuf.Timestamp deleted_at = 2;
+}
+
+message GetZoneRequest {
+  string zone_id = 1;
+}
+
+message GetZoneResponse {
+  Zone zone = 1;
+}
+
+message ListZonesRequest {
+  string project_id = 1;
+  ZoneType zone_type = 2; // Filter by type (optional)
+  ZoneCategory zone_category = 3; // Filter by category (optional)
+  ZoneStatus zone_status = 4; // Filter by status (optional)
+  string search_query = 5; // Search by name or tags
+  int32 limit = 6;
+  int32 offset = 7;
+}
+
+message ListZonesResponse {
+  repeated Zone zones = 1;
+  int64 total_count = 2;
+}
+
+message QueryZonesByLocationRequest {
+  string project_id = 1;
+  float latitude = 2;
+  float longitude = 3;
+  float search_radius_meters = 4; // Search in radius around point
+  ZoneType zone_type = 5; // Filter by type (optional)
+  int32 limit = 6;
+}
+
+message QueryZonesByLocationResponse {
+  repeated Zone nearby_zones = 1;
+  repeated SitingConflict potential_conflicts = 2;
+  common.v1.BoundingBox2D aggregated_bounds = 3;
+}
+
+message CheckSitingConflictsRequest {
+  string project_id = 1;
+  string proposed_site_geometry_wkt = 2; // WKT of proposed landing site
+  string geometry_type = 3; // POINT, POLYGON, etc.
+  common.v1.BoundingBox2D geometry_bounds = 4;
+  repeated ZoneType check_zone_types = 5; // Which zone types to check (empty = all)
+  bool include_buffer_zones = 6; // Include buffer zone conflicts
+  bool include_expired_zones = 7; // Check against expired zones
+}
+
+message CheckSitingConflictsResponse {
+  repeated SitingConflict conflicts = 1;
+  RiskScore risk_score = 2;
+  string siting_recommendation = 3; // Human-readable summary
+  int32 total_zones_checked = 4;
+}
+
+message ListZoneCategoriesRequest {
+  // No parameters needed
+}
+
+message ListZoneCategoriesResponse {
+  repeated CategoryDef categories = 1;
+}

@@ -23,17 +23,17 @@ pub fn compute_aspect_grid(dem: &ElevationGrid) -> ElevationGrid {
                         return dem.nodata;
                     }
 
-                    let z = |c: usize, r: usize| -> f64 {
-                        dem.get(c, r).unwrap_or(dem.nodata)
-                    };
+                    let z = |c: usize, r: usize| -> f64 { dem.get(c, r).unwrap_or(dem.nodata) };
 
-                    let dz_dx = ((z(col + 1, row - 1) + 2.0 * z(col + 1, row) + z(col + 1, row + 1))
-                        - (z(col - 1, row - 1) + 2.0 * z(col - 1, row) + z(col - 1, row + 1)))
-                        / (8.0 * res);
+                    let dz_dx =
+                        ((z(col + 1, row - 1) + 2.0 * z(col + 1, row) + z(col + 1, row + 1))
+                            - (z(col - 1, row - 1) + 2.0 * z(col - 1, row) + z(col - 1, row + 1)))
+                            / (8.0 * res);
 
-                    let dz_dy = ((z(col - 1, row + 1) + 2.0 * z(col, row + 1) + z(col + 1, row + 1))
-                        - (z(col - 1, row - 1) + 2.0 * z(col, row - 1) + z(col + 1, row - 1)))
-                        / (8.0 * res);
+                    let dz_dy =
+                        ((z(col - 1, row + 1) + 2.0 * z(col, row + 1) + z(col + 1, row + 1))
+                            - (z(col - 1, row - 1) + 2.0 * z(col, row - 1) + z(col + 1, row - 1)))
+                            / (8.0 * res);
 
                     if dz_dx.abs() < f64::EPSILON && dz_dy.abs() < f64::EPSILON {
                         return -1.0; // Flat area

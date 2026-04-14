@@ -1,0 +1,295 @@
+syntax = "proto3";
+
+package ml_inference.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/ml_inference/v1;mlinferencev1";
+
+import "ml_inference/v1/features.proto";
+
+service MLInferenceService {
+  // Inference RPCs
+  rpc PredictYield(YieldPredictionRequest) returns (YieldPredictionResponse);
+  rpc DetectAnomaly(AnomalyDetectionRequest) returns (AnomalyDetectionResponse);
+  rpc ForecastDegradation(DegradationRequest) returns (DegradationResponse);
+  rpc ExtractFeatures(FeatureExtractionRequest) returns (FeatureExtractionResponse);
+  
+  // Training & Management RPCs
+  rpc SubmitFeedback(SubmitFeedbackRequest) returns (SubmitFeedbackResponse);
+  rpc StartTraining(StartTrainingRequest) returns (StartTrainingResponse);
+  rpc GetTrainingStatus(GetTrainingStatusRequest) returns (GetTrainingStatusResponse);
+  rpc EvaluateModel(EvaluateModelRequest) returns (EvaluateModelResponse);
+  rpc GetModelVersions(GetModelVersionsRequest) returns (GetModelVersionsResponse);
+  rpc DeployModelVersion(DeployModelVersionRequest) returns (DeployModelVersionResponse);
+  rpc GetActiveModelVersion(GetActiveModelVersionRequest) returns (GetActiveModelVersionResponse);
+  rpc RollbackModelVersion(RollbackModelVersionRequest) returns (RollbackModelVersionResponse);
+}
+
+message WeatherFeatures {
+  double temperature_c = 1;
+  double irradiance_w_m2 = 2;
+  double humidity_percent = 3;
+  double pressure_mb = 4;
+  double wind_speed_m_s = 5;
+}
+
+message SolarFeatures {
+  double solar_altitude_deg = 1;
+  double solar_azimuth_deg = 2;
+  double air_mass = 3;
+  double clearness_index = 4;
+}
+
+message TimeFeatures {
+  int32 hour_of_day = 1;
+  int32 day_of_year = 2;
+  int32 month = 3;
+  bool is_weekend = 4;
+}
+
+message FeatureVector {
+  repeated double features = 1;
+  repeated string feature_names = 2;
+}
+
+message FeatureExtractionRequest {
+  WeatherFeatures weather = 1;
+  SolarFeatures solar = 2;
+  TimeFeatures time = 3;
+}
+
+message FeatureExtractionResponse {
+  FeatureVector features = 1;
+  int32 feature_count = 2;
+  FeaturePayload payload = 10;
+}
+
+message YieldPredictionRequest {
+  FeatureVector features = 1;
+  double model_output = 2;
+  double uncertainty_estimate = 3;
+  FeaturePayload feature_payload = 10;
+}
+
+message YieldForecast {
+  double predicted_yield_kwh = 1;
+  double confidence_lower = 2;
+  double confidence_upper = 3;
+  double expected_value = 4;
+  double variance = 5;
+}
+
+message YieldPredictionResponse {
+  YieldForecast forecast = 1;
+  repeated YieldForecast ensemble_forecasts = 2;
+}
+
+enum AnomalyType {
+  NORMAL = 0;
+  SENSOR_FAULT = 1;
+  PERFORMANCE_DEGRADATION = 2;
+  INVERTER_ISSUE = 3;
+  STRING_MALFUNCTION = 4;
+  WEATHER_EVENT = 5;
+}
+
+message AnomalyScore {
+  double score = 1;
+  AnomalyType anomaly_type = 2;
+  double confidence = 3;
+}
+
+message AnomalyDetectionRequest {
+  double expected_yield = 1;
+  double actual_yield = 2;
+  double model_prediction = 3;
+  double sensor_variance = 4;
+}
+
+message AnomalyDetectionResponse {
+  AnomalyScore score = 1;
+  bool is_anomalous = 2;
+  string recommendation = 3;
+}
+
+message DegradationForecast {
+  double current_degradation_percent = 1;
+  double annual_degradation_rate = 2;
+  double projected_degradation_5yr = 3;
+  double projected_degradation_10yr = 4;
+  double confidence_interval = 5;
+}
+
+message DegradationRequest {
+  double current_degradation = 1;
+  double annual_rate = 2;
+  int32 years = 3;
+}
+
+message DegradationResponse {
+  DegradationForecast forecast = 1;
+  double remaining_useful_life_years = 2;
+}
+
+// ============================================================
+// Training & Feedback Management Messages
+// ============================================================
+
+message SubmitFeedbackRequest {
+  string prediction_id = 1; // Reference to original prediction
+  string site_id = 2;
+  string task_type = 3; // "yield", "anomaly", "degradation"
+  double actual_label = 4; // Actual observed value
+  string notes = 5;
+  string submitted_by = 6;
+  LabeledFeatureSample sample = 10;
+}
+
+message SubmitFeedbackResponse {
+  string feedback_id = 1;
+  bool accepted = 2;
+  string message = 3;
+}
+
+message TrainingDataConfig {
+  string version = 1;
+  int32 lookback_days = 2;
+  int32 min_samples_per_site = 3;
+  double train_split_ratio = 4;
+  double validation_split_ratio = 5;
+  double test_split_ratio = 6;
+  bool time_aware_split = 7;
+  string feature_schema_hash = 8;
+  FeatureSchema feature_schema = 10;
+}
+
+message StartTrainingRequest {
+  string task_type = 1; // "yield", "anomaly", "degradation"
+  TrainingDataConfig config = 2;
+  map<string, string> hyperparams = 3;
+  string triggered_by = 4;
+  string commit_hash = 5; // Source code commit
+  FeatureSchema expected_schema = 10;
+}
+
+message StartTrainingResponse {
+  string training_run_id = 1;
+  string status = 2; // "queued", "running", "pending"
+  int64 queued_at_ms = 3;
+}
+
+message GetTrainingStatusRequest {
+  string training_run_id = 1;
+}
+
+message TrainingMetrics {
+  double train_loss = 1;
+  double validation_loss = 2;
+  double test_loss = 3;
+  double test_mae = 4;
+  double test_rmse = 5;
+  double test_coverage_lower = 6; // Interval coverage metrics
+  double test_coverage_upper = 7;
+  map<string, double> custom_metrics = 8;
+}
+
+message GetTrainingStatusResponse {
+  string training_run_id = 1;
+  string status = 2; // "queued", "running", "completed", "failed"
+  TrainingMetrics metrics = 3;
+  string error_message = 4;
+  int64 started_at_ms = 5;
+  int64 completed_at_ms = 6;
+  string model_version_id = 7; // Available once training completes
+  double completion_progress = 8; // 0.0 - 1.0 for running jobs
+}
+
+message EvaluateModelRequest {
+  string model_version_id = 1;
+  string dataset = 2; // "test", "validation"
+  string versus_model_id = 3; // For comparison
+}
+
+message ModelEvaluation {
+  string model_version_id = 1;
+  string versus_model_id = 2;
+  string metric_name = 3;
+  double baseline_value = 4;
+  double candidate_value = 5;
+  double improvement_percent = 6;
+  bool meets_threshold = 7;
+}
+
+message EvaluateModelResponse {
+  repeated ModelEvaluation evaluations = 1;
+  bool candidate_wins = 2;
+  string recommendation = 3;
+}
+
+message ModelVersionInfo {
+  string version_id = 1;
+  string task_type = 2;
+  string status = 3; // "candidate", "champion", "archived", "failed"
+  int64 created_at_ms = 4;
+  int64 deployed_at_ms = 5;
+  TrainingMetrics metrics = 6;
+  string artifact_path = 7;
+  string artifact_hash = 8;
+  string schema_hash = 9;
+  string training_run_id = 10;
+  string commit_hash = 11;
+  map<string, string> metadata = 12;
+}
+
+message GetModelVersionsRequest {
+  string task_type = 1;
+  int32 limit = 2;
+  string status_filter = 3; // optional
+}
+
+message GetModelVersionsResponse {
+  repeated ModelVersionInfo versions = 1;
+}
+
+message DeploymentPolicy {
+  double min_improvement_percent = 1;
+  bool require_manual_approval = 2;
+  double canary_traffic_percent = 3;
+  int32 rollback_threshold_minutes = 4;
+  repeated string alert_thresholds = 5; // e.g., "mae>50", "rmse>30"
+}
+
+message DeployModelVersionRequest {
+  string model_version_id = 1;
+  DeploymentPolicy policy = 2;
+  string deployed_by = 3;
+  string approval_id = 4; // For auditing
+  string notes = 5;
+}
+
+message DeployModelVersionResponse {
+  string deployment_id = 1;
+  string status = 2; // "deploying", "canary", "active", "failed"
+  int64 deployed_at_ms = 3;
+  string message = 4;
+}
+
+message GetActiveModelVersionRequest {
+  string task_type = 1;
+}
+
+message GetActiveModelVersionResponse {
+  ModelVersionInfo active_version = 1;
+  ModelVersionInfo previous_version = 2; // For quick rollback
+}
+
+message RollbackModelVersionRequest {
+  string task_type = 1;
+  string reason = 2;
+  string rolled_back_by = 3;
+}
+
+message RollbackModelVersionResponse {
+  string active_version_id = 1;
+  int64 rolled_back_at_ms = 2;
+  string message = 3;
+}

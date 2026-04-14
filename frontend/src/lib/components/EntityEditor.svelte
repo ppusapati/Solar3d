@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, tick } from 'svelte';
 	import { selectedEntityId } from '$lib/core/stores';
 
 	const dispatch = createEventDispatcher<{
@@ -11,9 +11,13 @@
 	export let entityData: Record<string, any> = {};
 
 	let editingField: string | null = null;
+	let editInput: HTMLInputElement | null = null;
 
-	function startEdit(field: string) {
+	async function startEdit(field: string) {
 		editingField = field;
+		await tick();
+		editInput?.focus();
+		editInput?.select();
 	}
 
 	function finishEdit(field: string, value: any) {
@@ -78,11 +82,11 @@
 				<span class="field-label">{field.label}</span>
 				{#if editingField === field.label}
 					<input
+						bind:this={editInput}
 						type={field.type === 'number' ? 'number' : 'text'}
 						value={entityData[field.label.toLowerCase().replace(' ', '_')] || ''}
 						on:blur={(e) => finishEdit(field.label.toLowerCase().replace(' ', '_'), e.currentTarget.value)}
 						on:keydown={(e) => { if (e.key === 'Enter') finishEdit(field.label.toLowerCase().replace(' ', '_'), e.currentTarget.value); }}
-						autofocus
 						class="field-input"
 					/>
 				{:else}

@@ -1,0 +1,22 @@
+[package]
+name = "extended-compute"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "extended_http_bridge"
+path = "src/bin/http_bridge.rs"
+
+[dependencies]
+common = { path = "../common" }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tiny_http = "0.12"
+bridge-core = { path = "../bridge-core" }
+
+[dev-dependencies]
+criterion = { version = "0.5", features = ["html_reports"] }
+
+[[bench]]
+name = "extended_bench"
+harness = false

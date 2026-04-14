@@ -20,16 +20,16 @@ const (
 )
 
 type Asset struct {
-	ID               uuid.UUID          `json:"id"`
-	Name             string             `json:"name"`
-	Manufacturer     string             `json:"manufacturer"`
-	Model            string             `json:"model"`
-	Category         AssetCategory      `json:"category"`
-	Dimensions       Dimensions         `json:"dimensions"`
+	ID               uuid.UUID            `json:"id"`
+	Name             string               `json:"name"`
+	Manufacturer     string               `json:"manufacturer"`
+	Model            string               `json:"model"`
+	Category         AssetCategory        `json:"category"`
+	Dimensions       Dimensions           `json:"dimensions"`
 	ElectricalParams ElectricalParameters `json:"electrical_params"`
-	Model3DPath      string             `json:"model_3d_path,omitempty"`
-	DatasheetPath    string             `json:"datasheet_path,omitempty"`
-	Metadata         json.RawMessage    `json:"metadata,omitempty"`
+	Model3DPath      *string              `json:"model_3d_path,omitempty"`
+	DatasheetPath    *string              `json:"datasheet_path,omitempty"`
+	Metadata         json.RawMessage      `json:"metadata,omitempty"`
 }
 
 type Dimensions struct {
@@ -52,44 +52,44 @@ type ElectricalParameters struct {
 	TempCoeffIsc      float64 `json:"temp_coeff_isc,omitempty"`
 
 	// Inverter parameters
-	MaxDCInputKW    float64 `json:"max_dc_input_kw,omitempty"`
-	RatedACOutputKW float64 `json:"rated_ac_output_kw,omitempty"`
-	MaxACOutputKW   float64 `json:"max_ac_output_kw,omitempty"`
-	MaxInputVoltage float64 `json:"max_input_voltage,omitempty"`
-	MPPTRangeMinV   float64 `json:"mppt_range_min_v,omitempty"`
-	MPPTRangeMaxV   float64 `json:"mppt_range_max_v,omitempty"`
-	MPPTCount       int     `json:"mppt_count,omitempty"`
-	MaxStringsPerMPPT int   `json:"max_strings_per_mppt,omitempty"`
+	MaxDCInputKW      float64 `json:"max_dc_input_kw,omitempty"`
+	RatedACOutputKW   float64 `json:"rated_ac_output_kw,omitempty"`
+	MaxACOutputKW     float64 `json:"max_ac_output_kw,omitempty"`
+	MaxInputVoltage   float64 `json:"max_input_voltage,omitempty"`
+	MPPTRangeMinV     float64 `json:"mppt_range_min_v,omitempty"`
+	MPPTRangeMaxV     float64 `json:"mppt_range_max_v,omitempty"`
+	MPPTCount         int     `json:"mppt_count,omitempty"`
+	MaxStringsPerMPPT int     `json:"max_strings_per_mppt,omitempty"`
 
 	// Transformer parameters
-	RatedKVA        float64 `json:"rated_kva,omitempty"`
-	PrimaryVoltage  float64 `json:"primary_voltage,omitempty"`
+	RatedKVA         float64 `json:"rated_kva,omitempty"`
+	PrimaryVoltage   float64 `json:"primary_voltage,omitempty"`
 	SecondaryVoltage float64 `json:"secondary_voltage,omitempty"`
 	ImpedancePercent float64 `json:"impedance_percent,omitempty"`
 }
 
 type CreateAssetRequest struct {
-	Name             string             `json:"name"`
-	Manufacturer     string             `json:"manufacturer"`
-	Model            string             `json:"model"`
-	Category         AssetCategory      `json:"category"`
-	Dimensions       Dimensions         `json:"dimensions"`
+	Name             string               `json:"name"`
+	Manufacturer     string               `json:"manufacturer"`
+	Model            string               `json:"model"`
+	Category         AssetCategory        `json:"category"`
+	Dimensions       Dimensions           `json:"dimensions"`
 	ElectricalParams ElectricalParameters `json:"electrical_params"`
-	Model3DPath      string             `json:"model_3d_path,omitempty"`
-	DatasheetPath    string             `json:"datasheet_path,omitempty"`
-	Metadata         json.RawMessage    `json:"metadata,omitempty"`
+	Model3DPath      *string              `json:"model_3d_path,omitempty"`
+	DatasheetPath    *string              `json:"datasheet_path,omitempty"`
+	Metadata         json.RawMessage      `json:"metadata,omitempty"`
 }
 
 type UpdateAssetRequest struct {
-	Name             *string             `json:"name,omitempty"`
-	Manufacturer     *string             `json:"manufacturer,omitempty"`
-	Model            *string             `json:"model,omitempty"`
-	Category         *AssetCategory      `json:"category,omitempty"`
-	Dimensions       *Dimensions         `json:"dimensions,omitempty"`
+	Name             *string               `json:"name,omitempty"`
+	Manufacturer     *string               `json:"manufacturer,omitempty"`
+	Model            *string               `json:"model,omitempty"`
+	Category         *AssetCategory        `json:"category,omitempty"`
+	Dimensions       *Dimensions           `json:"dimensions,omitempty"`
 	ElectricalParams *ElectricalParameters `json:"electrical_params,omitempty"`
-	Model3DPath      *string             `json:"model_3d_path,omitempty"`
-	DatasheetPath    *string             `json:"datasheet_path,omitempty"`
-	Metadata         json.RawMessage     `json:"metadata,omitempty"`
+	Model3DPath      *string               `json:"model_3d_path,omitempty"`
+	DatasheetPath    *string               `json:"datasheet_path,omitempty"`
+	Metadata         json.RawMessage       `json:"metadata,omitempty"`
 }
 
 type AssetFilter struct {
@@ -97,3 +97,4 @@ type AssetFilter struct {
 	Manufacturer *string        `json:"manufacturer,omitempty"`
 	SearchQuery  *string        `json:"search_query,omitempty"`
 }
+

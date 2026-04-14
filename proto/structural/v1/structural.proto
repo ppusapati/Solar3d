@@ -1,0 +1,275 @@
+syntax = "proto3";
+
+package structural.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/structural/v1;structuralv1";
+
+import "google/protobuf/timestamp.proto";
+
+// StructuralService provides load analysis and design verification for solar
+// mounting structures.  All calculations are traceable to ASCE 7-16 / EN 1991.
+service StructuralService {
+  // Design lifecycle
+  rpc CreateDesign(CreateDesignRequest) returns (CreateDesignResponse);
+  // GetDesign returns a structural design by ID.
+  rpc GetDesign(GetDesignRequest) returns (GetDesignResponse);
+  // ListDesigns lists structural designs for a project.
+  rpc ListDesigns(ListDesignsRequest) returns (ListDesignsResponse);
+  // DeleteDesign removes a structural design by ID.
+  rpc DeleteDesign(DeleteDesignRequest) returns (DeleteDesignResponse);
+
+  // Load calculations — every result references the equation used.
+  rpc ComputeDeadLoad(ComputeDeadLoadRequest) returns (ComputeDeadLoadResponse);
+  // ComputeWindLoad calculates wind load for the design inputs.
+  rpc ComputeWindLoad(ComputeWindLoadRequest) returns (ComputeWindLoadResponse);
+  // ComputeSeismicLoad calculates seismic load for the design inputs.
+  rpc ComputeSeismicLoad(ComputeSeismicLoadRequest) returns (ComputeSeismicLoadResponse);
+  // ComputeFoundationRequirement estimates foundation requirements from loads and soil.
+  rpc ComputeFoundationRequirement(ComputeFoundationRequirementRequest) returns (ComputeFoundationRequirementResponse);
+  // ValidateStructuralDesign validates design constraints and reports violations.
+  rpc ValidateStructuralDesign(ValidateStructuralDesignRequest) returns (ValidateStructuralDesignResponse);
+
+  // Engineer review workflow
+  rpc SubmitForReview(SubmitForReviewRequest) returns (SubmitForReviewResponse);
+  // ApproveDesign marks a submitted design as approved.
+  rpc ApproveDesign(ApproveDesignRequest) returns (ApproveDesignResponse);
+  // RejectDesign marks a submitted design as rejected.
+  rpc RejectDesign(RejectDesignRequest) returns (RejectDesignResponse);
+
+  // Plain-text design report with all assumptions and equations
+  rpc GenerateStructuralReport(GenerateStructuralReportRequest) returns (GenerateStructuralReportResponse);
+}
+
+enum ReviewState {
+  REVIEW_STATE_UNSPECIFIED = 0;
+  REVIEW_STATE_DRAFT = 1;
+  REVIEW_STATE_SUBMITTED = 2;
+  REVIEW_STATE_APPROVED = 3;
+  REVIEW_STATE_REJECTED = 4;
+}
+
+enum ExposureCategory {
+  EXPOSURE_CATEGORY_UNSPECIFIED = 0;
+  EXPOSURE_CATEGORY_B = 1; // Suburban / urban
+  EXPOSURE_CATEGORY_C = 2; // Open terrain with scattered obstructions
+  EXPOSURE_CATEGORY_D = 3; // Flat, unobstructed coastal/lakefront
+}
+
+enum FoundationType {
+  FOUNDATION_TYPE_UNSPECIFIED = 0;
+  FOUNDATION_TYPE_DRIVEN_PILE = 1; // Steel H-pile or pipe pile
+  FOUNDATION_TYPE_CONCRETE_PILE = 2; // Bored cast-in-place
+  FOUNDATION_TYPE_BALLAST = 3; // Concrete ballast blocks (flat roof)
+  FOUNDATION_TYPE_SCREW_PILE = 4; // Helical screw anchor
+}
+
+message StructuralDesign {
+  string id = 1;
+  string project_id = 2;
+  string name = 3;
+  ReviewState review_state = 4;
+  string reviewed_by = 5;
+  string review_notes = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
+  // Snapshot of the last computed loads (populated after ComputeX calls)
+  double dead_load_kn = 9;
+  double wind_load_kn = 10;
+  double seismic_load_kn = 11;
+  double governing_load_kn = 12; // factored: 1.2D + 1.6W controlling combo
+  FoundationResult foundation = 13;
+}
+
+// ── Dead Load ────────────────────────────────────────────────────────────────
+
+message ComputeDeadLoadRequest {
+  string design_id = 1;
+  int32  panel_count = 2;
+  double panel_mass_kg = 3; // mass per panel (default 25 kg)
+  double mounting_mass_per_panel_kg = 4; // mass of rails/clamps per panel (default 15 kg)
+  double cable_mass_kg = 5; // total cabling mass
+}
+
+message ComputeDeadLoadResponse {
+  string design_id = 1;
+  double panel_mass_total_kg = 2;
+  double mounting_mass_total_kg = 3;
+  double cable_mass_kg = 4;
+  double total_mass_kg = 5;
+  double dead_load_kn = 6; // total_mass × g / 1000
+  string equation = 7; // human-readable equation used
+}
+
+// ── Wind Load (ASCE 7-16 Components & Cladding method) ──────────────────────
+
+message ComputeWindLoadRequest {
+  string design_id = 1;
+  double wind_speed_m_s = 2; // 3-second gust design wind speed (m/s)
+  ExposureCategory exposure = 3;
+  double height_m = 4; // mean roof / mounting height above grade
+  double panel_tilt_deg = 5; // panel tilt from horizontal (°)
+  double total_panel_area_sqm = 6;
+  // Optional — if 0, code defaults are used
+  double k_zt = 7; // topographic factor (default 1.0)
+  double k_d = 8; // directionality factor (default 0.85)
+  double gust_factor = 9; // G (default 0.85)
+}
+
+message ComputeWindLoadResponse {
+  string design_id = 1;
+  double k_z = 2; // velocity pressure exposure coefficient
+  double q_z_pa = 3; // velocity pressure (Pa)
+  double c_p = 4; // net pressure coefficient (from tilt)
+  double pressure_pa = 5; // design wind pressure = G × Cp × q_z
+  double total_wind_force_kn = 6; // pressure × area / 1000
+  double wind_uplift_kn = 7; // uplift component (upward thrust)
+  string equation = 8;
+}
+
+// ── Seismic Load (ASCE 7-16 §12.8 Equivalent Lateral Force) ─────────────────
+
+message ComputeSeismicLoadRequest {
+  string design_id = 1;
+  double sds = 2; // Design spectral acceleration (g), 0.2s period
+  double total_mass_kg = 3; // Seismic weight W = dead load
+  double r_factor = 4; // Response modification factor (default 1.5 for freestanding)
+  double importance_factor = 5; // I_e (default 1.0)
+  // leave 0 for code minimum
+  double cs_override = 6;
+}
+
+message ComputeSeismicLoadResponse {
+  string design_id = 1;
+  double cs = 2; // seismic response coefficient
+  double seismic_weight_kn = 3; // W in kN
+  double base_shear_kn = 4; // V = Cs × W
+  double equation = 5; // reserved – use string representation
+  string equation_str = 6;
+}
+
+// ── Foundation ───────────────────────────────────────────────────────────────
+
+message ComputeFoundationRequirementRequest {
+  string design_id = 1;
+  double dead_load_kn = 2;
+  double wind_load_kn = 3;
+  double seismic_load_kn = 4;
+  FoundationType foundation_type = 5;
+  double pile_capacity_kn = 6; // allowable load per pile/anchor (default 50 kN)
+  double total_area_sqm = 7; // footprint for spacing calculation
+}
+
+message FoundationResult {
+  int32  pile_count = 1;
+  double design_load_kn = 2; // governing factored load combination
+  double pile_spacing_m = 3; // uniform grid spacing estimate
+  FoundationType foundation_type = 4;
+  double pile_capacity_kn = 5;
+  string load_combination = 6; // e.g. "1.2D + 1.6W"
+}
+
+message ComputeFoundationRequirementResponse {
+  string design_id = 1;
+  FoundationResult result = 2;
+  string equation = 3;
+}
+
+// ── Combined Validation ──────────────────────────────────────────────────────
+
+message StructuralViolation {
+  string code = 1;
+  string message = 2;
+  double limit = 3;
+  double actual = 4;
+}
+
+message ValidateStructuralDesignRequest {
+  string design_id = 1;
+  // Override limits; 0 = use code defaults
+  double max_dc_ac_ratio = 2; // unused here — forward compat
+  double max_wind_pressure_pa = 3;
+  double max_seismic_coefficient = 4;
+}
+
+message ValidateStructuralDesignResponse {
+  bool valid = 1;
+  repeated StructuralViolation violations = 2;
+  double utilization_ratio = 3; // governing_load / pile_count × pile_capacity
+}
+
+// ── Review Workflow ──────────────────────────────────────────────────────────
+
+message SubmitForReviewRequest {
+  string design_id = 1;
+  string submitted_by = 2;
+  string notes = 3;
+}
+
+message SubmitForReviewResponse {
+  StructuralDesign design = 1;
+}
+
+message ApproveDesignRequest {
+  string design_id = 1;
+  string approved_by = 2;
+  string notes = 3;
+}
+
+message ApproveDesignResponse {
+  StructuralDesign design = 1;
+}
+
+message RejectDesignRequest {
+  string design_id = 1;
+  string rejected_by = 2;
+  string reason = 3;
+}
+
+message RejectDesignResponse {
+  StructuralDesign design = 1;
+}
+
+// ── Report ───────────────────────────────────────────────────────────────────
+
+message GenerateStructuralReportRequest {
+  string design_id = 1;
+}
+
+message GenerateStructuralReportResponse {
+  string design_id = 1;
+  string report_text = 2; // plain-text report with all equations and values
+  ReviewState review_state = 3;
+}
+
+// ── CRUD scaffolding ─────────────────────────────────────────────────────────
+
+message CreateDesignRequest {
+  string project_id = 1;
+  string name = 2;
+}
+
+message CreateDesignResponse {
+  StructuralDesign design = 1;
+}
+
+message GetDesignRequest {
+  string id = 1;
+}
+
+message GetDesignResponse {
+  StructuralDesign design = 1;
+}
+
+message ListDesignsRequest {
+  string project_id = 1;
+}
+
+message ListDesignsResponse {
+  repeated StructuralDesign designs = 1;
+}
+
+message DeleteDesignRequest {
+  string id = 1;
+}
+
+message DeleteDesignResponse {}

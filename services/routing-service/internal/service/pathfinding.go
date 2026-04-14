@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/solar3d/solar3d/services/routing-service/internal/domain"
+	"solar3d/routing-service/internal/domain"
 )
 
 // GridNode represents a position on the terrain grid.
@@ -24,15 +24,26 @@ type astarNode struct {
 // priorityQueue implements heap.Interface for A* open set.
 type priorityQueue []*astarNode
 
-func (pq priorityQueue) Len() int            { return len(pq) }
-func (pq priorityQueue) Less(i, j int) bool  { return pq[i].fCost < pq[j].fCost }
-func (pq priorityQueue) Swap(i, j int)       { pq[i], pq[j] = pq[j], pq[i]; pq[i].index = i; pq[j].index = j }
-func (pq *priorityQueue) Push(x interface{}) { n := x.(*astarNode); n.index = len(*pq); *pq = append(*pq, n) }
-func (pq *priorityQueue) Pop() interface{}   { old := *pq; n := old[len(old)-1]; old[len(old)-1] = nil; n.index = -1; *pq = old[:len(old)-1]; return n }
+func (pq priorityQueue) Len() int           { return len(pq) }
+func (pq priorityQueue) Less(i, j int) bool { return pq[i].fCost < pq[j].fCost }
+func (pq priorityQueue) Swap(i, j int)      { pq[i], pq[j] = pq[j], pq[i]; pq[i].index = i; pq[j].index = j }
+func (pq *priorityQueue) Push(x interface{}) {
+	n := x.(*astarNode)
+	n.index = len(*pq)
+	*pq = append(*pq, n)
+}
+func (pq *priorityQueue) Pop() interface{} {
+	old := *pq
+	n := old[len(old)-1]
+	old[len(old)-1] = nil
+	n.index = -1
+	*pq = old[:len(old)-1]
+	return n
+}
 
 // neighbors returns the 8-connected grid neighbors of a node.
 var directions = [8][2]int{
-	{-1, 0}, {1, 0}, {0, -1}, {0, 1},  // Cardinal
+	{-1, 0}, {1, 0}, {0, -1}, {0, 1}, // Cardinal
 	{-1, -1}, {-1, 1}, {1, -1}, {1, 1}, // Diagonal
 }
 
@@ -243,3 +254,4 @@ func CalculatePathDistance(terrain *domain.TerrainGrid, path []GridNode) float64
 	}
 	return total
 }
+

@@ -1,0 +1,18 @@
+# Report Service Dockerfile
+
+
+FROM golang:1.26-alpine as builder
+WORKDIR /app
+# Copy service source from monorepo root context
+COPY services/report-service .
+# Copy shared module from monorepo root context
+COPY services/shared ./shared
+WORKDIR /app/cmd/server
+RUN go mod tidy
+RUN go build -o /app/server
+
+FROM alpine:latest
+WORKDIR /root/
+COPY --from=builder /app/server .
+EXPOSE 8080
+CMD ["./server"]

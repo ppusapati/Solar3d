@@ -7,8 +7,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 
-	"github.com/solar3d/solar3d/services/asset-service/internal/domain"
-	"github.com/solar3d/solar3d/services/asset-service/internal/repository"
+	"solar3d/asset-service/internal/domain"
+	"solar3d/asset-service/internal/repository"
+	"solar3d/shared/audit"
 )
 
 type AssetService struct {
@@ -42,6 +43,11 @@ func (s *AssetService) Create(ctx context.Context, req domain.CreateAssetRequest
 		Str("name", asset.Name).
 		Str("category", string(asset.Category)).
 		Msg("asset created")
+
+	event := audit.NewAuditEvent(audit.EventCreated, "asset", asset.ID.String(), actorIDFromContext(ctx, "asset-service"))
+	event.RecordMetadata("category", string(asset.Category))
+	event.RecordMetadata("name", asset.Name)
+	audit.LogToContext(ctx, event)
 
 	return asset, nil
 }
@@ -87,10 +93,10 @@ func (s *AssetService) Update(ctx context.Context, id uuid.UUID, req domain.Upda
 		asset.ElectricalParams = *req.ElectricalParams
 	}
 	if req.Model3DPath != nil {
-		asset.Model3DPath = *req.Model3DPath
+		asset.Model3DPath = req.Model3DPath
 	}
 	if req.DatasheetPath != nil {
-		asset.DatasheetPath = *req.DatasheetPath
+		asset.DatasheetPath = req.DatasheetPath
 	}
 	if req.Metadata != nil {
 		asset.Metadata = req.Metadata
@@ -105,6 +111,10 @@ func (s *AssetService) Update(ctx context.Context, id uuid.UUID, req domain.Upda
 		Str("name", asset.Name).
 		Msg("asset updated")
 
+	event := audit.NewAuditEvent(audit.EventUpdated, "asset", asset.ID.String(), actorIDFromContext(ctx, "asset-service"))
+	event.RecordMetadata("name", asset.Name)
+	audit.LogToContext(ctx, event)
+
 	return asset, nil
 }
 
@@ -117,5 +127,16 @@ func (s *AssetService) Delete(ctx context.Context, id uuid.UUID) error {
 		Str("asset_id", id.String()).
 		Msg("asset deleted")
 
+	event := audit.NewAuditEvent(audit.EventDeleted, "asset", id.String(), actorIDFromContext(ctx, "asset-service"))
+	audit.LogToContext(ctx, event)
+
 	return nil
 }
+
+func actorIDFromContext(ctx context.Context, fallback string) string {
+	if v, ok := ctx.Value("actor_id").(string); ok && v != "" {
+		return v
+	}
+	return fallback
+}
+

@@ -6,16 +6,18 @@ import (
 )
 
 type Config struct {
-	Port        string
-	DatabaseURL string
-	LogLevel    string
+	Port             string
+	DatabaseURL      string
+	OrchestrationURL string
+	LogLevel         string
 }
 
 func Load() (*Config, error) {
 	cfg := &Config{
-		Port:        getEnv("PORT", "8084"),
-		DatabaseURL: getEnv("DATABASE_URL", ""),
-		LogLevel:    getEnv("LOG_LEVEL", "info"),
+		Port:             getEnv("PORT", "8084"),
+		DatabaseURL:      getEnv("DATABASE_URL", ""),
+		OrchestrationURL: getEnv("ORCHESTRATION_URL", "http://127.0.0.1:50059"),
+		LogLevel:         getEnv("LOG_LEVEL", "info"),
 	}
 
 	if cfg.DatabaseURL == "" {
@@ -31,3 +33,4 @@ func getEnv(key, fallback string) string {
 	}
 	return fallback
 }
+

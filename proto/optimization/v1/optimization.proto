@@ -1,0 +1,118 @@
+syntax = "proto3";
+
+package optimization.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/optimization/v1;optimizationv1";
+
+import "optimization/v1/optimization_domain.proto";
+
+service OptimizationService {
+  rpc ParetoFrontier(AddToFrontierRequest) returns (ParetoFrontierResponse);
+  rpc MonteCarloSampling(MonteCarloRequest) returns (MonteCarloResponse);
+  rpc GeneticAlgorithm(GARequest) returns (GAResponse);
+  rpc SimulatedAnnealing(SARequest) returns (SAResponse);
+  rpc ParticleSwarmOptimization(PSORequest) returns (PSOResponse);
+}
+
+message Objective {
+  string name = 1;
+  enum ObjectiveKind {
+    MINIMIZE = 0;
+    MAXIMIZE = 1;
+  }
+  ObjectiveKind kind = 2;
+  double weight = 3;
+}
+
+message Solution {
+  int32 id = 1;
+  repeated double variables = 2;
+  repeated double objectives = 3;
+  double rank = 4;
+  double crowding_distance = 5;
+}
+
+message ParetoFrontierResponse {
+  repeated Solution solutions = 1;
+  int32 frontier_size = 2;
+  repeated int32 solution_ids = 3;
+}
+
+message AddToFrontierRequest {
+  repeated Objective objectives = 1;
+  Solution new_solution = 2;
+  MultiObjectiveOptimizationInput input = 10;
+}
+
+message Distribution {
+  double mean = 1;
+  double std_dev = 2;
+}
+
+message MonteCarloRequest {
+  repeated Distribution distributions = 1;
+  int32 num_samples = 2;
+  int64 seed = 3;
+  UncertaintyModel uncertainty_model = 10;
+}
+
+message MonteCarloResponse {
+  double mean = 1;
+  double std_dev = 2;
+  double p10 = 3;
+  double p50 = 4;
+  double p90 = 5;
+  double min_value = 6;
+  double max_value = 7;
+}
+
+message GARequest {
+  int32 population_size = 1;
+  int32 generations = 2;
+  double crossover_rate = 3;
+  double mutation_rate = 4;
+  int32 elite_count = 5;
+  int64 seed = 6;
+  repeated double initial_population = 7;
+  OptimizationProblem problem = 10;
+}
+
+message GAResponse {
+  double best_fitness = 1;
+  repeated double best_genes = 2;
+  int32 generations_completed = 3;
+}
+
+message SARequest {
+  double initial_temperature = 1;
+  double cooling_rate = 2;
+  int32 iterations = 3;
+  double perturbation_scale = 4;
+  int64 seed = 5;
+  repeated double initial_solution = 6;
+  OptimizationProblem problem = 10;
+}
+
+message SAResponse {
+  double best_energy = 1;
+  repeated double best_solution = 2;
+  double final_temperature = 3;
+}
+
+message PSORequest {
+  int32 num_particles = 1;
+  int32 iterations = 2;
+  double c1 = 3;
+  double c2 = 4;
+  double w = 5;
+  double boundary_min = 6;
+  double boundary_max = 7;
+  int64 seed = 8;
+  OptimizationProblem problem = 10;
+}
+
+message PSOResponse {
+  double best_position = 1;
+  double best_value = 2;
+  int32 iterations_completed = 3;
+}

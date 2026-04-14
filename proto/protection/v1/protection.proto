@@ -1,0 +1,217 @@
+syntax = "proto3";
+
+package protection.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/protection/v1;protectionv1";
+
+import "google/protobuf/timestamp.proto";
+
+// ProtectionService implements IEC 60909 short-circuit and IEC 60255 protective
+// relay studies for solar plant HV/MV networks.
+service ProtectionService {
+  // Study management
+  rpc CreateStudy(CreateStudyRequest) returns (CreateStudyResponse);
+  rpc GetStudy(GetStudyRequest) returns (GetStudyResponse);
+  rpc ListStudies(ListStudiesRequest) returns (ListStudiesResponse);
+  rpc DeleteStudy(DeleteStudyRequest) returns (DeleteStudyResponse);
+
+  // Fault calculations
+  rpc ComputeShortCircuit(ComputeShortCircuitRequest) returns (ComputeShortCircuitResponse);
+  rpc ComputeEarthFault(ComputeEarthFaultRequest) returns (ComputeEarthFaultResponse);
+
+  // Relay selection and settings
+  rpc SelectRelay(SelectRelayRequest) returns (SelectRelayResponse);
+  rpc ComputeRelaySettings(ComputeRelaySettingsRequest) returns (ComputeRelaySettingsResponse);
+
+  // Coordination check across upstream/downstream hierarchy
+  rpc ValidateCoordination(ValidateCoordinationRequest) returns (ValidateCoordinationResponse);
+
+  // Plain-text protection study report
+  rpc GenerateProtectionReport(GenerateProtectionReportRequest) returns (GenerateProtectionReportResponse);
+}
+
+enum NeutralEarthing {
+  NEUTRAL_EARTHING_UNSPECIFIED = 0;
+  NEUTRAL_EARTHING_SOLID = 1; // directly earthed
+  NEUTRAL_EARTHING_RESISTANCE = 2; // NGR / NER
+  NEUTRAL_EARTHING_PETERSEN_COIL = 3; // resonant / compensated
+  NEUTRAL_EARTHING_ISOLATED = 4; // unearthed
+}
+
+enum RelayCharacteristic {
+  RELAY_CHARACTERISTIC_UNSPECIFIED = 0;
+  RELAY_CHARACTERISTIC_STANDARD_INVERSE = 1; // IEC 60255 SI: 0.14/(M^0.02 -1)
+  RELAY_CHARACTERISTIC_VERY_INVERSE = 2; // VI: 13.5/(M-1)
+  RELAY_CHARACTERISTIC_EXTREMELY_INVERSE = 3; // EI: 80/(M^2-1)
+  RELAY_CHARACTERISTIC_DEFINITE_TIME = 4; // flat time
+}
+
+message ProtectionStudy {
+  string id = 1;
+  string project_id = 2;
+  string name = 3;
+  double system_voltage_kv = 4;
+  double source_impedance_pu = 5; // positive-sequence source impedance in p.u. on 100MVA base
+  double mva_base = 6; // MVA base for per-unit calculations
+  google.protobuf.Timestamp created_at = 7;
+}
+
+// ── Short-Circuit (IEC 60909 / symmetrical components) ──────────────────────
+
+message ComputeShortCircuitRequest {
+  string study_id = 1;
+  double voltage_kv = 2; // nominal line voltage
+  double source_impedance_ohm = 3; // positive-sequence source (Thevenin) impedance
+  double cable_resistance_ohm = 4; // cable positive-sequence resistance
+  double cable_reactance_ohm = 5; // cable positive-sequence reactance
+  double zero_seq_impedance_ohm = 6; // zero-sequence impedance (for SLG)
+  bool   include_single_line_to_ground = 7;
+}
+
+message ComputeShortCircuitResponse {
+  string study_id = 1;
+  double v_ln_kv = 2; // line-to-neutral voltage (kV)
+  double z_total_pos_seq_ohm = 3; // Z1 = Z_source + Z_cable
+  double i_fault_3ph_ka = 4; // three-phase symmetrical fault (kA)
+  // Single-line-to-ground (if requested)
+  bool   slg_computed = 5;
+  double z_total_zero_seq_ohm = 6; // Z0
+  double i_fault_slg_ka = 7; // I_f1φ = 3V_LN / (Z1 + Z2 + Z0), Z2=Z1
+  double governing_fault_ka = 8; // max(I_3ph, I_slg)
+  string equation = 9;
+}
+
+// ── Earth Fault ──────────────────────────────────────────────────────────────
+
+message ComputeEarthFaultRequest {
+  string study_id = 1;
+  double voltage_kv = 2;
+  NeutralEarthing earthing_method = 3;
+  double ngr_resistance_ohm = 4; // only for RESISTANCE earthing
+  double cable_resistance_ohm = 5;
+}
+
+message ComputeEarthFaultResponse {
+  string study_id = 1;
+  NeutralEarthing earthing_method = 2;
+  double earth_fault_current_ka = 3;
+  double touch_voltage_v = 4; // I_ef × R_earth_grid (estimated 1 Ω)
+  string equation = 5;
+}
+
+// ── Relay Selection ──────────────────────────────────────────────────────────
+
+message SelectRelayRequest {
+  string study_id = 1;
+  double fault_current_ka = 2; // maximum fault current at location
+  double load_current_a = 3; // normal load current (for pickup setting)
+  // preference
+  RelayCharacteristic preferred_characteristic = 4;
+}
+
+message RelaySelection {
+  string relay_id = 1; // deterministically generated reference
+  string make_model = 2; // e.g. "IEC 60255-151 compliant OCDT relay"
+  RelayCharacteristic characteristic = 3;
+  double pickup_current_a = 4; // I_pickup = 1.2 × I_load
+  double time_dial_setting = 5; // TDS (starting point)
+  string rationale = 6;
+}
+
+message SelectRelayResponse {
+  string study_id = 1;
+  RelaySelection relay = 2;
+}
+
+// ── Relay Settings ───────────────────────────────────────────────────────────
+
+message ComputeRelaySettingsRequest {
+  string study_id = 1;
+  RelayCharacteristic characteristic = 2;
+  double pickup_current_a = 3;
+  double time_dial_setting = 4;
+  double fault_current_a = 5; // evaluate operating time at this current
+}
+
+message ComputeRelaySettingsResponse {
+  string study_id = 1;
+  double multiplier = 2; // M = I_fault / I_pickup
+  double operating_time_s = 3; // time for relay to trip
+  RelayCharacteristic characteristic = 4;
+  string equation = 5;
+}
+
+// ── Coordination ─────────────────────────────────────────────────────────────
+
+message CoordinationPair {
+  string upstream_relay_id = 1;
+  string downstream_relay_id = 2;
+  double upstream_time_s = 3;
+  double downstream_time_s = 4;
+  double margin_s = 5; // upstream − downstream
+}
+
+message ValidateCoordinationRequest {
+  string study_id = 1;
+  repeated CoordinationPair pairs = 2;
+  double minimum_margin_s = 3; // IEC default 0.3 s
+}
+
+message CoordinationViolation {
+  string upstream_relay_id = 1;
+  string downstream_relay_id = 2;
+  double margin_s = 3;
+  double minimum_required_s = 4;
+}
+
+message ValidateCoordinationResponse {
+  bool valid = 1;
+  repeated CoordinationViolation violations = 2;
+}
+
+// ── Report ────────────────────────────────────────────────────────────────────
+
+message GenerateProtectionReportRequest {
+  string study_id = 1;
+}
+
+message GenerateProtectionReportResponse {
+  string study_id = 1;
+  string report_text = 2;
+}
+
+// ── CRUD ─────────────────────────────────────────────────────────────────────
+
+message CreateStudyRequest {
+  string project_id = 1;
+  string name = 2;
+  double system_voltage_kv = 3;
+  double source_impedance_pu = 4;
+  double mva_base = 5;
+}
+
+message CreateStudyResponse {
+  ProtectionStudy study = 1;
+}
+
+message GetStudyRequest {
+  string id = 1;
+}
+
+message GetStudyResponse {
+  ProtectionStudy study = 1;
+}
+
+message ListStudiesRequest {
+  string project_id = 1;
+}
+
+message ListStudiesResponse {
+  repeated ProtectionStudy studies = 1;
+}
+
+message DeleteStudyRequest {
+  string id = 1;
+}
+
+message DeleteStudyResponse {}

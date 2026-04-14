@@ -5,6 +5,28 @@ modules:
 lint:
   use:
     - STANDARD
+  ignore_only:
+    RPC_REQUEST_RESPONSE_UNIQUE:
+      - simulation/v1/simulation.proto
+      - terrain/v1/terrain.proto
+    RPC_REQUEST_STANDARD_NAME:
+      - ml_inference/v1/ml_inference.proto
+      - optimization/v1/optimization.proto
+      - solar/v1/solar.proto
+    RPC_RESPONSE_STANDARD_NAME:
+      - ml_inference/v1/ml_inference.proto
+      - optimization/v1/optimization.proto
+      - solar/v1/solar.proto
+    ENUM_VALUE_PREFIX:
+      - ml_inference/v1/ml_inference.proto
+      - optimization/v1/optimization.proto
+      - kml/v1/kml_ingestion.proto
+      - planning/v1/planning_workflow.proto
+    ENUM_ZERO_VALUE_SUFFIX:
+      - ml_inference/v1/ml_inference.proto
+      - optimization/v1/optimization.proto
+      - kml/v1/kml_ingestion.proto
 breaking:
   use:
     - FILE
+    - WIRE_JSON

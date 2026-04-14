@@ -21,17 +21,22 @@
 				{ keys: 'B', action: 'Draw boundary' },
 				{ keys: 'A', action: 'Draw panel area' },
 				{ keys: 'P', action: 'Place component' },
-				{ keys: 'M', action: 'Measure distance' }
+				{ keys: 'M', action: 'Measure distance' },
+				{ keys: 'D', action: 'Draw dimension' },
+				{ keys: 'I', action: 'Insert selected CAD block' }
 			]
 		},
 		{
 			category: 'Navigation',
 			items: [
 				{ keys: '1', action: 'Design view' },
-				{ keys: '2', action: 'Simulate view' },
-				{ keys: '3', action: 'Electrical view' },
-				{ keys: '4', action: 'Reports view' },
-				{ keys: '5', action: 'Financial view' },
+				{ keys: '2', action: 'CAD view' },
+				{ keys: '3', action: 'Simulate view' },
+				{ keys: '4', action: 'Electrical view' },
+				{ keys: '7', action: 'Transmission view' },
+				{ keys: '8', action: 'Commissioning view' },
+				{ keys: '5', action: 'Reports view' },
+				{ keys: '6', action: 'Financial view' },
 				{ keys: 'F', action: 'Focus on selection' }
 			]
 		},
@@ -49,13 +54,27 @@
 	function close() {
 		open = false;
 	}
+
+	function handleOverlayKeydown(event: KeyboardEvent) {
+		if (event.key === 'Escape') {
+			close();
+		}
+	}
 </script>
 
 {#if open}
-	<div class="overlay" on:click|self={close}>
+	<div
+		class="overlay"
+		role="dialog"
+		aria-modal="true"
+		aria-labelledby="keyboard-shortcuts-title"
+		tabindex="-1"
+		on:click|self={close}
+		on:keydown={handleOverlayKeydown}
+	>
 		<div class="shortcuts-modal">
 			<div class="modal-header">
-				<h2>Keyboard Shortcuts</h2>
+				<h2 id="keyboard-shortcuts-title">Keyboard Shortcuts</h2>
 				<button class="btn-close" on:click={close}>x</button>
 			</div>
 

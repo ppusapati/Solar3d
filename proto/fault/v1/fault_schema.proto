@@ -1,0 +1,186 @@
+syntax = "proto3";
+
+package fault.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/fault/v1;faultv1";
+
+import "google/protobuf/timestamp.proto";
+
+// FaultService manages operational fault events received from digital twins,
+// SCADA systems, protection relays, and manual reports.  Fault codes align
+// with IEC 60909 (short-circuit fault calculations) and IEC 61724-1 (PV system
+// performance monitoring) where applicable.
+service FaultService {
+  // ReportFault creates a new fault event for a digital twin asset.
+  // The twin_id must correspond to an ACTIVE DigitalTwin.
+  rpc ReportFault(ReportFaultRequest) returns (ReportFaultResponse);
+
+  // GetFault retrieves a single fault event by its unique ID.
+  rpc GetFault(GetFaultRequest) returns (GetFaultResponse);
+
+  // ListFaults returns fault events filtered by twin, project, severity or status.
+  // Results are ordered by detected_at descending.
+  rpc ListFaults(ListFaultsRequest) returns (ListFaultsResponse);
+
+  // AcknowledgeFault marks a fault as seen by an operator.  Only faults in
+  // FAULT_STATUS_ACTIVE state may be acknowledged; others return FAILED_PRECONDITION.
+  rpc AcknowledgeFault(AcknowledgeFaultRequest) returns (AcknowledgeFaultResponse);
+
+  // ResolveFault closes a fault with operator resolution notes.  Faults must be
+  // in FAULT_STATUS_ACTIVE or FAULT_STATUS_ACKNOWLEDGED state to be resolved.
+  rpc ResolveFault(ResolveFaultRequest) returns (ResolveFaultResponse);
+}
+
+// ── Enums ────────────────────────────────────────────────────────────────────
+
+// FaultType classifies the physical or logical nature of the fault condition.
+// Electrical types align with IEC 60909 symmetrical component analysis categories.
+enum FaultType {
+  FAULT_TYPE_UNSPECIFIED = 0;
+  // FAULT_TYPE_OVERCURRENT: Current exceeds protective relay pickup threshold.
+  FAULT_TYPE_OVERCURRENT = 1;
+  // FAULT_TYPE_EARTH_FAULT: Ground fault detected (phase-to-earth, IEC 60909 SLG).
+  FAULT_TYPE_EARTH_FAULT = 2;
+  // FAULT_TYPE_UNDERVOLTAGE: Bus voltage below minimum operating threshold.
+  FAULT_TYPE_UNDERVOLTAGE = 3;
+  // FAULT_TYPE_OVERVOLTAGE: Bus voltage above maximum operating threshold.
+  FAULT_TYPE_OVERVOLTAGE = 4;
+  // FAULT_TYPE_INVERTER_TRIP: Inverter protection tripped (MPPT, DC isolation failure, etc.).
+  FAULT_TYPE_INVERTER_TRIP = 5;
+  // FAULT_TYPE_COMMUNICATION_LOSS: SCADA or Modbus communication to asset lost.
+  FAULT_TYPE_COMMUNICATION_LOSS = 6;
+  // FAULT_TYPE_THERMAL: Temperature sensor exceeded design operating limits.
+  FAULT_TYPE_THERMAL = 7;
+  // FAULT_TYPE_MECHANICAL: Mechanical damage, tracker failure, or structural anomaly.
+  FAULT_TYPE_MECHANICAL = 8;
+  // FAULT_TYPE_PROTECTION_TRIP: Protection relay operated; circuit isolated.
+  FAULT_TYPE_PROTECTION_TRIP = 9;
+}
+
+// FaultSeverity represents the operational impact classification of the fault.
+enum FaultSeverity {
+  FAULT_SEVERITY_UNSPECIFIED = 0;
+  // FAULT_SEVERITY_INFO: Informational/monitoring event; no immediate action required.
+  FAULT_SEVERITY_INFO = 1;
+  // FAULT_SEVERITY_WARNING: Degraded performance; monitor and schedule maintenance.
+  FAULT_SEVERITY_WARNING = 2;
+  // FAULT_SEVERITY_CRITICAL: Significant revenue or equipment loss; respond within 4 hours.
+  FAULT_SEVERITY_CRITICAL = 3;
+  // FAULT_SEVERITY_EMERGENCY: Plant safety risk or grid code violation; immediate response required.
+  FAULT_SEVERITY_EMERGENCY = 4;
+}
+
+// FaultStatus tracks the lifecycle of a fault event from detection to resolution.
+enum FaultStatus {
+  FAULT_STATUS_UNSPECIFIED = 0;
+  // FAULT_STATUS_ACTIVE: Fault detected; no operator action taken yet.
+  FAULT_STATUS_ACTIVE = 1;
+  // FAULT_STATUS_ACKNOWLEDGED: Operator has seen the fault; remediation in progress.
+  FAULT_STATUS_ACKNOWLEDGED = 2;
+  // FAULT_STATUS_RESOLVED: Fault cleared; equipment returned to normal operation.
+  FAULT_STATUS_RESOLVED = 3;
+}
+
+// ── Domain messages ──────────────────────────────────────────────────────────
+
+// FaultEvent represents a single operational fault detected in a provisioned
+// digital twin asset.  All audit fields (detected_at, acknowledged_at,
+// resolved_at) are immutable once set.
+message FaultEvent {
+  string id = 1;
+  // twin_id: The digital twin in which the fault was detected.
+  string twin_id = 2;
+  string project_id = 3;
+  // asset_identity_id: Optional — links to the physical asset that triggered the fault.
+  string asset_identity_id = 4;
+  // fault_code: Vendor or standard fault code (e.g., IEC 60255 relay alarm code,
+  // inverter manufacturer alarm ID, or IEC 61724-1 energy loss category code).
+  string fault_code = 5;
+  FaultType fault_type = 6;
+  FaultSeverity severity = 7;
+  string description = 8;
+  FaultStatus status = 9;
+  // source_system: Originating system (e.g., "SCADA", "protection_relay", "manual", "telemetry").
+  string source_system = 10;
+  google.protobuf.Timestamp detected_at = 11;
+  // acknowledged_at: Set when AcknowledgeFault is called; empty if not yet acknowledged.
+  google.protobuf.Timestamp acknowledged_at = 12;
+  // acknowledged_by_actor_id: Operator who acknowledged the fault.
+  string acknowledged_by_actor_id = 13;
+  // resolved_at: Set when ResolveFault is called; empty if not yet resolved.
+  google.protobuf.Timestamp resolved_at = 14;
+  // resolved_by_actor_id: Operator who resolved the fault.
+  string resolved_by_actor_id = 15;
+  // resolution_notes: Free-form description of corrective action taken.
+  string resolution_notes = 16;
+  // metadata_json: Optional JSON for SCADA-specific event payload or vendor diagnostics.
+  string metadata_json = 17;
+  google.protobuf.Timestamp created_at = 18;
+  google.protobuf.Timestamp updated_at = 19;
+}
+
+// ── RPC Request / Response Messages ─────────────────────────────────────────
+
+message ReportFaultRequest {
+  string twin_id = 1;
+  string project_id = 2;
+  string asset_identity_id = 3;
+  string fault_code = 4;
+  FaultType fault_type = 5;
+  FaultSeverity severity = 6;
+  string description = 7;
+  string source_system = 8;
+  // detected_at: Caller-supplied detection time; defaults to server time if empty.
+  google.protobuf.Timestamp detected_at = 9;
+  string metadata_json = 10;
+}
+
+message ReportFaultResponse {
+  FaultEvent fault_event = 1;
+}
+
+message GetFaultRequest {
+  string fault_id = 1;
+}
+
+message GetFaultResponse {
+  FaultEvent fault_event = 1;
+}
+
+message ListFaultsRequest {
+  // twin_id: If set, returns faults for that twin only.
+  string twin_id = 1;
+  // project_id: If set (and twin_id is empty), returns faults across all twins for the project.
+  string project_id = 2;
+  // severity_filter: If UNSPECIFIED, all severities are returned.
+  FaultSeverity severity_filter = 3;
+  // status_filter: If UNSPECIFIED, all statuses are returned.
+  FaultStatus status_filter = 4;
+  int32 page_size = 5;
+  string page_token = 6;
+}
+
+message ListFaultsResponse {
+  repeated FaultEvent fault_events = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message AcknowledgeFaultRequest {
+  string fault_id = 1;
+  string actor_id = 2;
+}
+
+message AcknowledgeFaultResponse {
+  FaultEvent fault_event = 1;
+}
+
+message ResolveFaultRequest {
+  string fault_id = 1;
+  string actor_id = 2;
+  string resolution_notes = 3;
+}
+
+message ResolveFaultResponse {
+  FaultEvent fault_event = 1;
+}

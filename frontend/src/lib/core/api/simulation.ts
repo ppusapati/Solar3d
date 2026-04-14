@@ -1,4 +1,13 @@
-import { api } from './client';
+import {
+	SimulationService,
+	SimulationStatus,
+	SimulationType,
+	type ShadowPolygon as ProtoShadowPolygon,
+	type Simulation as ProtoSimulation,
+	type SunPosition as ProtoSunPosition
+} from '$lib/gen/simulation/v1/simulation_pb.js';
+
+import { createApiClient, isoToTimestamp, timestampToIso } from './connect';
 
 export interface Simulation {
 	id: string;
@@ -44,31 +53,172 @@ export interface ShadowPolygon {
 	shadow_intensity: number;
 }
 
+const client = createApiClient(SimulationService);
+
+function simulationTypeFromProto(simulationType: SimulationType): string {
+	switch (simulationType) {
+		case SimulationType.SHADOW:
+			return 'shadow';
+		case SimulationType.IRRADIANCE:
+			return 'irradiance';
+		case SimulationType.ANNUAL_YIELD:
+			return 'yield';
+		default:
+			return 'irradiance';
+	}
+}
+
+function simulationTypeToProto(simulationType: string): SimulationType {
+	switch (simulationType) {
+		case 'shadow':
+			return SimulationType.SHADOW;
+		case 'yield':
+			return SimulationType.ANNUAL_YIELD;
+		case 'irradiance':
+		default:
+			return SimulationType.IRRADIANCE;
+	}
+}
+
+function simulationStatusFromProto(status: SimulationStatus): string {
+	switch (status) {
+		case SimulationStatus.PENDING:
+			return 'pending';
+		case SimulationStatus.RUNNING:
+			return 'running';
+		case SimulationStatus.COMPLETED:
+			return 'completed';
+		case SimulationStatus.FAILED:
+			return 'failed';
+		default:
+			return 'pending';
+	}
+}
+
+function mapSimulation(simulation?: ProtoSimulation): Simulation {
+	if (!simulation) {
+		throw new Error('Simulation response was empty');
+	}
+
+	return {
+		id: simulation.id,
+		project_id: simulation.projectId,
+		layout_id: simulation.layoutId,
+		name: simulation.name,
+		simulation_type: simulationTypeFromProto(simulation.simulationType),
+		status: simulationStatusFromProto(simulation.status),
+		params: {
+			start_time: timestampToIso(simulation.params?.startTime),
+			end_time: timestampToIso(simulation.params?.endTime),
+			time_step_minutes: simulation.params?.timeStepMinutes ?? 0,
+			latitude: simulation.params?.latitude ?? 0,
+			longitude: simulation.params?.longitude ?? 0,
+			include_terrain_shading: simulation.params?.includeTerrainShading ?? false,
+			include_panel_shading: simulation.params?.includePanelShading ?? false
+		},
+		result: simulation.result
+			? {
+					total_irradiance_kwh_m2: simulation.result.totalIrradianceKwhM2,
+					annual_yield_kwh: simulation.result.annualYieldKwh,
+					performance_ratio: simulation.result.performanceRatio,
+					shading_loss_percent: simulation.result.shadingLossPercent,
+					result_file_path: simulation.result.resultFilePath
+				}
+			: null,
+		created_at: timestampToIso(simulation.createdAt),
+		completed_at: simulation.completedAt ? timestampToIso(simulation.completedAt) : null
+	};
+}
+
+function mapSunPosition(position?: ProtoSunPosition): SunPosition {
+	if (!position) {
+		throw new Error('Sun position response was empty');
+	}
+
+	return {
+		azimuth: position.azimuth,
+		elevation: position.elevation,
+		zenith: position.zenith,
+		hour_angle: position.hourAngle
+	};
+}
+
+function mapShadow(shadow: ProtoShadowPolygon): ShadowPolygon {
+	return {
+		source_panel_id: shadow.sourcePanelId,
+		shadow_geojson: shadow.shadowGeojson,
+		shadow_intensity: shadow.shadowIntensity
+	};
+}
+
 export const simulationApi = {
-	create: (data: {
+	create: async (data: {
 		project_id: string;
 		layout_id: string;
 		name: string;
 		simulation_type: string;
 		params: SimulationParams;
-	}) => api.post<{ simulation: Simulation }>('/api/v1/simulations', data),
+	}) => {
+		const response = await client.createSimulation({
+			projectId: data.project_id,
+			layoutId: data.layout_id,
+			name: data.name,
+			simulationType: simulationTypeToProto(data.simulation_type),
+			params: {
+				startTime: isoToTimestamp(data.params.start_time),
+				endTime: isoToTimestamp(data.params.end_time),
+				timeStepMinutes: data.params.time_step_minutes,
+				latitude: data.params.latitude,
+				longitude: data.params.longitude,
+				includeTerrainShading: data.params.include_terrain_shading,
+				includePanelShading: data.params.include_panel_shading
+			}
+		});
 
-	get: (id: string) => api.get<{ simulation: Simulation }>(`/api/v1/simulations/${id}`),
+		return { simulation: mapSimulation(response.simulation) };
+	},
 
-	list: (projectId: string) =>
-		api.get<{ simulations: Simulation[] }>(`/api/v1/simulations?project_id=${projectId}`),
+	get: async (id: string) => {
+		const response = await client.getSimulation({ id });
+		return { simulation: mapSimulation(response.simulation) };
+	},
 
-	run: (id: string) => api.post<{ simulation: Simulation }>(`/api/v1/simulations/${id}/run`, {}),
+	list: async (projectId: string) => {
+		const response = await client.listSimulations({ projectId });
+		return { simulations: response.simulations.map(mapSimulation) };
+	},
 
-	getSunPosition: (lat: number, lon: number, timestamp: string) =>
-		api.get<{ position: SunPosition }>(
-			`/api/v1/sun-position?latitude=${lat}&longitude=${lon}&timestamp=${timestamp}`
-		),
+	run: async (id: string) => {
+		const response = await client.runSimulation({ simulationId: id });
+		return { simulation: mapSimulation(response.simulation) };
+	},
 
-	getShadowMap: (layoutId: string, timestamp: string, lat: number, lon: number) =>
-		api.get<{ shadows: ShadowPolygon[]; sun_position: SunPosition }>(
-			`/api/v1/shadows?layout_id=${layoutId}&timestamp=${timestamp}&latitude=${lat}&longitude=${lon}`
-		),
+	getSunPosition: async (lat: number, lon: number, timestamp: string) => {
+		const response = await client.getSunPosition({
+			latitude: lat,
+			longitude: lon,
+			timestamp: isoToTimestamp(timestamp)
+		});
 
-	delete: (id: string) => api.delete(`/api/v1/simulations/${id}`)
+		return { position: mapSunPosition(response.position) };
+	},
+
+	getShadowMap: async (layoutId: string, timestamp: string, lat: number, lon: number) => {
+		const response = await client.getShadowMap({
+			layoutId,
+			timestamp: isoToTimestamp(timestamp),
+			latitude: lat,
+			longitude: lon
+		});
+
+		return {
+			shadows: response.shadows.map(mapShadow),
+			sun_position: response.sunPosition ? mapSunPosition(response.sunPosition) : null
+		};
+	},
+
+	delete: async (id: string) => {
+		await client.deleteSimulation({ id });
+		return {};
+	}
 };

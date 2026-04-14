@@ -1,0 +1,174 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cad-core-service
+  namespace: solar3d
+  labels:
+    app: cad-core-service
+    version: latest
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cad-core-service
+  template:
+    metadata:
+      labels:
+        app: cad-core-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8092"
+        prometheus.io/path: "/healthz"
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - cad-core-service
+                topologyKey: kubernetes.io/hostname
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+        - name: cad-core-service
+          image: solar3d/cad-core-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8092
+              protocol: TCP
+          env:
+            - name: PORT
+              value: "8092"
+            - name: DRAWING_REVISION_URL
+              value: "http://drawing-revision-service.solar3d.svc.cluster.local:8091"
+            - name: LOG_LEVEL
+              value: "info"
+            - name: REQUEST_TIMEOUT_SECONDS
+              value: "10"
+            - name: CAD_PHASE6_VERIFICATION_ENABLED
+              value: "false"
+            - name: CAD_ROLLOUT_STAGE
+              value: "stable"
+            - name: CAD_ROLLOUT_COHORT_PERCENT
+              value: "100"
+          resources:
+            # Stateless command-processing service — lower baseline than DB-backed services
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8092
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8092
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 8092
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 12
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cad-core-service
+  namespace: solar3d
+  labels:
+    app: cad-core-service
+spec:
+  type: ClusterIP
+  selector:
+    app: cad-core-service
+  ports:
+    - name: http
+      port: 8092
+      targetPort: 8092
+      protocol: TCP
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: cad-core-service
+  namespace: solar3d
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: cad-core-service
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 60
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+        - type: Pods
+          value: 2
+          periodSeconds: 60
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: cad-core-service
+  namespace: solar3d
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: cad-core-service

@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package optimization.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/optimization/v1;optimizationv1";
+
+import "common/v1/primitives.proto";
+
+enum VariableType {
+  VARIABLE_TYPE_UNSPECIFIED = 0;
+  VARIABLE_TYPE_CONTINUOUS = 1;
+  VARIABLE_TYPE_INTEGER = 2;
+  VARIABLE_TYPE_BINARY = 3;
+}
+
+enum ObjectiveKind {
+  OBJECTIVE_KIND_UNSPECIFIED = 0;
+  OBJECTIVE_KIND_MINIMIZE = 1;
+  OBJECTIVE_KIND_MAXIMIZE = 2;
+}
+
+message DecisionVariable {
+  string name = 1;
+  VariableType variable_type = 2;
+  common.v1.NumericRange bounds = 3;
+}
+
+message ObjectiveDefinition {
+  string name = 1;
+  ObjectiveKind kind = 2;
+  double weight = 3;
+}
+
+message DistributionModel {
+  double mean = 1;
+  double std_dev = 2;
+}
+
+message ConstraintDefinition {
+  string name = 1;
+  string expression = 2;
+  common.v1.NumericRange allowed_range = 3;
+  bool hard_constraint = 4;
+}
+
+message OptimizationProblem {
+  string problem_id = 1;
+  repeated DecisionVariable variables = 2;
+  repeated ObjectiveDefinition objectives = 3;
+  repeated ConstraintDefinition constraints = 4;
+  int64 random_seed = 5;
+  int32 max_iterations = 6;
+  common.v1.ContractMetadata contract = 7;
+}
+
+message DistributionDefinition {
+  string name = 1;
+  DistributionModel distribution = 2;
+}
+
+message UncertaintyModel {
+  repeated DistributionDefinition distributions = 1;
+  int32 sample_count = 2;
+  int64 random_seed = 3;
+  common.v1.ContractMetadata contract = 4;
+}
+
+message CandidateSolution {
+  string candidate_id = 1;
+  map<string, double> assignments = 2;
+  map<string, double> objective_values = 3;
+  map<string, double> constraint_violations = 4;
+}
+
+message MultiObjectiveOptimizationInput {
+  OptimizationProblem problem = 1;
+  repeated CandidateSolution initial_candidates = 2;
+}

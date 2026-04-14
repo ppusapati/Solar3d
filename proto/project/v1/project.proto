@@ -5,6 +5,7 @@ package project.v1;
 option go_package = "github.com/solar3d/solar3d/gen/project/v1;projectv1";
 
 import "google/protobuf/timestamp.proto";
+import "planning/v1/planning_workflow.proto";
 
 service ProjectService {
   rpc CreateProject(CreateProjectRequest) returns (CreateProjectResponse);
@@ -12,6 +13,10 @@ service ProjectService {
   rpc ListProjects(ListProjectsRequest) returns (ListProjectsResponse);
   rpc UpdateProject(UpdateProjectRequest) returns (UpdateProjectResponse);
   rpc DeleteProject(DeleteProjectRequest) returns (DeleteProjectResponse);
+  rpc TransitionPhase(TransitionPhaseRequest) returns (TransitionPhaseResponse);
+  rpc GetPhaseState(GetPhaseStateRequest) returns (GetPhaseStateResponse);
+  rpc ListPhaseTransitions(ListPhaseTransitionsRequest) returns (ListPhaseTransitionsResponse);
+  rpc ValidatePhaseReadiness(ValidatePhaseReadinessRequest) returns (ValidatePhaseReadinessResponse);
 }
 
 message Project {
@@ -23,6 +28,10 @@ message Project {
   ProjectMetadata metadata = 6;
   google.protobuf.Timestamp created_at = 7;
   google.protobuf.Timestamp updated_at = 8;
+  planning.v1.WorkflowPhase workflow_phase = 9;
+  google.protobuf.Timestamp phase_entered_at = 10;
+  repeated PhaseTransitionHistoryEntry transition_history = 11;
+  repeated string active_blockers = 12;
 }
 
 message Site {
@@ -102,3 +111,69 @@ message DeleteProjectRequest {
 }
 
 message DeleteProjectResponse {}
+
+// ========== Workflow Phase Management Messages ==========
+
+message PhaseTransitionHistoryEntry {
+  string id = 1;
+  planning.v1.WorkflowPhase from_phase = 2;
+  planning.v1.WorkflowPhase to_phase = 3;
+  google.protobuf.Timestamp occurred_at = 4;
+  string actor_id = 5;
+  string reason = 6;
+  bool is_rollback = 7;
+  string rollback_reason = 8;
+}
+
+message TransitionPhaseRequest {
+  string project_id = 1;
+  planning.v1.WorkflowPhase target_phase = 2;
+  planning.v1.TransitionEvidence evidence = 3;
+  string actor_id = 4;
+  string reason = 5;
+}
+
+message TransitionPhaseResponse {
+  string project_id = 1;
+  planning.v1.WorkflowPhase previous_phase = 2;
+  planning.v1.WorkflowPhase current_phase = 3;
+  PhaseTransitionHistoryEntry transition_record = 4;
+  bool was_noop = 5;
+}
+
+message GetPhaseStateRequest {
+  string project_id = 1;
+}
+
+message GetPhaseStateResponse {
+  string project_id = 1;
+  planning.v1.WorkflowPhase current_phase = 2;
+  google.protobuf.Timestamp phase_entered_at = 3;
+  PhaseTransitionHistoryEntry last_transition = 4;
+}
+
+message ListPhaseTransitionsRequest {
+  string project_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+}
+
+message ListPhaseTransitionsResponse {
+  repeated PhaseTransitionHistoryEntry transitions = 1;
+  string next_page_token = 2;
+}
+
+message ValidatePhaseReadinessRequest {
+  string project_id = 1;
+  planning.v1.WorkflowPhase target_phase = 2;
+  planning.v1.TransitionEvidence evidence = 3;
+}
+
+message ValidatePhaseReadinessResponse {
+  string project_id = 1;
+  planning.v1.WorkflowPhase current_phase = 2;
+  planning.v1.WorkflowPhase target_phase = 3;
+  bool is_valid = 4;
+  repeated string blocker_reasons = 5;
+  google.protobuf.Timestamp can_transition_after = 6;
+}

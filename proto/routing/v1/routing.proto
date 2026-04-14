@@ -7,6 +7,8 @@ option go_package = "github.com/solar3d/solar3d/gen/routing/v1;routingv1";
 import "google/protobuf/timestamp.proto";
 
 service RoutingService {
+  rpc CreateRoute(CreateRouteRequest) returns (CreateRouteResponse);
+  rpc GetRoute(GetRouteRequest) returns (GetRouteResponse);
   rpc CalculateRoute(CalculateRouteRequest) returns (CalculateRouteResponse);
   rpc CreateCableRoute(CreateCableRouteRequest) returns (CreateCableRouteResponse);
   rpc CreateRoadRoute(CreateRoadRouteRequest) returns (CreateRoadRouteResponse);
@@ -35,6 +37,7 @@ enum RouteType {
   ROUTE_TYPE_COMMUNICATION = 3;
   ROUTE_TYPE_ACCESS_ROAD = 4;
   ROUTE_TYPE_SERVICE_ROAD = 5;
+  ROUTE_TYPE_FENCE = 6;
 }
 
 message RouteMetadata {
@@ -55,6 +58,28 @@ message RouteConstraints {
   bool avoid_water = 2;
   repeated string avoid_zone_geojsons = 3;
   double terrain_slope_penalty = 4;
+}
+
+message CreateRouteRequest {
+  string project_id = 1;
+  string name = 2;
+  RouteType route_type = 3;
+  string geometry_geojson = 4;
+  double distance_m = 5;
+  double cost_estimate = 6;
+  RouteMetadata metadata = 7;
+}
+
+message CreateRouteResponse {
+  Route route = 1;
+}
+
+message GetRouteRequest {
+  string id = 1;
+}
+
+message GetRouteResponse {
+  Route route = 1;
 }
 
 message CalculateRouteRequest {

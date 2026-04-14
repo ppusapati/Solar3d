@@ -1,0 +1,13 @@
+apiVersion: 1
+
+providers:
+  - name: 'MLDashboards'
+    orgId: 1
+    folder: 'ML Learning System'
+    type: file
+    disableDeletion: false
+    editable: true
+    updateIntervalSeconds: 10
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards/ml-dashboards

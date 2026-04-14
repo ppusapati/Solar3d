@@ -6,15 +6,43 @@ option go_package = "github.com/solar3d/solar3d/gen/terrain/v1;terrainv1";
 
 import "google/protobuf/timestamp.proto";
 
+// TerrainService manages terrain layer lifecycle and terrain analytics operations.
 service TerrainService {
+  // UploadTerrain ingests a terrain file and creates a terrain layer.
   rpc UploadTerrain(UploadTerrainRequest) returns (UploadTerrainResponse);
+  // GetTerrainLayer returns a terrain layer by ID.
   rpc GetTerrainLayer(GetTerrainLayerRequest) returns (GetTerrainLayerResponse);
+  // ListTerrainLayers lists terrain layers for a project.
   rpc ListTerrainLayers(ListTerrainLayersRequest) returns (ListTerrainLayersResponse);
+  // GetElevation returns elevation at a single coordinate.
   rpc GetElevation(GetElevationRequest) returns (GetElevationResponse);
+  // GetElevationGrid returns elevation values for a bounding box grid.
   rpc GetElevationGrid(GetElevationGridRequest) returns (GetElevationGridResponse);
+  // AnalyzeEarthwork computes cut/fill and related earthwork metrics.
+  rpc AnalyzeEarthwork(AnalyzeEarthworkRequest) returns (AnalyzeEarthworkResponse);
+  // DiffTerrainLayers computes differences between two terrain layers.
+  rpc DiffTerrainLayers(DiffTerrainLayersRequest) returns (DiffTerrainLayersResponse);
+  // GenerateGradingPlan generates grading recommendations from terrain constraints.
+  rpc GenerateGradingPlan(GenerateGradingPlanRequest) returns (GenerateGradingPlanResponse);
+  // ComputeSlope computes slope values from terrain data.
   rpc ComputeSlope(ComputeSlopeRequest) returns (ComputeSlopeResponse);
+  // ComputeAspect computes aspect values from terrain data.
   rpc ComputeAspect(ComputeAspectRequest) returns (ComputeAspectResponse);
+  // DeleteTerrainLayer deletes a terrain layer by ID.
   rpc DeleteTerrainLayer(DeleteTerrainLayerRequest) returns (DeleteTerrainLayerResponse);
+}
+
+// TerrainComputeService exposes only stateless compute-style terrain operations.
+// Lifecycle/storage operations remain in TerrainService.
+service TerrainComputeService {
+  // GetElevation returns elevation at a single coordinate.
+  rpc GetElevation(GetElevationRequest) returns (GetElevationResponse);
+  // GetElevationGrid returns elevation values for a bounding box grid.
+  rpc GetElevationGrid(GetElevationGridRequest) returns (GetElevationGridResponse);
+  // ComputeSlope computes slope values from terrain data.
+  rpc ComputeSlope(ComputeSlopeRequest) returns (ComputeSlopeResponse);
+  // ComputeAspect computes aspect values from terrain data.
+  rpc ComputeAspect(ComputeAspectRequest) returns (ComputeAspectResponse);
 }
 
 message TerrainLayer {
@@ -98,6 +126,39 @@ message GetElevationGridResponse {
   double max_elevation = 5;
 }
 
+message AnalyzeEarthworkRequest {
+  string terrain_layer_id = 1;
+  optional double target_elevation_m = 2;
+  string boundary_geojson = 3;
+  double min_delta_m = 4;
+  double haul_factor = 5;
+  int32 grid_width = 6;
+  int32 grid_height = 7;
+}
+
+message AnalyzeEarthworkResponse {
+  string dem_source_layer_id = 1;
+  int32 grid_width = 2;
+  int32 grid_height = 3;
+  double cell_area_sqm = 4;
+  double mean_elevation_m = 5;
+  double target_elevation_m = 6;
+  double cut_volume_m3 = 7;
+  double fill_volume_m3 = 8;
+  double net_volume_m3 = 9;
+  double imbalance_volume_m3 = 10;
+  double balanced_volume_ratio = 11;
+  double affected_area_sqm = 12;
+  double average_absolute_delta_m = 13;
+  double maximum_absolute_delta_m = 14;
+  int32 included_cell_count = 15;
+  double clipped_area_sqm = 16;
+  double haul_distance_m = 17;
+  double haul_effort_m3m = 18;
+  double recommended_target_min_m = 19;
+  double recommended_target_max_m = 20;
+}
+
 message ComputeSlopeRequest {
   string terrain_layer_id = 1;
 }
@@ -119,3 +180,87 @@ message DeleteTerrainLayerRequest {
 }
 
 message DeleteTerrainLayerResponse {}
+
+message DiffTerrainLayersRequest {
+  string base_layer_id = 1;
+  string compare_layer_id = 2;
+  int32 grid_width = 3;
+  int32 grid_height = 4;
+}
+
+// DiffTerrainLayersResponse carries the per-cell elevation delta between two
+// DEM layers over their overlapping extent, together with aggregate statistics.
+message DiffTerrainLayersResponse {
+  string base_layer_id = 1;
+  string compare_layer_id = 2;
+  BoundingBox overlap_bounds = 3;
+  int32 grid_width = 4;
+  int32 grid_height = 5;
+  double cell_area_sqm = 6;
+  // delta_elevations[row*width+col] = compare − base (m). Row-major order.
+  repeated double delta_elevations = 7;
+  double mean_delta_m = 8;
+  double rms_delta_m = 9;
+  double max_abs_delta_m = 10;
+  double volume_added_m3 = 11;
+  double volume_removed_m3 = 12;
+  double net_volume_m3 = 13;
+  int32 valid_cell_count = 14;
+}
+
+message GenerateGradingPlanRequest {
+  string terrain_layer_id = 1;
+  optional double target_elevation_m = 2;
+  string boundary_geojson = 3;
+  double min_delta_m = 4;
+  double haul_factor = 5;
+  int32 grid_width = 6;
+  int32 grid_height = 7;
+  // Unit rates for cost estimation. Zero values disable that cost component.
+  double cut_rate_per_m3 = 8;
+  double fill_rate_per_m3 = 9;
+  double haul_rate_per_m3m = 10;
+  double import_rate_per_m3 = 11;
+  double export_rate_per_m3 = 12;
+  // compaction_factor: ratio of in-situ cut volume to compacted fill volume.
+  // 1.0 = no shrinkage or bulking. Typical 1.1–1.3 for granular soils.
+  double compaction_factor = 13;
+  string currency_code = 14;
+}
+
+// GradingPlanCostBreakdown contains all derived volumes and costs traceable to
+// the input unit rates and earthwork engine output.
+message GradingPlanCostBreakdown {
+  double cut_volume_m3 = 1;
+  double fill_volume_m3 = 2;
+  // fill_demand_m3 = fill_volume_m3 * compaction_factor (in-situ cut m3 needed)
+  double fill_demand_m3 = 3;
+  double export_volume_m3 = 4;
+  double import_volume_m3 = 5;
+  double hauled_volume_m3 = 6;
+  double haul_distance_m = 7;
+  double haul_effort_m3m = 8;
+  double cut_cost = 9;
+  double fill_cost = 10;
+  double haul_cost = 11;
+  double import_cost = 12;
+  double export_cost = 13;
+  double total_cost = 14;
+  string currency_code = 15;
+}
+
+message GenerateGradingPlanResponse {
+  string dem_layer_id = 1;
+  double target_elevation_m = 2;
+  double mean_elevation_m = 3;
+  double affected_area_sqm = 4;
+  double balanced_volume_ratio = 5;
+  double compaction_factor = 6;
+  double cut_rate_per_m3 = 7;
+  double fill_rate_per_m3 = 8;
+  double haul_rate_per_m3m = 9;
+  double import_rate_per_m3 = 10;
+  double export_rate_per_m3 = 11;
+  GradingPlanCostBreakdown cost = 12;
+}
+

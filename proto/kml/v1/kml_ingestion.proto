@@ -1,0 +1,203 @@
+syntax = "proto3";
+
+package kml.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/kml/v1;kmlv1";
+
+import "google/protobuf/timestamp.proto";
+import "common/v1/primitives.proto";
+
+// KMLIngestionService exposes KML/KMZ upload, parsing, and geometry import workflows.
+service KMLIngestionService {
+  // UploadKML initiates async KML/KMZ file processing.
+  rpc UploadKML(UploadKMLRequest) returns (UploadKMLResponse);
+  
+  // GetUploadStatus retrieves the status of a KML upload job.
+  rpc GetUploadStatus(GetUploadStatusRequest) returns (GetUploadStatusResponse);
+  
+  // ListImportedGeometries retrieves geometries from a completed upload.
+  rpc ListImportedGeometries(ListImportedGeometriesRequest) returns (ListImportedGeometriesResponse);
+  
+  // GetImportedGeometry retrieves a single imported geometry with full details.
+  rpc GetImportedGeometry(GetImportedGeometryRequest) returns (GetImportedGeometryResponse);
+  
+  // DeleteUpload removes an upload job and associated geometries.
+  rpc DeleteUpload(DeleteUploadRequest) returns (DeleteUploadResponse);
+}
+
+// Canonical coordinate reference system codes.
+enum CRSCode {
+  CRS_UNKNOWN = 0;
+  CRS_WGS84 = 4326; // EPSG:4326 - latitude/longitude
+  CRS_WEB_MERCATOR = 3857; // EPSG:3857 - Web Mercator
+  CRS_UTM = 32633; // Example UTM zone
+}
+
+// Status of KML upload job.
+enum UploadStatus {
+  STATUS_UNKNOWN = 0;
+  STATUS_PENDING = 1; // Queued for processing
+  STATUS_PROCESSING = 2; // Currently parsing/validating
+  STATUS_COMPLETED = 3; // Successfully imported
+  STATUS_FAILED = 4; // Import failed
+}
+
+// Canonical geometry type.
+enum GeometryType {
+  TYPE_UNKNOWN = 0;
+  TYPE_POINT = 1;
+  TYPE_LINESTRING = 2;
+  TYPE_POLYGON = 3;
+  TYPE_MULTIPOLYGON = 4;
+}
+
+// Request to upload KML/KMZ file for import.
+message UploadKMLRequest {
+  // File content (raw KML or zipped KMZ).
+  bytes file_data = 1;
+  
+  // File name (used to determine if it's KML or KMZ).
+  string file_name = 2;
+  
+  // Optional hint about source CRS if not detectable from KML.
+  CRSCode source_crs = 3;
+  
+  // Optional project/site ID for grouping imports.
+  string project_id = 4;
+  
+  // Optional metadata tags.
+  map<string, string> tags = 5;
+}
+
+// Response to upload request with job tracking ID.
+message UploadKMLResponse {
+  // Unique job ID for tracking progress.
+  string upload_job_id = 1;
+  
+  // Initial status.
+  UploadStatus status = 2;
+  
+  // Timestamp when upload was created.
+  google.protobuf.Timestamp created_at = 3;
+}
+
+// Request to check status of upload job.
+message GetUploadStatusRequest {
+  string upload_job_id = 1;
+}
+
+// Response with upload job status and progress.
+message GetUploadStatusResponse {
+  string upload_job_id = 1;
+  UploadStatus status = 2;
+  
+  // Number of features parsed so far.
+  int32 features_processed = 3;
+  
+  // Total features in file (0 if still parsing).
+  int32 total_features = 4;
+  
+  // Error message if status is FAILED.
+  string error_message = 5;
+  
+  // Timestamp when processing started.
+  google.protobuf.Timestamp started_at = 6;
+  
+  // Timestamp when processing completed (if done).
+  google.protobuf.Timestamp completed_at = 7;
+  
+  // Detected CRS of source file.
+  CRSCode detected_crs = 8;
+}
+
+// Request to list imported geometries from completed upload.
+message ListImportedGeometriesRequest {
+  string upload_job_id = 1;
+  
+  // Optional filter: return only geometries of this type.
+  GeometryType geometry_type = 2;
+  
+  // Optional pagination limit.
+  int32 limit = 3;
+  
+  // Optional pagination offset.
+  int32 offset = 4;
+}
+
+// Imported geometry with minimal metadata.
+message ImportedGeometryStub {
+  // Unique geometry ID within upload.
+  string geometry_id = 1;
+  
+  // Feature name from KML.
+  string name = 2;
+  
+  // Geometry type.
+  GeometryType type = 3;
+  
+  // Canonical bounding box (WGS84).
+  common.v1.BoundingBox2D bounding_box = 4;
+  
+  // Feature count for multi-geometries.
+  int32 feature_count = 5;
+}
+
+// Response with list of imported geometries.
+message ListImportedGeometriesResponse {
+  repeated ImportedGeometryStub geometries = 1;
+  
+  // Total count of geometries in upload.
+  int32 total_count = 2;
+}
+
+// Request to retrieve full details of imported geometry.
+message GetImportedGeometryRequest {
+  string upload_job_id = 1;
+  string geometry_id = 2;
+}
+
+// Full details of imported geometry.
+message GetImportedGeometryResponse {
+  string geometry_id = 1;
+  string name = 2;
+  string description = 3;
+  
+  // Original KML properties (key-value pairs).
+  map<string, string> properties = 4;
+  
+  // Geometry type.
+  GeometryType type = 5;
+  
+  // Canonical geometry in WGS84.
+  // Oneof: point, linestring, polygon, multipolygon
+  oneof canonical_geometry {
+    common.v1.Point2D point = 6;
+    common.v1.LineString2D linestring = 7;
+    common.v1.Polygon2D polygon = 8;
+    common.v1.MultiPolygon2D multipolygon = 9;
+  }
+  
+  // Source CRS of original geometry.
+  CRSCode source_crs = 10;
+  
+  // Canonical bounding box.
+  common.v1.BoundingBox2D bounding_box = 11;
+  
+  // Checksum of geometry for validation.
+  string geometry_hash = 12;
+  
+  // Timestamp when geometry was imported.
+  google.protobuf.Timestamp imported_at = 13;
+}
+
+// Request to delete upload job and all associated geometries.
+message DeleteUploadRequest {
+  string upload_job_id = 1;
+}
+
+// Response confirming deletion.
+message DeleteUploadResponse {
+  string upload_job_id = 1;
+  bool deleted = 2;
+  int32 geometries_deleted = 3;
+}

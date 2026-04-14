@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package orchestration.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/orchestration/v1;orchestrationv1";
+
+import "common/v1/primitives.proto";
+import "google/protobuf/timestamp.proto";
+import "orchestration/v1/orchestration.proto";
+
+enum JobEventType {
+  JOB_EVENT_TYPE_UNSPECIFIED = 0;
+  JOB_EVENT_TYPE_SUBMITTED = 1;
+  JOB_EVENT_TYPE_DISPATCHED = 2;
+  JOB_EVENT_TYPE_STARTED = 3;
+  JOB_EVENT_TYPE_PROGRESS = 4;
+  JOB_EVENT_TYPE_RETRY_SCHEDULED = 5;
+  JOB_EVENT_TYPE_FAILED = 6;
+  JOB_EVENT_TYPE_SUCCEEDED = 7;
+  JOB_EVENT_TYPE_CANCELED = 8;
+  JOB_EVENT_TYPE_DEAD_LETTERED = 9;
+}
+
+message JobEvent {
+  string event_id = 1;
+  string job_id = 2;
+  string project_id = 3;
+  JobType job_type = 4;
+  JobStatus job_status = 5;
+  JobEventType event_type = 6;
+  string actor = 7;
+  string message = 8;
+  int32 attempt = 9;
+  map<string, string> tags = 10;
+  repeated Artifact artifacts = 11;
+  string payload_json = 12;
+  google.protobuf.Timestamp occurred_at = 13;
+}
+
+message JobEventEnvelope {
+  common.v1.ApiVersion event_version = 1;
+  uint64 sequence = 2;
+  string correlation_id = 3;
+  string causation_id = 4;
+  JobEvent event = 5;
+}
+
+message JobEventBatch {
+  string stream_id = 1;
+  repeated JobEventEnvelope events = 2;
+}

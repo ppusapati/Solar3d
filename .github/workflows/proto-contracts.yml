@@ -1,0 +1,37 @@
+name: Proto Contracts
+
+on:
+  pull_request:
+    paths:
+      - proto/**
+      - .github/workflows/proto-contracts.yml
+  push:
+    branches:
+      - main
+    paths:
+      - proto/**
+      - .github/workflows/proto-contracts.yml
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Buf
+        uses: bufbuild/buf-setup-action@v1
+
+      - name: Buf Lint
+        working-directory: proto
+        run: buf lint
+
+      - name: Buf Generate
+        working-directory: proto
+        run: buf generate
+
+      - name: Buf Breaking
+        working-directory: proto
+        run: buf breaking --against '.git#branch=main'

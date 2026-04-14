@@ -2,6 +2,8 @@
 	import { createEventDispatcher } from 'svelte';
 	import { activeLayout } from '$lib/core/stores';
 	import { simulationApi, type Simulation, type SimulationResult } from '$lib/core/api';
+	import SunTrackingOverlay from './SunTrackingOverlay.svelte';
+	import ShadingAnalysisPanel from './ShadingAnalysisPanel.svelte';
 
 	const dispatch = createEventDispatcher<{
 		timeChange: string;
@@ -26,6 +28,8 @@
 	let shadowDate = new Date().toISOString().slice(0, 10);
 	let shadowHour = 12;
 	let showShadows = false;
+	let showSunTracking = true;
+	let showShadingAnalysis = false;
 
 	$: shadowTimestamp = `${shadowDate}T${String(shadowHour).padStart(2, '0')}:00:00Z`;
 	$: if (showShadows) dispatch('timeChange', shadowTimestamp);
@@ -81,12 +85,12 @@
 
 			{#if showShadows}
 				<div class="form-group">
-					<label>Date</label>
-					<input type="date" bind:value={shadowDate} />
+					<label for="shadow-date">Date</label>
+					<input id="shadow-date" type="date" bind:value={shadowDate} />
 				</div>
 				<div class="form-group">
-					<label>Time: {String(shadowHour).padStart(2, '0')}:00</label>
-					<input type="range" bind:value={shadowHour} min="5" max="20" step="1" />
+					<label for="shadow-hour">Time: {String(shadowHour).padStart(2, '0')}:00</label>
+					<input id="shadow-hour" type="range" bind:value={shadowHour} min="5" max="20" step="1" />
 				</div>
 			{/if}
 		</div>
@@ -98,8 +102,8 @@
 		<h5>Yield Simulation</h5>
 
 		<div class="form-group">
-			<label>Type</label>
-			<select bind:value={simType}>
+			<label for="simulation-type">Type</label>
+			<select id="simulation-type" bind:value={simType}>
 				<option value="yield">Annual Yield</option>
 				<option value="irradiance">Irradiance Analysis</option>
 				<option value="shadow">Shadow Study</option>
@@ -108,23 +112,23 @@
 
 		<div class="form-row">
 			<div class="form-group">
-				<label>Start</label>
-				<input type="date" bind:value={startDate} />
+				<label for="simulation-start">Start</label>
+				<input id="simulation-start" type="date" bind:value={startDate} />
 			</div>
 			<div class="form-group">
-				<label>End</label>
-				<input type="date" bind:value={endDate} />
+				<label for="simulation-end">End</label>
+				<input id="simulation-end" type="date" bind:value={endDate} />
 			</div>
 		</div>
 
 		<div class="form-row">
 			<div class="form-group">
-				<label>Latitude</label>
-				<input type="number" bind:value={latitude} step="0.01" />
+				<label for="simulation-latitude">Latitude</label>
+				<input id="simulation-latitude" type="number" bind:value={latitude} step="0.01" />
 			</div>
 			<div class="form-group">
-				<label>Longitude</label>
-				<input type="number" bind:value={longitude} step="0.01" />
+				<label for="simulation-longitude">Longitude</label>
+				<input id="simulation-longitude" type="number" bind:value={longitude} step="0.01" />
 			</div>
 		</div>
 
@@ -172,13 +176,56 @@
 			</div>
 		</div>
 	{/if}
+
+	<div class="divider"></div>
+
+	<div class="section overlays">
+		<h5>Visualization Overlays</h5>
+		<div class="button-row">
+			<button class="toggle-btn" class:active={showSunTracking} on:click={() => (showSunTracking = !showSunTracking)}>
+				☀️ Sun Tracking
+			</button>
+			<button class="toggle-btn" class:active={showShadingAnalysis} on:click={() => (showShadingAnalysis = !showShadingAnalysis)}>
+				🌑 Shading Analysis
+			</button>
+		</div>
+	</div>
 </div>
+
+{#if showSunTracking}
+	<SunTrackingOverlay
+		latitude={latitude}
+		longitude={longitude}
+		show={showSunTracking}
+	/>
+{/if}
+
+{#if showShadingAnalysis}
+	<div class="analysis-panel-container">
+		<ShadingAnalysisPanel
+			latitude={latitude}
+			longitude={longitude}
+			visible={showShadingAnalysis}
+		/>
+	</div>
+{/if}
 
 <style>
 	.sim-panel {
 		display: flex;
 		flex-direction: column;
 		gap: 12px;
+	}
+
+	.analysis-panel-container {
+		margin-top: 16px;
+		padding: 16px 0;
+		border-top: 1px solid rgba(148, 163, 184, 0.1);
+	}
+
+	.button-row {
+		display: flex;
+		gap: 8px;
 	}
 
 	h4 {

@@ -78,6 +78,9 @@ message GenerateReportRequest {
   string name = 2;
   ReportType report_type = 3;
   ReportFormat format = 4;
+  string approval_status = 5;
+  string approved_by = 6;
+  string approved_at_rfc3339 = 7;
 }
 
 message GenerateReportResponse {
@@ -120,6 +123,9 @@ message ExportLayoutRequest {
   string project_id = 1;
   string layout_id = 2;
   ReportFormat format = 3;
+  string approval_status = 4;
+  string approved_by = 5;
+  string approved_at_rfc3339 = 6;
 }
 
 message ExportLayoutResponse {

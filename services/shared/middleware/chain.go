@@ -12,3 +12,4 @@ func Chain(middlewares ...func(http.Handler) http.Handler) func(http.Handler) ht
 		return final
 	}
 }
+

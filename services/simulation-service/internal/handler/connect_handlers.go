@@ -7,18 +7,22 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/rs/zerolog/log"
+	"github.com/rs/zerolog"
 
-	"github.com/solar3d/solar3d/services/simulation-service/internal/domain"
-	"github.com/solar3d/solar3d/services/simulation-service/internal/service"
+	"solar3d/simulation-service/internal/domain"
+	"solar3d/simulation-service/internal/service"
 )
 
 type SimulationHandler struct {
-	svc *service.SimulationService
+	svc    *service.SimulationService
+	logger zerolog.Logger
 }
 
-func NewSimulationHandler(svc *service.SimulationService) *SimulationHandler {
-	return &SimulationHandler{svc: svc}
+func NewSimulationHandler(svc *service.SimulationService, logger zerolog.Logger) *SimulationHandler {
+	return &SimulationHandler{
+		svc:    svc,
+		logger: logger.With().Str("component", "handler").Logger(),
+	}
 }
 
 func (h *SimulationHandler) RegisterRoutes(mux *http.ServeMux) {
@@ -34,64 +38,64 @@ func (h *SimulationHandler) RegisterRoutes(mux *http.ServeMux) {
 func (h *SimulationHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var req domain.CreateSimulationRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		writeError(w, http.StatusBadRequest, "invalid request body")
+		h.writeError(w, http.StatusBadRequest, "invalid request body")
 		return
 	}
 
 	sim, err := h.svc.Create(r.Context(), req)
 	if err != nil {
-		log.Error().Err(err).Msg("failed to create simulation")
-		writeError(w, http.StatusInternalServerError, "failed to create simulation")
+		h.logger.Error().Err(err).Msg("failed to create simulation")
+		h.writeError(w, http.StatusInternalServerError, "failed to create simulation")
 		return
 	}
 
-	writeJSON(w, http.StatusCreated, sim)
+	h.writeJSON(w, http.StatusCreated, sim)
 }
 
 func (h *SimulationHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 	id, err := uuid.Parse(r.PathValue("id"))
 	if err != nil {
-		writeError(w, http.StatusBadRequest, "invalid simulation ID")
+		h.writeError(w, http.StatusBadRequest, "invalid simulation ID")
 		return
 	}
 
 	sim, err := h.svc.GetByID(r.Context(), id)
 	if err != nil {
-		log.Error().Err(err).Str("id", id.String()).Msg("failed to get simulation")
-		writeError(w, http.StatusNotFound, "simulation not found")
+		h.logger.Error().Err(err).Str("id", id.String()).Msg("failed to get simulation")
+		h.writeError(w, http.StatusNotFound, "simulation not found")
 		return
 	}
 
-	writeJSON(w, http.StatusOK, sim)
+	h.writeJSON(w, http.StatusOK, sim)
 }
 
 func (h *SimulationHandler) ListByProject(w http.ResponseWriter, r *http.Request) {
 	projectID, err := uuid.Parse(r.URL.Query().Get("project_id"))
 	if err != nil {
-		writeError(w, http.StatusBadRequest, "invalid project_id parameter")
+		h.writeError(w, http.StatusBadRequest, "invalid project_id parameter")
 		return
 	}
 
 	sims, err := h.svc.ListByProject(r.Context(), projectID)
 	if err != nil {
-		log.Error().Err(err).Msg("failed to list simulations")
-		writeError(w, http.StatusInternalServerError, "failed to list simulations")
+		h.logger.Error().Err(err).Msg("failed to list simulations")
+		h.writeError(w, http.StatusInternalServerError, "failed to list simulations")
 		return
 	}
 
-	writeJSON(w, http.StatusOK, sims)
+	h.writeJSON(w, http.StatusOK, sims)
 }
 
 func (h *SimulationHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	id, err := uuid.Parse(r.PathValue("id"))
 	if err != nil {
-		writeError(w, http.StatusBadRequest, "invalid simulation ID")
+		h.writeError(w, http.StatusBadRequest, "invalid simulation ID")
 		return
 	}
 
 	if err := h.svc.Delete(r.Context(), id); err != nil {
-		log.Error().Err(err).Str("id", id.String()).Msg("failed to delete simulation")
-		writeError(w, http.StatusNotFound, "simulation not found")
+		h.logger.Error().Err(err).Str("id", id.String()).Msg("failed to delete simulation")
+		h.writeError(w, http.StatusNotFound, "simulation not found")
 		return
 	}
 
@@ -101,18 +105,18 @@ func (h *SimulationHandler) Delete(w http.ResponseWriter, r *http.Request) {
 func (h *SimulationHandler) Run(w http.ResponseWriter, r *http.Request) {
 	id, err := uuid.Parse(r.PathValue("id"))
 	if err != nil {
-		writeError(w, http.StatusBadRequest, "invalid simulation ID")
+		h.writeError(w, http.StatusBadRequest, "invalid simulation ID")
 		return
 	}
 
 	sim, err := h.svc.RunSimulation(r.Context(), id)
 	if err != nil {
-		log.Error().Err(err).Str("id", id.String()).Msg("failed to run simulation")
-		writeError(w, http.StatusInternalServerError, "failed to run simulation")
+		h.logger.Error().Err(err).Str("id", id.String()).Msg("failed to run simulation")
+		h.writeError(w, http.StatusInternalServerError, "failed to run simulation")
 		return
 	}
 
-	writeJSON(w, http.StatusOK, sim)
+	h.writeJSON(w, http.StatusOK, sim)
 }
 
 func (h *SimulationHandler) GetSunPosition(w http.ResponseWriter, r *http.Request) {
@@ -121,12 +125,12 @@ func (h *SimulationHandler) GetSunPosition(w http.ResponseWriter, r *http.Reques
 
 	lat, err := parseFloat(q.Get("lat"))
 	if err != nil {
-		writeError(w, http.StatusBadRequest, "invalid lat parameter")
+		h.writeError(w, http.StatusBadRequest, "invalid lat parameter")
 		return
 	}
 	lon, err := parseFloat(q.Get("lon"))
 	if err != nil {
-		writeError(w, http.StatusBadRequest, "invalid lon parameter")
+		h.writeError(w, http.StatusBadRequest, "invalid lon parameter")
 		return
 	}
 
@@ -137,7 +141,7 @@ func (h *SimulationHandler) GetSunPosition(w http.ResponseWriter, r *http.Reques
 	if tsStr != "" {
 		ts, err := time.Parse(time.RFC3339, tsStr)
 		if err != nil {
-			writeError(w, http.StatusBadRequest, "invalid timestamp format, use RFC3339")
+			h.writeError(w, http.StatusBadRequest, "invalid timestamp format, use RFC3339")
 			return
 		}
 		req.Timestamp = ts
@@ -146,19 +150,19 @@ func (h *SimulationHandler) GetSunPosition(w http.ResponseWriter, r *http.Reques
 	}
 
 	pos := h.svc.GetSunPosition(req.Lat, req.Lon, req.Timestamp)
-	writeJSON(w, http.StatusOK, pos)
+	h.writeJSON(w, http.StatusOK, pos)
 }
 
 func (h *SimulationHandler) GetShadowMap(w http.ResponseWriter, r *http.Request) {
 	q := r.URL.Query()
 	lat, err := parseFloat(q.Get("lat"))
 	if err != nil {
-		writeError(w, http.StatusBadRequest, "invalid lat parameter")
+		h.writeError(w, http.StatusBadRequest, "invalid lat parameter")
 		return
 	}
 	lon, err := parseFloat(q.Get("lon"))
 	if err != nil {
-		writeError(w, http.StatusBadRequest, "invalid lon parameter")
+		h.writeError(w, http.StatusBadRequest, "invalid lon parameter")
 		return
 	}
 
@@ -166,7 +170,7 @@ func (h *SimulationHandler) GetShadowMap(w http.ResponseWriter, r *http.Request)
 	if tsStr := q.Get("date"); tsStr != "" {
 		parsed, err := time.Parse("2006-01-02", tsStr)
 		if err != nil {
-			writeError(w, http.StatusBadRequest, "invalid date format, use YYYY-MM-DD")
+			h.writeError(w, http.StatusBadRequest, "invalid date format, use YYYY-MM-DD")
 			return
 		}
 		ts = parsed
@@ -174,27 +178,27 @@ func (h *SimulationHandler) GetShadowMap(w http.ResponseWriter, r *http.Request)
 
 	positions, err := h.svc.GetShadowMap(r.Context(), lat, lon, ts)
 	if err != nil {
-		log.Error().Err(err).Msg("failed to compute shadow map")
-		writeError(w, http.StatusInternalServerError, "failed to compute shadow map")
+		h.logger.Error().Err(err).Msg("failed to compute shadow map")
+		h.writeError(w, http.StatusInternalServerError, "failed to compute shadow map")
 		return
 	}
 
-	writeJSON(w, http.StatusOK, positions)
+	h.writeJSON(w, http.StatusOK, positions)
 }
 
-func writeJSON(w http.ResponseWriter, status int, data any) {
+func (h *SimulationHandler) writeJSON(w http.ResponseWriter, status int, data any) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	if err := json.NewEncoder(w).Encode(data); err != nil {
-		log.Error().Err(err).Msg("failed to encode response")
+		h.logger.Error().Err(err).Msg("failed to encode response")
 	}
 }
 
-func writeError(w http.ResponseWriter, status int, message string) {
+func (h *SimulationHandler) writeError(w http.ResponseWriter, status int, message string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	if err := json.NewEncoder(w).Encode(map[string]string{"error": message}); err != nil {
-		log.Error().Err(err).Str("message", message).Msg("failed to encode error response")
+		h.logger.Error().Err(err).Str("message", message).Msg("failed to encode error response")
 	}
 }
 
@@ -205,3 +209,4 @@ func parseFloat(s string) (float64, error) {
 	}
 	return f, nil
 }
+

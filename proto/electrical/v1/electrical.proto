@@ -6,25 +6,89 @@ option go_package = "github.com/solar3d/solar3d/gen/electrical/v1;electricalv1";
 
 import "google/protobuf/timestamp.proto";
 
+// ElectricalService manages electrical network topology for solar farm layouts,
+// including string configuration, inverter assignment, capacity calculations,
+// network topology validation, BOM derivation, and the acceptance workflow gate
+// required for ElectricalReady -> TransmissionReady phase progression.
 service ElectricalService {
+  // CreateNetwork creates a new electrical network for a project layout.
   rpc CreateNetwork(CreateNetworkRequest) returns (CreateNetworkResponse);
+  // GetNetwork retrieves an electrical network by ID including review metadata.
   rpc GetNetwork(GetNetworkRequest) returns (GetNetworkResponse);
+  // ListNetworks returns all electrical networks for a project.
   rpc ListNetworks(ListNetworksRequest) returns (ListNetworksResponse);
+  // DeleteNetwork permanently removes an electrical network and all its strings.
   rpc DeleteNetwork(DeleteNetworkRequest) returns (DeleteNetworkResponse);
 
   // String operations
   rpc CreateString(CreateStringRequest) returns (CreateStringResponse);
+  // AutoGenerateStrings generates panel strings automatically based on inverter groups.
   rpc AutoGenerateStrings(AutoGenerateStringsRequest) returns (AutoGenerateStringsResponse);
+  // ListStrings returns all strings for a network.
   rpc ListStrings(ListStringsRequest) returns (ListStringsResponse);
 
   // Inverter operations
   rpc AssignInverter(AssignInverterRequest) returns (AssignInverterResponse);
+  // ListInverterGroups returns all inverter groups and their assigned strings.
   rpc ListInverterGroups(ListInverterGroupsRequest) returns (ListInverterGroupsResponse);
 
   // Calculations
   rpc CalculateDCCapacity(CalculateDCCapacityRequest) returns (CalculateDCCapacityResponse);
+  // CalculateACCapacity computes total AC output capacity for the network.
   rpc CalculateACCapacity(CalculateACCapacityRequest) returns (CalculateACCapacityResponse);
+  // CalculateLosses computes cable, mismatch, and system losses for the network.
   rpc CalculateLosses(CalculateLossesRequest) returns (CalculateLossesResponse);
+  // ValidateSizing performs parametric sizing validation against design constraints.
+  rpc ValidateSizing(ValidateSizingRequest) returns (ValidateSizingResponse);
+  // ValidateNetwork performs full topology validation: all strings assigned, no orphans, MPPT limits.
+  rpc ValidateNetwork(ValidateNetworkRequest) returns (ValidateNetworkResponse);
+  // GenerateNetworkBOM derives BOM item counts directly from the live network topology.
+  rpc GenerateNetworkBOM(GenerateNetworkBOMRequest) returns (GenerateNetworkBOMResponse);
+
+  // Acceptance workflow — gates the ElectricalReady -> TransmissionReady phase transition.
+  // SubmitNetworkForReview transitions review_metadata.status to REVIEW_PENDING.
+  rpc SubmitNetworkForReview(SubmitNetworkForReviewRequest) returns (SubmitNetworkForReviewResponse);
+  // ApproveNetwork sets review_metadata.status to APPROVED, enabling TransmissionReady transition.
+  rpc ApproveNetwork(ApproveNetworkRequest) returns (ApproveNetworkResponse);
+  // RejectNetwork sets review_metadata.status to REJECTED and records blocker reasons.
+  rpc RejectNetwork(RejectNetworkRequest) returns (RejectNetworkResponse);
+}
+
+// ========== Acceptance Status Enum ==========
+// AcceptanceStatus is the workflow gate state for an electrical network artefact.
+// Determines whether this network satisfies the ElectricalReady gate for phase progression.
+enum AcceptanceStatus {
+  // ACCEPTANCE_STATUS_UNSPECIFIED is the default zero value; treat as DRAFT.
+  ACCEPTANCE_STATUS_UNSPECIFIED = 0;
+  // ACCEPTANCE_STATUS_DRAFT indicates no review has been requested yet.
+  ACCEPTANCE_STATUS_DRAFT = 1;
+  // ACCEPTANCE_STATUS_REVIEW_PENDING indicates a review has been submitted and is awaiting decision.
+  ACCEPTANCE_STATUS_REVIEW_PENDING = 2;
+  // ACCEPTANCE_STATUS_APPROVED indicates the network passed acceptance and may proceed.
+  ACCEPTANCE_STATUS_APPROVED = 3;
+  // ACCEPTANCE_STATUS_REJECTED indicates the network failed acceptance; blockers must be resolved.
+  ACCEPTANCE_STATUS_REJECTED = 4;
+}
+
+// ========== Review Metadata ==========
+// ReviewMetadata captures the acceptance workflow state attached to an electrical network.
+// Populated by the SubmitNetworkForReview / ApproveNetwork / RejectNetwork RPCs.
+// Consumed by PlanningWorkflow gate enforcement for the ElectricalReady -> TransmissionReady transition.
+message ReviewMetadata {
+  // status is the current acceptance gate state.
+  AcceptanceStatus status = 1;
+  // reviewed_by_actor_id is the user or system actor that performed the review action.
+  string reviewed_by_actor_id = 2;
+  // reviewed_at is the timestamp of the most recent review action.
+  google.protobuf.Timestamp reviewed_at = 3;
+  // quality_score is a reviewer-assigned [0, 1] quality rating.
+  double quality_score = 4;
+  // review_comments are free-text annotations from the reviewer.
+  repeated string review_comments = 5;
+  // blockers are unresolved reasons preventing approval. Empty when approved.
+  repeated string blockers = 6;
+  // approval_timestamp_unix_secs records the ISO-8601 approval time for the audit trail.
+  string approval_timestamp_unix_secs = 7;
 }
 
 message ElectricalNetwork {
@@ -38,6 +102,9 @@ message ElectricalNetwork {
   int32 string_count = 8;
   int32 inverter_count = 9;
   google.protobuf.Timestamp created_at = 10;
+  ReviewMetadata review_metadata = 11;
+  repeated string validation_violations = 12; // Empty if all validations pass
+  double electrical_feasibility_score = 13; // [0, 1]
 }
 
 message PanelString {
@@ -94,10 +161,48 @@ message DeleteNetworkRequest {
 
 message DeleteNetworkResponse {}
 
+// ========== Acceptance Request/Response Messages ==========
+message SubmitNetworkForReviewRequest {
+  string network_id = 1;
+  string submission_reason = 2;
+  string submitted_by_actor_id = 3;
+}
+
+message SubmitNetworkForReviewResponse {
+  ElectricalNetwork network = 1;
+  ReviewMetadata review_metadata = 2;
+}
+
+message ApproveNetworkRequest {
+  string network_id = 1;
+  double quality_score = 2; // [0, 1]
+  double feasibility_score = 3; // [0, 1]
+  repeated string approval_comments = 4;
+  string approved_by_actor_id = 5;
+}
+
+message ApproveNetworkResponse {
+  ElectricalNetwork network = 1;
+  ReviewMetadata review_metadata = 2;
+}
+
+message RejectNetworkRequest {
+  string network_id = 1;
+  repeated string rejection_reasons = 2;
+  string rejected_by_actor_id = 3;
+}
+
+message RejectNetworkResponse {
+  ElectricalNetwork network = 1;
+  ReviewMetadata review_metadata = 2;
+}
+
 message CreateStringRequest {
   string network_id = 1;
   repeated string panel_ids = 2;
   string inverter_group_id = 3;
+  double panel_voltage = 4;
+  double panel_current = 5;
 }
 
 message CreateStringResponse {
@@ -110,6 +215,11 @@ message AutoGenerateStringsRequest {
   int32 panels_per_string = 3;
   string inverter_asset_id = 4;
   int32 strings_per_inverter = 5;
+  int32 total_panels = 6;
+  double panel_voltage = 7;
+  double panel_current = 8;
+  double panel_power_w = 9;
+  double inverter_ac_kw = 10;
 }
 
 message AutoGenerateStringsResponse {
@@ -117,6 +227,7 @@ message AutoGenerateStringsResponse {
   int32 inverter_groups_created = 2;
   double total_dc_kw = 3;
   double total_ac_kw = 4;
+  ElectricalNetwork network = 5;
 }
 
 message ListStringsRequest {
@@ -177,3 +288,106 @@ message CalculateLossesResponse {
   double transformer_loss_percent = 4;
   double total_loss_percent = 5;
 }
+
+// ValidateSizing checks DC/AC sizing constraints against parametric limits.
+message ValidateSizingRequest {
+  string network_id = 1;
+  // Panel electrical characteristics
+  double panel_voc_v = 2; // open-circuit voltage per panel
+  double panel_vmp_v = 3; // max-power-point voltage per panel
+  double panel_isc_a = 4; // short-circuit current per panel
+  double panel_imp_a = 5; // max-power-point current per panel
+  int32  panels_per_string = 6;
+  // Inverter input limits (from datasheet)
+  double inverter_vdc_max_v = 7;
+  double inverter_vmppt_min_v = 8;
+  double inverter_vmppt_max_v = 9;
+  double inverter_idc_max_a = 10;
+  // AC output
+  double inverter_ac_kw = 11;
+  // Target sizing range
+  double dc_ac_ratio_min = 12;
+  double dc_ac_ratio_max = 13;
+  // Temperature correction factors (IEC 62548)
+  double temp_coeff_voc_pct_per_c = 14; // negative, e.g. -0.29
+  double lowest_expected_temp_c = 15; // for cold-day Voc check
+  double highest_expected_temp_c = 16; // for hot-day Vmp check
+}
+
+message SizingViolation {
+  string code = 1;
+  string message = 2;
+  double limit = 3;
+  double actual = 4;
+}
+
+message ValidateSizingResponse {
+  bool valid = 1;
+  repeated SizingViolation violations = 2;
+  double string_voc_cold_v = 3;
+  double string_vmp_hot_v = 4;
+  double dc_string_power_kw = 5;
+  double dc_ac_ratio = 6;
+  int32  max_panels_per_string = 7;
+  int32  min_panels_per_string = 8;
+}
+
+// ValidateNetwork checks full network topology consistency.
+message ValidateNetworkRequest {
+  string network_id = 1;
+  // Optional inverter MPPT count limit for over-subscription checking.
+  int32 inverter_mppt_count = 2;
+  int32 max_strings_per_mppt = 3;
+}
+
+message NetworkTopologyIssue {
+  string code = 1; // e.g. "UNASSIGNED_STRING", "DUPLICATE_PANEL", "MPPT_OVER_SUBSCRIBED"
+  string message = 2;
+  string entity_id = 3; // string_id or inverter_group_id causing the issue
+}
+
+message ValidateNetworkResponse {
+  bool valid = 1;
+  repeated NetworkTopologyIssue issues = 2;
+  int32 total_strings = 3;
+  int32 assigned_strings = 4;
+  int32 unassigned_strings = 5;
+  int32 total_panels = 6;
+  int32 duplicate_panel_refs = 7;
+  double total_dc_kw = 8;
+  double total_ac_kw = 9;
+  double dc_ac_ratio = 10;
+}
+
+// GenerateNetworkBOM derives bill-of-materials item counts from live network topology.
+message GenerateNetworkBOMRequest {
+  string network_id = 1;
+  // Optional cost parameters; zero values omit cost columns.
+  double panel_unit_cost = 2;
+  double inverter_unit_cost = 3;
+  double cable_cost_per_m = 4;
+  double mounting_cost_per_panel = 5;
+  string currency_code = 6;
+}
+
+message NetworkBOMItem {
+  string category = 1;
+  string name = 2;
+  int32  quantity = 3;
+  string unit = 4;
+  double unit_cost = 5;
+  double total_cost = 6;
+}
+
+message GenerateNetworkBOMResponse {
+  string network_id = 1;
+  int32  panel_count = 2;
+  int32  string_count = 3;
+  int32  inverter_group_count = 4;
+  double total_dc_kw = 5;
+  double total_ac_kw = 6;
+  repeated NetworkBOMItem items = 7;
+  double total_cost = 8;
+  string currency_code = 9;
+}
+

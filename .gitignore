@@ -48,3 +48,5 @@ proto/gen/
 # Misc
 tmp/
 *.log
+
+compute/target/*

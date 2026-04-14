@@ -19,10 +19,15 @@ export interface ViewportBounds {
 export type MapTool =
 	| 'select'
 	| 'pan'
+	| 'place-pin'
 	| 'draw-boundary'
 	| 'place-component'
 	| 'draw-area'
-	| 'measure';
+	| 'draw-exclusion'
+	| 'draw-road'
+	| 'measure'
+	| 'draw-dimension'
+	| 'insert-block';
 
 export const camera = writable<CameraState>({
 	longitude: -120.0,
@@ -40,7 +45,15 @@ export const viewport = writable<ViewportBounds>({
 	north: 36
 });
 
-export type AppView = 'design' | 'simulate' | 'electrical' | 'reports' | 'financial';
+export type AppView =
+	| 'design'
+	| 'cad'
+	| 'simulate'
+	| 'electrical'
+	| 'reports'
+	| 'financial'
+	| 'transmission'
+	| 'commissioning';
 
 export const activeTool = writable<MapTool>('select');
 export const selectedEntityId = writable<string | null>(null);
@@ -54,6 +67,8 @@ export interface LayerVisibility {
 	panels: boolean;
 	shadows: boolean;
 	cables: boolean;
+	transmissionLines: boolean;
+	zones: boolean;
 }
 
 export const layerVisibility = writable<LayerVisibility>({
@@ -62,5 +77,7 @@ export const layerVisibility = writable<LayerVisibility>({
 	boundary: true,
 	panels: true,
 	shadows: false,
-	cables: false
+	cables: false,
+	transmissionLines: true,
+	zones: true
 });

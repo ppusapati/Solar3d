@@ -1,0 +1,249 @@
+syntax = "proto3";
+
+package planning.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/planning/v1;planningv1";
+
+import "google/protobuf/timestamp.proto";
+
+// ========== Planning Workflow Service ==========
+
+// PlanningWorkflowService manages transitions through the planning, design,
+// validation, and approval workflow phases for solar projects.
+//
+// The workflow is deterministic and sequential: projects progress from Planning
+// through LayoutReady, ElectricalReady, TransmissionReady, ReviewReady, Approved,
+// and finally CommissioningReady. Each transition is gated by predecessor phase
+// acceptance and validated evidence payloads.
+service PlanningWorkflowService {
+  // TransitionPhase transitions a project from its current phase to a new phase.
+  // The transition is idempotent: if already in the target phase, returns success
+  // with a "no-op" transition record. Backward transitions (rollback) are allowed
+  // only for phases before CommissioningReady.
+  rpc TransitionPhase(TransitionPhaseRequest) returns (TransitionPhaseResponse);
+
+  // GetPhaseState retrieves the current phase and transition history for a project.
+  rpc GetPhaseState(GetPhaseStateRequest) returns (GetPhaseStateResponse);
+
+  // ListPhaseTransitions returns all phase transitions for a project (immutable history).
+  rpc ListPhaseTransitions(ListPhaseTransitionsRequest) returns (ListPhaseTransitionsResponse);
+
+  // ValidatePhaseReadiness returns blocker reasons if a phase transition would fail,
+  // without actually performing the transition. Useful for UX validation.
+  rpc ValidatePhaseReadiness(ValidatePhaseReadinessRequest) returns (ValidatePhaseReadinessResponse);
+}
+
+// ========== Workflow Phase Enum ==========
+
+enum WorkflowPhase {
+  WORKFLOW_PHASE_UNSPECIFIED = 0;
+
+  // PLANNING: Initial state. Project captures boundary and planning parameters.
+  // No validation or synthesis has occurred yet.
+  // Gate: No predecessors. User provides planning inputs.
+  PLANNING = 1;
+
+  // LAYOUT_READY: ML/algorithm phase complete. Candidate set synthesized, ranked,
+  // and a preferred candidate selected or approved by user.
+  // Gate: Requires PLANNING acceptance + ML candidate approval.
+  LAYOUT_READY = 2;
+
+  // ELECTRICAL_READY: Electrical validation complete. Layout passed electrical
+  // feasibility checks (stringing, transformer, cable, voltage constraints).
+  // Gate: Requires LAYOUT_READY acceptance + electrical service sign-off.
+  ELECTRICAL_READY = 3;
+
+  // TRANSMISSION_READY: Transmission routing complete. Route anchors, protection
+  // devices, and fault isolation validated. No conflicts with electrical grid.
+  // Gate: Requires ELECTRICAL_READY acceptance + transmission service sign-off.
+  TRANSMISSION_READY = 4;
+
+  // REVIEW_READY: LOD 400 detail checklist cleared and quality gate passed.
+  // All mandatory asset-class requirements verified.
+  // Gate: Requires TRANSMISSION_READY acceptance + LOD gate pass.
+  REVIEW_READY = 5;
+
+  // APPROVED: Project approved for commissioning handover. All stakeholder
+  // signoffs collected. Ready for twin provisioning and asset linkage.
+  // Gate: Requires REVIEW_READY acceptance + reviewer/manager approval.
+  APPROVED = 6;
+
+  // COMMISSIONING_READY: Twin provisioned, asset identities linked, commissioning
+  // handover complete. System transitions to operational state.
+  // Gate: Requires APPROVED acceptance + twin provisioning confirmation.
+  COMMISSIONING_READY = 7;
+
+  // ARCHIVED: Project closed (past final, no longer active planning). Cannot be
+  // transitioned out of without explicit override.
+  ARCHIVED = 8;
+}
+
+// ========== Transition Evidence Payloads ==========
+
+// The union type for evidence. Each phase transition must provide typed evidence
+// relevant to that specific transition. Backend uses this evidence to enforce
+// gates and prevent unauthorized phase skips.
+
+// TransitionEvidence wraps all possible evidence types.
+message TransitionEvidence {
+  oneof evidence_type {
+    PlanningAcceptance planning_acceptance = 1;
+    LayoutApproval layout_approval = 2;
+    ElectricalSignoff electrical_signoff = 3;
+    TransmissionSignoff transmission_signoff = 4;
+    ReviewApproval review_approval = 5;
+    StakeholderApproval stakeholder_approval = 6;
+    CommissioningConfirmation commissioning_confirmation = 7;
+  }
+}
+
+// PlanningAcceptance marks the boundary and planning inputs as accepted.
+message PlanningAcceptance {
+  string boundary_id = 1; // Reference to boundary artifact
+  string accepted_by_actor_id = 2; // User or system actor ID
+  google.protobuf.Timestamp accepted_at = 3;
+  string notes = 4;
+}
+
+// LayoutApproval evidence: ML candidate set complete and preferred candidate selected.
+message LayoutApproval {
+  string candidate_id = 1; // Selected MLCandidate ID
+  string ml_experiment_id = 2; // Reference to ML phase output
+  string approved_by_actor_id = 3;
+  google.protobuf.Timestamp approved_at = 4;
+  double candidate_composite_score = 5;
+  string selection_rationale = 6;
+}
+
+// ElectricalSignoff evidence: Electrical validation passed.
+message ElectricalSignoff {
+  string layout_id = 1;
+  string electrical_analysis_id = 2; // Reference to electrical service validation run
+  string validated_by_actor_id = 3;
+  google.protobuf.Timestamp validated_at = 4;
+  repeated string violations = 5; // Empty if no violations
+  double electrical_feasibility_score = 6;
+}
+
+// TransmissionSignoff evidence: Transmission routing and protection complete.
+message TransmissionSignoff {
+  string electrical_layout_id = 1;
+  string transmission_route_id = 2; // Reference to transmission service route
+  string approved_by_actor_id = 3;
+  google.protobuf.Timestamp approved_at = 4;
+  repeated string protection_devices = 5;
+  int32 fault_isolation_points = 6;
+}
+
+// ReviewApproval evidence: LOD 400 checklist passed + quality gate cleared.
+message ReviewApproval {
+  string transmission_route_id = 1;
+  string lod_400_checklist_id = 2; // Reference to LOD checklist review
+  string reviewed_by_actor_id = 3;
+  google.protobuf.Timestamp reviewed_at = 4;
+  int32 mandatory_items_verified = 5;
+  repeated string blockers = 6; // Empty if all blockers resolved
+  double quality_score = 7; // [0, 1]
+}
+
+// StakeholderApproval evidence: Manager/stakeholder approval for commissioning.
+message StakeholderApproval {
+  string review_approved_layout_id = 1;
+  string approved_by_actor_id = 2; // Stakeholder user ID
+  string actor_role = 3; // e.g., "designer", "manager", "owner"
+  google.protobuf.Timestamp approved_at = 4;
+  string approval_notes = 5;
+}
+
+// CommissioningConfirmation evidence: Twin provisioned and asset identities linked.
+message CommissioningConfirmation {
+  string approved_project_id = 1;
+  string twin_id = 2; // Reference to provisioned digital twin
+  string provisioned_by_actor_id = 3;
+  google.protobuf.Timestamp provisioned_at = 4;
+  int32 asset_identity_links = 5; // Count of linked asset identities
+}
+
+// ========== Phase Transition Record (Immutable History) ==========
+
+// PhaseTransition represents a single immutable transition record.
+// All transitions are logged and never deleted (audit trail).
+message PhaseTransition {
+  string id = 1; // UUID
+  string project_id = 2;
+  WorkflowPhase from_phase = 3;
+  WorkflowPhase to_phase = 4;
+  TransitionEvidence evidence = 5;
+  google.protobuf.Timestamp occurred_at = 6;
+  string actor_id = 7; // User or system ID that performed transition
+  string reason = 8; // Human-readable reason for transition
+  bool is_rollback = 9; // True if this transition is a rollback
+  string rollback_reason = 10; // Reason for rollback, if applicable
+}
+
+// ========== RPC Request/Response Messages ==========
+
+message TransitionPhaseRequest {
+  string project_id = 1;
+  WorkflowPhase target_phase = 2;
+  TransitionEvidence evidence = 3; // Evidence required for target phase
+  string actor_id = 4; // User or system initiating transition
+  string reason = 5; // Human-readable transition reason
+}
+
+message TransitionPhaseResponse {
+  string project_id = 1;
+  WorkflowPhase previous_phase = 2;
+  WorkflowPhase current_phase = 3;
+  PhaseTransition transition_record = 4; // The created transition record
+  bool was_noop = 5; // True if already in target phase
+}
+
+message GetPhaseStateRequest {
+  string project_id = 1;
+}
+
+message GetPhaseStateResponse {
+  string project_id = 1;
+  WorkflowPhase current_phase = 2;
+  google.protobuf.Timestamp phase_entered_at = 3;
+  PhaseTransition last_transition = 4; // Most recent transition record
+}
+
+message ListPhaseTransitionsRequest {
+  string project_id = 1;
+  int32 page_size = 2; // Default 50, max 200
+  string page_token = 3;
+}
+
+message ListPhaseTransitionsResponse {
+  repeated PhaseTransition transitions = 1;
+  string next_page_token = 2;
+}
+
+message ValidatePhaseReadinessRequest {
+  string project_id = 1;
+  WorkflowPhase target_phase = 2; // Check if transition to this phase is valid
+  TransitionEvidence evidence = 3; // Optional: validate with provided evidence
+}
+
+message ValidatePhaseReadinessResponse {
+  string project_id = 1;
+  WorkflowPhase current_phase = 2;
+  WorkflowPhase target_phase = 3;
+  bool is_valid = 4; // True if transition is allowed
+  repeated string blocker_reasons = 5; // Non-empty list explains why transition would fail
+  google.protobuf.Timestamp can_transition_after = 6; // Optional: when blockers lift
+}
+
+// ========== Workflow State (for Phase Status Queries) ==========
+
+// WorkflowState represents the immutable state snapshot at any point.
+message WorkflowState {
+  string project_id = 1;
+  WorkflowPhase current_phase = 2;
+  google.protobuf.Timestamp phase_entered_at = 3;
+  int32 total_transitions = 4; // Count of all transitions
+  repeated string active_blockers = 5; // Blockers preventing further progress
+  string actor_blocked_since = 6; // Actor ID if phase transition is blocked
+}

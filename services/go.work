@@ -1,0 +1,35 @@
+go 1.26.1
+
+use (
+	../compute/planning
+	../proto/gen/go
+	./api-gateway-service
+	./asset-service
+	./cad-annotation-service
+	./cad-core-service
+	./cad-layer-block-service
+	./commissioning-service
+	./compute-orchestration-service
+	./compute-service
+	./drawing-revision-service
+	./electrical-service
+	./geo-analytics-service
+	./graph-service
+	./interop-service
+	./layout-service
+	./ml-service
+	./monolith
+	./optimization-service
+	./plot-sheet-service
+	./project-service
+	./protection-service
+	./report-service
+	./routing-service
+	./shared
+	./simulation-service
+	./structural-service
+	./terrain-service
+	./transmission-routing-service
+	./twin-service
+)
+

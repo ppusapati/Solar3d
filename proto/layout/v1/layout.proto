@@ -6,17 +6,26 @@ option go_package = "github.com/solar3d/solar3d/gen/layout/v1;layoutv1";
 
 import "google/protobuf/timestamp.proto";
 
+// LayoutService manages solar farm layout entities including panel arrays,
+// components (inverters, transformers, trackers), tile-based spatial queries,
+// and the acceptance workflow gate required for ElectricalReady phase progression.
 service LayoutService {
-  // Layout management
+  // CreateLayout creates a new empty layout for a project.
   rpc CreateLayout(CreateLayoutRequest) returns (CreateLayoutResponse);
+  // GetLayout retrieves a layout by ID including its current review metadata.
   rpc GetLayout(GetLayoutRequest) returns (GetLayoutResponse);
+  // ListLayouts returns all layouts for a project ordered by creation time.
   rpc ListLayouts(ListLayoutsRequest) returns (ListLayoutsResponse);
+  // DeleteLayout permanently removes a layout and all its components and tiles.
   rpc DeleteLayout(DeleteLayoutRequest) returns (DeleteLayoutResponse);
 
   // Component placement
   rpc PlaceComponent(PlaceComponentRequest) returns (PlaceComponentResponse);
+  // MoveComponent updates the position of an existing placed component.
   rpc MoveComponent(MoveComponentRequest) returns (MoveComponentResponse);
+  // RemoveComponent removes a placed component from the layout.
   rpc RemoveComponent(RemoveComponentRequest) returns (RemoveComponentResponse);
+  // ListComponents returns all placed components for a layout.
   rpc ListComponents(ListComponentsRequest) returns (ListComponentsResponse);
 
   // Panel array generation
@@ -24,7 +33,53 @@ service LayoutService {
 
   // Tile-based queries
   rpc GetTiles(GetTilesRequest) returns (GetTilesResponse);
+  // GetTilePanels returns individual panel geometries within a specific tile for viewport rendering.
   rpc GetTilePanels(GetTilePanelsRequest) returns (GetTilePanelsResponse);
+
+  // Acceptance workflow — gates the LayoutReady -> ElectricalReady phase transition.
+  // SubmitLayoutForReview transitions review_metadata.status to REVIEW_PENDING.
+  rpc SubmitLayoutForReview(SubmitLayoutForReviewRequest) returns (SubmitLayoutForReviewResponse);
+  // ApproveLayout sets review_metadata.status to APPROVED, enabling ElectricalReady transition.
+  rpc ApproveLayout(ApproveLayoutRequest) returns (ApproveLayoutResponse);
+  // RejectLayout sets review_metadata.status to REJECTED and records blockers preventing approval.
+  rpc RejectLayout(RejectLayoutRequest) returns (RejectLayoutResponse);
+}
+
+// ========== Acceptance Status Enum ==========
+// AcceptanceStatus is the workflow gate state for a layout artefact.
+// Determines whether this layout satisfies the LayoutReady gate for phase progression.
+enum AcceptanceStatus {
+  // ACCEPTANCE_STATUS_UNSPECIFIED is the default zero value; treat as DRAFT.
+  ACCEPTANCE_STATUS_UNSPECIFIED = 0;
+  // ACCEPTANCE_STATUS_DRAFT indicates no review has been requested yet.
+  ACCEPTANCE_STATUS_DRAFT = 1;
+  // ACCEPTANCE_STATUS_REVIEW_PENDING indicates a review has been submitted and is awaiting decision.
+  ACCEPTANCE_STATUS_REVIEW_PENDING = 2;
+  // ACCEPTANCE_STATUS_APPROVED indicates the layout passed acceptance and may proceed.
+  ACCEPTANCE_STATUS_APPROVED = 3;
+  // ACCEPTANCE_STATUS_REJECTED indicates the layout failed acceptance; blockers must be resolved.
+  ACCEPTANCE_STATUS_REJECTED = 4;
+}
+
+// ========== Review Metadata ==========
+// ReviewMetadata captures the acceptance workflow state attached to a layout.
+// Populated by the SubmitLayoutForReview / ApproveLayout / RejectLayout RPCs.
+// Consumed by PlanningWorkflow gate enforcement for the LayoutReady -> ElectricalReady transition.
+message ReviewMetadata {
+  // status is the current acceptance gate state.
+  AcceptanceStatus status = 1;
+  // reviewed_by_actor_id is the user or system actor that performed the review action.
+  string reviewed_by_actor_id = 2;
+  // reviewed_at is the timestamp of the most recent review action.
+  google.protobuf.Timestamp reviewed_at = 3;
+  // quality_score is a reviewer-assigned [0, 1] quality rating.
+  double quality_score = 4;
+  // review_comments are free-text annotations from the reviewer.
+  repeated string review_comments = 5;
+  // blockers are unresolved reasons preventing approval. Empty when approved.
+  repeated string blockers = 6;
+  // approval_timestamp_unix_secs records the ISO-8601 approval time for the audit trail.
+  string approval_timestamp_unix_secs = 7;
 }
 
 message Layout {
@@ -36,6 +91,8 @@ message Layout {
   int32 tile_count = 6;
   google.protobuf.Timestamp created_at = 7;
   google.protobuf.Timestamp updated_at = 8;
+  ReviewMetadata review_metadata = 9;
+  string candidate_id = 10; // Reference to MLCandidate if from algorithm
 }
 
 message Component {
@@ -93,6 +150,41 @@ message BoundingBox {
   double min_y = 2;
   double max_x = 3;
   double max_y = 4;
+}
+
+// ========== Acceptance Request/Response Messages ==========
+message SubmitLayoutForReviewRequest {
+  string layout_id = 1;
+  string submission_reason = 2;
+  string submitted_by_actor_id = 3;
+}
+
+message SubmitLayoutForReviewResponse {
+  Layout layout = 1;
+  ReviewMetadata review_metadata = 2;
+}
+
+message ApproveLayoutRequest {
+  string layout_id = 1;
+  double quality_score = 2; // [0, 1]
+  repeated string approval_comments = 3;
+  string approved_by_actor_id = 4;
+}
+
+message ApproveLayoutResponse {
+  Layout layout = 1;
+  ReviewMetadata review_metadata = 2;
+}
+
+message RejectLayoutRequest {
+  string layout_id = 1;
+  repeated string rejection_reasons = 2;
+  string rejected_by_actor_id = 3;
+}
+
+message RejectLayoutResponse {
+  Layout layout = 1;
+  ReviewMetadata review_metadata = 2;
 }
 
 message PanelArrayParams {

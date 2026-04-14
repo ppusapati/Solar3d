@@ -9,16 +9,21 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 
-	"github.com/solar3d/solar3d/services/routing-service/internal/domain"
-	"github.com/solar3d/solar3d/services/routing-service/internal/repository"
+	"solar3d/routing-service/internal/domain"
+	"solar3d/routing-service/internal/repository"
+	"solar3d/shared/orchestration"
 )
 
 type RoutingService struct {
-	repo *repository.RouteRepository
+	repo       *repository.RouteRepository
+	orchClient *orchestration.Client
 }
 
-func NewRoutingService(repo *repository.RouteRepository) *RoutingService {
-	return &RoutingService{repo: repo}
+func NewRoutingService(repo *repository.RouteRepository, orchestrationURL string) *RoutingService {
+	return &RoutingService{
+		repo:       repo,
+		orchClient: orchestration.NewClient(orchestrationURL),
+	}
 }
 
 func (s *RoutingService) CreateRoute(ctx context.Context, req domain.CreateRouteRequest) (*domain.Route, error) {
@@ -59,6 +64,11 @@ func (s *RoutingService) DeleteRoute(ctx context.Context, id uuid.UUID) error {
 }
 
 func (s *RoutingService) CalculateRoute(ctx context.Context, req domain.CalculateRouteRequest) (*domain.Route, error) {
+	s.submitRoutingJob(ctx, req.ProjectID, "calculate_route", map[string]string{
+		"route_type": string(req.RouteType),
+		"name":       req.Name,
+	})
+
 	terrain := req.Terrain
 	if terrain == nil {
 		// Generate a flat default terrain grid if none provided
@@ -190,6 +200,8 @@ func (s *RoutingService) CreateRoadRoute(ctx context.Context, req domain.Calcula
 // 2-opt local search to reduce total cable/road length across all routes
 // of the same type within a project.
 func (s *RoutingService) OptimizeRoutes(ctx context.Context, projectID uuid.UUID) ([]domain.Route, error) {
+	s.submitRoutingJob(ctx, projectID, "optimize_routes", nil)
+
 	routes, err := s.repo.ListByProject(ctx, projectID)
 	if err != nil {
 		return nil, err
@@ -243,6 +255,32 @@ func (s *RoutingService) OptimizeRoutes(ctx context.Context, projectID uuid.UUID
 		Msg("route optimization complete")
 
 	return routes, nil
+}
+
+func (s *RoutingService) submitRoutingJob(ctx context.Context, projectID uuid.UUID, operation string, extra map[string]string) {
+	payloadMap := map[string]string{
+		"domain":    "routing",
+		"operation": operation,
+	}
+	for k, v := range extra {
+		payloadMap[k] = v
+	}
+
+	payload, _ := json.Marshal(payloadMap)
+	jobID, err := s.orchClient.SubmitJob(
+		ctx,
+		projectID.String(),
+		"optimization",
+		3,
+		string(payload),
+		fmt.Sprintf("routing:%s:%s", operation, projectID.String()),
+	)
+	if err != nil {
+		log.Warn().Err(err).Str("project_id", projectID.String()).Str("operation", operation).Msg("failed to submit routing orchestration job; continuing inline compute")
+		return
+	}
+
+	log.Info().Str("project_id", projectID.String()).Str("operation", operation).Str("job_id", jobID).Msg("submitted routing compute job")
 }
 
 // routeCentroid extracts the geographic centroid from a route's GeoJSON.
@@ -359,3 +397,4 @@ func clampToGrid(terrain *domain.TerrainGrid, n GridNode) GridNode {
 	}
 	return n
 }
+

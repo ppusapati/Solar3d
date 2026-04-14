@@ -2,13 +2,14 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 
-	"github.com/solar3d/solar3d/services/report-service/internal/domain"
-	"github.com/solar3d/solar3d/services/report-service/internal/service"
+	"solar3d/report-service/internal/domain"
+	"solar3d/report-service/internal/service"
 )
 
 type ReportHandler struct {
@@ -38,6 +39,10 @@ func (h *ReportHandler) GenerateReport(w http.ResponseWriter, r *http.Request) {
 	report, err := h.svc.GenerateReport(r.Context(), req)
 	if err != nil {
 		log.Error().Err(err).Msg("failed to generate report")
+		if errors.Is(err, service.ErrApprovalRequired) || errors.Is(err, service.ErrLOD400GateNotPassed) {
+			writeError(w, http.StatusUnprocessableEntity, err.Error())
+			return
+		}
 		writeError(w, http.StatusInternalServerError, "failed to generate report")
 		return
 	}
@@ -120,6 +125,10 @@ func (h *ReportHandler) ExportLayout(w http.ResponseWriter, r *http.Request) {
 	report, err := h.svc.ExportLayout(r.Context(), req)
 	if err != nil {
 		log.Error().Err(err).Msg("failed to export layout")
+		if errors.Is(err, service.ErrApprovalRequired) || errors.Is(err, service.ErrLOD400GateNotPassed) {
+			writeError(w, http.StatusUnprocessableEntity, err.Error())
+			return
+		}
 		writeError(w, http.StatusInternalServerError, "failed to export layout")
 		return
 	}

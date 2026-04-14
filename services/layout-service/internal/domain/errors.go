@@ -25,6 +25,16 @@ var (
 	ErrInvalidFillArea        = errors.New("fill area GeoJSON is invalid or not a polygon")
 	ErrInvalidPanelCapacity   = errors.New("panel capacity must be positive")
 	ErrEmptyFillArea          = errors.New("fill area polygon has zero or negative area")
+	ErrPanelArrayTooLarge     = errors.New("panel array exceeds maximum allowed panel count")
+
+	// Acceptance errors.
+	ErrLayoutNotInReview     = errors.New("layout is not in REVIEW_PENDING state")
+	ErrLayoutAlreadyApproved = errors.New("layout is already approved")
+	ErrRejectReasonsRequired = errors.New("at least one rejection reason is required")
+	ErrCandidateNotFound     = errors.New("candidate not found")
+	ErrCandidateEmpty        = errors.New("candidate artifact graph has no panels")
+	ErrCandidateProjectScope = errors.New("candidate project does not match layout project")
+	ErrInvalidCandidateGeom  = errors.New("candidate panel geometry is invalid")
 
 	// General errors.
 	ErrInvalidID = errors.New("invalid UUID")

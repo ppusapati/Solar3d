@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package graph.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/graph/v1;graphv1";
+
+import "graph/v1/graph_domain.proto";
+
+// GraphService exposes graph algorithms used for layout and routing optimization.
+service GraphService {
+  // MinimumSpanningTree computes the MST over the provided weighted graph.
+  rpc MinimumSpanningTree(MinimumSpanningTreeRequest) returns (MinimumSpanningTreeResponse);
+  // ApproximateSteinerTree computes an approximate Steiner tree for terminal nodes.
+  rpc ApproximateSteinerTree(ApproximateSteinerTreeRequest) returns (ApproximateSteinerTreeResponse);
+}
+
+message GraphEdge {
+  int32 u = 1;
+  int32 v = 2;
+  double weight = 3;
+}
+
+message MinimumSpanningTreeRequest {
+  int32 node_count = 1;
+  repeated GraphEdge edges = 2;
+  // Canonical topology payload for cross-service compatibility.
+  GraphTopology topology = 10;
+}
+
+message MinimumSpanningTreeResponse {
+  repeated GraphEdge edges = 1;
+  GraphTopology output_topology = 10;
+}
+
+message ApproximateSteinerTreeRequest {
+  int32 node_count = 1;
+  repeated GraphEdge edges = 2;
+  repeated int32 terminals = 3;
+  GraphTopology topology = 10;
+  TerminalSet terminal_set = 11;
+  GraphConstraint constraints = 12;
+}
+
+message ApproximateSteinerTreeResponse {
+  repeated GraphEdge edges = 1;
+  GraphTopology output_topology = 10;
+}

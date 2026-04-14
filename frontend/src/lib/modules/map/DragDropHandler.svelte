@@ -5,7 +5,15 @@
 	export let viewer: any;
 
 	const dispatch = createEventDispatcher<{
-		drop: { type: string; name: string; longitude: number; latitude: number };
+		drop: {
+			type: string;
+			name: string;
+			id: string;
+			model3dPath: string;
+			dimensions: { widthMm: number; heightMm: number; depthMm: number };
+			longitude: number;
+			latitude: number;
+		};
 	}>();
 
 	let Cesium: any;
@@ -66,6 +74,13 @@
 			dispatch('drop', {
 				type: asset.type,
 				name: asset.name,
+				id: asset.id ?? '',
+				model3dPath: asset.model3dPath ?? '',
+				dimensions: {
+					widthMm: Number(asset.dimensions?.widthMm ?? 0),
+					heightMm: Number(asset.dimensions?.heightMm ?? 0),
+					depthMm: Number(asset.dimensions?.depthMm ?? 0)
+				},
 				longitude: Cesium.Math.toDegrees(carto.longitude),
 				latitude: Cesium.Math.toDegrees(carto.latitude)
 			});
@@ -102,6 +117,8 @@
 <div
 	class="drop-zone"
 	class:drag-over={isDragOver}
+	role="region"
+	aria-label="Map asset drop zone"
 	on:dragover={handleDragOver}
 	on:dragleave={handleDragLeave}
 	on:drop={handleDrop}

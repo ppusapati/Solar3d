@@ -1,0 +1,23 @@
+[package]
+name = "ml-inference"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bridge-core = { path = "../bridge-core" }
+common = { path = "../common" }
+serde = { version = "1.0", features = ["derive"] }
+ndarray = "0.15"
+ort = { version = "2.0.0-rc.12", features = ["download-binaries"] }
+
+[dev-dependencies]
+criterion = { version = "0.5", features = ["html_reports"] }
+tempfile = "3"
+
+[[bench]]
+name = "ml_inference_bench"
+harness = false
+
+[[bin]]
+name = "ml_http_bridge"
+path = "src/bin/http_bridge.rs"

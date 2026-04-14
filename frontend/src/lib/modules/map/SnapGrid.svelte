@@ -4,26 +4,24 @@
 	 * Provides grid snapping, entity-to-entity snapping, and alignment guides.
 	 */
 	import { onDestroy } from 'svelte';
-	import { writable } from 'svelte/store';
+	import { get } from 'svelte/store';
+	import { snapEnabled, snapGridVisible, snapGridSizeM, snapDistanceM } from '$lib/core/stores';
 
 	export let viewer: any;
 	export let enabled: boolean = true;
-	export let gridSizeM: number = 5; // meters
-	export let snapDistance: number = 2; // meters threshold
 
 	let Cesium: any;
 	let guideEntities: any[] = [];
 
 	import('cesium').then((mod) => { Cesium = mod; });
 
-	export const snapEnabled = writable(true);
-	export const gridVisible = writable(false);
-
 	/**
 	 * Snap a position to the nearest grid point.
 	 */
 	export function snapToGrid(lon: number, lat: number): { longitude: number; latitude: number } {
-		if (!enabled) return { longitude: lon, latitude: lat };
+		const active = enabled && get(snapEnabled);
+		if (!active) return { longitude: lon, latitude: lat };
+		const gridSizeM = get(snapGridSizeM);
 
 		// Convert grid size from meters to approximate degrees
 		const mPerDegLon = 111320 * Math.cos((lat * Math.PI) / 180);
@@ -45,9 +43,11 @@
 		lon: number, lat: number,
 		existingPositions: { longitude: number; latitude: number }[]
 	): { longitude: number; latitude: number; snapped: boolean } {
-		if (!enabled || existingPositions.length === 0) {
+		const active = enabled && get(snapEnabled);
+		if (!active || existingPositions.length === 0) {
 			return { longitude: lon, latitude: lat, snapped: false };
 		}
+		const snapDistance = get(snapDistanceM);
 
 		const mPerDegLon = 111320 * Math.cos((lat * Math.PI) / 180);
 		const mPerDegLat = 111320;
@@ -86,7 +86,7 @@
 		existingPositions: { longitude: number; latitude: number }[]
 	) {
 		clearGuides();
-		if (!Cesium || !viewer || !enabled) return;
+		if (!Cesium || !viewer || !enabled || !get(snapEnabled)) return;
 
 		const mPerDegLon = 111320 * Math.cos((lat * Math.PI) / 180);
 		const mPerDegLat = 111320;
@@ -145,7 +145,8 @@
 	 */
 	export function showGrid(centerLon: number, centerLat: number, extentM: number = 200) {
 		clearGuides();
-		if (!Cesium || !viewer) return;
+		if (!Cesium || !viewer || !get(snapGridVisible)) return;
+		const gridSizeM = get(snapGridSizeM);
 
 		const mPerDegLon = 111320 * Math.cos((centerLat * Math.PI) / 180);
 		const mPerDegLat = 111320;

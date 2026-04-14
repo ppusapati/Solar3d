@@ -9,7 +9,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"github.com/solar3d/solar3d/services/simulation-service/internal/domain"
+	"solar3d/simulation-service/internal/domain"
 )
 
 type SimulationRepository struct {
@@ -148,3 +148,4 @@ func (r *SimulationRepository) Delete(ctx context.Context, id uuid.UUID) error {
 	}
 	return nil
 }
+

@@ -1,4 +1,4 @@
-import { writable, get } from 'svelte/store';
+import { derived, writable, get } from 'svelte/store';
 
 export interface HistoryAction {
 	type: string;
@@ -9,6 +9,8 @@ export interface HistoryAction {
 
 const undoStack = writable<HistoryAction[]>([]);
 const redoStack = writable<HistoryAction[]>([]);
+
+export const commandStack = derived(undoStack, ($stack) => $stack);
 
 export const canUndo = writable(false);
 export const canRedo = writable(false);

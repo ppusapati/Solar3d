@@ -1,0 +1,364 @@
+syntax = "proto3";
+
+package transmission.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/transmission/v1;transmissionv1";
+
+import "google/protobuf/timestamp.proto";
+
+// TransmissionRoutingService manages end-to-end transmission corridor routing
+// with engineering validation, governance workflow, and exportable delivery packs.
+service TransmissionRoutingService {
+  // CalculateTransmissionRoute computes a transmission route and returns the final result.
+  rpc CalculateTransmissionRoute(CalculateTransmissionRouteRequest) returns (CalculateTransmissionRouteResponse);
+  // StreamTransmissionRoute streams phase progress updates and emits the final route.
+  rpc StreamTransmissionRoute(StreamTransmissionRouteRequest) returns (stream StreamTransmissionRouteResponse);
+  // GetTransmissionRoute returns a previously calculated transmission route by ID.
+  rpc GetTransmissionRoute(GetTransmissionRouteRequest) returns (GetTransmissionRouteResponse);
+  // ListTransmissionRoutes lists transmission routes for a project.
+  rpc ListTransmissionRoutes(ListTransmissionRoutesRequest) returns (ListTransmissionRoutesResponse);
+  // SubmitTransmissionRouteForReview transitions a route into engineering review.
+  rpc SubmitTransmissionRouteForReview(SubmitTransmissionRouteForReviewRequest) returns (SubmitTransmissionRouteForReviewResponse);
+  // ApproveTransmissionRoute approves a reviewed route for downstream delivery.
+  rpc ApproveTransmissionRoute(ApproveTransmissionRouteRequest) returns (ApproveTransmissionRouteResponse);
+  // ExportTransmissionRoutePack exports route artifacts required for handoff.
+  rpc ExportTransmissionRoutePack(ExportTransmissionRoutePackRequest) returns (ExportTransmissionRoutePackResponse);
+  // DeleteTransmissionRoute removes a transmission route.
+  rpc DeleteTransmissionRoute(DeleteTransmissionRouteRequest) returns (DeleteTransmissionRouteResponse);
+  // RejectTransmissionRoute rejects a route under engineering review, returning it to draft.
+  rpc RejectTransmissionRoute(RejectTransmissionRouteRequest) returns (RejectTransmissionRouteResponse);
+}
+
+// ========== Acceptance Status Enum ==========
+// AcceptanceStatus is the workflow gate acceptance state — distinct from ApprovalStatus
+// (which tracks the governance review stage). AcceptanceStatus determines whether this
+// artefact satisfies its predecessor gate for phase progression.
+enum AcceptanceStatus {
+  ACCEPTANCE_STATUS_UNSPECIFIED = 0;
+  ACCEPTANCE_STATUS_DRAFT = 1;
+  ACCEPTANCE_STATUS_REVIEW_PENDING = 2;
+  ACCEPTANCE_STATUS_APPROVED = 3;
+  ACCEPTANCE_STATUS_REJECTED = 4;
+}
+
+// ========== Review Metadata ==========
+// ReviewMetadata captures acceptance workflow state attached to a route artefact.
+// Populated by the acceptance RPCs below; consumed by PlanningWorkflow gate checks.
+message ReviewMetadata {
+  // status is the current acceptance gate state.
+  AcceptanceStatus status = 1;
+  // reviewed_by_actor_id is the user or system actor that performed the review.
+  string reviewed_by_actor_id = 2;
+  // reviewed_at is when the most recent review action occurred.
+  google.protobuf.Timestamp reviewed_at = 3;
+  // quality_score is an overall quality rating [0, 1] assigned by the reviewer.
+  double quality_score = 4;
+  // review_comments are free-text comments attached by the reviewer.
+  repeated string review_comments = 5;
+  // blockers lists unresolved reasons that prevented approval. Empty when approved.
+  repeated string blockers = 6;
+  // approval_timestamp_unix_secs records the ISO-8601 approval time as a string for audit.
+  string approval_timestamp_unix_secs = 7;
+}
+
+enum VoltageClass {
+  VOLTAGE_CLASS_UNSPECIFIED = 0;
+  VOLTAGE_CLASS_11KV = 1;
+  VOLTAGE_CLASS_33KV = 2;
+  VOLTAGE_CLASS_HT_66KV = 3;
+  VOLTAGE_CLASS_HT_132KV = 4;
+  VOLTAGE_CLASS_HT_220KV = 5;
+  VOLTAGE_CLASS_HT_400KV = 6;
+}
+
+enum ApprovalStatus {
+  APPROVAL_STATUS_UNSPECIFIED = 0;
+  APPROVAL_STATUS_DRAFT = 1;
+  APPROVAL_STATUS_ENGINEERING_REVIEW = 2;
+  APPROVAL_STATUS_APPROVED = 3;
+  APPROVAL_STATUS_REJECTED = 4;
+}
+
+enum InstallationMode {
+  INSTALLATION_MODE_UNSPECIFIED = 0;
+  INSTALLATION_MODE_OVERHEAD = 1;
+  INSTALLATION_MODE_UNDERGROUND = 2;
+}
+
+message Waypoint {
+  double longitude = 1;
+  double latitude = 2;
+  double elevation = 3;
+}
+
+message TransmissionConstraints {
+  double min_span_m = 1;
+  double max_span_m = 2;
+  double row_width_m = 3;
+  double max_slope_deg = 4;
+  double slope_penalty_factor = 5;
+  double water_crossing_cost_mult = 6;
+  double road_parallel_discount = 7;
+  double max_deflection_deg = 8;
+  double turn_penalty_factor = 9;
+  double off_road_penalty = 10;
+  double road_buffer_m = 11;
+}
+
+message ElevationRasterInput {
+  int32 width = 1;
+  int32 height = 2;
+  double cell_size_m = 3;
+  double origin_longitude = 4;
+  double origin_latitude = 5;
+  repeated double elevations = 6;
+}
+
+message ObstacleRasterInput {
+  int32 width = 1;
+  int32 height = 2;
+  double cell_size_m = 3;
+  double origin_longitude = 4;
+  double origin_latitude = 5;
+  repeated double values = 6;
+}
+
+message VectorFeatureInput {
+  string feature_type = 1;
+  string geometry_geojson = 2;
+  double cost_multiplier = 3;
+}
+
+message TowerPosition {
+  double longitude = 1;
+  double latitude = 2;
+  double elevation = 3;
+  double span_to_next_m = 4;
+  double height_m = 5;
+}
+
+message SegmentExplanation {
+  int32 from_index = 1;
+  double slope_deg = 2;
+  string land_type = 3;
+  double cost_multiplier = 4;
+  string decision_reason = 5;
+  InstallationMode installation_mode = 6;
+}
+
+message CostBreakdown {
+  double conductor_cost = 1;
+  double tower_cost = 2;
+  double row_acquisition_cost = 3;
+  double crossing_premium = 4;
+  double total_cost = 5;
+  double cost_per_km = 6;
+}
+
+message RouteScore {
+  double cost_score = 1;
+  double risk_score = 2;
+  double constructability_score = 3;
+  double schedule_score = 4;
+  double composite_score = 5;
+  bool pareto_frontier = 6;
+  string recommendation_reason = 7;
+  map<string, string> dimension_reasons = 8;
+}
+
+message GovernanceEvent {
+  string event_type = 1;
+  string actor = 2;
+  string note = 3;
+  ApprovalStatus from_status = 4;
+  ApprovalStatus to_status = 5;
+  google.protobuf.Timestamp occurred_at = 6;
+}
+
+message TraceabilityBundle {
+  string algorithm_version = 1;
+  string input_fingerprint = 2;
+  string route_fingerprint = 3;
+  string regression_signature = 4;
+  string request_snapshot_json = 5;
+  string data_snapshot_id = 6;
+  google.protobuf.Timestamp approved_at = 7;
+  string approved_by = 8;
+}
+
+message TowerScheduleEntry {
+  int32 sequence = 1;
+  double longitude = 2;
+  double latitude = 3;
+  double elevation = 4;
+  double span_to_next_m = 5;
+  double height_m = 6;
+  string structure_type = 7;
+}
+
+message UndergroundChainageEntry {
+  int32 segment_index = 1;
+  double start_chainage_m = 2;
+  double end_chainage_m = 3;
+  double length_m = 4;
+  string reason = 5;
+}
+
+message CostBookEntry {
+  string category = 1;
+  string subcategory = 2;
+  double amount = 3;
+  string basis = 4;
+}
+
+message TransmissionRouteExportPack {
+  TransmissionRoute route = 1;
+  repeated TowerScheduleEntry tower_schedule = 2;
+  repeated UndergroundChainageEntry underground_chainage = 3;
+  repeated CostBookEntry cost_book = 4;
+  TraceabilityBundle traceability = 5;
+  google.protobuf.Timestamp generated_at = 6;
+  string generated_by = 7;
+}
+
+message TransmissionRoute {
+  string id = 1;
+  string project_id = 2;
+  string name = 3;
+  VoltageClass voltage_class = 4;
+  string path_geojson = 5;
+  Waypoint farm_output_point = 6;
+  Waypoint grid_injection_point = 7;
+  repeated TowerPosition tower_positions = 8;
+  double distance_m = 9;
+  CostBreakdown cost_breakdown = 10;
+  RouteScore route_score = 14;
+  repeated SegmentExplanation segment_explanations = 11;
+  string route_summary = 12;
+  google.protobuf.Timestamp created_at = 13;
+  ApprovalStatus approval_status = 15;
+  google.protobuf.Timestamp engineering_reviewed_at = 16;
+  string engineering_reviewed_by = 17;
+  google.protobuf.Timestamp approved_at = 18;
+  string approved_by = 19;
+  repeated GovernanceEvent governance_events = 20;
+  // Acceptance gate fields added in Step 15.
+  // electrical_network_id links this route to its origin electrical network.
+  string electrical_network_id = 21;
+  // review_metadata holds the acceptance workflow state (gate check for TransmissionReady).
+  ReviewMetadata review_metadata = 22;
+  // protection_devices lists device identifiers validated on this route (IEC 60255).
+  repeated string protection_devices = 23;
+  // fault_isolation_points is the count of validated fault isolation points on the route.
+  int32 fault_isolation_points = 24;
+  // route_conflicts lists unresolved spatial or electrical conflicts. Empty if route is clean.
+  repeated string route_conflicts = 25;
+  // route_feasibility_score is an overall engineering feasibility score [0, 1].
+  double route_feasibility_score = 26;
+}
+
+message CalculateTransmissionRouteRequest {
+  string project_id = 1;
+  string name = 2;
+  VoltageClass voltage_class = 3;
+  Waypoint farm_output_point = 4;
+  Waypoint grid_injection_point = 5;
+  TransmissionConstraints constraints = 6;
+  ElevationRasterInput elevation_raster = 7;
+  ObstacleRasterInput obstacle_raster = 8;
+  repeated VectorFeatureInput vector_features = 9;
+}
+
+message CalculateTransmissionRouteResponse {
+  TransmissionRoute route = 1;
+}
+
+message StreamTransmissionRouteRequest {
+  CalculateTransmissionRouteRequest request = 1;
+}
+
+message StreamTransmissionRouteResponse {
+  string phase = 1;
+  int32 percent_complete = 2;
+  string message = 3;
+  TransmissionRoute route = 4;
+}
+
+message GetTransmissionRouteRequest {
+  string id = 1;
+}
+
+message GetTransmissionRouteResponse {
+  TransmissionRoute route = 1;
+}
+
+message ListTransmissionRoutesRequest {
+  string project_id = 1;
+}
+
+message ListTransmissionRoutesResponse {
+  repeated TransmissionRoute routes = 1;
+}
+
+// SubmitTransmissionRouteForReviewRequest submits a route for engineering review,
+// transitioning its approval_status to ENGINEERING_REVIEW and acceptance status to REVIEW_PENDING.
+message SubmitTransmissionRouteForReviewRequest {
+  string id = 1;
+  string actor = 2;
+  string note = 3;
+  // submission_reason is a required human-readable justification for the review submission.
+  string submission_reason = 4;
+}
+
+// SubmitTransmissionRouteForReviewResponse returns the route with updated approval and acceptance state.
+message SubmitTransmissionRouteForReviewResponse {
+  TransmissionRoute route = 1;
+}
+
+// ApproveTransmissionRouteRequest approves a route in engineering review,
+// setting acceptance_status to APPROVED and recording quality/feasibility scores.
+message ApproveTransmissionRouteRequest {
+  string id = 1;
+  string actor = 2;
+  string note = 3;
+  // quality_score is the reviewer-assigned quality rating [0, 1].
+  double quality_score = 4;
+  // feasibility_score is the reviewer-assigned engineering feasibility score [0, 1].
+  double feasibility_score = 5;
+  // approval_comments are free-text comments attached to the approval.
+  repeated string approval_comments = 6;
+}
+
+// ApproveTransmissionRouteResponse returns the route with APPROVED acceptance state.
+message ApproveTransmissionRouteResponse {
+  TransmissionRoute route = 1;
+}
+
+// RejectTransmissionRouteRequest rejects a route under review,
+// returning it to DRAFT with documented rejection reasons.
+message RejectTransmissionRouteRequest {
+  string id = 1;
+  string actor = 2;
+  // rejection_reasons must be non-empty; they populate review_metadata.blockers.
+  repeated string rejection_reasons = 3;
+}
+
+// RejectTransmissionRouteResponse returns the route with REJECTED acceptance state.
+message RejectTransmissionRouteResponse {
+  TransmissionRoute route = 1;
+}
+
+message ExportTransmissionRoutePackRequest {
+  string id = 1;
+  string generated_by = 2;
+}
+
+message ExportTransmissionRoutePackResponse {
+  TransmissionRouteExportPack pack = 1;
+}
+
+message DeleteTransmissionRouteRequest {
+  string id = 1;
+}
+
+message DeleteTransmissionRouteResponse {}

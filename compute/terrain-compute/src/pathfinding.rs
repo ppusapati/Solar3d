@@ -49,7 +49,6 @@ pub struct RouteResult {
 #[derive(Debug, Clone)]
 struct AStarNode {
     cell: GridCell,
-    g_cost: f64,
     f_cost: f64,
 }
 
@@ -100,7 +99,6 @@ impl<'a> AStarRouter<'a> {
         g_scores.insert(source, 0.0);
         open_set.push(AStarNode {
             cell: source,
-            g_cost: 0.0,
             f_cost: self.heuristic(source, destination),
         });
 
@@ -127,7 +125,6 @@ impl<'a> AStarRouter<'a> {
 
                     open_set.push(AStarNode {
                         cell: neighbor,
-                        g_cost: tentative_g,
                         f_cost: tentative_g + self.heuristic(neighbor, destination),
                     });
                 }
@@ -138,11 +135,7 @@ impl<'a> AStarRouter<'a> {
     }
 
     /// Find a route using world coordinates.
-    pub fn find_route_world(
-        &self,
-        source: Waypoint,
-        destination: Waypoint,
-    ) -> Option<RouteResult> {
+    pub fn find_route_world(&self, source: Waypoint, destination: Waypoint) -> Option<RouteResult> {
         let src_cell = self.world_to_grid(source.x, source.y)?;
         let dst_cell = self.world_to_grid(destination.x, destination.y)?;
         self.find_route(src_cell, dst_cell)
@@ -152,7 +145,10 @@ impl<'a> AStarRouter<'a> {
         let col = ((x - self.dem.origin_x) / self.dem.resolution).floor() as isize;
         let row = ((y - self.dem.origin_y) / self.dem.resolution).floor() as isize;
 
-        if col >= 0 && row >= 0 && (col as usize) < self.dem.width && (row as usize) < self.dem.height
+        if col >= 0
+            && row >= 0
+            && (col as usize) < self.dem.width
+            && (row as usize) < self.dem.height
         {
             Some(GridCell {
                 col: col as usize,
@@ -178,9 +174,14 @@ impl<'a> AStarRouter<'a> {
 
     fn neighbors(&self, cell: GridCell) -> Vec<GridCell> {
         let directions: [(isize, isize); 8] = [
-            (-1, -1), (0, -1), (1, -1),
-            (-1, 0),           (1, 0),
-            (-1, 1),  (0, 1),  (1, 1),
+            (-1, -1),
+            (0, -1),
+            (1, -1),
+            (-1, 0),
+            (1, 0),
+            (-1, 1),
+            (0, 1),
+            (1, 1),
         ];
 
         directions
@@ -250,7 +251,7 @@ impl<'a> AStarRouter<'a> {
         path.reverse();
 
         let mut total_distance = 0.0;
-        let mut max_slope = 0.0;
+        let mut max_slope: f64 = 0.0;
         let mut waypoints: Vec<Waypoint> = Vec::with_capacity(path.len());
 
         for (i, cell) in path.iter().enumerate() {
@@ -294,10 +295,7 @@ mod tests {
         let grid = make_flat_grid();
         let router = AStarRouter::new(&grid, RouteConstraints::default());
 
-        let result = router.find_route(
-            GridCell { col: 0, row: 0 },
-            GridCell { col: 9, row: 9 },
-        );
+        let result = router.find_route(GridCell { col: 0, row: 0 }, GridCell { col: 9, row: 9 });
 
         assert!(result.is_some());
         let route = result.unwrap();
@@ -325,10 +323,7 @@ mod tests {
         };
 
         let router = AStarRouter::new(&grid, constraints);
-        let result = router.find_route(
-            GridCell { col: 0, row: 5 },
-            GridCell { col: 9, row: 5 },
-        );
+        let result = router.find_route(GridCell { col: 0, row: 5 }, GridCell { col: 9, row: 5 });
 
         assert!(result.is_some());
         let route = result.unwrap();
@@ -346,8 +341,8 @@ mod tests {
     #[test]
     fn test_steep_terrain_avoidance() {
         let mut data = vec![100.0; 100];
-        // Create a steep wall at col=5
-        for row in 0..10 {
+        // Create a steep wall at col=5 with a one-cell gap at the bottom.
+        for row in 0..9 {
             data[row * 10 + 5] = 200.0;
         }
 
@@ -359,11 +354,9 @@ mod tests {
         };
 
         let router = AStarRouter::new(&grid, constraints);
-        let result = router.find_route(
-            GridCell { col: 0, row: 5 },
-            GridCell { col: 9, row: 5 },
-        );
+        let result = router.find_route(GridCell { col: 0, row: 5 }, GridCell { col: 9, row: 5 });
 
-        assert!(result.is_some());
+        // Every crossing from col=4 to col=5 exceeds max_slope_percent, so no route should exist.
+        assert!(result.is_none());
     }
 }

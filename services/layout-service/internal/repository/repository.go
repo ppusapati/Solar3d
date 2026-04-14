@@ -11,8 +11,39 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog/log"
 
-	"github.com/solar3d/solar3d/services/layout-service/internal/domain"
+	"solar3d/layout-service/internal/domain"
 )
+
+// CandidatePanelArtifact represents one frozen panel geometry row from the
+// candidate artifact graph tables.
+type CandidatePanelArtifact struct {
+	Geometry json.RawMessage
+	Tilt     float64
+	Azimuth  float64
+	PowerKW  float64
+	StringID string
+	Metadata json.RawMessage
+}
+
+// CandidateImportPayload is the data required to materialize a selected
+// candidate artifact graph into layout tiles/panels.
+type CandidateImportPayload struct {
+	CandidateID           uuid.UUID
+	ProjectID             uuid.UUID
+	ArtifactGraphLayoutID uuid.UUID
+	SelectionReason       string
+	Panels                []CandidatePanelArtifact
+}
+
+func stringIDToUUID(value string) uuid.UUID {
+	if value == "" {
+		return uuid.New()
+	}
+	if parsed, err := uuid.Parse(value); err == nil {
+		return parsed
+	}
+	return uuid.NewSHA1(uuid.NameSpaceOID, []byte(value))
+}
 
 // Repository provides persistence operations for the layout domain.
 type Repository struct {
@@ -36,10 +67,10 @@ func (r *Repository) CreateLayout(ctx context.Context, layout *domain.Layout) er
 	layout.UpdatedAt = now
 
 	_, err := r.pool.Exec(ctx, `
-		INSERT INTO layouts (id, project_id, name, total_panels, total_capacity_kw, tile_count, created_at, updated_at)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+		INSERT INTO layouts (id, project_id, name, total_panels, total_capacity_kw, tile_count, candidate_id, created_at, updated_at)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
 		layout.ID, layout.ProjectID, layout.Name,
-		layout.TotalPanels, layout.TotalCapacityKW, layout.TileCount,
+		layout.TotalPanels, layout.TotalCapacityKW, layout.TileCount, layout.CandidateID,
 		layout.CreatedAt, layout.UpdatedAt,
 	)
 	if err != nil {
@@ -48,15 +79,25 @@ func (r *Repository) CreateLayout(ctx context.Context, layout *domain.Layout) er
 	return nil
 }
 
-// GetLayout retrieves a layout by ID.
+// GetLayout retrieves a layout by ID, including its review_metadata if present.
 func (r *Repository) GetLayout(ctx context.Context, id uuid.UUID) (*domain.Layout, error) {
 	l := &domain.Layout{}
+	var metaJSON []byte
+	var candidateID *uuid.UUID
 	err := r.pool.QueryRow(ctx, `
-		SELECT id, project_id, name, total_panels, total_capacity_kw, tile_count, created_at, updated_at
+		SELECT id, project_id, name, total_panels, total_capacity_kw, tile_count, created_at, updated_at, candidate_id,
+		       COALESCE(review_metadata, '{"status":"DRAFT"}'::jsonb)
 		FROM layouts WHERE id = $1`, id,
-	).Scan(&l.ID, &l.ProjectID, &l.Name, &l.TotalPanels, &l.TotalCapacityKW, &l.TileCount, &l.CreatedAt, &l.UpdatedAt)
+	).Scan(&l.ID, &l.ProjectID, &l.Name, &l.TotalPanels, &l.TotalCapacityKW, &l.TileCount, &l.CreatedAt, &l.UpdatedAt, &candidateID, &metaJSON)
 	if err != nil {
 		return nil, fmt.Errorf("get layout: %w", err)
+	}
+	l.CandidateID = candidateID
+	if len(metaJSON) > 0 {
+		l.ReviewMetadata = &domain.ReviewMetadata{}
+		if err := json.Unmarshal(metaJSON, l.ReviewMetadata); err != nil {
+			return nil, fmt.Errorf("unmarshal review_metadata: %w", err)
+		}
 	}
 	return l, nil
 }
@@ -64,7 +105,8 @@ func (r *Repository) GetLayout(ctx context.Context, id uuid.UUID) (*domain.Layou
 // ListLayoutsByProject returns all layouts belonging to a project.
 func (r *Repository) ListLayoutsByProject(ctx context.Context, projectID uuid.UUID) ([]*domain.Layout, error) {
 	rows, err := r.pool.Query(ctx, `
-		SELECT id, project_id, name, total_panels, total_capacity_kw, tile_count, created_at, updated_at
+		SELECT id, project_id, name, total_panels, total_capacity_kw, tile_count, created_at, updated_at, candidate_id,
+		       COALESCE(review_metadata, '{"status":"DRAFT"}'::jsonb)
 		FROM layouts WHERE project_id = $1 ORDER BY created_at DESC`, projectID,
 	)
 	if err != nil {
@@ -75,8 +117,17 @@ func (r *Repository) ListLayoutsByProject(ctx context.Context, projectID uuid.UU
 	var layouts []*domain.Layout
 	for rows.Next() {
 		l := &domain.Layout{}
-		if err := rows.Scan(&l.ID, &l.ProjectID, &l.Name, &l.TotalPanels, &l.TotalCapacityKW, &l.TileCount, &l.CreatedAt, &l.UpdatedAt); err != nil {
+		var metaJSON []byte
+		var candidateID *uuid.UUID
+		if err := rows.Scan(&l.ID, &l.ProjectID, &l.Name, &l.TotalPanels, &l.TotalCapacityKW, &l.TileCount, &l.CreatedAt, &l.UpdatedAt, &candidateID, &metaJSON); err != nil {
 			return nil, fmt.Errorf("scan layout: %w", err)
+		}
+		l.CandidateID = candidateID
+		if len(metaJSON) > 0 {
+			l.ReviewMetadata = &domain.ReviewMetadata{}
+			if err := json.Unmarshal(metaJSON, l.ReviewMetadata); err != nil {
+				return nil, fmt.Errorf("unmarshal review_metadata: %w", err)
+			}
 		}
 		layouts = append(layouts, l)
 	}
@@ -87,9 +138,9 @@ func (r *Repository) ListLayoutsByProject(ctx context.Context, projectID uuid.UU
 func (r *Repository) UpdateLayout(ctx context.Context, layout *domain.Layout) error {
 	layout.UpdatedAt = time.Now().UTC()
 	_, err := r.pool.Exec(ctx, `
-		UPDATE layouts SET name = $2, total_panels = $3, total_capacity_kw = $4, tile_count = $5, updated_at = $6
+		UPDATE layouts SET name = $2, total_panels = $3, total_capacity_kw = $4, tile_count = $5, candidate_id = $6, updated_at = $7
 		WHERE id = $1`,
-		layout.ID, layout.Name, layout.TotalPanels, layout.TotalCapacityKW, layout.TileCount, layout.UpdatedAt,
+		layout.ID, layout.Name, layout.TotalPanels, layout.TotalCapacityKW, layout.TileCount, layout.CandidateID, layout.UpdatedAt,
 	)
 	if err != nil {
 		return fmt.Errorf("update layout: %w", err)
@@ -102,6 +153,23 @@ func (r *Repository) DeleteLayout(ctx context.Context, id uuid.UUID) error {
 	_, err := r.pool.Exec(ctx, `DELETE FROM layouts WHERE id = $1`, id)
 	if err != nil {
 		return fmt.Errorf("delete layout: %w", err)
+	}
+	return nil
+}
+
+// UpdateLayoutReviewMetadata persists the acceptance workflow state for a layout.
+// Uses a narrow UPDATE to avoid overwriting unrelated fields.
+func (r *Repository) UpdateLayoutReviewMetadata(ctx context.Context, layoutID uuid.UUID, metadata *domain.ReviewMetadata) error {
+	metaJSON, err := json.Marshal(metadata)
+	if err != nil {
+		return fmt.Errorf("marshal review_metadata: %w", err)
+	}
+	_, err = r.pool.Exec(ctx,
+		`UPDATE layouts SET review_metadata = $2, updated_at = NOW() WHERE id = $1`,
+		layoutID, metaJSON,
+	)
+	if err != nil {
+		return fmt.Errorf("update layout review_metadata: %w", err)
 	}
 	return nil
 }
@@ -184,6 +252,32 @@ func (r *Repository) ListComponentsByLayout(ctx context.Context, layoutID uuid.U
 	return components, rows.Err()
 }
 
+// MoveComponent updates position and rotation for an existing component.
+func (r *Repository) MoveComponent(ctx context.Context, id uuid.UUID, position domain.Position, rotation domain.Position) error {
+	posJSON, err := json.Marshal(position)
+	if err != nil {
+		return fmt.Errorf("marshal position: %w", err)
+	}
+	rotJSON, err := json.Marshal(rotation)
+	if err != nil {
+		return fmt.Errorf("marshal rotation: %w", err)
+	}
+
+	cmd, err := r.pool.Exec(ctx, `
+		UPDATE components
+		SET position = $2, rotation = $3
+		WHERE id = $1`,
+		id, posJSON, rotJSON,
+	)
+	if err != nil {
+		return fmt.Errorf("move component: %w", err)
+	}
+	if cmd.RowsAffected() == 0 {
+		return fmt.Errorf("move component: component not found")
+	}
+	return nil
+}
+
 // DeleteComponent removes a component by ID.
 func (r *Repository) DeleteComponent(ctx context.Context, id uuid.UUID) error {
 	_, err := r.pool.Exec(ctx, `DELETE FROM components WHERE id = $1`, id)
@@ -201,11 +295,20 @@ func (r *Repository) DeleteComponent(ctx context.Context, id uuid.UUID) error {
 // Uses PostGIS ST_MakeEnvelope && geometry intersection for efficient spatial queries.
 func (r *Repository) GetTilesByViewport(ctx context.Context, layoutID uuid.UUID, vq domain.ViewportQuery) ([]*domain.LayoutTile, error) {
 	query := `
-		SELECT id, layout_id, min_x, min_y, max_x, max_y, lod_level, panel_count, metadata, created_at
+		SELECT
+			id,
+			layout_id,
+			ST_XMin(tile_bbox) AS min_x,
+			ST_YMin(tile_bbox) AS min_y,
+			ST_XMax(tile_bbox) AS max_x,
+			ST_YMax(tile_bbox) AS max_y,
+			lod_level,
+			panel_count,
+			metadata,
+			created_at
 		FROM layout_tiles
 		WHERE layout_id = $1
-		  AND ST_MakeEnvelope(min_x, min_y, max_x, max_y, 0) &&
-		      ST_MakeEnvelope($2, $3, $4, $5, 0)`
+		  AND tile_bbox && ST_MakeEnvelope($2, $3, $4, $5, 4326)`
 
 	args := []any{layoutID, vq.MinX, vq.MinY, vq.MaxX, vq.MaxY}
 
@@ -214,7 +317,7 @@ func (r *Repository) GetTilesByViewport(ctx context.Context, layoutID uuid.UUID,
 		args = append(args, *vq.LODLevel)
 	}
 
-	query += ` ORDER BY min_x, min_y`
+	query += ` ORDER BY ST_XMin(tile_bbox), ST_YMin(tile_bbox)`
 
 	rows, err := r.pool.Query(ctx, query, args...)
 	if err != nil {
@@ -240,7 +343,7 @@ func (r *Repository) GetTilesByViewport(ctx context.Context, layoutID uuid.UUID,
 // GetPanelsByTile returns all panels belonging to a tile.
 func (r *Repository) GetPanelsByTile(ctx context.Context, tileID uuid.UUID) ([]*domain.Panel, error) {
 	rows, err := r.pool.Query(ctx, `
-		SELECT id, tile_id, string_id, geometry_geojson, tilt, azimuth, elevation, metadata
+		SELECT id, tile_id, string_id::text, ST_AsGeoJSON(geometry), tilt, azimuth, elevation, metadata
 		FROM panels WHERE tile_id = $1 ORDER BY string_id`, tileID,
 	)
 	if err != nil {
@@ -271,22 +374,35 @@ func (r *Repository) BulkInsertTiles(ctx context.Context, tiles []*domain.Layout
 
 	log.Info().Int("count", len(tiles)).Msg("bulk inserting tiles")
 
-	columns := []string{"id", "layout_id", "min_x", "min_y", "max_x", "max_y", "lod_level", "panel_count", "metadata", "created_at"}
-
-	rows := make([][]any, 0, len(tiles))
+	batch := &pgx.Batch{}
 	for _, t := range tiles {
-		t.ID = uuid.New()
+		if t.ID == uuid.Nil {
+			t.ID = uuid.New()
+		}
 		t.CreatedAt = time.Now().UTC()
-		rows = append(rows, []any{
-			t.ID, t.LayoutID,
-			t.BBox.MinX, t.BBox.MinY, t.BBox.MaxX, t.BBox.MaxY,
-			t.LODLevel, t.PanelCount, t.Metadata, t.CreatedAt,
-		})
+		batch.Queue(`
+			INSERT INTO layout_tiles (id, layout_id, tile_bbox, lod_level, panel_count, metadata, created_at)
+			VALUES ($1, $2, ST_MakeEnvelope($3, $4, $5, $6, 4326), $7, $8, $9, $10)
+		`,
+			t.ID,
+			t.LayoutID,
+			t.BBox.MinX,
+			t.BBox.MinY,
+			t.BBox.MaxX,
+			t.BBox.MaxY,
+			t.LODLevel,
+			t.PanelCount,
+			t.Metadata,
+			t.CreatedAt,
+		)
 	}
 
-	_, err := r.pool.CopyFrom(ctx, pgx.Identifier{"layout_tiles"}, columns, pgx.CopyFromRows(rows))
-	if err != nil {
-		return fmt.Errorf("bulk insert tiles: %w", err)
+	results := r.pool.SendBatch(ctx, batch)
+	defer results.Close()
+	for i := 0; i < len(tiles); i++ {
+		if _, err := results.Exec(); err != nil {
+			return fmt.Errorf("bulk insert tiles: %w", err)
+		}
 	}
 
 	log.Info().Int("count", len(tiles)).Msg("tiles inserted")
@@ -302,10 +418,8 @@ func (r *Repository) BulkInsertPanels(ctx context.Context, panels []*domain.Pane
 
 	log.Info().Int("count", len(panels)).Msg("bulk inserting panels")
 
-	columns := []string{"id", "tile_id", "string_id", "geometry_geojson", "tilt", "azimuth", "elevation", "metadata"}
-
-	// Process in batches of 50,000 to control memory.
-	const batchSize = 50_000
+	// Process in batches of 10,000 to control memory and transaction size.
+	const batchSize = 10_000
 	for start := 0; start < len(panels); start += batchSize {
 		end := start + batchSize
 		if end > len(panels) {
@@ -313,18 +427,33 @@ func (r *Repository) BulkInsertPanels(ctx context.Context, panels []*domain.Pane
 		}
 		batch := panels[start:end]
 
-		rows := make([][]any, 0, len(batch))
+		pgBatch := &pgx.Batch{}
 		for _, p := range batch {
 			p.ID = uuid.New()
-			rows = append(rows, []any{
-				p.ID, p.TileID, p.StringID, p.GeometryGeoJSON,
-				p.Tilt, p.Azimuth, p.Elevation, p.Metadata,
-			})
+			pgBatch.Queue(`
+				INSERT INTO panels (id, tile_id, string_id, geometry, tilt, azimuth, elevation, metadata)
+				VALUES ($1, $2, $3, ST_SetSRID(ST_GeomFromGeoJSON($4), 4326), $5, $6, $7, $8)
+			`,
+				p.ID,
+				p.TileID,
+				stringIDToUUID(p.StringID),
+				string(p.GeometryGeoJSON),
+				p.Tilt,
+				p.Azimuth,
+				p.Elevation,
+				p.Metadata,
+			)
 		}
 
-		_, err := r.pool.CopyFrom(ctx, pgx.Identifier{"panels"}, columns, pgx.CopyFromRows(rows))
-		if err != nil {
-			return fmt.Errorf("bulk insert panels batch %d-%d: %w", start, end, err)
+		results := r.pool.SendBatch(ctx, pgBatch)
+		for i := 0; i < len(batch); i++ {
+			if _, err := results.Exec(); err != nil {
+				_ = results.Close()
+				return fmt.Errorf("bulk insert panels batch %d-%d: %w", start, end, err)
+			}
+		}
+		if err := results.Close(); err != nil {
+			return fmt.Errorf("close panel batch %d-%d: %w", start, end, err)
 		}
 
 		log.Debug().Int("from", start).Int("to", end).Msg("panel batch inserted")
@@ -341,4 +470,51 @@ func (r *Repository) DeleteTilesByLayout(ctx context.Context, layoutID uuid.UUID
 		return fmt.Errorf("delete tiles by layout: %w", err)
 	}
 	return nil
+}
+
+// GetCandidateImportPayload loads one selected candidate and all panel artifacts
+// needed to materialize it into the layout-service tables.
+func (r *Repository) GetCandidateImportPayload(ctx context.Context, candidateID uuid.UUID) (*CandidateImportPayload, error) {
+	payload := &CandidateImportPayload{}
+	err := r.pool.QueryRow(ctx, `
+		SELECT c.candidate_id, c.project_id, c.artifact_graph_layout_id,
+		       COALESCE(cl.final_selection_reason, c.selection_reasoning)
+		FROM ml_artifacts.ml_candidates c
+		LEFT JOIN ml_artifacts.candidate_lineage cl ON cl.layout_id = c.artifact_graph_layout_id
+		WHERE c.candidate_id = $1`, candidateID,
+	).Scan(&payload.CandidateID, &payload.ProjectID, &payload.ArtifactGraphLayoutID, &payload.SelectionReason)
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			return nil, domain.ErrCandidateNotFound
+		}
+		return nil, fmt.Errorf("get candidate payload: %w", err)
+	}
+
+	rows, err := r.pool.Query(ctx, `
+		SELECT geometry, tilt_degrees::float8, azimuth_degrees::float8, mpp_capacity_kw::float8,
+		       COALESCE(string_id::text, ''), COALESCE(precision_metadata, '{}'::jsonb)
+		FROM ml_artifacts.solar_panels
+		WHERE layout_id = $1
+		ORDER BY panel_id`, payload.ArtifactGraphLayoutID)
+	if err != nil {
+		return nil, fmt.Errorf("query candidate panels: %w", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var p CandidatePanelArtifact
+		if err := rows.Scan(&p.Geometry, &p.Tilt, &p.Azimuth, &p.PowerKW, &p.StringID, &p.Metadata); err != nil {
+			return nil, fmt.Errorf("scan candidate panel: %w", err)
+		}
+		payload.Panels = append(payload.Panels, p)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("iterate candidate panels: %w", err)
+	}
+
+	if len(payload.Panels) == 0 {
+		return nil, domain.ErrCandidateEmpty
+	}
+
+	return payload, nil
 }

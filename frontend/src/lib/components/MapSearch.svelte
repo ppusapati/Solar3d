@@ -3,12 +3,15 @@
 
 	const dispatch = createEventDispatcher<{
 		flyTo: { longitude: number; latitude: number; name: string };
+		placePin: { longitude: number; latitude: number; name: string };
 	}>();
 
 	let query = '';
 	let results: SearchResult[] = [];
 	let isSearching = false;
 	let showResults = false;
+	let manualLat = '';
+	let manualLon = '';
 
 	interface SearchResult {
 		name: string;
@@ -86,6 +89,15 @@
 			showResults = false;
 		}
 	}
+
+	function placeManualPin() {
+		const latitude = Number(manualLat);
+		const longitude = Number(manualLon);
+		if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return;
+		if (Math.abs(latitude) > 90 || Math.abs(longitude) > 180) return;
+		dispatch('flyTo', { longitude, latitude, name: 'Manual Coordinates' });
+		dispatch('placePin', { longitude, latitude, name: 'Manual Coordinates' });
+	}
 </script>
 
 <div class="search-container">
@@ -104,6 +116,12 @@
 		{#if isSearching}
 			<span class="spinner"></span>
 		{/if}
+	</div>
+
+	<div class="manual-coords">
+		<input class="coord-input" type="number" step="0.000001" bind:value={manualLat} placeholder="Lat" />
+		<input class="coord-input" type="number" step="0.000001" bind:value={manualLon} placeholder="Lon" />
+		<button class="coord-btn" on:click={placeManualPin}>Pin</button>
 	</div>
 
 	{#if showResults && results.length > 0}
@@ -187,6 +205,34 @@
 		max-height: 280px;
 		overflow-y: auto;
 		backdrop-filter: blur(8px);
+	}
+
+	.manual-coords {
+		display: grid;
+		grid-template-columns: 1fr 1fr auto;
+		gap: 6px;
+		margin-top: 6px;
+	}
+
+	.coord-input {
+		width: 100%;
+		padding: 5px 7px;
+		border-radius: 6px;
+		border: 1px solid rgba(255, 255, 255, 0.12);
+		background: rgba(22, 33, 62, 0.9);
+		color: #e2e8f0;
+		font-size: 12px;
+	}
+
+	.coord-btn {
+		padding: 5px 9px;
+		border-radius: 6px;
+		border: 1px solid rgba(245, 158, 11, 0.4);
+		background: rgba(245, 158, 11, 0.18);
+		color: #f59e0b;
+		font-size: 12px;
+		font-weight: 600;
+		cursor: pointer;
 	}
 
 	.results-header {

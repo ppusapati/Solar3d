@@ -5,18 +5,22 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
-	"github.com/rs/zerolog/log"
+	"github.com/rs/zerolog"
 
-	"github.com/solar3d/solar3d/services/routing-service/internal/domain"
-	"github.com/solar3d/solar3d/services/routing-service/internal/service"
+	"solar3d/routing-service/internal/domain"
+	"solar3d/routing-service/internal/service"
 )
 
 type RoutingHandler struct {
-	svc *service.RoutingService
+	svc    *service.RoutingService
+	logger zerolog.Logger
 }
 
-func NewRoutingHandler(svc *service.RoutingService) *RoutingHandler {
-	return &RoutingHandler{svc: svc}
+func NewRoutingHandler(svc *service.RoutingService, logger zerolog.Logger) *RoutingHandler {
+	return &RoutingHandler{
+		svc:    svc,
+		logger: logger.With().Str("component", "handler").Logger(),
+	}
 }
 
 func (h *RoutingHandler) RegisterRoutes(mux *http.ServeMux) {
@@ -39,12 +43,12 @@ func (h *RoutingHandler) CreateRoute(w http.ResponseWriter, r *http.Request) {
 
 	route, err := h.svc.CreateRoute(r.Context(), req)
 	if err != nil {
-		log.Error().Err(err).Msg("failed to create route")
+		h.logger.Error().Err(err).Msg("failed to create route")
 		writeError(w, http.StatusInternalServerError, "failed to create route")
 		return
 	}
 
-	writeJSON(w, http.StatusCreated, route)
+	h.writeJSON(w, http.StatusCreated, route)
 }
 
 func (h *RoutingHandler) GetRoute(w http.ResponseWriter, r *http.Request) {
@@ -60,7 +64,7 @@ func (h *RoutingHandler) GetRoute(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	writeJSON(w, http.StatusOK, route)
+	h.writeJSON(w, http.StatusOK, route)
 }
 
 func (h *RoutingHandler) ListRoutes(w http.ResponseWriter, r *http.Request) {
@@ -72,12 +76,12 @@ func (h *RoutingHandler) ListRoutes(w http.ResponseWriter, r *http.Request) {
 
 	routes, err := h.svc.ListRoutes(r.Context(), projectID)
 	if err != nil {
-		log.Error().Err(err).Msg("failed to list routes")
+		h.logger.Error().Err(err).Msg("failed to list routes")
 		writeError(w, http.StatusInternalServerError, "failed to list routes")
 		return
 	}
 
-	writeJSON(w, http.StatusOK, routes)
+	h.writeJSON(w, http.StatusOK, routes)
 }
 
 func (h *RoutingHandler) DeleteRoute(w http.ResponseWriter, r *http.Request) {
@@ -104,12 +108,12 @@ func (h *RoutingHandler) CalculateRoute(w http.ResponseWriter, r *http.Request) 
 
 	route, err := h.svc.CalculateRoute(r.Context(), req)
 	if err != nil {
-		log.Error().Err(err).Msg("failed to calculate route")
+		h.logger.Error().Err(err).Msg("failed to calculate route")
 		writeError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	writeJSON(w, http.StatusOK, route)
+	h.writeJSON(w, http.StatusOK, route)
 }
 
 func (h *RoutingHandler) CreateCableRoute(w http.ResponseWriter, r *http.Request) {
@@ -121,12 +125,12 @@ func (h *RoutingHandler) CreateCableRoute(w http.ResponseWriter, r *http.Request
 
 	route, err := h.svc.CreateCableRoute(r.Context(), req)
 	if err != nil {
-		log.Error().Err(err).Msg("failed to create cable route")
+		h.logger.Error().Err(err).Msg("failed to create cable route")
 		writeError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	writeJSON(w, http.StatusCreated, route)
+	h.writeJSON(w, http.StatusCreated, route)
 }
 
 func (h *RoutingHandler) CreateRoadRoute(w http.ResponseWriter, r *http.Request) {
@@ -138,12 +142,12 @@ func (h *RoutingHandler) CreateRoadRoute(w http.ResponseWriter, r *http.Request)
 
 	route, err := h.svc.CreateRoadRoute(r.Context(), req)
 	if err != nil {
-		log.Error().Err(err).Msg("failed to create road route")
+		h.logger.Error().Err(err).Msg("failed to create road route")
 		writeError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	writeJSON(w, http.StatusCreated, route)
+	h.writeJSON(w, http.StatusCreated, route)
 }
 
 func (h *RoutingHandler) OptimizeRoutes(w http.ResponseWriter, r *http.Request) {
@@ -155,26 +159,25 @@ func (h *RoutingHandler) OptimizeRoutes(w http.ResponseWriter, r *http.Request) 
 
 	routes, err := h.svc.OptimizeRoutes(r.Context(), projectID)
 	if err != nil {
-		log.Error().Err(err).Msg("failed to optimize routes")
+		h.logger.Error().Err(err).Msg("failed to optimize routes")
 		writeError(w, http.StatusInternalServerError, "failed to optimize routes")
 		return
 	}
 
-	writeJSON(w, http.StatusOK, routes)
+	h.writeJSON(w, http.StatusOK, routes)
 }
 
-func writeJSON(w http.ResponseWriter, status int, data any) {
+func (h *RoutingHandler) writeJSON(w http.ResponseWriter, status int, data any) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	if err := json.NewEncoder(w).Encode(data); err != nil {
-		log.Error().Err(err).Msg("failed to encode response")
+		h.logger.Error().Err(err).Msg("failed to encode response")
 	}
 }
 
 func writeError(w http.ResponseWriter, status int, message string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
-	if err := json.NewEncoder(w).Encode(map[string]string{"error": message}); err != nil {
-		log.Error().Err(err).Str("message", message).Msg("failed to encode error response")
-	}
+	_ = json.NewEncoder(w).Encode(map[string]string{"error": message})
 }
+

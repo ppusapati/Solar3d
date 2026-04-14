@@ -68,3 +68,4 @@ type CreateRouteRequest struct {
 	CostEstimate    float64         `json:"cost_estimate"`
 	Metadata        json.RawMessage `json:"metadata,omitempty"`
 }
+

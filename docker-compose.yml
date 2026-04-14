@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   # ============================================================
   # Infrastructure
@@ -33,6 +31,11 @@ services:
       - "9001:9001"
     volumes:
       - minio_data:/data
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   # ============================================================
   # Backend Services
@@ -40,8 +43,10 @@ services:
 
   project-service:
     build:
-      context: ./services/project-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: deploy/docker/go-service.Dockerfile
+      args:
+        SERVICE_NAME: project-service
     environment:
       PORT: "8080"
       DATABASE_URL: "postgres://${POSTGRES_USER:-solar3d}:${POSTGRES_PASSWORD:?err}@postgres:5432/${POSTGRES_DB:-solar3d}?sslmode=${DB_SSLMODE:-disable}"
@@ -52,11 +57,18 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   terrain-service:
     build:
-      context: ./services/terrain-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: deploy/docker/go-service.Dockerfile
+      args:
+        SERVICE_NAME: terrain-service
     environment:
       PORT: "8081"
       DATABASE_URL: "postgres://${POSTGRES_USER:-solar3d}:${POSTGRES_PASSWORD:?err}@postgres:5432/${POSTGRES_DB:-solar3d}?sslmode=${DB_SSLMODE:-disable}"
@@ -68,11 +80,18 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:8081/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   layout-service:
     build:
-      context: ./services/layout-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: deploy/docker/go-service.Dockerfile
+      args:
+        SERVICE_NAME: layout-service
     environment:
       PORT: "8082"
       DATABASE_URL: "postgres://${POSTGRES_USER:-solar3d}:${POSTGRES_PASSWORD:?err}@postgres:5432/${POSTGRES_DB:-solar3d}?sslmode=${DB_SSLMODE:-disable}"
@@ -83,11 +102,18 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:8082/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   simulation-service:
     build:
-      context: ./services/simulation-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: deploy/docker/go-service.Dockerfile
+      args:
+        SERVICE_NAME: simulation-service
     environment:
       PORT: "8083"
       DATABASE_URL: "postgres://${POSTGRES_USER:-solar3d}:${POSTGRES_PASSWORD:?err}@postgres:5432/${POSTGRES_DB:-solar3d}?sslmode=${DB_SSLMODE:-disable}"
@@ -97,11 +123,18 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:8083/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   electrical-service:
     build:
-      context: ./services/electrical-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: deploy/docker/go-service.Dockerfile
+      args:
+        SERVICE_NAME: electrical-service
     environment:
       PORT: "8084"
       DATABASE_URL: "postgres://${POSTGRES_USER:-solar3d}:${POSTGRES_PASSWORD:?err}@postgres:5432/${POSTGRES_DB:-solar3d}?sslmode=${DB_SSLMODE:-disable}"
@@ -111,11 +144,18 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:8084/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   routing-service:
     build:
-      context: ./services/routing-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: deploy/docker/go-service.Dockerfile
+      args:
+        SERVICE_NAME: routing-service
     environment:
       PORT: "8085"
       DATABASE_URL: "postgres://${POSTGRES_USER:-solar3d}:${POSTGRES_PASSWORD:?err}@postgres:5432/${POSTGRES_DB:-solar3d}?sslmode=${DB_SSLMODE:-disable}"
@@ -125,11 +165,43 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:8085/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  transmission-routing-service:
+    build:
+      context: .
+      dockerfile: deploy/docker/go-service.Dockerfile
+      args:
+        SERVICE_NAME: transmission-routing-service
+    environment:
+      PORT: "8088"
+      DATABASE_URL: "postgres://${POSTGRES_USER:-solar3d}:${POSTGRES_PASSWORD:?err}@postgres:5432/${POSTGRES_DB:-solar3d}?sslmode=${DB_SSLMODE:-disable}"
+      TERRAIN_BRIDGE_URL: "http://host.docker.internal:8084"
+      PROJECT_SERVICE_URL: "http://project-service:8080"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
+    ports:
+      - "8088:8088"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      project-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:8088/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   report-service:
     build:
-      context: ./services/report-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: deploy/docker/go-service.Dockerfile
+      args:
+        SERVICE_NAME: report-service
     environment:
       PORT: "8086"
       DATABASE_URL: "postgres://${POSTGRES_USER:-solar3d}:${POSTGRES_PASSWORD:?err}@postgres:5432/${POSTGRES_DB:-solar3d}?sslmode=${DB_SSLMODE:-disable}"
@@ -141,11 +213,20 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      minio:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:8086/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   asset-service:
     build:
-      context: ./services/asset-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: deploy/docker/go-service.Dockerfile
+      args:
+        SERVICE_NAME: asset-service
     environment:
       PORT: "8087"
       DATABASE_URL: "postgres://${POSTGRES_USER:-solar3d}:${POSTGRES_PASSWORD:?err}@postgres:5432/${POSTGRES_DB:-solar3d}?sslmode=${DB_SSLMODE:-disable}"
@@ -155,19 +236,299 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      project-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:8087/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  twin-service:
+    build:
+      context: .
+      dockerfile: deploy/docker/go-service.Dockerfile
+      args:
+        SERVICE_NAME: twin-service
+    environment:
+      PORT: "8100"
+      DATABASE_URL: "postgres://${POSTGRES_USER:-solar3d}:${POSTGRES_PASSWORD:?err}@postgres:5432/${POSTGRES_DB:-solar3d}?sslmode=${DB_SSLMODE:-disable}"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
+    ports:
+      - "8100:8100"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:8100/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # ============================================================
-  # Frontend
+  # CAD Platform Services (Drawing, Revision, Core)
+  # ============================================================
+
+  drawing-revision-service:
+    build:
+      context: .
+      dockerfile: services/drawing-revision-service/Dockerfile
+    environment:
+      PORT: "8080"
+      DATABASE_URL: "postgres://${POSTGRES_USER:-solar3d}:${POSTGRES_PASSWORD:?err}@postgres:5432/${POSTGRES_DB:-solar3d}?sslmode=disable"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
+    ports:
+      - "8091:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  cad-core-service:
+    build:
+      context: .
+      dockerfile: services/cad-core-service/Dockerfile
+    environment:
+      PORT: "8080"
+      DRAWING_REVISION_URL: "http://drawing-revision-service:8080"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
+    ports:
+      - "8092:8080"
+    depends_on:
+      drawing-revision-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  cad-annotation-service:
+    build:
+      context: .
+      dockerfile: services/cad-annotation-service/Dockerfile
+    environment:
+      PORT: "8093"
+      DRAWING_REVISION_URL: "http://drawing-revision-service:8080"
+      CAD_CORE_URL: "http://cad-core-service:8080"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
+    ports:
+      - "8093:8080"
+    depends_on:
+      drawing-revision-service:
+        condition: service_healthy
+      cad-core-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  cad-layer-block-service:
+    build:
+      context: .
+      dockerfile: services/cad-layer-block-service/Dockerfile
+    environment:
+      PORT: "8094"
+      DRAWING_REVISION_URL: "http://drawing-revision-service:8080"
+      CAD_CORE_URL: "http://cad-core-service:8080"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
+    ports:
+      - "8094:8080"
+    depends_on:
+      drawing-revision-service:
+        condition: service_healthy
+      cad-core-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  interop-service:
+    build:
+      context: .
+      dockerfile: services/interop-service/Dockerfile
+    environment:
+      PORT: "8095"
+      DRAWING_REVISION_URL: "http://drawing-revision-service:8080"
+      CAD_CORE_URL: "http://cad-core-service:8080"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
+    ports:
+      - "8095:8080"
+    depends_on:
+      drawing-revision-service:
+        condition: service_healthy
+      cad-core-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  plot-sheet-service:
+    build:
+      context: .
+      dockerfile: services/plot-sheet-service/Dockerfile
+    environment:
+      PORT: "8096"
+      DRAWING_REVISION_URL: "http://drawing-revision-service:8080"
+      CAD_CORE_URL: "http://cad-core-service:8080"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
+    ports:
+      - "8096:8080"
+    depends_on:
+      drawing-revision-service:
+        condition: service_healthy
+      cad-core-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api-gateway-service:
+    build:
+      context: .
+      dockerfile: services/api-gateway-service/Dockerfile
+    environment:
+      PORT: "8090"
+      PROJECT_SERVICE_URL: "http://project-service:8080"
+      DRAWING_REVISION_URL: "http://drawing-revision-service:8080"
+      CAD_CORE_URL: "http://cad-core-service:8080"
+      CAD_ANNOTATION_URL: "http://cad-annotation-service:8080"
+      CAD_LAYER_BLOCK_URL: "http://cad-layer-block-service:8080"
+      INTEROP_URL: "http://interop-service:8080"
+      PLOT_SHEET_URL: "http://plot-sheet-service:8080"
+      TWIN_SERVICE_URL: "http://twin-service:8100"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
+    ports:
+      - "8090:8080"
+    depends_on:
+      project-service:
+        condition: service_healthy
+      drawing-revision-service:
+        condition: service_healthy
+      cad-core-service:
+        condition: service_healthy
+      cad-annotation-service:
+        condition: service_healthy
+      cad-layer-block-service:
+        condition: service_healthy
+      interop-service:
+        condition: service_healthy
+      plot-sheet-service:
+        condition: service_healthy
+      twin-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============================================================
+  # Advanced Analytics Services
+  # ============================================================
+
+  geo-analytics-service:
+    build:
+      context: .
+      dockerfile: services/geo-analytics-service/Dockerfile
+    environment:
+      PORT: "8097"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
+    ports:
+      - "8097:8080"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  graph-service:
+    build:
+      context: .
+      dockerfile: services/graph-service/Dockerfile
+    environment:
+      PORT: "8098"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
+    ports:
+      - "8098:8080"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  optimization-service:
+    build:
+      context: .
+      dockerfile: services/optimization-service/Dockerfile
+    environment:
+      PORT: "8099"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
+    ports:
+      - "8099:8080"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ml-service:
+    build:
+      context: .
+      dockerfile: services/ml-service/Dockerfile
+    environment:
+      PORT: "8100"
+      LOG_LEVEL: "${LOG_LEVEL:-info}"
+    ports:
+      - "8100:8080"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:8080/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============================================================
+  # Frontend & Reverse Proxy
   # ============================================================
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    expose:
+      - "3000"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:3000"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  nginx:
+    image: nginx:alpine
     ports:
-      - "3000:3000"
-    environment:
-      VITE_API_BASE_URL: "${VITE_API_BASE_URL:-http://localhost:8080}"
+      - "3000:80"
+    volumes:
+      - ./deploy/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      frontend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost/healthz"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:

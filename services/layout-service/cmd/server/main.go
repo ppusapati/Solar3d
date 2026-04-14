@@ -12,12 +12,13 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
+	layoutv1connect "github.com/solar3d/solar3d/gen/layout/v1/layoutv1connect"
 
-	"github.com/solar3d/solar3d/services/layout-service/internal/config"
-	"github.com/solar3d/solar3d/services/layout-service/internal/handler"
-	"github.com/solar3d/solar3d/services/layout-service/internal/repository"
-	"github.com/solar3d/solar3d/services/layout-service/internal/service"
-	mw "github.com/solar3d/solar3d/services/shared/middleware"
+	"solar3d/layout-service/internal/config"
+	"solar3d/layout-service/internal/handler"
+	"solar3d/layout-service/internal/repository"
+	"solar3d/layout-service/internal/service"
+	mw "solar3d/shared/middleware"
 )
 
 func main() {
@@ -70,11 +71,13 @@ func main() {
 	// ── Application layers ────────────────────────────────────────────────
 	repo := repository.New(pool)
 	svc := service.New(repo, cfg)
-	h := handler.New(svc)
+	h := handler.New(svc, logger)
 
 	// ── HTTP Server ───────────────────────────────────────────────────────
 	mux := http.NewServeMux()
 	h.RegisterRoutes(mux)
+	connectPath, connectHandler := layoutv1connect.NewLayoutServiceHandler(handler.NewConnectLayoutService(svc))
+	mux.Handle(connectPath, connectHandler)
 
 	// Health check.
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
@@ -91,7 +94,7 @@ func main() {
 	limiter := mw.NewRateLimiter(100, 200)
 	chain := mw.Chain(
 		mw.Recovery(logger),
-		mw.RequestID,
+		mw.IDempotencyKeyMiddleware,
 		mw.CORS,
 		mw.Logging(logger),
 		limiter.Middleware,
@@ -133,3 +136,4 @@ func main() {
 	}
 	logger.Info().Msg("layout-service stopped")
 }
+

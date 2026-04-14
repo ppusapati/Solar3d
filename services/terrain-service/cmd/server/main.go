@@ -11,12 +11,14 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
+	terrainv1connect "github.com/solar3d/solar3d/gen/terrain/v1/terrainv1connect"
 
-	"github.com/solar3d/solar3d/services/terrain-service/internal/config"
-	"github.com/solar3d/solar3d/services/terrain-service/internal/handler"
-	"github.com/solar3d/solar3d/services/terrain-service/internal/repository"
-	"github.com/solar3d/solar3d/services/terrain-service/internal/service"
-	mw "github.com/solar3d/solar3d/services/shared/middleware"
+	mw "solar3d/shared/middleware"
+	"solar3d/terrain-service/internal/config"
+	"solar3d/terrain-service/internal/handler"
+	"solar3d/terrain-service/internal/repository"
+	"solar3d/terrain-service/internal/service"
+	"solar3d/terrain-service/internal/worker"
 )
 
 func main() {
@@ -74,7 +76,19 @@ func run() error {
 
 	// ── Application layers ────────────────────────────────────────────────
 	repo := repository.New(pool, logger)
-	svc := service.New(repo, logger)
+
+	// Initialize Copernicus DEM worker with context that spans the server lifetime
+	serverCtx, serverCancel := context.WithCancel(context.Background())
+	cachePath := os.Getenv("COPERNICUS_CACHE_PATH")
+	if cachePath == "" {
+		cachePath = "/tmp/copernicus-dem-cache"
+		os.MkdirAll(cachePath, 0755)
+	}
+	demWorker := worker.NewCopernicusDEMWorker(repo, logger, cachePath)
+	demWorker.Start(serverCtx)
+	demWorker.MonitorLayersForDEMJobs(serverCtx)
+
+	svc := service.New(repo, logger, cfg.OrchestrationURL, demWorker)
 	h := handler.New(svc, logger)
 
 	// ── HTTP Server ───────────────────────────────────────────────────────
@@ -89,12 +103,14 @@ func run() error {
 
 	// Register terrain API routes.
 	h.RegisterRoutes(mux)
+	connectPath, connectHandler := terrainv1connect.NewTerrainServiceHandler(handler.NewConnectTerrainService(svc))
+	mux.Handle(connectPath, connectHandler)
 
 	// Apply middleware chain: Recovery → RequestID → CORS → Logging → RateLimit
 	limiter := mw.NewRateLimiter(100, 200)
 	chain := mw.Chain(
 		mw.Recovery(logger),
-		mw.RequestID,
+		mw.IDempotencyKeyMiddleware,
 		mw.CORS,
 		mw.Logging(logger),
 		limiter.Middleware,
@@ -136,6 +152,10 @@ func run() error {
 		return fmt.Errorf("server shutdown: %w", err)
 	}
 
+	// Stop the DEM worker
+	serverCancel()
+
 	logger.Info().Msg("terrain service stopped")
 	return nil
 }
+

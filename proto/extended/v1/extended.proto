@@ -1,0 +1,193 @@
+syntax = "proto3";
+
+package extended.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/extended/v1;extendedv1";
+
+// ExtendedService exposes advanced compute modules built on extended-compute.
+service ExtendedService {
+  // SolarTransposition computes plane-of-array irradiance and incidence terms.
+  rpc SolarTransposition(SolarTranspositionRequest) returns (SolarTranspositionResponse);
+  // FinancialMetrics computes investment performance indicators for a project.
+  rpc FinancialMetrics(FinancialMetricsRequest) returns (FinancialMetricsResponse);
+  // CompareFinancialScenarios evaluates a full scenario set against engineering and finance assumptions.
+  rpc CompareFinancialScenarios(CompareFinancialScenariosRequest) returns (CompareFinancialScenariosResponse);
+  // ClimateImpact aggregates climate uncertainty factors into a unified impact view.
+  rpc ClimateImpact(ClimateImpactRequest) returns (ClimateImpactResponse);
+  // SaveFinancialScenarioSet stores scenario assumptions for a specific project/layout.
+  rpc SaveFinancialScenarioSet(SaveFinancialScenarioSetRequest) returns (SaveFinancialScenarioSetResponse);
+  // GetFinancialScenarioSet retrieves saved scenario assumptions for a specific project/layout.
+  rpc GetFinancialScenarioSet(GetFinancialScenarioSetRequest) returns (GetFinancialScenarioSetResponse);
+  // ListFinancialScenarioSets lists all saved scenario sets for a project.
+  rpc ListFinancialScenarioSets(ListFinancialScenarioSetsRequest) returns (ListFinancialScenarioSetsResponse);
+  // GetFinancialScenarioSetVersions returns the version history of scenario assumptions for a layout.
+  rpc GetFinancialScenarioSetVersions(GetFinancialScenarioSetVersionsRequest) returns (GetFinancialScenarioSetVersionsResponse);
+  // CalculateInterRowShading computes inter-row shading loss for a fixed-tilt or single-axis tracker array.
+  rpc CalculateInterRowShading(CalculateInterRowShadingRequest) returns (CalculateInterRowShadingResponse);
+  // CalculateYieldUncertainty estimates P50/P90/P99 annual yield from a base energy estimate and uncertainty inputs.
+  rpc CalculateYieldUncertainty(CalculateYieldUncertaintyRequest) returns (CalculateYieldUncertaintyResponse);
+}
+
+message SolarTranspositionRequest {
+  double ghi_wm2 = 1;
+  double dhi_wm2 = 2;
+  double wind_speed_ms = 3;
+  double temperature_c = 4;
+  double surface_tilt_deg = 5;
+  double surface_azimuth = 6;
+  double solar_altitude = 7;
+  double solar_azimuth = 8;
+}
+
+message SolarTranspositionResponse {
+  double poa_irradiance = 1;
+  double aoi = 2;
+  double incidence_modulation = 3;
+}
+
+message FinancialMetricsRequest {
+  repeated double annual_cashflows = 1;
+  double initial_investment = 2;
+  double discount_rate = 3;
+  double pr_baseline = 4;
+  double pr_actual = 5;
+}
+
+message FinancialMetricsResponse {
+  double npv_usd = 1;
+  double irr_percent = 2;
+  double pi_coeff = 3;
+  double crop_percent = 4;
+}
+
+message CompareFinancialScenariosRequest {
+  double annual_yield_kwh = 1;
+  double annual_om_usd = 2;
+  int32 project_life_years = 3;
+  double base_initial_investment = 4;
+  double pr_baseline = 5;
+  repeated FinancialScenario scenarios = 6;
+}
+
+message FinancialScenarioResult {
+  string name = 1;
+  FinancialMetricsResponse metrics = 2;
+  double annual_revenue_usd = 3;
+  double net_annual_cashflow_usd = 4;
+  double simple_payback_years = 5;
+  double roi_percent = 6;
+}
+
+message CompareFinancialScenariosResponse {
+  repeated FinancialScenarioResult scenarios = 1;
+}
+
+message ClimateImpactRequest {
+  double temp_impact = 1;
+  double soiling_impact = 2;
+  double wind_impact = 3;
+  double availability_impact = 4;
+}
+
+message ClimateImpactResponse {
+  double soiling_factor_change = 1;
+  double efficiency_factor_change = 2;
+  double module_temperature_increase = 3;
+  double availability_impact_percent = 4;
+}
+
+message FinancialScenario {
+  string name = 1;
+  double electricity_price = 2;
+  double escalation_rate_percent = 3;
+  double degradation_rate_percent = 4;
+  double discount_rate_percent = 5;
+  double pr_actual = 6;
+  double capex_multiplier = 7;
+}
+
+message SaveFinancialScenarioSetRequest {
+  string project_id = 1;
+  string layout_id = 2;
+  repeated FinancialScenario scenarios = 3;
+}
+
+message SaveFinancialScenarioSetResponse {
+  string project_id = 1;
+  string layout_id = 2;
+  repeated FinancialScenario scenarios = 3;
+  string updated_at_rfc3339 = 4;
+}
+
+message GetFinancialScenarioSetRequest {
+  string project_id = 1;
+  string layout_id = 2;
+}
+
+message GetFinancialScenarioSetResponse {
+  string project_id = 1;
+  string layout_id = 2;
+  repeated FinancialScenario scenarios = 3;
+  string updated_at_rfc3339 = 4;
+}
+
+message ListFinancialScenarioSetsRequest {
+  string project_id = 1;
+}
+
+message FinancialScenarioSetSummary {
+  string layout_id = 1;
+  int32 scenario_count = 2;
+  string updated_at_rfc3339 = 3;
+}
+
+message ListFinancialScenarioSetsResponse {
+  repeated FinancialScenarioSetSummary items = 1;
+}
+
+message FinancialScenarioSetVersion {
+  repeated FinancialScenario scenarios = 1;
+  string saved_at_rfc3339 = 2;
+}
+
+message GetFinancialScenarioSetVersionsRequest {
+  string project_id = 1;
+  string layout_id = 2;
+}
+
+message GetFinancialScenarioSetVersionsResponse {
+  repeated FinancialScenarioSetVersion versions = 1;
+}
+
+// Inter-row shading request for fixed-tilt or single-axis tracker arrays.
+message CalculateInterRowShadingRequest {
+  double tilt_deg = 1; // panel tilt (0 for tracker, use max tilt for tracker worst-case)
+  double gcr = 2; // ground coverage ratio (pitch / panel_length)
+  double latitude_deg = 3; // site latitude
+  int32  analysis_days = 4; // number of sky points to sample (0 = default 365)
+  bool   is_tracker = 5; // single-axis tracker; backtracking applied
+}
+
+message CalculateInterRowShadingResponse {
+  double annual_shading_loss_percent = 1;
+  double near_shading_loss_percent = 2; // horizon/row shading only (no far shading)
+  double optimal_gcr = 3; // GCR minimising shading loss for given tilt
+  string note = 4;
+}
+
+// Yield uncertainty request for P-value estimation.
+message CalculateYieldUncertaintyRequest {
+  double p50_annual_kwh = 1; // best-estimate (P50) annual energy, kWh
+  double interannual_variability_pct = 2; // σ from long-term irradiance variance, % (e.g. 5)
+  double measurement_uncertainty_pct = 3; // pyranometer/satellite data uncertainty (e.g. 3)
+  double model_uncertainty_pct = 4; // energy model uncertainty (e.g. 4)
+  double soiling_uncertainty_pct = 5; // soiling scenario spread (e.g. 2)
+  double degradation_uncertainty_pct = 6; // module degradation σ (e.g. 1)
+}
+
+message CalculateYieldUncertaintyResponse {
+  double p50_kwh = 1;
+  double p90_kwh = 2; // ~1.28σ below P50
+  double p99_kwh = 3; // ~2.33σ below P50
+  double combined_uncertainty_pct = 4;
+}

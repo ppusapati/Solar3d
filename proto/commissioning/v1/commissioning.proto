@@ -1,0 +1,262 @@
+syntax = "proto3";
+
+package commissioning.v1;
+
+option go_package = "github.com/solar3d/solar3d/gen/commissioning/v1;commissioningv1";
+
+import "google/protobuf/timestamp.proto";
+
+// CommissioningService manages commissioning checklists, signoff workflows,
+// formal handover records, and as-built artifact registration for solar projects.
+service CommissioningService {
+  // Checklist lifecycle
+  rpc CreateChecklist(CreateChecklistRequest) returns (CreateChecklistResponse);
+  rpc GetChecklist(GetChecklistRequest) returns (GetChecklistResponse);
+  rpc ListChecklists(ListChecklistsRequest) returns (ListChecklistsResponse);
+
+  // Checklist item management
+  rpc AddChecklistItem(AddChecklistItemRequest) returns (AddChecklistItemResponse);
+  rpc UpdateChecklistItem(UpdateChecklistItemRequest) returns (UpdateChecklistItemResponse);
+
+  // Engineer / contractor signoff
+  rpc SignOffChecklist(SignOffChecklistRequest) returns (SignOffChecklistResponse);
+  rpc ListSignoffs(ListSignoffsRequest) returns (ListSignoffsResponse);
+
+  // Formal project handover
+  rpc CreateHandover(CreateHandoverRequest) returns (CreateHandoverResponse);
+  rpc GetHandover(GetHandoverRequest) returns (GetHandoverResponse);
+
+  // As-built artifact registry (URL-based; binary upload is a separate storage concern)
+  rpc RecordAsBuilt(RecordAsBuiltRequest) returns (RecordAsBuiltResponse);
+  rpc ListAsBuiltArtifacts(ListAsBuiltArtifactsRequest) returns (ListAsBuiltArtifactsResponse);
+
+  // Plain-text commissioning report covering all checklist items and signoffs
+  rpc GenerateCommissioningReport(GenerateCommissioningReportRequest) returns (GenerateCommissioningReportResponse);
+}
+
+// ── Enums ────────────────────────────────────────────────────────────────────
+
+enum CommissioningStatus {
+  COMMISSIONING_STATUS_UNSPECIFIED = 0;
+  COMMISSIONING_STATUS_PENDING = 1; // created, no items completed
+  COMMISSIONING_STATUS_IN_PROGRESS = 2; // some items completed
+  COMMISSIONING_STATUS_COMPLETED = 3; // all required items pass/N-A
+  COMMISSIONING_STATUS_SIGNED_OFF = 4; // all required signatories have signed
+  COMMISSIONING_STATUS_HANDED_OVER = 5; // handover record created
+}
+
+enum ChecklistItemStatus {
+  CHECKLIST_ITEM_STATUS_UNSPECIFIED = 0;
+  CHECKLIST_ITEM_STATUS_PENDING = 1;
+  CHECKLIST_ITEM_STATUS_PASS = 2;
+  CHECKLIST_ITEM_STATUS_FAIL = 3;
+  CHECKLIST_ITEM_STATUS_NOT_APPLICABLE = 4;
+}
+
+enum ChecklistSection {
+  CHECKLIST_SECTION_UNSPECIFIED = 0;
+  CHECKLIST_SECTION_CIVIL = 1;
+  CHECKLIST_SECTION_MECHANICAL = 2;
+  CHECKLIST_SECTION_ELECTRICAL = 3;
+  CHECKLIST_SECTION_PROTECTION = 4;
+  CHECKLIST_SECTION_SCADA = 5;
+  CHECKLIST_SECTION_SAFETY = 6;
+  CHECKLIST_SECTION_DOCUMENTATION = 7;
+}
+
+enum AsBuiltArtifactType {
+  AS_BUILT_ARTIFACT_TYPE_UNSPECIFIED = 0;
+  AS_BUILT_ARTIFACT_TYPE_DRAWING = 1;
+  AS_BUILT_ARTIFACT_TYPE_REPORT = 2;
+  AS_BUILT_ARTIFACT_TYPE_SPECIFICATION = 3;
+  AS_BUILT_ARTIFACT_TYPE_PHOTO = 4;
+  AS_BUILT_ARTIFACT_TYPE_TEST_RECORD = 5;
+  AS_BUILT_ARTIFACT_TYPE_CERTIFICATE = 6;
+}
+
+// ── Domain messages ──────────────────────────────────────────────────────────
+
+message CommissioningChecklist {
+  string id = 1;
+  string project_id = 2;
+  string name = 3;
+  CommissioningStatus status = 4;
+  repeated ChecklistItem items = 5;
+  repeated CommissioningSignoff signoffs = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
+  string created_by = 9;
+  // Derived counts (read-only)
+  int32 total_items = 10;
+  int32 completed_items = 11;
+  int32 failed_items = 12;
+}
+
+message ChecklistItem {
+  string id = 1;
+  string checklist_id = 2;
+  string description = 3;
+  ChecklistSection section = 4;
+  ChecklistItemStatus status = 5;
+  bool required = 6;
+  string completed_by = 7;
+  google.protobuf.Timestamp completed_at = 8;
+  string notes = 9;
+  int32 sequence = 10; // display sort order
+}
+
+message CommissioningSignoff {
+  string id = 1;
+  string checklist_id = 2;
+  string signed_by = 3;
+  string role = 4; // e.g. "EPC_ENGINEER", "CLIENT_REPRESENTATIVE", "ELECTRICAL_INSPECTOR"
+  string comments = 5;
+  google.protobuf.Timestamp signed_at = 6;
+}
+
+message HandoverRecord {
+  string id = 1;
+  string project_id = 2;
+  string checklist_id = 3;
+  string handed_over_by = 4;
+  string received_by = 5;
+  string notes = 6;
+  repeated string artifact_ids = 7;
+  google.protobuf.Timestamp handover_date = 8;
+  google.protobuf.Timestamp created_at = 9;
+}
+
+message AsBuiltArtifact {
+  string id = 1;
+  string project_id = 2;
+  string name = 3;
+  AsBuiltArtifactType artifact_type = 4;
+  string storage_url = 5;
+  string uploaded_by = 6;
+  google.protobuf.Timestamp uploaded_at = 7;
+  string description = 8;
+  int64 file_size_bytes = 9;
+  string revision = 10;
+}
+
+// ── Checklist RPCs ───────────────────────────────────────────────────────────
+
+message CreateChecklistRequest {
+  string project_id = 1;
+  string name = 2;
+  string created_by = 3;
+}
+message CreateChecklistResponse {
+  CommissioningChecklist checklist = 1;
+}
+
+message GetChecklistRequest {
+  string checklist_id = 1;
+}
+message GetChecklistResponse {
+  CommissioningChecklist checklist = 1;
+}
+
+message ListChecklistsRequest {
+  string project_id = 1;
+}
+message ListChecklistsResponse {
+  repeated CommissioningChecklist checklists = 1;
+}
+
+// ── ChecklistItem RPCs ───────────────────────────────────────────────────────
+
+message AddChecklistItemRequest {
+  string checklist_id = 1;
+  string description = 2;
+  ChecklistSection section = 3;
+  bool required = 4;
+  int32 sequence = 5;
+}
+message AddChecklistItemResponse {
+  ChecklistItem item = 1;
+}
+
+message UpdateChecklistItemRequest {
+  string item_id = 1;
+  ChecklistItemStatus status = 2;
+  string completed_by = 3;
+  string notes = 4;
+}
+message UpdateChecklistItemResponse {
+  ChecklistItem item = 1;
+}
+
+// ── Signoff RPCs  ─────────────────────────────────────────────────────────────
+
+message SignOffChecklistRequest {
+  string checklist_id = 1;
+  string signed_by = 2;
+  string role = 3;
+  string comments = 4;
+}
+message SignOffChecklistResponse {
+  CommissioningSignoff signoff = 1;
+  CommissioningChecklist updated_checklist = 2;
+}
+
+message ListSignoffsRequest {
+  string checklist_id = 1;
+}
+message ListSignoffsResponse {
+  repeated CommissioningSignoff signoffs = 1;
+}
+
+// ── Handover RPCs ─────────────────────────────────────────────────────────────
+
+message CreateHandoverRequest {
+  string project_id = 1;
+  string checklist_id = 2;
+  string handed_over_by = 3;
+  string received_by = 4;
+  string notes = 5;
+  repeated string artifact_ids = 6;
+}
+message CreateHandoverResponse {
+  HandoverRecord handover = 1;
+}
+
+message GetHandoverRequest {
+  string handover_id = 1;
+}
+message GetHandoverResponse {
+  HandoverRecord handover = 1;
+}
+
+// ── As-Built Artifact RPCs ────────────────────────────────────────────────────
+
+message RecordAsBuiltRequest {
+  string project_id = 1;
+  string name = 2;
+  AsBuiltArtifactType artifact_type = 3;
+  string storage_url = 4;
+  string uploaded_by = 5;
+  string description = 6;
+  int64 file_size_bytes = 7;
+  string revision = 8;
+}
+message RecordAsBuiltResponse {
+  AsBuiltArtifact artifact = 1;
+}
+
+message ListAsBuiltArtifactsRequest {
+  string project_id = 1;
+}
+message ListAsBuiltArtifactsResponse {
+  repeated AsBuiltArtifact artifacts = 1;
+}
+
+// ── Report ────────────────────────────────────────────────────────────────────
+
+message GenerateCommissioningReportRequest {
+  string checklist_id = 1;
+}
+message GenerateCommissioningReportResponse {
+  string report_text = 1;
+  google.protobuf.Timestamp generated_at = 2;
+}

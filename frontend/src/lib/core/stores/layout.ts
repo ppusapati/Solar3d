@@ -15,7 +15,16 @@ export const activeLayout = derived([layouts, activeLayoutId], ([$layouts, $acti
 
 export async function loadLayouts(projectId: string) {
 	const response = await layoutApi.list(projectId);
-	layouts.set(response.layouts || []);
+	const loadedLayouts = response.layouts || [];
+	layouts.set(loadedLayouts);
+
+	// Keep an active layout selected so generation can run against a concrete layout.
+	activeLayoutId.update((current) => {
+		if (current && loadedLayouts.some((l) => l.id === current)) {
+			return current;
+		}
+		return loadedLayouts[0]?.id ?? null;
+	});
 }
 
 export async function createLayout(projectId: string, name: string) {
@@ -44,4 +53,22 @@ export async function loadTilesForViewport(
 export async function loadComponents(layoutId: string) {
 	const response = await layoutApi.listComponents(layoutId);
 	components.set(response.components || []);
+}
+
+export function applyLayoutGenerationSummary(
+	layoutId: string,
+	summary: { panels: number; capacityKw: number; tiles: number }
+) {
+	layouts.update((items) =>
+		items.map((layout) =>
+			layout.id === layoutId
+				? {
+					...layout,
+					total_panels: summary.panels,
+					total_capacity_kw: summary.capacityKw,
+					tile_count: summary.tiles
+				}
+				: layout
+		)
+	);
 }

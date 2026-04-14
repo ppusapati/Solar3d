@@ -10,13 +10,14 @@ import (
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
+	simulationv1connect "github.com/solar3d/solar3d/gen/simulation/v1/simulationv1connect"
 
-	"github.com/solar3d/solar3d/services/simulation-service/internal/config"
-	"github.com/solar3d/solar3d/services/simulation-service/internal/db"
-	"github.com/solar3d/solar3d/services/simulation-service/internal/handler"
-	"github.com/solar3d/solar3d/services/simulation-service/internal/repository"
-	"github.com/solar3d/solar3d/services/simulation-service/internal/service"
-	mw "github.com/solar3d/solar3d/services/shared/middleware"
+	mw "solar3d/shared/middleware"
+	"solar3d/simulation-service/internal/config"
+	"solar3d/simulation-service/internal/db"
+	"solar3d/simulation-service/internal/handler"
+	"solar3d/simulation-service/internal/repository"
+	"solar3d/simulation-service/internal/service"
 )
 
 func main() {
@@ -52,12 +53,14 @@ func main() {
 
 	// ── Application layers ────────────────────────────────────────────────
 	repo := repository.NewSimulationRepository(pool)
-	svc := service.NewSimulationService(repo)
-	h := handler.NewSimulationHandler(svc)
+	svc := service.NewSimulationService(repo, cfg.OrchestrationURL)
+	h := handler.NewSimulationHandler(svc, logger)
 
 	// ── HTTP Server ───────────────────────────────────────────────────────
 	mux := http.NewServeMux()
 	h.RegisterRoutes(mux)
+	connectPath, connectHandler := simulationv1connect.NewSimulationServiceHandler(handler.NewConnectSimulationService(svc))
+	mux.Handle(connectPath, connectHandler)
 
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
@@ -69,7 +72,7 @@ func main() {
 	limiter := mw.NewRateLimiter(100, 200)
 	chain := mw.Chain(
 		mw.Recovery(logger),
-		mw.RequestID,
+		mw.IDempotencyKeyMiddleware,
 		mw.CORS,
 		mw.Logging(logger),
 		limiter.Middleware,
@@ -111,3 +114,4 @@ func main() {
 	}
 	logger.Info().Msg("server stopped")
 }
+

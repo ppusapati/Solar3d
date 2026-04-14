@@ -1,12 +1,13 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount } from 'svelte';
 
 	let isOnline = true;
 	let apiReachable = true;
 	let checking = false;
-	let checkInterval: ReturnType<typeof setInterval>;
+	let checkInterval: ReturnType<typeof setInterval> | undefined;
 
-	const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+	// In dev, use relative path so Vite proxy forwards to monolith (PORT_MONOLITH).
+	const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
 
 	async function checkApi() {
 		if (checking) return;
@@ -33,12 +34,12 @@
 		window.addEventListener('offline', handleOffline);
 		checkApi();
 		checkInterval = setInterval(checkApi, 30000);
-	});
 
-	onDestroy(() => {
-		window.removeEventListener('online', handleOnline);
-		window.removeEventListener('offline', handleOffline);
-		clearInterval(checkInterval);
+		return () => {
+			window.removeEventListener('online', handleOnline);
+			window.removeEventListener('offline', handleOffline);
+			if (checkInterval) clearInterval(checkInterval);
+		};
 	});
 
 	$: status = !isOnline ? 'offline' : !apiReachable ? 'api-down' : 'connected';

@@ -1,0 +1,178 @@
+syntax = "proto3";
+
+package ml_orchestration.v1;
+
+// ML Training Orchestration Service
+// Handles long-running ML training workflows via compute orchestration
+
+service MLOrchestrationService {
+  rpc SubmitTrainingJob(SubmitTrainingJobRequest) returns (SubmitTrainingJobResponse);
+  rpc GetJobStatus(GetJobStatusRequest) returns (GetJobStatusResponse);
+  rpc CancelJob(CancelJobRequest) returns (CancelJobResponse);
+  rpc GetJobHistory(GetJobHistoryRequest) returns (GetJobHistoryResponse);
+}
+
+// ============================================================
+// Dataset & Feature Configuration
+// ============================================================
+
+message FeatureExtraction {
+  repeated string selected_features = 1;
+  bool normalize = 2;
+  double outlier_percentile = 3;
+}
+
+message DatasetWindow {
+  int32 lookback_days = 1;
+  int32 min_samples_per_site = 2;
+  bool include_synthetic = 3;
+}
+
+message DatasetSplit {
+  double train_ratio = 1; // 0.6
+  double validation_ratio = 2; // 0.2
+  double test_ratio = 3; // 0.2
+  bool time_aware = 4; // Use temporal ordering for splits
+}
+
+message DatasetConfig {
+  string version = 1;
+  DatasetWindow window = 2;
+  DatasetSplit split = 3;
+  FeatureExtraction features = 4;
+  string feedback_source = 5; // "manual", "system_inferred", "all"
+}
+
+// ============================================================
+// Model Training Configuration
+// ============================================================
+
+message TrainingHyperparams {
+  string algorithm = 1; // "gradient_boosting", "neural_net", "ensemble"
+  int32 epochs = 2;
+  int32 batch_size = 3;
+  double learning_rate = 4;
+  double regularization_l1 = 5;
+  double regularization_l2 = 6;
+  double dropout_rate = 7;
+  map<string, string> extra_params = 8;
+}
+
+message EarlyStoppingPolicy {
+  int32 patience_epochs = 1;
+  double min_delta = 2;
+  bool monitor_validation = 3;
+}
+
+// ============================================================
+// Training Job Submission
+// ============================================================
+
+message SubmitTrainingJobRequest {
+  string job_id = 1; // Optional; auto-generated if empty
+  string task_type = 2; // "yield", "anomaly", "degradation"
+  DatasetConfig dataset_config = 3;
+  TrainingHyperparams hyperparams = 4;
+  EarlyStoppingPolicy stopping_policy = 5;
+  string triggered_by = 6;
+  string commit_hash = 7;
+  map<string, string> labels = 8; // For job tracking/filtering
+  int32 timeout_minutes = 9; // Default 120
+}
+
+message SubmitTrainingJobResponse {
+  string job_id = 1;
+  string status = 2; // "accepted", "queued", "rejected"
+  string message = 3;
+  int64 queued_at_ms = 4;
+}
+
+// ============================================================
+// Job Status & Progress
+// ============================================================
+
+message TrainingProgress {
+  int32 current_epoch = 1;
+  int32 total_epochs = 2;
+  double completion_percent = 3;
+  int64 elapsed_seconds = 4;
+  int64 estimated_remaining_seconds = 5;
+}
+
+message TrainingMetrics {
+  double train_loss = 1;
+  double validation_loss = 2;
+  double test_loss = 3;
+  double test_mae = 4;
+  double test_rmse = 5;
+  double test_r2_score = 6;
+  double test_coverage_lower = 7;
+  double test_coverage_upper = 8;
+  map<string, double> custom_metrics = 9;
+}
+
+message ModelArtifactInfo {
+  string path = 1;
+  string hash = 2;
+  int64 size_bytes = 3;
+  string format = 4; // "onnx", "pytorch", "tensorflow"
+}
+
+message GetJobStatusRequest {
+  string job_id = 1;
+}
+
+message GetJobStatusResponse {
+  string job_id = 1;
+  string status = 2; // "queued", "running", "completed", "failed", "cancelled"
+  TrainingProgress progress = 3;
+  TrainingMetrics metrics = 4;
+  ModelArtifactInfo artifact = 5;
+  string model_version_id = 6;
+  string error_message = 7;
+  int64 started_at_ms = 8;
+  int64 completed_at_ms = 9;
+  map<string, string> logs = 10; // Log aggregates if available
+}
+
+// ============================================================
+// Job Management
+// ============================================================
+
+message CancelJobRequest {
+  string job_id = 1;
+  string reason = 2;
+  string cancelled_by = 3;
+}
+
+message CancelJobResponse {
+  string job_id = 1;
+  bool cancelled = 2;
+  string message = 3;
+}
+
+message JobHistoryFilter {
+  string task_type = 1;
+  string status = 2;
+  int32 limit = 3;
+  int32 offset = 4;
+}
+
+message JobHistoryEntry {
+  string job_id = 1;
+  string task_type = 2;
+  string status = 3;
+  string triggered_by = 4;
+  int64 created_at_ms = 5;
+  int64 completed_at_ms = 6;
+  string model_version_id = 7;
+}
+
+message GetJobHistoryRequest {
+  JobHistoryFilter filter = 1;
+}
+
+message GetJobHistoryResponse {
+  repeated JobHistoryEntry jobs = 1;
+  int32 total_count = 2;
+}

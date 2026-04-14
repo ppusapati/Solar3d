@@ -43,7 +43,9 @@
 			const sunPos = response.sun_position;
 
 			renderShadows(shadows);
-			renderSunIndicator(sunPos);
+			if (sunPos) {
+				renderSunIndicator(sunPos);
+			}
 		} catch (err) {
 			console.error('Failed to load shadows:', err);
 		}
