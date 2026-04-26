@@ -1,0 +1,1074 @@
+openapi: 3.1.0
+info:
+  title: constraint.v1
+paths:
+  /constraint.v1.ConstraintZoneService/CheckSitingConflicts:
+    post:
+      tags:
+        - constraint.v1.ConstraintZoneService
+      summary: CheckSitingConflicts
+      description: CheckSitingConflicts analyzes proposed landing site against constraint zones.
+      operationId: constraint.v1.ConstraintZoneService.CheckSitingConflicts
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/constraint.v1.CheckSitingConflictsRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/constraint.v1.CheckSitingConflictsResponse'
+  /constraint.v1.ConstraintZoneService/CreateZone:
+    post:
+      tags:
+        - constraint.v1.ConstraintZoneService
+      summary: CreateZone
+      description: CreateZone creates a new constraint zone.
+      operationId: constraint.v1.ConstraintZoneService.CreateZone
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/constraint.v1.CreateZoneRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/constraint.v1.CreateZoneResponse'
+  /constraint.v1.ConstraintZoneService/DeleteZone:
+    post:
+      tags:
+        - constraint.v1.ConstraintZoneService
+      summary: DeleteZone
+      description: DeleteZone removes a zone (soft delete with audit trail).
+      operationId: constraint.v1.ConstraintZoneService.DeleteZone
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/constraint.v1.DeleteZoneRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/constraint.v1.DeleteZoneResponse'
+  /constraint.v1.ConstraintZoneService/GetZone:
+    post:
+      tags:
+        - constraint.v1.ConstraintZoneService
+      summary: GetZone
+      description: GetZone retrieves a single zone by ID.
+      operationId: constraint.v1.ConstraintZoneService.GetZone
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/constraint.v1.GetZoneRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/constraint.v1.GetZoneResponse'
+  /constraint.v1.ConstraintZoneService/ListZoneCategories:
+    post:
+      tags:
+        - constraint.v1.ConstraintZoneService
+      summary: ListZoneCategories
+      description: ListZoneCategories returns available zone category taxonomy.
+      operationId: constraint.v1.ConstraintZoneService.ListZoneCategories
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/constraint.v1.ListZoneCategoriesRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/constraint.v1.ListZoneCategoriesResponse'
+  /constraint.v1.ConstraintZoneService/ListZones:
+    post:
+      tags:
+        - constraint.v1.ConstraintZoneService
+      summary: ListZones
+      description: ListZones lists zones with filtering and pagination.
+      operationId: constraint.v1.ConstraintZoneService.ListZones
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/constraint.v1.ListZonesRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/constraint.v1.ListZonesResponse'
+  /constraint.v1.ConstraintZoneService/QueryZonesByLocation:
+    post:
+      tags:
+        - constraint.v1.ConstraintZoneService
+      summary: QueryZonesByLocation
+      description: QueryZonesByLocation finds zones intersecting/containing a location or geometry.
+      operationId: constraint.v1.ConstraintZoneService.QueryZonesByLocation
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/constraint.v1.QueryZonesByLocationRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/constraint.v1.QueryZonesByLocationResponse'
+  /constraint.v1.ConstraintZoneService/UpdateZone:
+    post:
+      tags:
+        - constraint.v1.ConstraintZoneService
+      summary: UpdateZone
+      description: UpdateZone updates an existing zone.
+      operationId: constraint.v1.ConstraintZoneService.UpdateZone
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/constraint.v1.UpdateZoneRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/constraint.v1.UpdateZoneResponse'
+components:
+  schemas:
+    common.v1.BoundingBox2D:
+      type: object
+      properties:
+        minX:
+          type: number
+          title: min_x
+          format: double
+        minY:
+          type: number
+          title: min_y
+          format: double
+        maxX:
+          type: number
+          title: max_x
+          format: double
+        maxY:
+          type: number
+          title: max_y
+          format: double
+      title: BoundingBox2D
+      additionalProperties: false
+    connect-protocol-version:
+      type: number
+      title: Connect-Protocol-Version
+      enum:
+        - 1
+      description: Define the version of the Connect protocol
+      const: 1
+    connect-timeout-header:
+      type: number
+      title: Connect-Timeout-Ms
+      description: Define the timeout, in ms
+    connect.error:
+      type: object
+      properties:
+        code:
+          type: string
+          examples:
+            - not_found
+          enum:
+            - canceled
+            - unknown
+            - invalid_argument
+            - deadline_exceeded
+            - not_found
+            - already_exists
+            - permission_denied
+            - resource_exhausted
+            - failed_precondition
+            - aborted
+            - out_of_range
+            - unimplemented
+            - internal
+            - unavailable
+            - data_loss
+            - unauthenticated
+          description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+        message:
+          type: string
+          description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/connect.error_details.Any'
+          description: A list of messages that carry the error details. There is no limit on the number of messages.
+      title: Connect Error
+      additionalProperties: true
+      description: 'Error type returned by Connect: https://connectrpc.com/docs/go/errors/#http-representation'
+    connect.error_details.Any:
+      type: object
+      properties:
+        type:
+          type: string
+          description: 'A URL that acts as a globally unique identifier for the type of the serialized message. For example: `type.googleapis.com/google.rpc.ErrorInfo`. This is used to determine the schema of the data in the `value` field and is the discriminator for the `debug` field.'
+        value:
+          type: string
+          format: binary
+          description: The Protobuf message, serialized as bytes and base64-encoded. The specific message type is identified by the `type` field.
+        debug:
+          oneOf:
+            - type: object
+              title: Any
+              additionalProperties: true
+              description: Detailed error information.
+          discriminator:
+            propertyName: type
+          title: Debug
+          description: Deserialized error detail payload. The 'type' field indicates the schema. This field is for easier debugging and should not be relied upon for application logic.
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message, with an additional debug field for ConnectRPC error details.
+    constraint.v1.CategoryDef:
+      type: object
+      properties:
+        category:
+          title: category
+          $ref: '#/components/schemas/constraint.v1.ZoneCategory'
+        displayName:
+          type: string
+          title: display_name
+        description:
+          type: string
+          title: description
+        allowedTags:
+          type: array
+          items:
+            type: string
+          title: allowed_tags
+        associatedRegulations:
+          type: array
+          items:
+            type: string
+          title: associated_regulations
+      title: CategoryDef
+      additionalProperties: false
+      description: ZoneCategory represents a category in the taxonomy.
+    constraint.v1.CheckSitingConflictsRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        proposedSiteGeometryWkt:
+          type: string
+          title: proposed_site_geometry_wkt
+          description: WKT of proposed landing site
+        geometryType:
+          type: string
+          title: geometry_type
+          description: POINT, POLYGON, etc.
+        geometryBounds:
+          title: geometry_bounds
+          $ref: '#/components/schemas/common.v1.BoundingBox2D'
+        checkZoneTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/constraint.v1.ZoneType'
+          title: check_zone_types
+          description: Which zone types to check (empty = all)
+        includeBufferZones:
+          type: boolean
+          title: include_buffer_zones
+          description: Include buffer zone conflicts
+        includeExpiredZones:
+          type: boolean
+          title: include_expired_zones
+          description: Check against expired zones
+      title: CheckSitingConflictsRequest
+      additionalProperties: false
+    constraint.v1.CheckSitingConflictsResponse:
+      type: object
+      properties:
+        conflicts:
+          type: array
+          items:
+            $ref: '#/components/schemas/constraint.v1.SitingConflict'
+          title: conflicts
+        riskScore:
+          title: risk_score
+          $ref: '#/components/schemas/constraint.v1.RiskScore'
+        sitingRecommendation:
+          type: string
+          title: siting_recommendation
+          description: Human-readable summary
+        totalZonesChecked:
+          type: integer
+          title: total_zones_checked
+          format: int32
+      title: CheckSitingConflictsResponse
+      additionalProperties: false
+    constraint.v1.ConflictSeverity:
+      type: string
+      title: ConflictSeverity
+      enum:
+        - CONFLICT_SEVERITY_UNSPECIFIED
+        - CONFLICT_SEVERITY_INFO
+        - CONFLICT_SEVERITY_WARNING
+        - CONFLICT_SEVERITY_ERROR
+        - CONFLICT_SEVERITY_BLOCKER
+    constraint.v1.CreateZoneRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          title: name
+        description:
+          type: string
+          title: description
+        zoneType:
+          title: zone_type
+          $ref: '#/components/schemas/constraint.v1.ZoneType'
+        zoneCategory:
+          title: zone_category
+          $ref: '#/components/schemas/constraint.v1.ZoneCategory'
+        geometryWkt:
+          type: string
+          title: geometry_wkt
+        geometryType:
+          type: string
+          title: geometry_type
+        effectiveStart:
+          title: effective_start
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        effectiveEnd:
+          title: effective_end
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        source:
+          type: string
+          title: source
+        sourceId:
+          type: string
+          title: source_id
+        bufferDistanceMeters:
+          type: number
+          title: buffer_distance_meters
+          format: float
+        tags:
+          type: array
+          items:
+            type: string
+          title: tags
+        metadata:
+          type: object
+          title: metadata
+          additionalProperties:
+            type: string
+            title: value
+        projectId:
+          type: string
+          title: project_id
+        isPublic:
+          type: boolean
+          title: is_public
+      title: CreateZoneRequest
+      additionalProperties: false
+    constraint.v1.CreateZoneRequest.MetadataEntry:
+      type: object
+      properties:
+        key:
+          type: string
+          title: key
+        value:
+          type: string
+          title: value
+      title: MetadataEntry
+      additionalProperties: false
+    constraint.v1.CreateZoneResponse:
+      type: object
+      properties:
+        zoneId:
+          type: string
+          title: zone_id
+        zone:
+          title: zone
+          $ref: '#/components/schemas/constraint.v1.Zone'
+        createdAt:
+          title: created_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: CreateZoneResponse
+      additionalProperties: false
+    constraint.v1.DeleteZoneRequest:
+      type: object
+      properties:
+        zoneId:
+          type: string
+          title: zone_id
+        reason:
+          type: string
+          title: reason
+          description: 'Audit: why zone is being deleted'
+      title: DeleteZoneRequest
+      additionalProperties: false
+    constraint.v1.DeleteZoneResponse:
+      type: object
+      properties:
+        zoneId:
+          type: string
+          title: zone_id
+        deletedAt:
+          title: deleted_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: DeleteZoneResponse
+      additionalProperties: false
+    constraint.v1.GetZoneRequest:
+      type: object
+      properties:
+        zoneId:
+          type: string
+          title: zone_id
+      title: GetZoneRequest
+      additionalProperties: false
+    constraint.v1.GetZoneResponse:
+      type: object
+      properties:
+        zone:
+          title: zone
+          $ref: '#/components/schemas/constraint.v1.Zone'
+      title: GetZoneResponse
+      additionalProperties: false
+    constraint.v1.ListZoneCategoriesRequest:
+      type: object
+      title: ListZoneCategoriesRequest
+      additionalProperties: false
+      description: No parameters needed
+    constraint.v1.ListZoneCategoriesResponse:
+      type: object
+      properties:
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/constraint.v1.CategoryDef'
+          title: categories
+      title: ListZoneCategoriesResponse
+      additionalProperties: false
+    constraint.v1.ListZonesRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        zoneType:
+          title: zone_type
+          description: Filter by type (optional)
+          $ref: '#/components/schemas/constraint.v1.ZoneType'
+        zoneCategory:
+          title: zone_category
+          description: Filter by category (optional)
+          $ref: '#/components/schemas/constraint.v1.ZoneCategory'
+        zoneStatus:
+          title: zone_status
+          description: Filter by status (optional)
+          $ref: '#/components/schemas/constraint.v1.ZoneStatus'
+        searchQuery:
+          type: string
+          title: search_query
+          description: Search by name or tags
+        limit:
+          type: integer
+          title: limit
+          format: int32
+        offset:
+          type: integer
+          title: offset
+          format: int32
+      title: ListZonesRequest
+      additionalProperties: false
+    constraint.v1.ListZonesResponse:
+      type: object
+      properties:
+        zones:
+          type: array
+          items:
+            $ref: '#/components/schemas/constraint.v1.Zone'
+          title: zones
+        totalCount:
+          type:
+            - integer
+            - string
+          title: total_count
+          format: int64
+      title: ListZonesResponse
+      additionalProperties: false
+    constraint.v1.QueryZonesByLocationRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        latitude:
+          type: number
+          title: latitude
+          format: float
+        longitude:
+          type: number
+          title: longitude
+          format: float
+        searchRadiusMeters:
+          type: number
+          title: search_radius_meters
+          format: float
+          description: Search in radius around point
+        zoneType:
+          title: zone_type
+          description: Filter by type (optional)
+          $ref: '#/components/schemas/constraint.v1.ZoneType'
+        limit:
+          type: integer
+          title: limit
+          format: int32
+      title: QueryZonesByLocationRequest
+      additionalProperties: false
+    constraint.v1.QueryZonesByLocationResponse:
+      type: object
+      properties:
+        nearbyZones:
+          type: array
+          items:
+            $ref: '#/components/schemas/constraint.v1.Zone'
+          title: nearby_zones
+        potentialConflicts:
+          type: array
+          items:
+            $ref: '#/components/schemas/constraint.v1.SitingConflict'
+          title: potential_conflicts
+        aggregatedBounds:
+          title: aggregated_bounds
+          $ref: '#/components/schemas/common.v1.BoundingBox2D'
+      title: QueryZonesByLocationResponse
+      additionalProperties: false
+    constraint.v1.RiskScore:
+      type: object
+      properties:
+        totalConflicts:
+          type: integer
+          title: total_conflicts
+          format: int32
+        blockerCount:
+          type: integer
+          title: blocker_count
+          format: int32
+        errorCount:
+          type: integer
+          title: error_count
+          format: int32
+        warningCount:
+          type: integer
+          title: warning_count
+          format: int32
+        overallRiskPercentage:
+          type: number
+          title: overall_risk_percentage
+          format: float
+          description: 0-100, higher = more restrictive
+        isSiteable:
+          type: boolean
+          title: is_siteable
+          description: True if score allows placement
+      title: RiskScore
+      additionalProperties: false
+      description: RiskScore aggregates conflict severity for siting decision.
+    constraint.v1.SitingConflict:
+      type: object
+      properties:
+        conflictId:
+          type: string
+          title: conflict_id
+          description: UUID
+        zoneId:
+          type: string
+          title: zone_id
+        conflictingZone:
+          title: conflicting_zone
+          $ref: '#/components/schemas/constraint.v1.Zone'
+        severity:
+          title: severity
+          $ref: '#/components/schemas/constraint.v1.ConflictSeverity'
+        conflictReason:
+          type: string
+          title: conflict_reason
+          description: e.g., "Site inside exclusion zone"
+        distanceMeters:
+          type: number
+          title: distance_meters
+          format: float
+          description: Distance to zone (if not intersecting, 0 if inside)
+        overlapAreaSqm:
+          type: number
+          title: overlap_area_sqm
+          format: float
+          description: 'For polygons: overlap area in m²'
+        mitigationSuggestions:
+          type: array
+          items:
+            type: string
+          title: mitigation_suggestions
+          description: Recommendations to resolve
+      title: SitingConflict
+      additionalProperties: false
+      description: SitingConflict represents a conflict between a proposed site and a constraint zone.
+    constraint.v1.UpdateZoneRequest:
+      type: object
+      properties:
+        zoneId:
+          type: string
+          title: zone_id
+        name:
+          type: string
+          title: name
+        description:
+          type: string
+          title: description
+        zoneType:
+          title: zone_type
+          $ref: '#/components/schemas/constraint.v1.ZoneType'
+        zoneCategory:
+          title: zone_category
+          $ref: '#/components/schemas/constraint.v1.ZoneCategory'
+        zoneStatus:
+          title: zone_status
+          $ref: '#/components/schemas/constraint.v1.ZoneStatus'
+        geometryWkt:
+          type: string
+          title: geometry_wkt
+        effectiveStart:
+          title: effective_start
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        effectiveEnd:
+          title: effective_end
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        bufferDistanceMeters:
+          type: number
+          title: buffer_distance_meters
+          format: float
+        tags:
+          type: array
+          items:
+            type: string
+          title: tags
+        metadata:
+          type: object
+          title: metadata
+          additionalProperties:
+            type: string
+            title: value
+        isPublic:
+          type: boolean
+          title: is_public
+      title: UpdateZoneRequest
+      additionalProperties: false
+    constraint.v1.UpdateZoneRequest.MetadataEntry:
+      type: object
+      properties:
+        key:
+          type: string
+          title: key
+        value:
+          type: string
+          title: value
+      title: MetadataEntry
+      additionalProperties: false
+    constraint.v1.UpdateZoneResponse:
+      type: object
+      properties:
+        zone:
+          title: zone
+          $ref: '#/components/schemas/constraint.v1.Zone'
+        updatedAt:
+          title: updated_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: UpdateZoneResponse
+      additionalProperties: false
+    constraint.v1.Zone:
+      type: object
+      properties:
+        zoneId:
+          type: string
+          title: zone_id
+          description: UUID
+        name:
+          type: string
+          title: name
+        description:
+          type: string
+          title: description
+        zoneType:
+          title: zone_type
+          $ref: '#/components/schemas/constraint.v1.ZoneType'
+        zoneCategory:
+          title: zone_category
+          $ref: '#/components/schemas/constraint.v1.ZoneCategory'
+        zoneStatus:
+          title: zone_status
+          $ref: '#/components/schemas/constraint.v1.ZoneStatus'
+        geometryWkt:
+          type: string
+          title: geometry_wkt
+          description: Geometry (WKT format or PostGIS reference)
+        geometryType:
+          type: string
+          title: geometry_type
+          description: POINT, LINESTRING, POLYGON, MULTIPOLYGON
+        boundingBox:
+          title: bounding_box
+          $ref: '#/components/schemas/common.v1.BoundingBox2D'
+        effectiveStart:
+          title: effective_start
+          description: Temporal constraints
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        effectiveEnd:
+          title: effective_end
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        source:
+          type: string
+          title: source
+          description: Metadata Data source (e.g., "regulatory_db", "user_defined")
+        sourceId:
+          type: string
+          title: source_id
+          description: Reference to external system
+        bufferDistanceMeters:
+          type: number
+          title: buffer_distance_meters
+          format: float
+          description: 'For buffer zones: distance from feature'
+        tags:
+          type: array
+          items:
+            type: string
+          title: tags
+          description: Classification tags
+        metadata:
+          type: object
+          title: metadata
+          additionalProperties:
+            type: string
+            title: value
+          description: Custom key-value pairs
+        createdBy:
+          type: string
+          title: created_by
+          description: Permissions User ID
+        projectId:
+          type: string
+          title: project_id
+          description: Associated project
+        isPublic:
+          type: boolean
+          title: is_public
+          description: Visibility scope
+        createdAt:
+          title: created_at
+          description: Audit
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        updatedAt:
+          title: updated_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        deletedAt:
+          title: deleted_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: Zone
+      additionalProperties: false
+      description: Zone represents a constraint zone (exclusion, inclusion, or buffer).
+    constraint.v1.Zone.MetadataEntry:
+      type: object
+      properties:
+        key:
+          type: string
+          title: key
+        value:
+          type: string
+          title: value
+      title: MetadataEntry
+      additionalProperties: false
+    constraint.v1.ZoneCategory:
+      type: string
+      title: ZoneCategory
+      enum:
+        - ZONE_CATEGORY_UNSPECIFIED
+        - ZONE_CATEGORY_GEOLOGICAL
+        - ZONE_CATEGORY_ENVIRONMENTAL
+        - ZONE_CATEGORY_REGULATORY
+        - ZONE_CATEGORY_INFRASTRUCTURE
+        - ZONE_CATEGORY_MILITARY
+        - ZONE_CATEGORY_PROTECTED
+    constraint.v1.ZoneStatus:
+      type: string
+      title: ZoneStatus
+      enum:
+        - ZONE_STATUS_UNSPECIFIED
+        - ZONE_STATUS_ACTIVE
+        - ZONE_STATUS_INACTIVE
+        - ZONE_STATUS_EXPIRED
+        - ZONE_STATUS_PENDING
+    constraint.v1.ZoneType:
+      type: string
+      title: ZoneType
+      enum:
+        - ZONE_TYPE_UNSPECIFIED
+        - ZONE_TYPE_EXCLUSION
+        - ZONE_TYPE_INCLUSION
+        - ZONE_TYPE_BUFFER
+    google.protobuf.Timestamp:
+      type: string
+      examples:
+        - "2023-01-15T01:30:15.01Z"
+        - "2024-12-25T12:00:00Z"
+      format: date-time
+      description: |-
+        A Timestamp represents a point in time independent of any time zone or local
+         calendar, encoded as a count of seconds and fractions of seconds at
+         nanosecond resolution. The count is relative to an epoch at UTC midnight on
+         January 1, 1970, in the proleptic Gregorian calendar which extends the
+         Gregorian calendar backwards to year one.
+
+         All minutes are 60 seconds long. Leap seconds are "smeared" so that no leap
+         second table is needed for interpretation, using a [24-hour linear
+         smear](https://developers.google.com/time/smear).
+
+         The range is from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59.999999999Z. By
+         restricting to that range, we ensure that we can convert to and from [RFC
+         3339](https://www.ietf.org/rfc/rfc3339.txt) date strings.
+
+         # Examples
+
+         Example 1: Compute Timestamp from POSIX `time()`.
+
+             Timestamp timestamp;
+             timestamp.set_seconds(time(NULL));
+             timestamp.set_nanos(0);
+
+         Example 2: Compute Timestamp from POSIX `gettimeofday()`.
+
+             struct timeval tv;
+             gettimeofday(&tv, NULL);
+
+             Timestamp timestamp;
+             timestamp.set_seconds(tv.tv_sec);
+             timestamp.set_nanos(tv.tv_usec * 1000);
+
+         Example 3: Compute Timestamp from Win32 `GetSystemTimeAsFileTime()`.
+
+             FILETIME ft;
+             GetSystemTimeAsFileTime(&ft);
+             UINT64 ticks = (((UINT64)ft.dwHighDateTime) << 32) | ft.dwLowDateTime;
+
+             // A Windows tick is 100 nanoseconds. Windows epoch 1601-01-01T00:00:00Z
+             // is 11644473600 seconds before Unix epoch 1970-01-01T00:00:00Z.
+             Timestamp timestamp;
+             timestamp.set_seconds((INT64) ((ticks / 10000000) - 11644473600LL));
+             timestamp.set_nanos((INT32) ((ticks % 10000000) * 100));
+
+         Example 4: Compute Timestamp from Java `System.currentTimeMillis()`.
+
+             long millis = System.currentTimeMillis();
+
+             Timestamp timestamp = Timestamp.newBuilder().setSeconds(millis / 1000)
+                 .setNanos((int) ((millis % 1000) * 1000000)).build();
+
+         Example 5: Compute Timestamp from Java `Instant.now()`.
+
+             Instant now = Instant.now();
+
+             Timestamp timestamp =
+                 Timestamp.newBuilder().setSeconds(now.getEpochSecond())
+                     .setNanos(now.getNano()).build();
+
+         Example 6: Compute Timestamp from current time in Python.
+
+             timestamp = Timestamp()
+             timestamp.GetCurrentTime()
+
+         # JSON Mapping
+
+         In JSON format, the Timestamp type is encoded as a string in the
+         [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format. That is, the
+         format is "{year}-{month}-{day}T{hour}:{min}:{sec}[.{frac_sec}]Z"
+         where {year} is always expressed using four digits while {month}, {day},
+         {hour}, {min}, and {sec} are zero-padded to two digits each. The fractional
+         seconds, which can go up to 9 digits (i.e. up to 1 nanosecond resolution),
+         are optional. The "Z" suffix indicates the timezone ("UTC"); the timezone
+         is required. A proto3 JSON serializer should always use UTC (as indicated by
+         "Z") when printing the Timestamp type and a proto3 JSON parser should be
+         able to accept both UTC and other timezones (as indicated by an offset).
+
+         For example, "2017-01-15T01:30:15.01Z" encodes 15.01 seconds past
+         01:30 UTC on January 15, 2017.
+
+         In JavaScript, one can convert a Date object to this format using the
+         standard
+         [toISOString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString)
+         method. In Python, a standard `datetime.datetime` object can be converted
+         to this format using
+         [`strftime`](https://docs.python.org/2/library/time.html#time.strftime) with
+         the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one can use
+         the Joda Time's [`ISODateTimeFormat.dateTime()`](
+         http://joda-time.sourceforge.net/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime()
+         ) to obtain a formatter capable of generating timestamps in this format.
+security: []
+tags:
+  - name: constraint.v1.ConstraintZoneService
+    description: ConstraintZoneService provides zone management and siting conflict analysis.

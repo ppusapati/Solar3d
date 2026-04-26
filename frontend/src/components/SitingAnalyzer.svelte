@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
+	import { constraintApi } from '$lib/core/api/constraint';
+	import { toast } from '$lib/core/stores/toast';
+	import { structuredLog } from '$lib/core/error-handling';
 
 	interface SitingConflict {
 		conflictId: string;
@@ -93,105 +96,68 @@
 	$: currentStatus = currentAnalysis ? getSiteabilityStatus(currentAnalysis.riskScore) : null;
 
 	// Lifecycle
-	onMount(async () => {
-		loadAnalysisHistory();
+	onMount(() => {
+		// Analysis history is session-local: each Check call returns a fresh
+		// snapshot. Persisting historic analyses across sessions would require
+		// a separate audit-log endpoint we have not provisioned.
+		analyses.set([]);
 	});
 
-	// Load analysis history
-	async function loadAnalysisHistory() {
-		try {
-			// TODO: API call to fetch analysis history
-			// const response = await fetch(`/api/siting-analyses?projectId=${projectId}`);
-			// const data = await response.json();
-			// analyses.set(data);
-			analyses.set([]);
-		} catch (error) {
-			console.error('Failed to load analysis history:', error);
-		}
+	function severityFromProto(v: number | string): SitingConflict['severity'] {
+		if (typeof v === 'string') return (['INFO', 'WARNING', 'ERROR', 'BLOCKER'].includes(v) ? v : 'WARNING') as SitingConflict['severity'];
+		return (['UNSPECIFIED', 'INFO', 'WARNING', 'ERROR', 'BLOCKER'][v] ?? 'WARNING') as SitingConflict['severity'];
+	}
+
+	function zoneTypeFromProto(v: number | string): SitingConflict['zoneType'] {
+		if (typeof v === 'string') return (['EXCLUSION', 'INCLUSION', 'BUFFER'].includes(v) ? v : 'EXCLUSION') as SitingConflict['zoneType'];
+		return (['UNSPECIFIED', 'EXCLUSION', 'INCLUSION', 'BUFFER'][v] ?? 'EXCLUSION') as SitingConflict['zoneType'];
 	}
 
 	// Analyze siting
 	async function analyzeSite() {
 		if (!proposedSiteGeometry) {
-			alert('Please enter proposed site geometry');
+			toast.warning('Please enter proposed site geometry');
 			return;
 		}
 
 		isAnalyzing = true;
 
 		try {
-			// TODO: Replace with actual API call
-			// const response = await fetch('/api/constraint-zones/check-siting-conflicts', {
-			//   method: 'POST',
-			//   body: JSON.stringify({
-			//     projectId,
-			//     proposedSiteGeometryWkt: proposedSiteGeometry,
-			//     proposedGeometryType: geometryType,
-			//     includeBufferZones,
-			//     includeExpiredZones,
-			//     analyzedByUser: 'current-user'
-			//   })
-			// });
-			// const data = await response.json();
+			const resp = await constraintApi.checkSitingConflicts({
+				projectId,
+				proposedSiteGeometryWkt: proposedSiteGeometry,
+				geometryType,
+				includeBufferZones,
+				includeExpiredZones
+			});
 
-			// Mock analysis result
-			const mockConflicts: SitingConflict[] = [
-				{
-					conflictId: 'conflict-1',
-					zoneId: 'zone-env-1',
-					zoneName: 'Protected Habitat Alpha',
-					zoneType: 'EXCLUSION',
-					severity: 'BLOCKER',
-					reason: 'Site overlaps critical wildlife habitat (endangered species present)',
-					distanceMeters: 0,
-					mitigationSuggestions: [
-						'Relocate site at least 500m away from habitat boundaries',
-						'Obtain endangered species permit (may take 6-12 months)',
-						'Implement habitat restoration plan (costly)'
-					]
-				},
-				{
-					conflictId: 'conflict-2',
-					zoneId: 'zone-inf-1',
-					zoneName: 'Power Line Buffer',
-					zoneType: 'BUFFER',
-					severity: 'WARNING',
-					reason: 'Site within 500m buffer of high-voltage transmission lines',
-					distanceMeters: 250,
-					mitigationSuggestions: [
-						'Maintain 500m clearance from transmission lines',
-						'Install underground conduit if closer than 300m',
-						'Coordinate with utility company for safety approval'
-					]
-				},
-				{
-					conflictId: 'conflict-3',
-					zoneId: 'zone-reg-1',
-					zoneName: 'Designated Solar Zone',
-					zoneType: 'INCLUSION',
-					severity: 'INFO',
-					reason: 'Site is within county-approved solar development zone',
-					distanceMeters: 0,
-					mitigationSuggestions: ['No action required - site matches regulatory approval']
-				}
-			];
+			const conflicts: SitingConflict[] = (resp.conflicts ?? []).map((c: any) => ({
+				conflictId: c.conflictId,
+				zoneId: c.zoneId,
+				zoneName: c.conflictingZone?.name ?? c.zoneName ?? '',
+				zoneType: zoneTypeFromProto(c.conflictingZone?.zoneType ?? 'EXCLUSION'),
+				severity: severityFromProto(c.severity),
+				reason: c.conflictReason ?? '',
+				distanceMeters: c.distanceMeters,
+				mitigationSuggestions: c.mitigationSuggestions ?? []
+			}));
 
-			const mockRiskScore: RiskScore = {
-				totalConflicts: mockConflicts.length,
-				blockerCount: 1,
-				errorCount: 0,
-				warningCount: 1,
-				infoCount: 1,
-				isSiteable: false,
-				overallRiskPercentage: 61.67,
-				sitingRecommendation:
-					'CRITICAL: Site cannot be placed due to 1 blocker conflicts. Relocation required.'
+			const rs = (resp.riskScore ?? {}) as any;
+			const riskScore: RiskScore = {
+				totalConflicts: rs.totalConflicts ?? conflicts.length,
+				blockerCount: rs.blockerCount ?? 0,
+				errorCount: rs.errorCount ?? 0,
+				warningCount: rs.warningCount ?? 0,
+				infoCount: rs.warningCount ?? 0,
+				isSiteable: rs.isSiteable ?? false,
+				overallRiskPercentage: rs.overallRiskPercentage ?? 0,
+				sitingRecommendation: resp.sitingRecommendation ?? rs.sitingRecommendation ?? ''
 			};
 
 			const analysis: AnalysisResult = {
 				sitingGeometry: proposedSiteGeometry,
-				riskScore: mockRiskScore,
-				conflicts: mockConflicts,
+				riskScore,
+				conflicts,
 				analyzedAt: new Date().toISOString(),
 				analyzedBy: 'current-user'
 			};
@@ -200,8 +166,8 @@
 			analyses.update((a) => [analysis, ...a]);
 			showResults = true;
 		} catch (error) {
-			console.error('Failed to analyze site:', error);
-			alert('Failed to analyze site: ' + error);
+			structuredLog('error', 'siting.analyze', { error: String(error), projectId });
+			toast.error(`Failed to analyze site: ${error instanceof Error ? error.message : 'unknown error'}`);
 		} finally {
 			isAnalyzing = false;
 		}

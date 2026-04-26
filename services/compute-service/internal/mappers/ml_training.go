@@ -3,9 +3,9 @@ package mappers
 import (
 	"encoding/json"
 
-	"solar3d/compute-service/internal/models"
+	"p9e.in/samavaya/solar3d/compute-service/internal/models"
 
-	ml_inferencev1 "github.com/solar3d/solar3d/gen/ml_inference/v1"
+	ml_inferencev1 "p9e.in/samavaya/solar3d/gen/ml_inference/v1"
 )
 
 // ============================================================

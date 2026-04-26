@@ -4,9 +4,9 @@ import (
 	"context"
 	"testing"
 
-	"solar3d/graph-service/internal/client"
-	"solar3d/graph-service/internal/handler"
-	"solar3d/graph-service/internal/service"
+	"p9e.in/samavaya/solar3d/graph-service/internal/client"
+	"p9e.in/samavaya/solar3d/graph-service/internal/handler"
+	"p9e.in/samavaya/solar3d/graph-service/internal/service"
 )
 
 // MockGraphComputeClient is a mock implementation

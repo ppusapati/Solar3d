@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"solar3d/graph-service/internal/client"
+	"p9e.in/samavaya/solar3d/graph-service/internal/client"
 )
 
 // GraphCompute defines the interface for graph-compute operations

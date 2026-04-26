@@ -4,7 +4,7 @@ import (
 	"math"
 	"time"
 
-	"solar3d/simulation-service/internal/domain"
+	"p9e.in/samavaya/solar3d/simulation-service/internal/domain"
 )
 
 const (

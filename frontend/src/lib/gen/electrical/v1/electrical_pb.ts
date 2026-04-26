@@ -2,8 +2,8 @@
 // @generated from file electrical/v1/electrical.proto (package electrical.v1, syntax proto3)
 /* eslint-disable */
 
-import type { GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
-import { fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
+import type { GenEnum, GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
+import { enumDesc, fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import { file_google_protobuf_timestamp } from "@bufbuild/protobuf/wkt";
 import type { Message } from "@bufbuild/protobuf";
@@ -12,7 +12,73 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file electrical/v1/electrical.proto.
  */
 export const file_electrical_v1_electrical: GenFile = /*@__PURE__*/
-  fileDesc("Ch5lbGVjdHJpY2FsL3YxL2VsZWN0cmljYWwucHJvdG8SDWVsZWN0cmljYWwudjEigwIKEUVsZWN0cmljYWxOZXR3b3JrEgoKAmlkGAEgASgJEhIKCnByb2plY3RfaWQYAiABKAkSEQoJbGF5b3V0X2lkGAMgASgJEgwKBG5hbWUYBCABKAkSHAoUdG90YWxfZGNfY2FwYWNpdHlfa3cYBSABKAESHAoUdG90YWxfYWNfY2FwYWNpdHlfa3cYBiABKAESEwoLZGNfYWNfcmF0aW8YByABKAESFAoMc3RyaW5nX2NvdW50GAggASgFEhYKDmludmVydGVyX2NvdW50GAkgASgFEi4KCmNyZWF0ZWRfYXQYCiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIrgBCgtQYW5lbFN0cmluZxIKCgJpZBgBIAEoCRISCgpuZXR3b3JrX2lkGAIgASgJEhkKEWludmVydGVyX2dyb3VwX2lkGAMgASgJEhEKCXBhbmVsX2lkcxgEIAMoCRITCgtwYW5lbF9jb3VudBgFIAEoBRIWCg5zdHJpbmdfdm9sdGFnZRgGIAEoARIWCg5zdHJpbmdfY3VycmVudBgHIAEoARIWCg5zdHJpbmdfcG93ZXJfdxgIIAEoASK4AQoNSW52ZXJ0ZXJHcm91cBIKCgJpZBgBIAEoCRISCgpuZXR3b3JrX2lkGAIgASgJEhkKEWludmVydGVyX2Fzc2V0X2lkGAMgASgJEhIKCnN0cmluZ19pZHMYBCADKAkSEwoLZGNfaW5wdXRfa3cYBSABKAESFAoMYWNfb3V0cHV0X2t3GAYgASgBEhMKC2RjX2FjX3JhdGlvGAcgASgBEhgKEHBvc2l0aW9uX2dlb2pzb24YCCABKAkiSwoUQ3JlYXRlTmV0d29ya1JlcXVlc3QSEgoKcHJvamVjdF9pZBgBIAEoCRIRCglsYXlvdXRfaWQYAiABKAkSDAoEbmFtZRgDIAEoCSJKChVDcmVhdGVOZXR3b3JrUmVzcG9uc2USMQoHbmV0d29yaxgBIAEoCzIgLmVsZWN0cmljYWwudjEuRWxlY3RyaWNhbE5ldHdvcmsiHwoRR2V0TmV0d29ya1JlcXVlc3QSCgoCaWQYASABKAkiRwoSR2V0TmV0d29ya1Jlc3BvbnNlEjEKB25ldHdvcmsYASABKAsyIC5lbGVjdHJpY2FsLnYxLkVsZWN0cmljYWxOZXR3b3JrIikKE0xpc3ROZXR3b3Jrc1JlcXVlc3QSEgoKcHJvamVjdF9pZBgBIAEoCSJKChRMaXN0TmV0d29ya3NSZXNwb25zZRIyCghuZXR3b3JrcxgBIAMoCzIgLmVsZWN0cmljYWwudjEuRWxlY3RyaWNhbE5ldHdvcmsiIgoURGVsZXRlTmV0d29ya1JlcXVlc3QSCgoCaWQYASABKAkiFwoVRGVsZXRlTmV0d29ya1Jlc3BvbnNlIoUBChNDcmVhdGVTdHJpbmdSZXF1ZXN0EhIKCm5ldHdvcmtfaWQYASABKAkSEQoJcGFuZWxfaWRzGAIgAygJEhkKEWludmVydGVyX2dyb3VwX2lkGAMgASgJEhUKDXBhbmVsX3ZvbHRhZ2UYBCABKAESFQoNcGFuZWxfY3VycmVudBgFIAEoASJIChRDcmVhdGVTdHJpbmdSZXNwb25zZRIwCgxwYW5lbF9zdHJpbmcYASABKAsyGi5lbGVjdHJpY2FsLnYxLlBhbmVsU3RyaW5nIooCChpBdXRvR2VuZXJhdGVTdHJpbmdzUmVxdWVzdBISCgpuZXR3b3JrX2lkGAEgASgJEhEKCWxheW91dF9pZBgCIAEoCRIZChFwYW5lbHNfcGVyX3N0cmluZxgDIAEoBRIZChFpbnZlcnRlcl9hc3NldF9pZBgEIAEoCRIcChRzdHJpbmdzX3Blcl9pbnZlcnRlchgFIAEoBRIUCgx0b3RhbF9wYW5lbHMYBiABKAUSFQoNcGFuZWxfdm9sdGFnZRgHIAEoARIVCg1wYW5lbF9jdXJyZW50GAggASgBEhUKDXBhbmVsX3Bvd2VyX3cYCSABKAESFgoOaW52ZXJ0ZXJfYWNfa3cYCiABKAEitAEKG0F1dG9HZW5lcmF0ZVN0cmluZ3NSZXNwb25zZRIXCg9zdHJpbmdzX2NyZWF0ZWQYASABKAUSHwoXaW52ZXJ0ZXJfZ3JvdXBzX2NyZWF0ZWQYAiABKAUSEwoLdG90YWxfZGNfa3cYAyABKAESEwoLdG90YWxfYWNfa3cYBCABKAESMQoHbmV0d29yaxgFIAEoCzIgLmVsZWN0cmljYWwudjEuRWxlY3RyaWNhbE5ldHdvcmsiKAoSTGlzdFN0cmluZ3NSZXF1ZXN0EhIKCm5ldHdvcmtfaWQYASABKAkiQgoTTGlzdFN0cmluZ3NSZXNwb25zZRIrCgdzdHJpbmdzGAEgAygLMhouZWxlY3RyaWNhbC52MS5QYW5lbFN0cmluZyJ0ChVBc3NpZ25JbnZlcnRlclJlcXVlc3QSEgoKbmV0d29ya19pZBgBIAEoCRIZChFpbnZlcnRlcl9hc3NldF9pZBgCIAEoCRISCgpzdHJpbmdfaWRzGAMgAygJEhgKEHBvc2l0aW9uX2dlb2pzb24YBCABKAkiTgoWQXNzaWduSW52ZXJ0ZXJSZXNwb25zZRI0Cg5pbnZlcnRlcl9ncm91cBgBIAEoCzIcLmVsZWN0cmljYWwudjEuSW52ZXJ0ZXJHcm91cCIvChlMaXN0SW52ZXJ0ZXJHcm91cHNSZXF1ZXN0EhIKCm5ldHdvcmtfaWQYASABKAkiUwoaTGlzdEludmVydGVyR3JvdXBzUmVzcG9uc2USNQoPaW52ZXJ0ZXJfZ3JvdXBzGAEgAygLMhwuZWxlY3RyaWNhbC52MS5JbnZlcnRlckdyb3VwIjAKGkNhbGN1bGF0ZURDQ2FwYWNpdHlSZXF1ZXN0EhIKCm5ldHdvcmtfaWQYASABKAkiXwobQ2FsY3VsYXRlRENDYXBhY2l0eVJlc3BvbnNlEhMKC3RvdGFsX2RjX2t3GAEgASgBEhQKDHRvdGFsX3BhbmVscxgCIAEoBRIVCg10b3RhbF9zdHJpbmdzGAMgASgFIjAKGkNhbGN1bGF0ZUFDQ2FwYWNpdHlSZXF1ZXN0EhIKCm5ldHdvcmtfaWQYASABKAkiYAobQ2FsY3VsYXRlQUNDYXBhY2l0eVJlc3BvbnNlEhMKC3RvdGFsX2FjX2t3GAEgASgBEhMKC2RjX2FjX3JhdGlvGAIgASgBEhcKD3RvdGFsX2ludmVydGVycxgDIAEoBSIsChZDYWxjdWxhdGVMb3NzZXNSZXF1ZXN0EhIKCm5ldHdvcmtfaWQYASABKAkitAEKF0NhbGN1bGF0ZUxvc3Nlc1Jlc3BvbnNlEh0KFWRjX2NhYmxlX2xvc3NfcGVyY2VudBgBIAEoARIdChVhY19jYWJsZV9sb3NzX3BlcmNlbnQYAiABKAESHQoVaW52ZXJ0ZXJfbG9zc19wZXJjZW50GAMgASgBEiAKGHRyYW5zZm9ybWVyX2xvc3NfcGVyY2VudBgEIAEoARIaChJ0b3RhbF9sb3NzX3BlcmNlbnQYBSABKAEiuwMKFVZhbGlkYXRlU2l6aW5nUmVxdWVzdBISCgpuZXR3b3JrX2lkGAEgASgJEhMKC3BhbmVsX3ZvY192GAIgASgBEhMKC3BhbmVsX3ZtcF92GAMgASgBEhMKC3BhbmVsX2lzY19hGAQgASgBEhMKC3BhbmVsX2ltcF9hGAUgASgBEhkKEXBhbmVsc19wZXJfc3RyaW5nGAYgASgFEhoKEmludmVydGVyX3ZkY19tYXhfdhgHIAEoARIcChRpbnZlcnRlcl92bXBwdF9taW5fdhgIIAEoARIcChRpbnZlcnRlcl92bXBwdF9tYXhfdhgJIAEoARIaChJpbnZlcnRlcl9pZGNfbWF4X2EYCiABKAESFgoOaW52ZXJ0ZXJfYWNfa3cYCyABKAESFwoPZGNfYWNfcmF0aW9fbWluGAwgASgBEhcKD2RjX2FjX3JhdGlvX21heBgNIAEoARIgChh0ZW1wX2NvZWZmX3ZvY19wY3RfcGVyX2MYDiABKAESHgoWbG93ZXN0X2V4cGVjdGVkX3RlbXBfYxgPIAEoARIfChdoaWdoZXN0X2V4cGVjdGVkX3RlbXBfYxgQIAEoASJPCg9TaXppbmdWaW9sYXRpb24SDAoEY29kZRgBIAEoCRIPCgdtZXNzYWdlGAIgASgJEg0KBWxpbWl0GAMgASgBEg4KBmFjdHVhbBgEIAEoASL/AQoWVmFsaWRhdGVTaXppbmdSZXNwb25zZRINCgV2YWxpZBgBIAEoCBIyCgp2aW9sYXRpb25zGAIgAygLMh4uZWxlY3RyaWNhbC52MS5TaXppbmdWaW9sYXRpb24SGQoRc3RyaW5nX3ZvY19jb2xkX3YYAyABKAESGAoQc3RyaW5nX3ZtcF9ob3RfdhgEIAEoARIaChJkY19zdHJpbmdfcG93ZXJfa3cYBSABKAESEwoLZGNfYWNfcmF0aW8YBiABKAESHQoVbWF4X3BhbmVsc19wZXJfc3RyaW5nGAcgASgFEh0KFW1pbl9wYW5lbHNfcGVyX3N0cmluZxgIIAEoBSJnChZWYWxpZGF0ZU5ldHdvcmtSZXF1ZXN0EhIKCm5ldHdvcmtfaWQYASABKAkSGwoTaW52ZXJ0ZXJfbXBwdF9jb3VudBgCIAEoBRIcChRtYXhfc3RyaW5nc19wZXJfbXBwdBgDIAEoBSJIChROZXR3b3JrVG9wb2xvZ3lJc3N1ZRIMCgRjb2RlGAEgASgJEg8KB21lc3NhZ2UYAiABKAkSEQoJZW50aXR5X2lkGAMgASgJIp0CChdWYWxpZGF0ZU5ldHdvcmtSZXNwb25zZRINCgV2YWxpZBgBIAEoCBIzCgZpc3N1ZXMYAiADKAsyIy5lbGVjdHJpY2FsLnYxLk5ldHdvcmtUb3BvbG9neUlzc3VlEhUKDXRvdGFsX3N0cmluZ3MYAyABKAUSGAoQYXNzaWduZWRfc3RyaW5ncxgEIAEoBRIaChJ1bmFzc2lnbmVkX3N0cmluZ3MYBSABKAUSFAoMdG90YWxfcGFuZWxzGAYgASgFEhwKFGR1cGxpY2F0ZV9wYW5lbF9yZWZzGAcgASgFEhMKC3RvdGFsX2RjX2t3GAggASgBEhMKC3RvdGFsX2FjX2t3GAkgASgBEhMKC2RjX2FjX3JhdGlvGAogASgBIrYBChlHZW5lcmF0ZU5ldHdvcmtCT01SZXF1ZXN0EhIKCm5ldHdvcmtfaWQYASABKAkSFwoPcGFuZWxfdW5pdF9jb3N0GAIgASgBEhoKEmludmVydGVyX3VuaXRfY29zdBgDIAEoARIYChBjYWJsZV9jb3N0X3Blcl9tGAQgASgBEh8KF21vdW50aW5nX2Nvc3RfcGVyX3BhbmVsGAUgASgBEhUKDWN1cnJlbmN5X2NvZGUYBiABKAkidwoOTmV0d29ya0JPTUl0ZW0SEAoIY2F0ZWdvcnkYASABKAkSDAoEbmFtZRgCIAEoCRIQCghxdWFudGl0eRgDIAEoBRIMCgR1bml0GAQgASgJEhEKCXVuaXRfY29zdBgFIAEoARISCgp0b3RhbF9jb3N0GAYgASgBIvwBChpHZW5lcmF0ZU5ldHdvcmtCT01SZXNwb25zZRISCgpuZXR3b3JrX2lkGAEgASgJEhMKC3BhbmVsX2NvdW50GAIgASgFEhQKDHN0cmluZ19jb3VudBgDIAEoBRIcChRpbnZlcnRlcl9ncm91cF9jb3VudBgEIAEoBRITCgt0b3RhbF9kY19rdxgFIAEoARITCgt0b3RhbF9hY19rdxgGIAEoARIsCgVpdGVtcxgHIAMoCzIdLmVsZWN0cmljYWwudjEuTmV0d29ya0JPTUl0ZW0SEgoKdG90YWxfY29zdBgIIAEoARIVCg1jdXJyZW5jeV9jb2RlGAkgASgJMsgLChFFbGVjdHJpY2FsU2VydmljZRJaCg1DcmVhdGVOZXR3b3JrEiMuZWxlY3RyaWNhbC52MS5DcmVhdGVOZXR3b3JrUmVxdWVzdBokLmVsZWN0cmljYWwudjEuQ3JlYXRlTmV0d29ya1Jlc3BvbnNlElEKCkdldE5ldHdvcmsSIC5lbGVjdHJpY2FsLnYxLkdldE5ldHdvcmtSZXF1ZXN0GiEuZWxlY3RyaWNhbC52MS5HZXROZXR3b3JrUmVzcG9uc2USVwoMTGlzdE5ldHdvcmtzEiIuZWxlY3RyaWNhbC52MS5MaXN0TmV0d29ya3NSZXF1ZXN0GiMuZWxlY3RyaWNhbC52MS5MaXN0TmV0d29ya3NSZXNwb25zZRJaCg1EZWxldGVOZXR3b3JrEiMuZWxlY3RyaWNhbC52MS5EZWxldGVOZXR3b3JrUmVxdWVzdBokLmVsZWN0cmljYWwudjEuRGVsZXRlTmV0d29ya1Jlc3BvbnNlElcKDENyZWF0ZVN0cmluZxIiLmVsZWN0cmljYWwudjEuQ3JlYXRlU3RyaW5nUmVxdWVzdBojLmVsZWN0cmljYWwudjEuQ3JlYXRlU3RyaW5nUmVzcG9uc2USbAoTQXV0b0dlbmVyYXRlU3RyaW5ncxIpLmVsZWN0cmljYWwudjEuQXV0b0dlbmVyYXRlU3RyaW5nc1JlcXVlc3QaKi5lbGVjdHJpY2FsLnYxLkF1dG9HZW5lcmF0ZVN0cmluZ3NSZXNwb25zZRJUCgtMaXN0U3RyaW5ncxIhLmVsZWN0cmljYWwudjEuTGlzdFN0cmluZ3NSZXF1ZXN0GiIuZWxlY3RyaWNhbC52MS5MaXN0U3RyaW5nc1Jlc3BvbnNlEl0KDkFzc2lnbkludmVydGVyEiQuZWxlY3RyaWNhbC52MS5Bc3NpZ25JbnZlcnRlclJlcXVlc3QaJS5lbGVjdHJpY2FsLnYxLkFzc2lnbkludmVydGVyUmVzcG9uc2USaQoSTGlzdEludmVydGVyR3JvdXBzEiguZWxlY3RyaWNhbC52MS5MaXN0SW52ZXJ0ZXJHcm91cHNSZXF1ZXN0GikuZWxlY3RyaWNhbC52MS5MaXN0SW52ZXJ0ZXJHcm91cHNSZXNwb25zZRJsChNDYWxjdWxhdGVEQ0NhcGFjaXR5EikuZWxlY3RyaWNhbC52MS5DYWxjdWxhdGVEQ0NhcGFjaXR5UmVxdWVzdBoqLmVsZWN0cmljYWwudjEuQ2FsY3VsYXRlRENDYXBhY2l0eVJlc3BvbnNlEmwKE0NhbGN1bGF0ZUFDQ2FwYWNpdHkSKS5lbGVjdHJpY2FsLnYxLkNhbGN1bGF0ZUFDQ2FwYWNpdHlSZXF1ZXN0GiouZWxlY3RyaWNhbC52MS5DYWxjdWxhdGVBQ0NhcGFjaXR5UmVzcG9uc2USYAoPQ2FsY3VsYXRlTG9zc2VzEiUuZWxlY3RyaWNhbC52MS5DYWxjdWxhdGVMb3NzZXNSZXF1ZXN0GiYuZWxlY3RyaWNhbC52MS5DYWxjdWxhdGVMb3NzZXNSZXNwb25zZRJdCg5WYWxpZGF0ZVNpemluZxIkLmVsZWN0cmljYWwudjEuVmFsaWRhdGVTaXppbmdSZXF1ZXN0GiUuZWxlY3RyaWNhbC52MS5WYWxpZGF0ZVNpemluZ1Jlc3BvbnNlEmAKD1ZhbGlkYXRlTmV0d29yaxIlLmVsZWN0cmljYWwudjEuVmFsaWRhdGVOZXR3b3JrUmVxdWVzdBomLmVsZWN0cmljYWwudjEuVmFsaWRhdGVOZXR3b3JrUmVzcG9uc2USaQoSR2VuZXJhdGVOZXR3b3JrQk9NEiguZWxlY3RyaWNhbC52MS5HZW5lcmF0ZU5ldHdvcmtCT01SZXF1ZXN0GikuZWxlY3RyaWNhbC52MS5HZW5lcmF0ZU5ldHdvcmtCT01SZXNwb25zZUK0AQoRY29tLmVsZWN0cmljYWwudjFCD0VsZWN0cmljYWxQcm90b1ABWjlnaXRodWIuY29tL3NvbGFyM2Qvc29sYXIzZC9nZW4vZWxlY3RyaWNhbC92MTtlbGVjdHJpY2FsdjGiAgNFWFiqAg1FbGVjdHJpY2FsLlYxygINRWxlY3RyaWNhbFxWMeICGUVsZWN0cmljYWxcVjFcR1BCTWV0YWRhdGHqAg5FbGVjdHJpY2FsOjpWMWIGcHJvdG8z", [file_google_protobuf_timestamp]);
+  fileDesc("Ch5lbGVjdHJpY2FsL3YxL2VsZWN0cmljYWwucHJvdG8SDWVsZWN0cmljYWwudjEi+AEKDlJldmlld01ldGFkYXRhEi8KBnN0YXR1cxgBIAEoDjIfLmVsZWN0cmljYWwudjEuQWNjZXB0YW5jZVN0YXR1cxIcChRyZXZpZXdlZF9ieV9hY3Rvcl9pZBgCIAEoCRIvCgtyZXZpZXdlZF9hdBgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASFQoNcXVhbGl0eV9zY29yZRgEIAEoARIXCg9yZXZpZXdfY29tbWVudHMYBSADKAkSEAoIYmxvY2tlcnMYBiADKAkSJAocYXBwcm92YWxfdGltZXN0YW1wX3VuaXhfc2VjcxgHIAEoCSKAAwoRRWxlY3RyaWNhbE5ldHdvcmsSCgoCaWQYASABKAkSEgoKcHJvamVjdF9pZBgCIAEoCRIRCglsYXlvdXRfaWQYAyABKAkSDAoEbmFtZRgEIAEoCRIcChR0b3RhbF9kY19jYXBhY2l0eV9rdxgFIAEoARIcChR0b3RhbF9hY19jYXBhY2l0eV9rdxgGIAEoARITCgtkY19hY19yYXRpbxgHIAEoARIUCgxzdHJpbmdfY291bnQYCCABKAUSFgoOaW52ZXJ0ZXJfY291bnQYCSABKAUSLgoKY3JlYXRlZF9hdBgKIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASNgoPcmV2aWV3X21ldGFkYXRhGAsgASgLMh0uZWxlY3RyaWNhbC52MS5SZXZpZXdNZXRhZGF0YRIdChV2YWxpZGF0aW9uX3Zpb2xhdGlvbnMYDCADKAkSJAocZWxlY3RyaWNhbF9mZWFzaWJpbGl0eV9zY29yZRgNIAEoASK4AQoLUGFuZWxTdHJpbmcSCgoCaWQYASABKAkSEgoKbmV0d29ya19pZBgCIAEoCRIZChFpbnZlcnRlcl9ncm91cF9pZBgDIAEoCRIRCglwYW5lbF9pZHMYBCADKAkSEwoLcGFuZWxfY291bnQYBSABKAUSFgoOc3RyaW5nX3ZvbHRhZ2UYBiABKAESFgoOc3RyaW5nX2N1cnJlbnQYByABKAESFgoOc3RyaW5nX3Bvd2VyX3cYCCABKAEiuAEKDUludmVydGVyR3JvdXASCgoCaWQYASABKAkSEgoKbmV0d29ya19pZBgCIAEoCRIZChFpbnZlcnRlcl9hc3NldF9pZBgDIAEoCRISCgpzdHJpbmdfaWRzGAQgAygJEhMKC2RjX2lucHV0X2t3GAUgASgBEhQKDGFjX291dHB1dF9rdxgGIAEoARITCgtkY19hY19yYXRpbxgHIAEoARIYChBwb3NpdGlvbl9nZW9qc29uGAggASgJIksKFENyZWF0ZU5ldHdvcmtSZXF1ZXN0EhIKCnByb2plY3RfaWQYASABKAkSEQoJbGF5b3V0X2lkGAIgASgJEgwKBG5hbWUYAyABKAkiSgoVQ3JlYXRlTmV0d29ya1Jlc3BvbnNlEjEKB25ldHdvcmsYASABKAsyIC5lbGVjdHJpY2FsLnYxLkVsZWN0cmljYWxOZXR3b3JrIh8KEUdldE5ldHdvcmtSZXF1ZXN0EgoKAmlkGAEgASgJIkcKEkdldE5ldHdvcmtSZXNwb25zZRIxCgduZXR3b3JrGAEgASgLMiAuZWxlY3RyaWNhbC52MS5FbGVjdHJpY2FsTmV0d29yayIpChNMaXN0TmV0d29ya3NSZXF1ZXN0EhIKCnByb2plY3RfaWQYASABKAkiSgoUTGlzdE5ldHdvcmtzUmVzcG9uc2USMgoIbmV0d29ya3MYASADKAsyIC5lbGVjdHJpY2FsLnYxLkVsZWN0cmljYWxOZXR3b3JrIiIKFERlbGV0ZU5ldHdvcmtSZXF1ZXN0EgoKAmlkGAEgASgJIhcKFURlbGV0ZU5ldHdvcmtSZXNwb25zZSJtCh1TdWJtaXROZXR3b3JrRm9yUmV2aWV3UmVxdWVzdBISCgpuZXR3b3JrX2lkGAEgASgJEhkKEXN1Ym1pc3Npb25fcmVhc29uGAIgASgJEh0KFXN1Ym1pdHRlZF9ieV9hY3Rvcl9pZBgDIAEoCSKLAQoeU3VibWl0TmV0d29ya0ZvclJldmlld1Jlc3BvbnNlEjEKB25ldHdvcmsYASABKAsyIC5lbGVjdHJpY2FsLnYxLkVsZWN0cmljYWxOZXR3b3JrEjYKD3Jldmlld19tZXRhZGF0YRgCIAEoCzIdLmVsZWN0cmljYWwudjEuUmV2aWV3TWV0YWRhdGEilgEKFUFwcHJvdmVOZXR3b3JrUmVxdWVzdBISCgpuZXR3b3JrX2lkGAEgASgJEhUKDXF1YWxpdHlfc2NvcmUYAiABKAESGQoRZmVhc2liaWxpdHlfc2NvcmUYAyABKAESGQoRYXBwcm92YWxfY29tbWVudHMYBCADKAkSHAoUYXBwcm92ZWRfYnlfYWN0b3JfaWQYBSABKAkigwEKFkFwcHJvdmVOZXR3b3JrUmVzcG9uc2USMQoHbmV0d29yaxgBIAEoCzIgLmVsZWN0cmljYWwudjEuRWxlY3RyaWNhbE5ldHdvcmsSNgoPcmV2aWV3X21ldGFkYXRhGAIgASgLMh0uZWxlY3RyaWNhbC52MS5SZXZpZXdNZXRhZGF0YSJjChRSZWplY3ROZXR3b3JrUmVxdWVzdBISCgpuZXR3b3JrX2lkGAEgASgJEhkKEXJlamVjdGlvbl9yZWFzb25zGAIgAygJEhwKFHJlamVjdGVkX2J5X2FjdG9yX2lkGAMgASgJIoIBChVSZWplY3ROZXR3b3JrUmVzcG9uc2USMQoHbmV0d29yaxgBIAEoCzIgLmVsZWN0cmljYWwudjEuRWxlY3RyaWNhbE5ldHdvcmsSNgoPcmV2aWV3X21ldGFkYXRhGAIgASgLMh0uZWxlY3RyaWNhbC52MS5SZXZpZXdNZXRhZGF0YSKFAQoTQ3JlYXRlU3RyaW5nUmVxdWVzdBISCgpuZXR3b3JrX2lkGAEgASgJEhEKCXBhbmVsX2lkcxgCIAMoCRIZChFpbnZlcnRlcl9ncm91cF9pZBgDIAEoCRIVCg1wYW5lbF92b2x0YWdlGAQgASgBEhUKDXBhbmVsX2N1cnJlbnQYBSABKAEiSAoUQ3JlYXRlU3RyaW5nUmVzcG9uc2USMAoMcGFuZWxfc3RyaW5nGAEgASgLMhouZWxlY3RyaWNhbC52MS5QYW5lbFN0cmluZyKKAgoaQXV0b0dlbmVyYXRlU3RyaW5nc1JlcXVlc3QSEgoKbmV0d29ya19pZBgBIAEoCRIRCglsYXlvdXRfaWQYAiABKAkSGQoRcGFuZWxzX3Blcl9zdHJpbmcYAyABKAUSGQoRaW52ZXJ0ZXJfYXNzZXRfaWQYBCABKAkSHAoUc3RyaW5nc19wZXJfaW52ZXJ0ZXIYBSABKAUSFAoMdG90YWxfcGFuZWxzGAYgASgFEhUKDXBhbmVsX3ZvbHRhZ2UYByABKAESFQoNcGFuZWxfY3VycmVudBgIIAEoARIVCg1wYW5lbF9wb3dlcl93GAkgASgBEhYKDmludmVydGVyX2FjX2t3GAogASgBIrQBChtBdXRvR2VuZXJhdGVTdHJpbmdzUmVzcG9uc2USFwoPc3RyaW5nc19jcmVhdGVkGAEgASgFEh8KF2ludmVydGVyX2dyb3Vwc19jcmVhdGVkGAIgASgFEhMKC3RvdGFsX2RjX2t3GAMgASgBEhMKC3RvdGFsX2FjX2t3GAQgASgBEjEKB25ldHdvcmsYBSABKAsyIC5lbGVjdHJpY2FsLnYxLkVsZWN0cmljYWxOZXR3b3JrIigKEkxpc3RTdHJpbmdzUmVxdWVzdBISCgpuZXR3b3JrX2lkGAEgASgJIkIKE0xpc3RTdHJpbmdzUmVzcG9uc2USKwoHc3RyaW5ncxgBIAMoCzIaLmVsZWN0cmljYWwudjEuUGFuZWxTdHJpbmcidAoVQXNzaWduSW52ZXJ0ZXJSZXF1ZXN0EhIKCm5ldHdvcmtfaWQYASABKAkSGQoRaW52ZXJ0ZXJfYXNzZXRfaWQYAiABKAkSEgoKc3RyaW5nX2lkcxgDIAMoCRIYChBwb3NpdGlvbl9nZW9qc29uGAQgASgJIk4KFkFzc2lnbkludmVydGVyUmVzcG9uc2USNAoOaW52ZXJ0ZXJfZ3JvdXAYASABKAsyHC5lbGVjdHJpY2FsLnYxLkludmVydGVyR3JvdXAiLwoZTGlzdEludmVydGVyR3JvdXBzUmVxdWVzdBISCgpuZXR3b3JrX2lkGAEgASgJIlMKGkxpc3RJbnZlcnRlckdyb3Vwc1Jlc3BvbnNlEjUKD2ludmVydGVyX2dyb3VwcxgBIAMoCzIcLmVsZWN0cmljYWwudjEuSW52ZXJ0ZXJHcm91cCIwChpDYWxjdWxhdGVEQ0NhcGFjaXR5UmVxdWVzdBISCgpuZXR3b3JrX2lkGAEgASgJIl8KG0NhbGN1bGF0ZURDQ2FwYWNpdHlSZXNwb25zZRITCgt0b3RhbF9kY19rdxgBIAEoARIUCgx0b3RhbF9wYW5lbHMYAiABKAUSFQoNdG90YWxfc3RyaW5ncxgDIAEoBSIwChpDYWxjdWxhdGVBQ0NhcGFjaXR5UmVxdWVzdBISCgpuZXR3b3JrX2lkGAEgASgJImAKG0NhbGN1bGF0ZUFDQ2FwYWNpdHlSZXNwb25zZRITCgt0b3RhbF9hY19rdxgBIAEoARITCgtkY19hY19yYXRpbxgCIAEoARIXCg90b3RhbF9pbnZlcnRlcnMYAyABKAUiLAoWQ2FsY3VsYXRlTG9zc2VzUmVxdWVzdBISCgpuZXR3b3JrX2lkGAEgASgJIrQBChdDYWxjdWxhdGVMb3NzZXNSZXNwb25zZRIdChVkY19jYWJsZV9sb3NzX3BlcmNlbnQYASABKAESHQoVYWNfY2FibGVfbG9zc19wZXJjZW50GAIgASgBEh0KFWludmVydGVyX2xvc3NfcGVyY2VudBgDIAEoARIgChh0cmFuc2Zvcm1lcl9sb3NzX3BlcmNlbnQYBCABKAESGgoSdG90YWxfbG9zc19wZXJjZW50GAUgASgBIrsDChVWYWxpZGF0ZVNpemluZ1JlcXVlc3QSEgoKbmV0d29ya19pZBgBIAEoCRITCgtwYW5lbF92b2NfdhgCIAEoARITCgtwYW5lbF92bXBfdhgDIAEoARITCgtwYW5lbF9pc2NfYRgEIAEoARITCgtwYW5lbF9pbXBfYRgFIAEoARIZChFwYW5lbHNfcGVyX3N0cmluZxgGIAEoBRIaChJpbnZlcnRlcl92ZGNfbWF4X3YYByABKAESHAoUaW52ZXJ0ZXJfdm1wcHRfbWluX3YYCCABKAESHAoUaW52ZXJ0ZXJfdm1wcHRfbWF4X3YYCSABKAESGgoSaW52ZXJ0ZXJfaWRjX21heF9hGAogASgBEhYKDmludmVydGVyX2FjX2t3GAsgASgBEhcKD2RjX2FjX3JhdGlvX21pbhgMIAEoARIXCg9kY19hY19yYXRpb19tYXgYDSABKAESIAoYdGVtcF9jb2VmZl92b2NfcGN0X3Blcl9jGA4gASgBEh4KFmxvd2VzdF9leHBlY3RlZF90ZW1wX2MYDyABKAESHwoXaGlnaGVzdF9leHBlY3RlZF90ZW1wX2MYECABKAEiTwoPU2l6aW5nVmlvbGF0aW9uEgwKBGNvZGUYASABKAkSDwoHbWVzc2FnZRgCIAEoCRINCgVsaW1pdBgDIAEoARIOCgZhY3R1YWwYBCABKAEi/wEKFlZhbGlkYXRlU2l6aW5nUmVzcG9uc2USDQoFdmFsaWQYASABKAgSMgoKdmlvbGF0aW9ucxgCIAMoCzIeLmVsZWN0cmljYWwudjEuU2l6aW5nVmlvbGF0aW9uEhkKEXN0cmluZ192b2NfY29sZF92GAMgASgBEhgKEHN0cmluZ192bXBfaG90X3YYBCABKAESGgoSZGNfc3RyaW5nX3Bvd2VyX2t3GAUgASgBEhMKC2RjX2FjX3JhdGlvGAYgASgBEh0KFW1heF9wYW5lbHNfcGVyX3N0cmluZxgHIAEoBRIdChVtaW5fcGFuZWxzX3Blcl9zdHJpbmcYCCABKAUiZwoWVmFsaWRhdGVOZXR3b3JrUmVxdWVzdBISCgpuZXR3b3JrX2lkGAEgASgJEhsKE2ludmVydGVyX21wcHRfY291bnQYAiABKAUSHAoUbWF4X3N0cmluZ3NfcGVyX21wcHQYAyABKAUiSAoUTmV0d29ya1RvcG9sb2d5SXNzdWUSDAoEY29kZRgBIAEoCRIPCgdtZXNzYWdlGAIgASgJEhEKCWVudGl0eV9pZBgDIAEoCSKdAgoXVmFsaWRhdGVOZXR3b3JrUmVzcG9uc2USDQoFdmFsaWQYASABKAgSMwoGaXNzdWVzGAIgAygLMiMuZWxlY3RyaWNhbC52MS5OZXR3b3JrVG9wb2xvZ3lJc3N1ZRIVCg10b3RhbF9zdHJpbmdzGAMgASgFEhgKEGFzc2lnbmVkX3N0cmluZ3MYBCABKAUSGgoSdW5hc3NpZ25lZF9zdHJpbmdzGAUgASgFEhQKDHRvdGFsX3BhbmVscxgGIAEoBRIcChRkdXBsaWNhdGVfcGFuZWxfcmVmcxgHIAEoBRITCgt0b3RhbF9kY19rdxgIIAEoARITCgt0b3RhbF9hY19rdxgJIAEoARITCgtkY19hY19yYXRpbxgKIAEoASK2AQoZR2VuZXJhdGVOZXR3b3JrQk9NUmVxdWVzdBISCgpuZXR3b3JrX2lkGAEgASgJEhcKD3BhbmVsX3VuaXRfY29zdBgCIAEoARIaChJpbnZlcnRlcl91bml0X2Nvc3QYAyABKAESGAoQY2FibGVfY29zdF9wZXJfbRgEIAEoARIfChdtb3VudGluZ19jb3N0X3Blcl9wYW5lbBgFIAEoARIVCg1jdXJyZW5jeV9jb2RlGAYgASgJIncKDk5ldHdvcmtCT01JdGVtEhAKCGNhdGVnb3J5GAEgASgJEgwKBG5hbWUYAiABKAkSEAoIcXVhbnRpdHkYAyABKAUSDAoEdW5pdBgEIAEoCRIRCgl1bml0X2Nvc3QYBSABKAESEgoKdG90YWxfY29zdBgGIAEoASL8AQoaR2VuZXJhdGVOZXR3b3JrQk9NUmVzcG9uc2USEgoKbmV0d29ya19pZBgBIAEoCRITCgtwYW5lbF9jb3VudBgCIAEoBRIUCgxzdHJpbmdfY291bnQYAyABKAUSHAoUaW52ZXJ0ZXJfZ3JvdXBfY291bnQYBCABKAUSEwoLdG90YWxfZGNfa3cYBSABKAESEwoLdG90YWxfYWNfa3cYBiABKAESLAoFaXRlbXMYByADKAsyHS5lbGVjdHJpY2FsLnYxLk5ldHdvcmtCT01JdGVtEhIKCnRvdGFsX2Nvc3QYCCABKAESFQoNY3VycmVuY3lfY29kZRgJIAEoCSq4AQoQQWNjZXB0YW5jZVN0YXR1cxIhCh1BQ0NFUFRBTkNFX1NUQVRVU19VTlNQRUNJRklFRBAAEhsKF0FDQ0VQVEFOQ0VfU1RBVFVTX0RSQUZUEAESJAogQUNDRVBUQU5DRV9TVEFUVVNfUkVWSUVXX1BFTkRJTkcQAhIeChpBQ0NFUFRBTkNFX1NUQVRVU19BUFBST1ZFRBADEh4KGkFDQ0VQVEFOQ0VfU1RBVFVTX1JFSkVDVEVEEAQy+g0KEUVsZWN0cmljYWxTZXJ2aWNlEloKDUNyZWF0ZU5ldHdvcmsSIy5lbGVjdHJpY2FsLnYxLkNyZWF0ZU5ldHdvcmtSZXF1ZXN0GiQuZWxlY3RyaWNhbC52MS5DcmVhdGVOZXR3b3JrUmVzcG9uc2USUQoKR2V0TmV0d29yaxIgLmVsZWN0cmljYWwudjEuR2V0TmV0d29ya1JlcXVlc3QaIS5lbGVjdHJpY2FsLnYxLkdldE5ldHdvcmtSZXNwb25zZRJXCgxMaXN0TmV0d29ya3MSIi5lbGVjdHJpY2FsLnYxLkxpc3ROZXR3b3Jrc1JlcXVlc3QaIy5lbGVjdHJpY2FsLnYxLkxpc3ROZXR3b3Jrc1Jlc3BvbnNlEloKDURlbGV0ZU5ldHdvcmsSIy5lbGVjdHJpY2FsLnYxLkRlbGV0ZU5ldHdvcmtSZXF1ZXN0GiQuZWxlY3RyaWNhbC52MS5EZWxldGVOZXR3b3JrUmVzcG9uc2USVwoMQ3JlYXRlU3RyaW5nEiIuZWxlY3RyaWNhbC52MS5DcmVhdGVTdHJpbmdSZXF1ZXN0GiMuZWxlY3RyaWNhbC52MS5DcmVhdGVTdHJpbmdSZXNwb25zZRJsChNBdXRvR2VuZXJhdGVTdHJpbmdzEikuZWxlY3RyaWNhbC52MS5BdXRvR2VuZXJhdGVTdHJpbmdzUmVxdWVzdBoqLmVsZWN0cmljYWwudjEuQXV0b0dlbmVyYXRlU3RyaW5nc1Jlc3BvbnNlElQKC0xpc3RTdHJpbmdzEiEuZWxlY3RyaWNhbC52MS5MaXN0U3RyaW5nc1JlcXVlc3QaIi5lbGVjdHJpY2FsLnYxLkxpc3RTdHJpbmdzUmVzcG9uc2USXQoOQXNzaWduSW52ZXJ0ZXISJC5lbGVjdHJpY2FsLnYxLkFzc2lnbkludmVydGVyUmVxdWVzdBolLmVsZWN0cmljYWwudjEuQXNzaWduSW52ZXJ0ZXJSZXNwb25zZRJpChJMaXN0SW52ZXJ0ZXJHcm91cHMSKC5lbGVjdHJpY2FsLnYxLkxpc3RJbnZlcnRlckdyb3Vwc1JlcXVlc3QaKS5lbGVjdHJpY2FsLnYxLkxpc3RJbnZlcnRlckdyb3Vwc1Jlc3BvbnNlEmwKE0NhbGN1bGF0ZURDQ2FwYWNpdHkSKS5lbGVjdHJpY2FsLnYxLkNhbGN1bGF0ZURDQ2FwYWNpdHlSZXF1ZXN0GiouZWxlY3RyaWNhbC52MS5DYWxjdWxhdGVEQ0NhcGFjaXR5UmVzcG9uc2USbAoTQ2FsY3VsYXRlQUNDYXBhY2l0eRIpLmVsZWN0cmljYWwudjEuQ2FsY3VsYXRlQUNDYXBhY2l0eVJlcXVlc3QaKi5lbGVjdHJpY2FsLnYxLkNhbGN1bGF0ZUFDQ2FwYWNpdHlSZXNwb25zZRJgCg9DYWxjdWxhdGVMb3NzZXMSJS5lbGVjdHJpY2FsLnYxLkNhbGN1bGF0ZUxvc3Nlc1JlcXVlc3QaJi5lbGVjdHJpY2FsLnYxLkNhbGN1bGF0ZUxvc3Nlc1Jlc3BvbnNlEl0KDlZhbGlkYXRlU2l6aW5nEiQuZWxlY3RyaWNhbC52MS5WYWxpZGF0ZVNpemluZ1JlcXVlc3QaJS5lbGVjdHJpY2FsLnYxLlZhbGlkYXRlU2l6aW5nUmVzcG9uc2USYAoPVmFsaWRhdGVOZXR3b3JrEiUuZWxlY3RyaWNhbC52MS5WYWxpZGF0ZU5ldHdvcmtSZXF1ZXN0GiYuZWxlY3RyaWNhbC52MS5WYWxpZGF0ZU5ldHdvcmtSZXNwb25zZRJpChJHZW5lcmF0ZU5ldHdvcmtCT00SKC5lbGVjdHJpY2FsLnYxLkdlbmVyYXRlTmV0d29ya0JPTVJlcXVlc3QaKS5lbGVjdHJpY2FsLnYxLkdlbmVyYXRlTmV0d29ya0JPTVJlc3BvbnNlEnUKFlN1Ym1pdE5ldHdvcmtGb3JSZXZpZXcSLC5lbGVjdHJpY2FsLnYxLlN1Ym1pdE5ldHdvcmtGb3JSZXZpZXdSZXF1ZXN0Gi0uZWxlY3RyaWNhbC52MS5TdWJtaXROZXR3b3JrRm9yUmV2aWV3UmVzcG9uc2USXQoOQXBwcm92ZU5ldHdvcmsSJC5lbGVjdHJpY2FsLnYxLkFwcHJvdmVOZXR3b3JrUmVxdWVzdBolLmVsZWN0cmljYWwudjEuQXBwcm92ZU5ldHdvcmtSZXNwb25zZRJaCg1SZWplY3ROZXR3b3JrEiMuZWxlY3RyaWNhbC52MS5SZWplY3ROZXR3b3JrUmVxdWVzdBokLmVsZWN0cmljYWwudjEuUmVqZWN0TmV0d29ya1Jlc3BvbnNlQrEBChFjb20uZWxlY3RyaWNhbC52MUIPRWxlY3RyaWNhbFByb3RvUAFaNnA5ZS5pbi9zYW1hdmF5YS9zb2xhcjNkL2dlbi9lbGVjdHJpY2FsL3YxO2VsZWN0cmljYWx2MaICA0VYWKoCDUVsZWN0cmljYWwuVjHKAg1FbGVjdHJpY2FsXFYx4gIZRWxlY3RyaWNhbFxWMVxHUEJNZXRhZGF0YeoCDkVsZWN0cmljYWw6OlYxYgZwcm90bzM", [file_google_protobuf_timestamp]);
+
+/**
+ * ========== Review Metadata ==========
+ * ReviewMetadata captures the acceptance workflow state attached to an electrical network.
+ * Populated by the SubmitNetworkForReview / ApproveNetwork / RejectNetwork RPCs.
+ * Consumed by PlanningWorkflow gate enforcement for the ElectricalReady -> TransmissionReady transition.
+ *
+ * @generated from message electrical.v1.ReviewMetadata
+ */
+export type ReviewMetadata = Message<"electrical.v1.ReviewMetadata"> & {
+  /**
+   * status is the current acceptance gate state.
+   *
+   * @generated from field: electrical.v1.AcceptanceStatus status = 1;
+   */
+  status: AcceptanceStatus;
+
+  /**
+   * reviewed_by_actor_id is the user or system actor that performed the review action.
+   *
+   * @generated from field: string reviewed_by_actor_id = 2;
+   */
+  reviewedByActorId: string;
+
+  /**
+   * reviewed_at is the timestamp of the most recent review action.
+   *
+   * @generated from field: google.protobuf.Timestamp reviewed_at = 3;
+   */
+  reviewedAt?: Timestamp;
+
+  /**
+   * quality_score is a reviewer-assigned [0, 1] quality rating.
+   *
+   * @generated from field: double quality_score = 4;
+   */
+  qualityScore: number;
+
+  /**
+   * review_comments are free-text annotations from the reviewer.
+   *
+   * @generated from field: repeated string review_comments = 5;
+   */
+  reviewComments: string[];
+
+  /**
+   * blockers are unresolved reasons preventing approval. Empty when approved.
+   *
+   * @generated from field: repeated string blockers = 6;
+   */
+  blockers: string[];
+
+  /**
+   * approval_timestamp_unix_secs records the ISO-8601 approval time for the audit trail.
+   *
+   * @generated from field: string approval_timestamp_unix_secs = 7;
+   */
+  approvalTimestampUnixSecs: string;
+};
+
+/**
+ * Describes the message electrical.v1.ReviewMetadata.
+ * Use `create(ReviewMetadataSchema)` to create a new message.
+ */
+export const ReviewMetadataSchema: GenMessage<ReviewMetadata> = /*@__PURE__*/
+  messageDesc(file_electrical_v1_electrical, 0);
 
 /**
  * @generated from message electrical.v1.ElectricalNetwork
@@ -67,6 +133,25 @@ export type ElectricalNetwork = Message<"electrical.v1.ElectricalNetwork"> & {
    * @generated from field: google.protobuf.Timestamp created_at = 10;
    */
   createdAt?: Timestamp;
+
+  /**
+   * @generated from field: electrical.v1.ReviewMetadata review_metadata = 11;
+   */
+  reviewMetadata?: ReviewMetadata;
+
+  /**
+   * Empty if all validations pass
+   *
+   * @generated from field: repeated string validation_violations = 12;
+   */
+  validationViolations: string[];
+
+  /**
+   * [0, 1]
+   *
+   * @generated from field: double electrical_feasibility_score = 13;
+   */
+  electricalFeasibilityScore: number;
 };
 
 /**
@@ -74,7 +159,7 @@ export type ElectricalNetwork = Message<"electrical.v1.ElectricalNetwork"> & {
  * Use `create(ElectricalNetworkSchema)` to create a new message.
  */
 export const ElectricalNetworkSchema: GenMessage<ElectricalNetwork> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 0);
+  messageDesc(file_electrical_v1_electrical, 1);
 
 /**
  * @generated from message electrical.v1.PanelString
@@ -126,7 +211,7 @@ export type PanelString = Message<"electrical.v1.PanelString"> & {
  * Use `create(PanelStringSchema)` to create a new message.
  */
 export const PanelStringSchema: GenMessage<PanelString> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 1);
+  messageDesc(file_electrical_v1_electrical, 2);
 
 /**
  * @generated from message electrical.v1.InverterGroup
@@ -178,7 +263,7 @@ export type InverterGroup = Message<"electrical.v1.InverterGroup"> & {
  * Use `create(InverterGroupSchema)` to create a new message.
  */
 export const InverterGroupSchema: GenMessage<InverterGroup> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 2);
+  messageDesc(file_electrical_v1_electrical, 3);
 
 /**
  * @generated from message electrical.v1.CreateNetworkRequest
@@ -205,7 +290,7 @@ export type CreateNetworkRequest = Message<"electrical.v1.CreateNetworkRequest">
  * Use `create(CreateNetworkRequestSchema)` to create a new message.
  */
 export const CreateNetworkRequestSchema: GenMessage<CreateNetworkRequest> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 3);
+  messageDesc(file_electrical_v1_electrical, 4);
 
 /**
  * @generated from message electrical.v1.CreateNetworkResponse
@@ -222,7 +307,7 @@ export type CreateNetworkResponse = Message<"electrical.v1.CreateNetworkResponse
  * Use `create(CreateNetworkResponseSchema)` to create a new message.
  */
 export const CreateNetworkResponseSchema: GenMessage<CreateNetworkResponse> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 4);
+  messageDesc(file_electrical_v1_electrical, 5);
 
 /**
  * @generated from message electrical.v1.GetNetworkRequest
@@ -239,7 +324,7 @@ export type GetNetworkRequest = Message<"electrical.v1.GetNetworkRequest"> & {
  * Use `create(GetNetworkRequestSchema)` to create a new message.
  */
 export const GetNetworkRequestSchema: GenMessage<GetNetworkRequest> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 5);
+  messageDesc(file_electrical_v1_electrical, 6);
 
 /**
  * @generated from message electrical.v1.GetNetworkResponse
@@ -256,7 +341,7 @@ export type GetNetworkResponse = Message<"electrical.v1.GetNetworkResponse"> & {
  * Use `create(GetNetworkResponseSchema)` to create a new message.
  */
 export const GetNetworkResponseSchema: GenMessage<GetNetworkResponse> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 6);
+  messageDesc(file_electrical_v1_electrical, 7);
 
 /**
  * @generated from message electrical.v1.ListNetworksRequest
@@ -273,7 +358,7 @@ export type ListNetworksRequest = Message<"electrical.v1.ListNetworksRequest"> &
  * Use `create(ListNetworksRequestSchema)` to create a new message.
  */
 export const ListNetworksRequestSchema: GenMessage<ListNetworksRequest> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 7);
+  messageDesc(file_electrical_v1_electrical, 8);
 
 /**
  * @generated from message electrical.v1.ListNetworksResponse
@@ -290,7 +375,7 @@ export type ListNetworksResponse = Message<"electrical.v1.ListNetworksResponse">
  * Use `create(ListNetworksResponseSchema)` to create a new message.
  */
 export const ListNetworksResponseSchema: GenMessage<ListNetworksResponse> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 8);
+  messageDesc(file_electrical_v1_electrical, 9);
 
 /**
  * @generated from message electrical.v1.DeleteNetworkRequest
@@ -307,7 +392,7 @@ export type DeleteNetworkRequest = Message<"electrical.v1.DeleteNetworkRequest">
  * Use `create(DeleteNetworkRequestSchema)` to create a new message.
  */
 export const DeleteNetworkRequestSchema: GenMessage<DeleteNetworkRequest> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 9);
+  messageDesc(file_electrical_v1_electrical, 10);
 
 /**
  * @generated from message electrical.v1.DeleteNetworkResponse
@@ -320,7 +405,170 @@ export type DeleteNetworkResponse = Message<"electrical.v1.DeleteNetworkResponse
  * Use `create(DeleteNetworkResponseSchema)` to create a new message.
  */
 export const DeleteNetworkResponseSchema: GenMessage<DeleteNetworkResponse> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 10);
+  messageDesc(file_electrical_v1_electrical, 11);
+
+/**
+ * ========== Acceptance Request/Response Messages ==========
+ *
+ * @generated from message electrical.v1.SubmitNetworkForReviewRequest
+ */
+export type SubmitNetworkForReviewRequest = Message<"electrical.v1.SubmitNetworkForReviewRequest"> & {
+  /**
+   * @generated from field: string network_id = 1;
+   */
+  networkId: string;
+
+  /**
+   * @generated from field: string submission_reason = 2;
+   */
+  submissionReason: string;
+
+  /**
+   * @generated from field: string submitted_by_actor_id = 3;
+   */
+  submittedByActorId: string;
+};
+
+/**
+ * Describes the message electrical.v1.SubmitNetworkForReviewRequest.
+ * Use `create(SubmitNetworkForReviewRequestSchema)` to create a new message.
+ */
+export const SubmitNetworkForReviewRequestSchema: GenMessage<SubmitNetworkForReviewRequest> = /*@__PURE__*/
+  messageDesc(file_electrical_v1_electrical, 12);
+
+/**
+ * @generated from message electrical.v1.SubmitNetworkForReviewResponse
+ */
+export type SubmitNetworkForReviewResponse = Message<"electrical.v1.SubmitNetworkForReviewResponse"> & {
+  /**
+   * @generated from field: electrical.v1.ElectricalNetwork network = 1;
+   */
+  network?: ElectricalNetwork;
+
+  /**
+   * @generated from field: electrical.v1.ReviewMetadata review_metadata = 2;
+   */
+  reviewMetadata?: ReviewMetadata;
+};
+
+/**
+ * Describes the message electrical.v1.SubmitNetworkForReviewResponse.
+ * Use `create(SubmitNetworkForReviewResponseSchema)` to create a new message.
+ */
+export const SubmitNetworkForReviewResponseSchema: GenMessage<SubmitNetworkForReviewResponse> = /*@__PURE__*/
+  messageDesc(file_electrical_v1_electrical, 13);
+
+/**
+ * @generated from message electrical.v1.ApproveNetworkRequest
+ */
+export type ApproveNetworkRequest = Message<"electrical.v1.ApproveNetworkRequest"> & {
+  /**
+   * @generated from field: string network_id = 1;
+   */
+  networkId: string;
+
+  /**
+   * [0, 1]
+   *
+   * @generated from field: double quality_score = 2;
+   */
+  qualityScore: number;
+
+  /**
+   * [0, 1]
+   *
+   * @generated from field: double feasibility_score = 3;
+   */
+  feasibilityScore: number;
+
+  /**
+   * @generated from field: repeated string approval_comments = 4;
+   */
+  approvalComments: string[];
+
+  /**
+   * @generated from field: string approved_by_actor_id = 5;
+   */
+  approvedByActorId: string;
+};
+
+/**
+ * Describes the message electrical.v1.ApproveNetworkRequest.
+ * Use `create(ApproveNetworkRequestSchema)` to create a new message.
+ */
+export const ApproveNetworkRequestSchema: GenMessage<ApproveNetworkRequest> = /*@__PURE__*/
+  messageDesc(file_electrical_v1_electrical, 14);
+
+/**
+ * @generated from message electrical.v1.ApproveNetworkResponse
+ */
+export type ApproveNetworkResponse = Message<"electrical.v1.ApproveNetworkResponse"> & {
+  /**
+   * @generated from field: electrical.v1.ElectricalNetwork network = 1;
+   */
+  network?: ElectricalNetwork;
+
+  /**
+   * @generated from field: electrical.v1.ReviewMetadata review_metadata = 2;
+   */
+  reviewMetadata?: ReviewMetadata;
+};
+
+/**
+ * Describes the message electrical.v1.ApproveNetworkResponse.
+ * Use `create(ApproveNetworkResponseSchema)` to create a new message.
+ */
+export const ApproveNetworkResponseSchema: GenMessage<ApproveNetworkResponse> = /*@__PURE__*/
+  messageDesc(file_electrical_v1_electrical, 15);
+
+/**
+ * @generated from message electrical.v1.RejectNetworkRequest
+ */
+export type RejectNetworkRequest = Message<"electrical.v1.RejectNetworkRequest"> & {
+  /**
+   * @generated from field: string network_id = 1;
+   */
+  networkId: string;
+
+  /**
+   * @generated from field: repeated string rejection_reasons = 2;
+   */
+  rejectionReasons: string[];
+
+  /**
+   * @generated from field: string rejected_by_actor_id = 3;
+   */
+  rejectedByActorId: string;
+};
+
+/**
+ * Describes the message electrical.v1.RejectNetworkRequest.
+ * Use `create(RejectNetworkRequestSchema)` to create a new message.
+ */
+export const RejectNetworkRequestSchema: GenMessage<RejectNetworkRequest> = /*@__PURE__*/
+  messageDesc(file_electrical_v1_electrical, 16);
+
+/**
+ * @generated from message electrical.v1.RejectNetworkResponse
+ */
+export type RejectNetworkResponse = Message<"electrical.v1.RejectNetworkResponse"> & {
+  /**
+   * @generated from field: electrical.v1.ElectricalNetwork network = 1;
+   */
+  network?: ElectricalNetwork;
+
+  /**
+   * @generated from field: electrical.v1.ReviewMetadata review_metadata = 2;
+   */
+  reviewMetadata?: ReviewMetadata;
+};
+
+/**
+ * Describes the message electrical.v1.RejectNetworkResponse.
+ * Use `create(RejectNetworkResponseSchema)` to create a new message.
+ */
+export const RejectNetworkResponseSchema: GenMessage<RejectNetworkResponse> = /*@__PURE__*/
+  messageDesc(file_electrical_v1_electrical, 17);
 
 /**
  * @generated from message electrical.v1.CreateStringRequest
@@ -357,7 +605,7 @@ export type CreateStringRequest = Message<"electrical.v1.CreateStringRequest"> &
  * Use `create(CreateStringRequestSchema)` to create a new message.
  */
 export const CreateStringRequestSchema: GenMessage<CreateStringRequest> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 11);
+  messageDesc(file_electrical_v1_electrical, 18);
 
 /**
  * @generated from message electrical.v1.CreateStringResponse
@@ -374,7 +622,7 @@ export type CreateStringResponse = Message<"electrical.v1.CreateStringResponse">
  * Use `create(CreateStringResponseSchema)` to create a new message.
  */
 export const CreateStringResponseSchema: GenMessage<CreateStringResponse> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 12);
+  messageDesc(file_electrical_v1_electrical, 19);
 
 /**
  * @generated from message electrical.v1.AutoGenerateStringsRequest
@@ -436,7 +684,7 @@ export type AutoGenerateStringsRequest = Message<"electrical.v1.AutoGenerateStri
  * Use `create(AutoGenerateStringsRequestSchema)` to create a new message.
  */
 export const AutoGenerateStringsRequestSchema: GenMessage<AutoGenerateStringsRequest> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 13);
+  messageDesc(file_electrical_v1_electrical, 20);
 
 /**
  * @generated from message electrical.v1.AutoGenerateStringsResponse
@@ -473,7 +721,7 @@ export type AutoGenerateStringsResponse = Message<"electrical.v1.AutoGenerateStr
  * Use `create(AutoGenerateStringsResponseSchema)` to create a new message.
  */
 export const AutoGenerateStringsResponseSchema: GenMessage<AutoGenerateStringsResponse> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 14);
+  messageDesc(file_electrical_v1_electrical, 21);
 
 /**
  * @generated from message electrical.v1.ListStringsRequest
@@ -490,7 +738,7 @@ export type ListStringsRequest = Message<"electrical.v1.ListStringsRequest"> & {
  * Use `create(ListStringsRequestSchema)` to create a new message.
  */
 export const ListStringsRequestSchema: GenMessage<ListStringsRequest> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 15);
+  messageDesc(file_electrical_v1_electrical, 22);
 
 /**
  * @generated from message electrical.v1.ListStringsResponse
@@ -507,7 +755,7 @@ export type ListStringsResponse = Message<"electrical.v1.ListStringsResponse"> &
  * Use `create(ListStringsResponseSchema)` to create a new message.
  */
 export const ListStringsResponseSchema: GenMessage<ListStringsResponse> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 16);
+  messageDesc(file_electrical_v1_electrical, 23);
 
 /**
  * @generated from message electrical.v1.AssignInverterRequest
@@ -539,7 +787,7 @@ export type AssignInverterRequest = Message<"electrical.v1.AssignInverterRequest
  * Use `create(AssignInverterRequestSchema)` to create a new message.
  */
 export const AssignInverterRequestSchema: GenMessage<AssignInverterRequest> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 17);
+  messageDesc(file_electrical_v1_electrical, 24);
 
 /**
  * @generated from message electrical.v1.AssignInverterResponse
@@ -556,7 +804,7 @@ export type AssignInverterResponse = Message<"electrical.v1.AssignInverterRespon
  * Use `create(AssignInverterResponseSchema)` to create a new message.
  */
 export const AssignInverterResponseSchema: GenMessage<AssignInverterResponse> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 18);
+  messageDesc(file_electrical_v1_electrical, 25);
 
 /**
  * @generated from message electrical.v1.ListInverterGroupsRequest
@@ -573,7 +821,7 @@ export type ListInverterGroupsRequest = Message<"electrical.v1.ListInverterGroup
  * Use `create(ListInverterGroupsRequestSchema)` to create a new message.
  */
 export const ListInverterGroupsRequestSchema: GenMessage<ListInverterGroupsRequest> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 19);
+  messageDesc(file_electrical_v1_electrical, 26);
 
 /**
  * @generated from message electrical.v1.ListInverterGroupsResponse
@@ -590,7 +838,7 @@ export type ListInverterGroupsResponse = Message<"electrical.v1.ListInverterGrou
  * Use `create(ListInverterGroupsResponseSchema)` to create a new message.
  */
 export const ListInverterGroupsResponseSchema: GenMessage<ListInverterGroupsResponse> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 20);
+  messageDesc(file_electrical_v1_electrical, 27);
 
 /**
  * @generated from message electrical.v1.CalculateDCCapacityRequest
@@ -607,7 +855,7 @@ export type CalculateDCCapacityRequest = Message<"electrical.v1.CalculateDCCapac
  * Use `create(CalculateDCCapacityRequestSchema)` to create a new message.
  */
 export const CalculateDCCapacityRequestSchema: GenMessage<CalculateDCCapacityRequest> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 21);
+  messageDesc(file_electrical_v1_electrical, 28);
 
 /**
  * @generated from message electrical.v1.CalculateDCCapacityResponse
@@ -634,7 +882,7 @@ export type CalculateDCCapacityResponse = Message<"electrical.v1.CalculateDCCapa
  * Use `create(CalculateDCCapacityResponseSchema)` to create a new message.
  */
 export const CalculateDCCapacityResponseSchema: GenMessage<CalculateDCCapacityResponse> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 22);
+  messageDesc(file_electrical_v1_electrical, 29);
 
 /**
  * @generated from message electrical.v1.CalculateACCapacityRequest
@@ -651,7 +899,7 @@ export type CalculateACCapacityRequest = Message<"electrical.v1.CalculateACCapac
  * Use `create(CalculateACCapacityRequestSchema)` to create a new message.
  */
 export const CalculateACCapacityRequestSchema: GenMessage<CalculateACCapacityRequest> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 23);
+  messageDesc(file_electrical_v1_electrical, 30);
 
 /**
  * @generated from message electrical.v1.CalculateACCapacityResponse
@@ -678,7 +926,7 @@ export type CalculateACCapacityResponse = Message<"electrical.v1.CalculateACCapa
  * Use `create(CalculateACCapacityResponseSchema)` to create a new message.
  */
 export const CalculateACCapacityResponseSchema: GenMessage<CalculateACCapacityResponse> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 24);
+  messageDesc(file_electrical_v1_electrical, 31);
 
 /**
  * @generated from message electrical.v1.CalculateLossesRequest
@@ -695,7 +943,7 @@ export type CalculateLossesRequest = Message<"electrical.v1.CalculateLossesReque
  * Use `create(CalculateLossesRequestSchema)` to create a new message.
  */
 export const CalculateLossesRequestSchema: GenMessage<CalculateLossesRequest> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 25);
+  messageDesc(file_electrical_v1_electrical, 32);
 
 /**
  * @generated from message electrical.v1.CalculateLossesResponse
@@ -732,7 +980,7 @@ export type CalculateLossesResponse = Message<"electrical.v1.CalculateLossesResp
  * Use `create(CalculateLossesResponseSchema)` to create a new message.
  */
 export const CalculateLossesResponseSchema: GenMessage<CalculateLossesResponse> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 26);
+  messageDesc(file_electrical_v1_electrical, 33);
 
 /**
  * ValidateSizing checks DC/AC sizing constraints against parametric limits.
@@ -850,7 +1098,7 @@ export type ValidateSizingRequest = Message<"electrical.v1.ValidateSizingRequest
  * Use `create(ValidateSizingRequestSchema)` to create a new message.
  */
 export const ValidateSizingRequestSchema: GenMessage<ValidateSizingRequest> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 27);
+  messageDesc(file_electrical_v1_electrical, 34);
 
 /**
  * @generated from message electrical.v1.SizingViolation
@@ -882,7 +1130,7 @@ export type SizingViolation = Message<"electrical.v1.SizingViolation"> & {
  * Use `create(SizingViolationSchema)` to create a new message.
  */
 export const SizingViolationSchema: GenMessage<SizingViolation> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 28);
+  messageDesc(file_electrical_v1_electrical, 35);
 
 /**
  * @generated from message electrical.v1.ValidateSizingResponse
@@ -934,7 +1182,7 @@ export type ValidateSizingResponse = Message<"electrical.v1.ValidateSizingRespon
  * Use `create(ValidateSizingResponseSchema)` to create a new message.
  */
 export const ValidateSizingResponseSchema: GenMessage<ValidateSizingResponse> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 29);
+  messageDesc(file_electrical_v1_electrical, 36);
 
 /**
  * ValidateNetwork checks full network topology consistency.
@@ -965,7 +1213,7 @@ export type ValidateNetworkRequest = Message<"electrical.v1.ValidateNetworkReque
  * Use `create(ValidateNetworkRequestSchema)` to create a new message.
  */
 export const ValidateNetworkRequestSchema: GenMessage<ValidateNetworkRequest> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 30);
+  messageDesc(file_electrical_v1_electrical, 37);
 
 /**
  * @generated from message electrical.v1.NetworkTopologyIssue
@@ -996,7 +1244,7 @@ export type NetworkTopologyIssue = Message<"electrical.v1.NetworkTopologyIssue">
  * Use `create(NetworkTopologyIssueSchema)` to create a new message.
  */
 export const NetworkTopologyIssueSchema: GenMessage<NetworkTopologyIssue> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 31);
+  messageDesc(file_electrical_v1_electrical, 38);
 
 /**
  * @generated from message electrical.v1.ValidateNetworkResponse
@@ -1058,7 +1306,7 @@ export type ValidateNetworkResponse = Message<"electrical.v1.ValidateNetworkResp
  * Use `create(ValidateNetworkResponseSchema)` to create a new message.
  */
 export const ValidateNetworkResponseSchema: GenMessage<ValidateNetworkResponse> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 32);
+  messageDesc(file_electrical_v1_electrical, 39);
 
 /**
  * GenerateNetworkBOM derives bill-of-materials item counts from live network topology.
@@ -1104,7 +1352,7 @@ export type GenerateNetworkBOMRequest = Message<"electrical.v1.GenerateNetworkBO
  * Use `create(GenerateNetworkBOMRequestSchema)` to create a new message.
  */
 export const GenerateNetworkBOMRequestSchema: GenMessage<GenerateNetworkBOMRequest> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 33);
+  messageDesc(file_electrical_v1_electrical, 40);
 
 /**
  * @generated from message electrical.v1.NetworkBOMItem
@@ -1146,7 +1394,7 @@ export type NetworkBOMItem = Message<"electrical.v1.NetworkBOMItem"> & {
  * Use `create(NetworkBOMItemSchema)` to create a new message.
  */
 export const NetworkBOMItemSchema: GenMessage<NetworkBOMItem> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 34);
+  messageDesc(file_electrical_v1_electrical, 41);
 
 /**
  * @generated from message electrical.v1.GenerateNetworkBOMResponse
@@ -1203,13 +1451,70 @@ export type GenerateNetworkBOMResponse = Message<"electrical.v1.GenerateNetworkB
  * Use `create(GenerateNetworkBOMResponseSchema)` to create a new message.
  */
 export const GenerateNetworkBOMResponseSchema: GenMessage<GenerateNetworkBOMResponse> = /*@__PURE__*/
-  messageDesc(file_electrical_v1_electrical, 35);
+  messageDesc(file_electrical_v1_electrical, 42);
 
 /**
+ * ========== Acceptance Status Enum ==========
+ * AcceptanceStatus is the workflow gate state for an electrical network artefact.
+ * Determines whether this network satisfies the ElectricalReady gate for phase progression.
+ *
+ * @generated from enum electrical.v1.AcceptanceStatus
+ */
+export enum AcceptanceStatus {
+  /**
+   * ACCEPTANCE_STATUS_UNSPECIFIED is the default zero value; treat as DRAFT.
+   *
+   * @generated from enum value: ACCEPTANCE_STATUS_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * ACCEPTANCE_STATUS_DRAFT indicates no review has been requested yet.
+   *
+   * @generated from enum value: ACCEPTANCE_STATUS_DRAFT = 1;
+   */
+  DRAFT = 1,
+
+  /**
+   * ACCEPTANCE_STATUS_REVIEW_PENDING indicates a review has been submitted and is awaiting decision.
+   *
+   * @generated from enum value: ACCEPTANCE_STATUS_REVIEW_PENDING = 2;
+   */
+  REVIEW_PENDING = 2,
+
+  /**
+   * ACCEPTANCE_STATUS_APPROVED indicates the network passed acceptance and may proceed.
+   *
+   * @generated from enum value: ACCEPTANCE_STATUS_APPROVED = 3;
+   */
+  APPROVED = 3,
+
+  /**
+   * ACCEPTANCE_STATUS_REJECTED indicates the network failed acceptance; blockers must be resolved.
+   *
+   * @generated from enum value: ACCEPTANCE_STATUS_REJECTED = 4;
+   */
+  REJECTED = 4,
+}
+
+/**
+ * Describes the enum electrical.v1.AcceptanceStatus.
+ */
+export const AcceptanceStatusSchema: GenEnum<AcceptanceStatus> = /*@__PURE__*/
+  enumDesc(file_electrical_v1_electrical, 0);
+
+/**
+ * ElectricalService manages electrical network topology for solar farm layouts,
+ * including string configuration, inverter assignment, capacity calculations,
+ * network topology validation, BOM derivation, and the acceptance workflow gate
+ * required for ElectricalReady -> TransmissionReady phase progression.
+ *
  * @generated from service electrical.v1.ElectricalService
  */
 export const ElectricalService: GenService<{
   /**
+   * CreateNetwork creates a new electrical network for a project layout.
+   *
    * @generated from rpc electrical.v1.ElectricalService.CreateNetwork
    */
   createNetwork: {
@@ -1218,6 +1523,8 @@ export const ElectricalService: GenService<{
     output: typeof CreateNetworkResponseSchema;
   },
   /**
+   * GetNetwork retrieves an electrical network by ID including review metadata.
+   *
    * @generated from rpc electrical.v1.ElectricalService.GetNetwork
    */
   getNetwork: {
@@ -1226,6 +1533,8 @@ export const ElectricalService: GenService<{
     output: typeof GetNetworkResponseSchema;
   },
   /**
+   * ListNetworks returns all electrical networks for a project.
+   *
    * @generated from rpc electrical.v1.ElectricalService.ListNetworks
    */
   listNetworks: {
@@ -1234,6 +1543,8 @@ export const ElectricalService: GenService<{
     output: typeof ListNetworksResponseSchema;
   },
   /**
+   * DeleteNetwork permanently removes an electrical network and all its strings.
+   *
    * @generated from rpc electrical.v1.ElectricalService.DeleteNetwork
    */
   deleteNetwork: {
@@ -1252,6 +1563,8 @@ export const ElectricalService: GenService<{
     output: typeof CreateStringResponseSchema;
   },
   /**
+   * AutoGenerateStrings generates panel strings automatically based on inverter groups.
+   *
    * @generated from rpc electrical.v1.ElectricalService.AutoGenerateStrings
    */
   autoGenerateStrings: {
@@ -1260,6 +1573,8 @@ export const ElectricalService: GenService<{
     output: typeof AutoGenerateStringsResponseSchema;
   },
   /**
+   * ListStrings returns all strings for a network.
+   *
    * @generated from rpc electrical.v1.ElectricalService.ListStrings
    */
   listStrings: {
@@ -1278,6 +1593,8 @@ export const ElectricalService: GenService<{
     output: typeof AssignInverterResponseSchema;
   },
   /**
+   * ListInverterGroups returns all inverter groups and their assigned strings.
+   *
    * @generated from rpc electrical.v1.ElectricalService.ListInverterGroups
    */
   listInverterGroups: {
@@ -1296,6 +1613,8 @@ export const ElectricalService: GenService<{
     output: typeof CalculateDCCapacityResponseSchema;
   },
   /**
+   * CalculateACCapacity computes total AC output capacity for the network.
+   *
    * @generated from rpc electrical.v1.ElectricalService.CalculateACCapacity
    */
   calculateACCapacity: {
@@ -1304,6 +1623,8 @@ export const ElectricalService: GenService<{
     output: typeof CalculateACCapacityResponseSchema;
   },
   /**
+   * CalculateLosses computes cable, mismatch, and system losses for the network.
+   *
    * @generated from rpc electrical.v1.ElectricalService.CalculateLosses
    */
   calculateLosses: {
@@ -1312,7 +1633,7 @@ export const ElectricalService: GenService<{
     output: typeof CalculateLossesResponseSchema;
   },
   /**
-   * Parametric sizing validation
+   * ValidateSizing performs parametric sizing validation against design constraints.
    *
    * @generated from rpc electrical.v1.ElectricalService.ValidateSizing
    */
@@ -1322,7 +1643,7 @@ export const ElectricalService: GenService<{
     output: typeof ValidateSizingResponseSchema;
   },
   /**
-   * Full network topology validation (all strings assigned, no orphans, MPPT limits)
+   * ValidateNetwork performs full topology validation: all strings assigned, no orphans, MPPT limits.
    *
    * @generated from rpc electrical.v1.ElectricalService.ValidateNetwork
    */
@@ -1332,7 +1653,7 @@ export const ElectricalService: GenService<{
     output: typeof ValidateNetworkResponseSchema;
   },
   /**
-   * Derive BOM item counts directly from the live network topology
+   * GenerateNetworkBOM derives BOM item counts directly from the live network topology.
    *
    * @generated from rpc electrical.v1.ElectricalService.GenerateNetworkBOM
    */
@@ -1340,6 +1661,37 @@ export const ElectricalService: GenService<{
     methodKind: "unary";
     input: typeof GenerateNetworkBOMRequestSchema;
     output: typeof GenerateNetworkBOMResponseSchema;
+  },
+  /**
+   * Acceptance workflow — gates the ElectricalReady -> TransmissionReady phase transition.
+   * SubmitNetworkForReview transitions review_metadata.status to REVIEW_PENDING.
+   *
+   * @generated from rpc electrical.v1.ElectricalService.SubmitNetworkForReview
+   */
+  submitNetworkForReview: {
+    methodKind: "unary";
+    input: typeof SubmitNetworkForReviewRequestSchema;
+    output: typeof SubmitNetworkForReviewResponseSchema;
+  },
+  /**
+   * ApproveNetwork sets review_metadata.status to APPROVED, enabling TransmissionReady transition.
+   *
+   * @generated from rpc electrical.v1.ElectricalService.ApproveNetwork
+   */
+  approveNetwork: {
+    methodKind: "unary";
+    input: typeof ApproveNetworkRequestSchema;
+    output: typeof ApproveNetworkResponseSchema;
+  },
+  /**
+   * RejectNetwork sets review_metadata.status to REJECTED and records blocker reasons.
+   *
+   * @generated from rpc electrical.v1.ElectricalService.RejectNetwork
+   */
+  rejectNetwork: {
+    methodKind: "unary";
+    input: typeof RejectNetworkRequestSchema;
+    output: typeof RejectNetworkResponseSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_electrical_v1_electrical, 0);

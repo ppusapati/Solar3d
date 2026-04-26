@@ -8,12 +8,12 @@ import (
 	"time"
 
 	"github.com/rs/zerolog"
-	orchestrationv1connect "github.com/solar3d/solar3d/gen/orchestration/v1/orchestrationv1connect"
+	orchestrationv1connect "p9e.in/samavaya/solar3d/gen/orchestration/v1/orchestrationv1connect"
 
-	"solar3d/compute-orchestration-service/internal/executor"
-	"solar3d/compute-orchestration-service/internal/handler"
-	"solar3d/compute-orchestration-service/internal/repository"
-	"solar3d/compute-orchestration-service/internal/service"
+	"p9e.in/samavaya/solar3d/compute-orchestration-service/internal/executor"
+	"p9e.in/samavaya/solar3d/compute-orchestration-service/internal/handler"
+	"p9e.in/samavaya/solar3d/compute-orchestration-service/internal/repository"
+	"p9e.in/samavaya/solar3d/compute-orchestration-service/internal/service"
 )
 
 // Register wires the compute-orchestration-service handlers onto mux.

@@ -8,8 +8,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 
-	"solar3d/project-service/internal/domain"
-	"solar3d/project-service/internal/repository"
+	"p9e.in/samavaya/solar3d/project-service/internal/domain"
+	"p9e.in/samavaya/solar3d/project-service/internal/repository"
 )
 
 type siteImportRepoStub struct {

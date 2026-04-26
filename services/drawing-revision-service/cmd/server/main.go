@@ -9,15 +9,15 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
-	drawingv1connect "github.com/solar3d/solar3d/gen/drawing/v1/drawingv1connect"
+	drawingv1connect "p9e.in/samavaya/solar3d/gen/drawing/v1/drawingv1connect"
 
-	"solar3d/drawing-revision-service/internal/config"
-	"solar3d/drawing-revision-service/internal/handler"
-	"solar3d/drawing-revision-service/internal/repository"
-	"solar3d/drawing-revision-service/internal/service"
-	mw "solar3d/shared/middleware"
+	"p9e.in/samavaya/packages/database/pgxpostgres"
+	mw "p9e.in/samavaya/packages/httpmiddleware"
+	"p9e.in/samavaya/solar3d/drawing-revision-service/internal/config"
+	"p9e.in/samavaya/solar3d/drawing-revision-service/internal/handler"
+	"p9e.in/samavaya/solar3d/drawing-revision-service/internal/repository"
+	"p9e.in/samavaya/solar3d/drawing-revision-service/internal/service"
 )
 
 func main() {
@@ -38,24 +38,11 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	poolCfg, err := pgxpool.ParseConfig(cfg.DatabaseURL)
+	pool, closePool, err := pgxpostgres.NewPgxFromDSN(ctx, cfg.DatabaseURL, pgxpostgres.DefaultPoolOptions())
 	if err != nil {
-		logger.Fatal().Err(err).Msg("invalid DATABASE_URL")
+		logger.Fatal().Err(err).Msg("failed to initialise database pool")
 	}
-	poolCfg.MaxConns = 20
-	poolCfg.MinConns = 2
-	poolCfg.MaxConnLifetime = 30 * time.Minute
-	poolCfg.MaxConnIdleTime = 5 * time.Minute
-
-	pool, err := pgxpool.NewWithConfig(ctx, poolCfg)
-	if err != nil {
-		logger.Fatal().Err(err).Msg("failed to create connection pool")
-	}
-	defer pool.Close()
-
-	if err := pool.Ping(ctx); err != nil {
-		logger.Fatal().Err(err).Msg("failed to ping database")
-	}
+	defer closePool()
 
 	repo := repository.NewPgRepository(pool)
 	serviceCtx, serviceCancel := context.WithCancel(context.Background())
@@ -65,18 +52,14 @@ func main() {
 	h := handler.NewConnectDrawingRevisionService(svc)
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, _ *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte(`{"status":"ok"}`))
-	})
+	mux.HandleFunc("GET /healthz", mw.HealthzHandler(pool))
 
 	connectPath, connectHandler := drawingv1connect.NewDrawingRevisionServiceHandler(h)
 	mux.Handle(connectPath, connectHandler)
 
 	limiter := mw.NewRateLimiter(100, 200)
 	chain := mw.Chain(
-		mw.Recovery(logger),
+		mw.Recovery(logger), mw.DeprecateRESTAliases(logger),
 		mw.IDempotencyKeyMiddleware,
 		mw.CORS,
 		mw.Logging(logger),

@@ -12,8 +12,8 @@ import (
 
 	"github.com/google/uuid"
 
-	"solar3d/transmission-routing-service/internal/domain"
-	"solar3d/transmission-routing-service/internal/repository"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/domain"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/repository"
 )
 
 const transmissionAlgorithmVersion = "transmission-routing-phase6.0.0"
@@ -91,6 +91,45 @@ func (s *TransmissionService) ApproveTransmissionRoute(ctx context.Context, id u
 	appendGovernanceEvent(route, "approved", actor, note, domain.ApprovalStatusEngineeringReview, domain.ApprovalStatusApproved, now)
 	appendRouteSummary(route, fmt.Sprintf("workflow: approved by %s", actor))
 	return s.repo.Approve(ctx, route)
+}
+
+// RejectTransmissionRoute transitions a route from engineering_review to
+// rejected with at least one documented reason. The transition is captured in
+// the governance event stream (single source of truth for audit); dedicated
+// rejected_at / rejected_by columns are intentionally not persisted.
+func (s *TransmissionService) RejectTransmissionRoute(ctx context.Context, id uuid.UUID, actor string, reasons []string, note string) (*domain.TransmissionRoute, error) {
+	actor = strings.TrimSpace(actor)
+	if actor == "" {
+		return nil, fmt.Errorf("%w: actor is required", ErrInvalidInput)
+	}
+	if len(reasons) == 0 {
+		return nil, fmt.Errorf("%w: at least one rejection reason is required", ErrInvalidInput)
+	}
+	route, err := s.repo.GetByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	if route == nil {
+		return nil, repository.ErrNotFound
+	}
+	if route.ApprovalStatus == "" {
+		route.ApprovalStatus = domain.ApprovalStatusDraft
+	}
+	if route.ApprovalStatus != domain.ApprovalStatusEngineeringReview {
+		return nil, fmt.Errorf("%w: route must be in engineering review before rejection", ErrInvalidWorkflowTransition)
+	}
+	now := time.Now().UTC()
+	from := route.ApprovalStatus
+	route.ApprovalStatus = domain.ApprovalStatusRejected
+	rejectionNote := note
+	if rejectionNote == "" {
+		rejectionNote = strings.Join(reasons, "; ")
+	} else {
+		rejectionNote = rejectionNote + " | reasons: " + strings.Join(reasons, "; ")
+	}
+	appendGovernanceEvent(route, "rejected", actor, rejectionNote, from, domain.ApprovalStatusRejected, now)
+	appendRouteSummary(route, fmt.Sprintf("workflow: rejected by %s", actor))
+	return s.repo.Reject(ctx, route)
 }
 
 func appendGovernanceEvent(route *domain.TransmissionRoute, eventType, actor, note string, fromStatus, toStatus domain.ApprovalStatus, occurredAt time.Time) {

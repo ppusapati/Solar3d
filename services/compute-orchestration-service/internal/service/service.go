@@ -12,8 +12,8 @@ import (
 
 	"github.com/google/uuid"
 
-	"solar3d/compute-orchestration-service/internal/domain"
-	"solar3d/compute-orchestration-service/internal/repository"
+	"p9e.in/samavaya/solar3d/compute-orchestration-service/internal/domain"
+	"p9e.in/samavaya/solar3d/compute-orchestration-service/internal/repository"
 )
 
 type Executor interface {
@@ -287,11 +287,17 @@ func (s *Service) handleFailure(ctx context.Context, job *domain.Job, execErr er
 		job.Status = domain.JobStatusFailed
 		job.CompletedAt = &now
 		job.ErrorMessage = errMsg
-		_ = s.repo.UpdateJob(ctx, job)
-		if startedAt != nil {
-			_ = s.repo.RecordAttempt(ctx, job.ID, job.Attempts, domain.JobStatusFailed, startedAt, &now, errMsg)
+		if err := s.repo.UpdateJob(ctx, job); err != nil {
+			log.Printf("event=repo.update_failed job_id=%s err=%v", job.ID, err)
 		}
-		_ = s.repo.RecordDeadLetter(ctx, job.ID, errMsg, job.PayloadJSON)
+		if startedAt != nil {
+			if err := s.repo.RecordAttempt(ctx, job.ID, job.Attempts, domain.JobStatusFailed, startedAt, &now, errMsg); err != nil {
+				log.Printf("event=repo.record_attempt_failed job_id=%s err=%v", job.ID, err)
+			}
+		}
+		if err := s.repo.RecordDeadLetter(ctx, job.ID, errMsg, job.PayloadJSON); err != nil {
+			log.Printf("event=repo.dead_letter_failed job_id=%s err=%v", job.ID, err)
+		}
 		s.failed.Add(1)
 		s.deadLettered.Add(1)
 		s.emitTrace(job.ID, traceID, "execute.dead_lettered", map[string]any{"error": errMsg})
@@ -299,12 +305,16 @@ func (s *Service) handleFailure(ctx context.Context, job *domain.Job, execErr er
 	}
 
 	if startedAt != nil {
-		_ = s.repo.RecordAttempt(ctx, job.ID, job.Attempts, domain.JobStatusFailed, startedAt, finishedAt, errMsg)
+		if err := s.repo.RecordAttempt(ctx, job.ID, job.Attempts, domain.JobStatusFailed, startedAt, finishedAt, errMsg); err != nil {
+			log.Printf("event=repo.record_attempt_failed job_id=%s err=%v", job.ID, err)
+		}
 	}
 
 	backoff := time.Duration(job.Attempts*2) * time.Second
 	nextRetry := time.Now().UTC().Add(backoff)
-	_, _ = s.repo.MarkRetryPending(ctx, job.ID, nextRetry, errMsg)
+	if _, err := s.repo.MarkRetryPending(ctx, job.ID, nextRetry, errMsg); err != nil {
+		log.Printf("event=repo.mark_retry_failed job_id=%s err=%v", job.ID, err)
+	}
 	s.failed.Add(1)
 	s.emitTrace(job.ID, traceID, "execute.retry_scheduled", map[string]any{"error": errMsg, "backoff_seconds": int(backoff.Seconds())})
 

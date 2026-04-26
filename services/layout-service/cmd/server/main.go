@@ -9,16 +9,16 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	layoutv1connect "github.com/solar3d/solar3d/gen/layout/v1/layoutv1connect"
+	layoutv1connect "p9e.in/samavaya/solar3d/gen/layout/v1/layoutv1connect"
 
-	"solar3d/layout-service/internal/config"
-	"solar3d/layout-service/internal/handler"
-	"solar3d/layout-service/internal/repository"
-	"solar3d/layout-service/internal/service"
-	mw "solar3d/shared/middleware"
+	"p9e.in/samavaya/packages/database/pgxpostgres"
+	mw "p9e.in/samavaya/packages/httpmiddleware"
+	"p9e.in/samavaya/solar3d/layout-service/internal/config"
+	"p9e.in/samavaya/solar3d/layout-service/internal/handler"
+	"p9e.in/samavaya/solar3d/layout-service/internal/repository"
+	"p9e.in/samavaya/solar3d/layout-service/internal/service"
 )
 
 func main() {
@@ -50,22 +50,11 @@ func main() {
 	defer cancel()
 
 	// Database connection pool.
-	poolCfg, err := pgxpool.ParseConfig(cfg.DatabaseURL)
+	pool, closePool, err := pgxpostgres.NewPgxFromDSN(ctx, cfg.DatabaseURL, pgxpostgres.DefaultPoolOptions())
 	if err != nil {
-		logger.Fatal().Err(err).Msg("failed to parse database URL")
+		logger.Fatal().Err(err).Msg("failed to initialise database pool")
 	}
-	poolCfg.MaxConns = 20
-	poolCfg.MinConns = 4
-
-	pool, err := pgxpool.NewWithConfig(ctx, poolCfg)
-	if err != nil {
-		logger.Fatal().Err(err).Msg("failed to create database pool")
-	}
-	defer pool.Close()
-
-	if err := pool.Ping(ctx); err != nil {
-		logger.Fatal().Err(err).Msg("failed to ping database")
-	}
+	defer closePool()
 	logger.Info().Msg("database connection established")
 
 	// ── Application layers ────────────────────────────────────────────────
@@ -80,20 +69,12 @@ func main() {
 	mux.Handle(connectPath, connectHandler)
 
 	// Health check.
-	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
-		if err := pool.Ping(r.Context()); err != nil {
-			http.Error(w, "database unreachable", http.StatusServiceUnavailable)
-			return
-		}
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		fmt.Fprintln(w, `{"status":"ok"}`)
-	})
+	mux.HandleFunc("GET /healthz", mw.HealthzHandler(pool))
 
 	// Apply middleware chain: Recovery → RequestID → CORS → Logging → RateLimit
 	limiter := mw.NewRateLimiter(100, 200)
 	chain := mw.Chain(
-		mw.Recovery(logger),
+		mw.Recovery(logger), mw.DeprecateRESTAliases(logger),
 		mw.IDempotencyKeyMiddleware,
 		mw.CORS,
 		mw.Logging(logger),

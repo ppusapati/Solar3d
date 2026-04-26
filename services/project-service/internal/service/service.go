@@ -4,15 +4,16 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 
-	"solar3d/project-service/internal/domain"
-	"solar3d/project-service/internal/gis"
-	"solar3d/project-service/internal/repository"
-	"solar3d/shared/orchestration"
+	"p9e.in/samavaya/solar3d/project-service/internal/domain"
+	"p9e.in/samavaya/solar3d/project-service/internal/gis"
+	"p9e.in/samavaya/solar3d/project-service/internal/repository"
+	"p9e.in/samavaya/packages/solar3dorch"
 )
 
 // Sentinel errors returned by the service layer.
@@ -32,11 +33,30 @@ type orchestrationSubmitter interface {
 	SubmitJob(ctx context.Context, projectID, jobType string, maxAttempts int32, payload string, idempotencyKey string) (string, error)
 }
 
-// New creates a new ProjectService.
+// defaultOrchestrationURL is the local development fallback for the
+// compute-orchestration-service. Production deployments must pass an explicit
+// URL or set ORCHESTRATION_SERVICE_URL — `New` will refuse to start if
+// SOLAR3D_ENV=production and neither override is supplied.
+const defaultOrchestrationURL = "http://127.0.0.1:50059"
+
+// New creates a new ProjectService. orchestrationURL is optional; if empty
+// the constructor reads ORCHESTRATION_SERVICE_URL, then falls back to the
+// dev default. In production (SOLAR3D_ENV=production) an explicit value is
+// mandatory and a missing one panics fast at boot rather than silently
+// pointing at localhost.
 func New(repo repository.ProjectRepository, logger zerolog.Logger, orchestrationURL ...string) *ProjectService {
-	url := "http://127.0.0.1:50059"
-	if len(orchestrationURL) > 0 && strings.TrimSpace(orchestrationURL[0]) != "" {
+	url := ""
+	if len(orchestrationURL) > 0 {
 		url = strings.TrimSpace(orchestrationURL[0])
+	}
+	if url == "" {
+		url = strings.TrimSpace(os.Getenv("ORCHESTRATION_SERVICE_URL"))
+	}
+	if url == "" {
+		if strings.EqualFold(os.Getenv("SOLAR3D_ENV"), "production") {
+			panic("project-service: ORCHESTRATION_SERVICE_URL is required when SOLAR3D_ENV=production")
+		}
+		url = defaultOrchestrationURL
 	}
 	return &ProjectService{
 		repo:   repo,

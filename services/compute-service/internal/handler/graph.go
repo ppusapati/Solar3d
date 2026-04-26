@@ -4,12 +4,12 @@ import (
 	"context"
 	"errors"
 
-	"solar3d/compute-service/internal/mappers"
-	"solar3d/compute-service/internal/service"
+	"p9e.in/samavaya/solar3d/compute-service/internal/mappers"
+	"p9e.in/samavaya/solar3d/compute-service/internal/service"
 
 	"connectrpc.com/connect"
-	graphv1 "github.com/solar3d/solar3d/gen/graph/v1"
-	graphv1connect "github.com/solar3d/solar3d/gen/graph/v1/graphv1connect"
+	graphv1 "p9e.in/samavaya/solar3d/gen/graph/v1"
+	graphv1connect "p9e.in/samavaya/solar3d/gen/graph/v1/graphv1connect"
 )
 
 type GraphServiceHandler struct {

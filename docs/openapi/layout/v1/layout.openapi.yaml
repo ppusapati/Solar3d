@@ -1,0 +1,1267 @@
+openapi: 3.1.0
+info:
+  title: layout.v1
+paths:
+  /layout.v1.LayoutService/ApproveLayout:
+    post:
+      tags:
+        - layout.v1.LayoutService
+      summary: ApproveLayout
+      description: ApproveLayout sets review_metadata.status to APPROVED, enabling ElectricalReady transition.
+      operationId: layout.v1.LayoutService.ApproveLayout
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/layout.v1.ApproveLayoutRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/layout.v1.ApproveLayoutResponse'
+  /layout.v1.LayoutService/CreateLayout:
+    post:
+      tags:
+        - layout.v1.LayoutService
+      summary: CreateLayout
+      description: CreateLayout creates a new empty layout for a project.
+      operationId: layout.v1.LayoutService.CreateLayout
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/layout.v1.CreateLayoutRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/layout.v1.CreateLayoutResponse'
+  /layout.v1.LayoutService/DeleteLayout:
+    post:
+      tags:
+        - layout.v1.LayoutService
+      summary: DeleteLayout
+      description: DeleteLayout permanently removes a layout and all its components and tiles.
+      operationId: layout.v1.LayoutService.DeleteLayout
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/layout.v1.DeleteLayoutRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/layout.v1.DeleteLayoutResponse'
+  /layout.v1.LayoutService/GeneratePanelArray:
+    post:
+      tags:
+        - layout.v1.LayoutService
+      summary: GeneratePanelArray
+      description: Panel array generation
+      operationId: layout.v1.LayoutService.GeneratePanelArray
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/layout.v1.GeneratePanelArrayRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/layout.v1.GeneratePanelArrayResponse'
+  /layout.v1.LayoutService/GetLayout:
+    post:
+      tags:
+        - layout.v1.LayoutService
+      summary: GetLayout
+      description: GetLayout retrieves a layout by ID including its current review metadata.
+      operationId: layout.v1.LayoutService.GetLayout
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/layout.v1.GetLayoutRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/layout.v1.GetLayoutResponse'
+  /layout.v1.LayoutService/GetTilePanels:
+    post:
+      tags:
+        - layout.v1.LayoutService
+      summary: GetTilePanels
+      description: GetTilePanels returns individual panel geometries within a specific tile for viewport rendering.
+      operationId: layout.v1.LayoutService.GetTilePanels
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/layout.v1.GetTilePanelsRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/layout.v1.GetTilePanelsResponse'
+  /layout.v1.LayoutService/GetTiles:
+    post:
+      tags:
+        - layout.v1.LayoutService
+      summary: GetTiles
+      description: Tile-based queries
+      operationId: layout.v1.LayoutService.GetTiles
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/layout.v1.GetTilesRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/layout.v1.GetTilesResponse'
+  /layout.v1.LayoutService/ListComponents:
+    post:
+      tags:
+        - layout.v1.LayoutService
+      summary: ListComponents
+      description: ListComponents returns all placed components for a layout.
+      operationId: layout.v1.LayoutService.ListComponents
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/layout.v1.ListComponentsRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/layout.v1.ListComponentsResponse'
+  /layout.v1.LayoutService/ListLayouts:
+    post:
+      tags:
+        - layout.v1.LayoutService
+      summary: ListLayouts
+      description: ListLayouts returns all layouts for a project ordered by creation time.
+      operationId: layout.v1.LayoutService.ListLayouts
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/layout.v1.ListLayoutsRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/layout.v1.ListLayoutsResponse'
+  /layout.v1.LayoutService/MoveComponent:
+    post:
+      tags:
+        - layout.v1.LayoutService
+      summary: MoveComponent
+      description: MoveComponent updates the position of an existing placed component.
+      operationId: layout.v1.LayoutService.MoveComponent
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/layout.v1.MoveComponentRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/layout.v1.MoveComponentResponse'
+  /layout.v1.LayoutService/PlaceComponent:
+    post:
+      tags:
+        - layout.v1.LayoutService
+      summary: PlaceComponent
+      description: Component placement
+      operationId: layout.v1.LayoutService.PlaceComponent
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/layout.v1.PlaceComponentRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/layout.v1.PlaceComponentResponse'
+  /layout.v1.LayoutService/RejectLayout:
+    post:
+      tags:
+        - layout.v1.LayoutService
+      summary: RejectLayout
+      description: RejectLayout sets review_metadata.status to REJECTED and records blockers preventing approval.
+      operationId: layout.v1.LayoutService.RejectLayout
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/layout.v1.RejectLayoutRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/layout.v1.RejectLayoutResponse'
+  /layout.v1.LayoutService/RemoveComponent:
+    post:
+      tags:
+        - layout.v1.LayoutService
+      summary: RemoveComponent
+      description: RemoveComponent removes a placed component from the layout.
+      operationId: layout.v1.LayoutService.RemoveComponent
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/layout.v1.RemoveComponentRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/layout.v1.RemoveComponentResponse'
+  /layout.v1.LayoutService/SubmitLayoutForReview:
+    post:
+      tags:
+        - layout.v1.LayoutService
+      summary: SubmitLayoutForReview
+      description: |-
+        Acceptance workflow — gates the LayoutReady -> ElectricalReady phase transition.
+         SubmitLayoutForReview transitions review_metadata.status to REVIEW_PENDING.
+      operationId: layout.v1.LayoutService.SubmitLayoutForReview
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/layout.v1.SubmitLayoutForReviewRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/layout.v1.SubmitLayoutForReviewResponse'
+components:
+  schemas:
+    connect-protocol-version:
+      type: number
+      title: Connect-Protocol-Version
+      enum:
+        - 1
+      description: Define the version of the Connect protocol
+      const: 1
+    connect-timeout-header:
+      type: number
+      title: Connect-Timeout-Ms
+      description: Define the timeout, in ms
+    connect.error:
+      type: object
+      properties:
+        code:
+          type: string
+          examples:
+            - not_found
+          enum:
+            - canceled
+            - unknown
+            - invalid_argument
+            - deadline_exceeded
+            - not_found
+            - already_exists
+            - permission_denied
+            - resource_exhausted
+            - failed_precondition
+            - aborted
+            - out_of_range
+            - unimplemented
+            - internal
+            - unavailable
+            - data_loss
+            - unauthenticated
+          description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+        message:
+          type: string
+          description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/connect.error_details.Any'
+          description: A list of messages that carry the error details. There is no limit on the number of messages.
+      title: Connect Error
+      additionalProperties: true
+      description: 'Error type returned by Connect: https://connectrpc.com/docs/go/errors/#http-representation'
+    connect.error_details.Any:
+      type: object
+      properties:
+        type:
+          type: string
+          description: 'A URL that acts as a globally unique identifier for the type of the serialized message. For example: `type.googleapis.com/google.rpc.ErrorInfo`. This is used to determine the schema of the data in the `value` field and is the discriminator for the `debug` field.'
+        value:
+          type: string
+          format: binary
+          description: The Protobuf message, serialized as bytes and base64-encoded. The specific message type is identified by the `type` field.
+        debug:
+          oneOf:
+            - type: object
+              title: Any
+              additionalProperties: true
+              description: Detailed error information.
+          discriminator:
+            propertyName: type
+          title: Debug
+          description: Deserialized error detail payload. The 'type' field indicates the schema. This field is for easier debugging and should not be relied upon for application logic.
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message, with an additional debug field for ConnectRPC error details.
+    google.protobuf.Timestamp:
+      type: string
+      examples:
+        - "2023-01-15T01:30:15.01Z"
+        - "2024-12-25T12:00:00Z"
+      format: date-time
+      description: |-
+        A Timestamp represents a point in time independent of any time zone or local
+         calendar, encoded as a count of seconds and fractions of seconds at
+         nanosecond resolution. The count is relative to an epoch at UTC midnight on
+         January 1, 1970, in the proleptic Gregorian calendar which extends the
+         Gregorian calendar backwards to year one.
+
+         All minutes are 60 seconds long. Leap seconds are "smeared" so that no leap
+         second table is needed for interpretation, using a [24-hour linear
+         smear](https://developers.google.com/time/smear).
+
+         The range is from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59.999999999Z. By
+         restricting to that range, we ensure that we can convert to and from [RFC
+         3339](https://www.ietf.org/rfc/rfc3339.txt) date strings.
+
+         # Examples
+
+         Example 1: Compute Timestamp from POSIX `time()`.
+
+             Timestamp timestamp;
+             timestamp.set_seconds(time(NULL));
+             timestamp.set_nanos(0);
+
+         Example 2: Compute Timestamp from POSIX `gettimeofday()`.
+
+             struct timeval tv;
+             gettimeofday(&tv, NULL);
+
+             Timestamp timestamp;
+             timestamp.set_seconds(tv.tv_sec);
+             timestamp.set_nanos(tv.tv_usec * 1000);
+
+         Example 3: Compute Timestamp from Win32 `GetSystemTimeAsFileTime()`.
+
+             FILETIME ft;
+             GetSystemTimeAsFileTime(&ft);
+             UINT64 ticks = (((UINT64)ft.dwHighDateTime) << 32) | ft.dwLowDateTime;
+
+             // A Windows tick is 100 nanoseconds. Windows epoch 1601-01-01T00:00:00Z
+             // is 11644473600 seconds before Unix epoch 1970-01-01T00:00:00Z.
+             Timestamp timestamp;
+             timestamp.set_seconds((INT64) ((ticks / 10000000) - 11644473600LL));
+             timestamp.set_nanos((INT32) ((ticks % 10000000) * 100));
+
+         Example 4: Compute Timestamp from Java `System.currentTimeMillis()`.
+
+             long millis = System.currentTimeMillis();
+
+             Timestamp timestamp = Timestamp.newBuilder().setSeconds(millis / 1000)
+                 .setNanos((int) ((millis % 1000) * 1000000)).build();
+
+         Example 5: Compute Timestamp from Java `Instant.now()`.
+
+             Instant now = Instant.now();
+
+             Timestamp timestamp =
+                 Timestamp.newBuilder().setSeconds(now.getEpochSecond())
+                     .setNanos(now.getNano()).build();
+
+         Example 6: Compute Timestamp from current time in Python.
+
+             timestamp = Timestamp()
+             timestamp.GetCurrentTime()
+
+         # JSON Mapping
+
+         In JSON format, the Timestamp type is encoded as a string in the
+         [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format. That is, the
+         format is "{year}-{month}-{day}T{hour}:{min}:{sec}[.{frac_sec}]Z"
+         where {year} is always expressed using four digits while {month}, {day},
+         {hour}, {min}, and {sec} are zero-padded to two digits each. The fractional
+         seconds, which can go up to 9 digits (i.e. up to 1 nanosecond resolution),
+         are optional. The "Z" suffix indicates the timezone ("UTC"); the timezone
+         is required. A proto3 JSON serializer should always use UTC (as indicated by
+         "Z") when printing the Timestamp type and a proto3 JSON parser should be
+         able to accept both UTC and other timezones (as indicated by an offset).
+
+         For example, "2017-01-15T01:30:15.01Z" encodes 15.01 seconds past
+         01:30 UTC on January 15, 2017.
+
+         In JavaScript, one can convert a Date object to this format using the
+         standard
+         [toISOString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString)
+         method. In Python, a standard `datetime.datetime` object can be converted
+         to this format using
+         [`strftime`](https://docs.python.org/2/library/time.html#time.strftime) with
+         the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one can use
+         the Joda Time's [`ISODateTimeFormat.dateTime()`](
+         http://joda-time.sourceforge.net/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime()
+         ) to obtain a formatter capable of generating timestamps in this format.
+    layout.v1.AcceptanceStatus:
+      type: string
+      title: AcceptanceStatus
+      enum:
+        - ACCEPTANCE_STATUS_UNSPECIFIED
+        - ACCEPTANCE_STATUS_DRAFT
+        - ACCEPTANCE_STATUS_REVIEW_PENDING
+        - ACCEPTANCE_STATUS_APPROVED
+        - ACCEPTANCE_STATUS_REJECTED
+      description: |-
+        ========== Acceptance Status Enum ==========
+         AcceptanceStatus is the workflow gate state for a layout artefact.
+         Determines whether this layout satisfies the LayoutReady gate for phase progression.
+    layout.v1.ApproveLayoutRequest:
+      type: object
+      properties:
+        layoutId:
+          type: string
+          title: layout_id
+        qualityScore:
+          type: number
+          title: quality_score
+          format: double
+          description: '[0, 1]'
+        approvalComments:
+          type: array
+          items:
+            type: string
+          title: approval_comments
+        approvedByActorId:
+          type: string
+          title: approved_by_actor_id
+      title: ApproveLayoutRequest
+      additionalProperties: false
+    layout.v1.ApproveLayoutResponse:
+      type: object
+      properties:
+        layout:
+          title: layout
+          $ref: '#/components/schemas/layout.v1.Layout'
+        reviewMetadata:
+          title: review_metadata
+          $ref: '#/components/schemas/layout.v1.ReviewMetadata'
+      title: ApproveLayoutResponse
+      additionalProperties: false
+    layout.v1.BoundingBox:
+      type: object
+      properties:
+        minX:
+          type: number
+          title: min_x
+          format: double
+        minY:
+          type: number
+          title: min_y
+          format: double
+        maxX:
+          type: number
+          title: max_x
+          format: double
+        maxY:
+          type: number
+          title: max_y
+          format: double
+      title: BoundingBox
+      additionalProperties: false
+    layout.v1.Component:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        layoutId:
+          type: string
+          title: layout_id
+        assetId:
+          type: string
+          title: asset_id
+        componentType:
+          title: component_type
+          $ref: '#/components/schemas/layout.v1.ComponentType'
+        position:
+          title: position
+          $ref: '#/components/schemas/layout.v1.Position'
+        rotation:
+          type: number
+          title: rotation
+          format: double
+        metadataJson:
+          type: string
+          title: metadata_json
+        createdAt:
+          title: created_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: Component
+      additionalProperties: false
+    layout.v1.ComponentType:
+      type: string
+      title: ComponentType
+      enum:
+        - COMPONENT_TYPE_UNSPECIFIED
+        - COMPONENT_TYPE_PANEL
+        - COMPONENT_TYPE_INVERTER
+        - COMPONENT_TYPE_TRANSFORMER
+        - COMPONENT_TYPE_JUNCTION_BOX
+        - COMPONENT_TYPE_SUBSTATION
+        - COMPONENT_TYPE_TRACKER
+        - COMPONENT_TYPE_COMBINER_BOX
+    layout.v1.CreateLayoutRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        name:
+          type: string
+          title: name
+      title: CreateLayoutRequest
+      additionalProperties: false
+    layout.v1.CreateLayoutResponse:
+      type: object
+      properties:
+        layout:
+          title: layout
+          $ref: '#/components/schemas/layout.v1.Layout'
+      title: CreateLayoutResponse
+      additionalProperties: false
+    layout.v1.DeleteLayoutRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+      title: DeleteLayoutRequest
+      additionalProperties: false
+    layout.v1.DeleteLayoutResponse:
+      type: object
+      title: DeleteLayoutResponse
+      additionalProperties: false
+    layout.v1.GeneratePanelArrayRequest:
+      type: object
+      properties:
+        layoutId:
+          type: string
+          title: layout_id
+        params:
+          title: params
+          $ref: '#/components/schemas/layout.v1.PanelArrayParams'
+      title: GeneratePanelArrayRequest
+      additionalProperties: false
+    layout.v1.GeneratePanelArrayResponse:
+      type: object
+      properties:
+        panelsCreated:
+          type: integer
+          title: panels_created
+          format: int32
+        tilesCreated:
+          type: integer
+          title: tiles_created
+          format: int32
+        capacityKw:
+          type: number
+          title: capacity_kw
+          format: double
+      title: GeneratePanelArrayResponse
+      additionalProperties: false
+    layout.v1.GetLayoutRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+      title: GetLayoutRequest
+      additionalProperties: false
+    layout.v1.GetLayoutResponse:
+      type: object
+      properties:
+        layout:
+          title: layout
+          $ref: '#/components/schemas/layout.v1.Layout'
+      title: GetLayoutResponse
+      additionalProperties: false
+    layout.v1.GetTilePanelsRequest:
+      type: object
+      properties:
+        tileId:
+          type: string
+          title: tile_id
+      title: GetTilePanelsRequest
+      additionalProperties: false
+    layout.v1.GetTilePanelsResponse:
+      type: object
+      properties:
+        panels:
+          type: array
+          items:
+            $ref: '#/components/schemas/layout.v1.Panel'
+          title: panels
+      title: GetTilePanelsResponse
+      additionalProperties: false
+    layout.v1.GetTilesRequest:
+      type: object
+      properties:
+        layoutId:
+          type: string
+          title: layout_id
+        viewport:
+          title: viewport
+          $ref: '#/components/schemas/layout.v1.BoundingBox'
+        lodLevel:
+          type: integer
+          title: lod_level
+          format: int32
+      title: GetTilesRequest
+      additionalProperties: false
+    layout.v1.GetTilesResponse:
+      type: object
+      properties:
+        tiles:
+          type: array
+          items:
+            $ref: '#/components/schemas/layout.v1.LayoutTile'
+          title: tiles
+      title: GetTilesResponse
+      additionalProperties: false
+    layout.v1.Layout:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        projectId:
+          type: string
+          title: project_id
+        name:
+          type: string
+          title: name
+        totalPanels:
+          type: integer
+          title: total_panels
+          format: int32
+        totalCapacityKw:
+          type: number
+          title: total_capacity_kw
+          format: double
+        tileCount:
+          type: integer
+          title: tile_count
+          format: int32
+        createdAt:
+          title: created_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        updatedAt:
+          title: updated_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        reviewMetadata:
+          title: review_metadata
+          $ref: '#/components/schemas/layout.v1.ReviewMetadata'
+        candidateId:
+          type: string
+          title: candidate_id
+          description: Reference to MLCandidate if from algorithm
+      title: Layout
+      additionalProperties: false
+    layout.v1.LayoutTile:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        layoutId:
+          type: string
+          title: layout_id
+        bbox:
+          title: bbox
+          $ref: '#/components/schemas/layout.v1.BoundingBox'
+        lodLevel:
+          type: integer
+          title: lod_level
+          format: int32
+        panelCount:
+          type: integer
+          title: panel_count
+          format: int32
+        metadataJson:
+          type: string
+          title: metadata_json
+        createdAt:
+          title: created_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: LayoutTile
+      additionalProperties: false
+    layout.v1.ListComponentsRequest:
+      type: object
+      properties:
+        layoutId:
+          type: string
+          title: layout_id
+        typeFilter:
+          title: type_filter
+          $ref: '#/components/schemas/layout.v1.ComponentType'
+      title: ListComponentsRequest
+      additionalProperties: false
+    layout.v1.ListComponentsResponse:
+      type: object
+      properties:
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/layout.v1.Component'
+          title: components
+      title: ListComponentsResponse
+      additionalProperties: false
+    layout.v1.ListLayoutsRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+      title: ListLayoutsRequest
+      additionalProperties: false
+    layout.v1.ListLayoutsResponse:
+      type: object
+      properties:
+        layouts:
+          type: array
+          items:
+            $ref: '#/components/schemas/layout.v1.Layout'
+          title: layouts
+      title: ListLayoutsResponse
+      additionalProperties: false
+    layout.v1.MoveComponentRequest:
+      type: object
+      properties:
+        componentId:
+          type: string
+          title: component_id
+        position:
+          title: position
+          $ref: '#/components/schemas/layout.v1.Position'
+        rotation:
+          type: number
+          title: rotation
+          format: double
+      title: MoveComponentRequest
+      additionalProperties: false
+    layout.v1.MoveComponentResponse:
+      type: object
+      properties:
+        component:
+          title: component
+          $ref: '#/components/schemas/layout.v1.Component'
+      title: MoveComponentResponse
+      additionalProperties: false
+    layout.v1.Panel:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        tileId:
+          type: string
+          title: tile_id
+        stringId:
+          type: string
+          title: string_id
+        geometryGeojson:
+          type: string
+          title: geometry_geojson
+          description: GeoJSON polygon
+        tilt:
+          type: number
+          title: tilt
+          format: double
+        azimuth:
+          type: number
+          title: azimuth
+          format: double
+        elevation:
+          type: number
+          title: elevation
+          format: double
+        metadataJson:
+          type: string
+          title: metadata_json
+      title: Panel
+      additionalProperties: false
+    layout.v1.PanelArrayParams:
+      type: object
+      properties:
+        panelWidth:
+          type: number
+          title: panel_width
+          format: double
+          description: Panel dimensions in meters
+        panelHeight:
+          type: number
+          title: panel_height
+          format: double
+        tiltAngle:
+          type: number
+          title: tilt_angle
+          format: double
+        azimuth:
+          type: number
+          title: azimuth
+          format: double
+        rowSpacing:
+          type: number
+          title: row_spacing
+          format: double
+        columnSpacing:
+          type: number
+          title: column_spacing
+          format: double
+        fillAreaGeojson:
+          type: string
+          title: fill_area_geojson
+          description: GeoJSON polygon for the fill area
+        terrainLayerId:
+          type: string
+          title: terrain_layer_id
+          description: Optional terrain layer for alignment
+      title: PanelArrayParams
+      additionalProperties: false
+    layout.v1.PlaceComponentRequest:
+      type: object
+      properties:
+        layoutId:
+          type: string
+          title: layout_id
+        assetId:
+          type: string
+          title: asset_id
+        componentType:
+          title: component_type
+          $ref: '#/components/schemas/layout.v1.ComponentType'
+        position:
+          title: position
+          $ref: '#/components/schemas/layout.v1.Position'
+        rotation:
+          type: number
+          title: rotation
+          format: double
+        metadataJson:
+          type: string
+          title: metadata_json
+      title: PlaceComponentRequest
+      additionalProperties: false
+    layout.v1.PlaceComponentResponse:
+      type: object
+      properties:
+        component:
+          title: component
+          $ref: '#/components/schemas/layout.v1.Component'
+      title: PlaceComponentResponse
+      additionalProperties: false
+    layout.v1.Position:
+      type: object
+      properties:
+        longitude:
+          type: number
+          title: longitude
+          format: double
+        latitude:
+          type: number
+          title: latitude
+          format: double
+        elevation:
+          type: number
+          title: elevation
+          format: double
+      title: Position
+      additionalProperties: false
+    layout.v1.RejectLayoutRequest:
+      type: object
+      properties:
+        layoutId:
+          type: string
+          title: layout_id
+        rejectionReasons:
+          type: array
+          items:
+            type: string
+          title: rejection_reasons
+        rejectedByActorId:
+          type: string
+          title: rejected_by_actor_id
+      title: RejectLayoutRequest
+      additionalProperties: false
+    layout.v1.RejectLayoutResponse:
+      type: object
+      properties:
+        layout:
+          title: layout
+          $ref: '#/components/schemas/layout.v1.Layout'
+        reviewMetadata:
+          title: review_metadata
+          $ref: '#/components/schemas/layout.v1.ReviewMetadata'
+      title: RejectLayoutResponse
+      additionalProperties: false
+    layout.v1.RemoveComponentRequest:
+      type: object
+      properties:
+        componentId:
+          type: string
+          title: component_id
+      title: RemoveComponentRequest
+      additionalProperties: false
+    layout.v1.RemoveComponentResponse:
+      type: object
+      title: RemoveComponentResponse
+      additionalProperties: false
+    layout.v1.ReviewMetadata:
+      type: object
+      properties:
+        status:
+          title: status
+          description: status is the current acceptance gate state.
+          $ref: '#/components/schemas/layout.v1.AcceptanceStatus'
+        reviewedByActorId:
+          type: string
+          title: reviewed_by_actor_id
+          description: reviewed_by_actor_id is the user or system actor that performed the review action.
+        reviewedAt:
+          title: reviewed_at
+          description: reviewed_at is the timestamp of the most recent review action.
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        qualityScore:
+          type: number
+          title: quality_score
+          format: double
+          description: quality_score is a reviewer-assigned [0, 1] quality rating.
+        reviewComments:
+          type: array
+          items:
+            type: string
+          title: review_comments
+          description: review_comments are free-text annotations from the reviewer.
+        blockers:
+          type: array
+          items:
+            type: string
+          title: blockers
+          description: blockers are unresolved reasons preventing approval. Empty when approved.
+        approvalTimestampUnixSecs:
+          type: string
+          title: approval_timestamp_unix_secs
+          description: approval_timestamp_unix_secs records the ISO-8601 approval time for the audit trail.
+      title: ReviewMetadata
+      additionalProperties: false
+      description: |-
+        ========== Review Metadata ==========
+         ReviewMetadata captures the acceptance workflow state attached to a layout.
+         Populated by the SubmitLayoutForReview / ApproveLayout / RejectLayout RPCs.
+         Consumed by PlanningWorkflow gate enforcement for the LayoutReady -> ElectricalReady transition.
+    layout.v1.SubmitLayoutForReviewRequest:
+      type: object
+      properties:
+        layoutId:
+          type: string
+          title: layout_id
+        submissionReason:
+          type: string
+          title: submission_reason
+        submittedByActorId:
+          type: string
+          title: submitted_by_actor_id
+      title: SubmitLayoutForReviewRequest
+      additionalProperties: false
+      description: ========== Acceptance Request/Response Messages ==========
+    layout.v1.SubmitLayoutForReviewResponse:
+      type: object
+      properties:
+        layout:
+          title: layout
+          $ref: '#/components/schemas/layout.v1.Layout'
+        reviewMetadata:
+          title: review_metadata
+          $ref: '#/components/schemas/layout.v1.ReviewMetadata'
+      title: SubmitLayoutForReviewResponse
+      additionalProperties: false
+security: []
+tags:
+  - name: layout.v1.LayoutService
+    description: |-
+      LayoutService manages solar farm layout entities including panel arrays,
+       components (inverters, transformers, trackers), tile-based spatial queries,
+       and the acceptance workflow gate required for ElectricalReady phase progression.

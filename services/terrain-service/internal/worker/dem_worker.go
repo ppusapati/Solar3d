@@ -12,8 +12,8 @@ import (
 
 	"github.com/rs/zerolog"
 
-	"solar3d/terrain-service/internal/domain"
-	"solar3d/terrain-service/internal/repository"
+	"p9e.in/samavaya/solar3d/terrain-service/internal/domain"
+	"p9e.in/samavaya/solar3d/terrain-service/internal/repository"
 )
 
 // CopernicusDEMWorker downloads and ingests Copernicus DEM GeoTIFF data into the cache.

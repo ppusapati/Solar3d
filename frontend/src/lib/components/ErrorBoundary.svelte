@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { structuredLog, Solar3DError } from '$lib/core/error-handling';
 
 	export let fallbackMessage = 'Something went wrong';
+	export let scope = 'root';
 
 	let hasError = false;
 	let errorMessage = '';
@@ -10,12 +12,14 @@
 		const handler = (event: ErrorEvent) => {
 			hasError = true;
 			errorMessage = event.message || 'An unexpected error occurred';
+			structuredLog('error', `error_boundary.${scope}`, event.error instanceof Solar3DError ? event.error : { message: errorMessage, source: event.filename, line: event.lineno });
 			event.preventDefault();
 		};
 
 		const rejectionHandler = (event: PromiseRejectionEvent) => {
 			hasError = true;
 			errorMessage = event.reason?.message || 'An unhandled promise rejection occurred';
+			structuredLog('error', `error_boundary.${scope}.rejection`, event.reason instanceof Solar3DError ? event.reason : { message: errorMessage });
 			event.preventDefault();
 		};
 

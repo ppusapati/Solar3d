@@ -1,0 +1,26 @@
+---
+# Chaos Mesh — NetworkChaos: partition project-service from Postgres primary.
+# Expected behaviour: project-service fails fast, gateway returns 503 for writes,
+# reads from replica continue, circuit breaker opens after threshold.
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: partition-project-db
+  namespace: solar3d-staging
+spec:
+  action: partition
+  mode: all
+  selector:
+    namespaces:
+      - solar3d-staging
+    labelSelectors:
+      app: project-service
+  direction: to
+  target:
+    mode: all
+    selector:
+      namespaces:
+        - solar3d-staging
+      labelSelectors:
+        app: postgres-primary
+  duration: '5m'

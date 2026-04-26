@@ -1,6 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
+	import { constraintApi } from '$lib/core/api/constraint';
+	import { toast } from '$lib/core/stores/toast';
+	import { confirm as confirmModal } from '$lib/core/stores/confirm';
+	import { structuredLog } from '$lib/core/error-handling';
 
 	interface Zone {
 		zoneId: string;
@@ -98,62 +102,49 @@
 		updateFilteredZones();
 	});
 
+	function protoZoneToUi(z: any): Zone {
+		return {
+			zoneId: z.zoneId,
+			name: z.name,
+			description: z.description ?? '',
+			zoneType: zoneTypeFromProto(z.zoneType),
+			zoneCategory: zoneCategoryFromProto(z.zoneCategory),
+			geometryWkt: z.geometryWkt ?? '',
+			bufferDistanceM: z.bufferDistanceM,
+			zoneStatus: zoneStatusFromProto(z.zoneStatus),
+			effectiveStartAt: z.effectiveStartAt,
+			effectiveEndAt: z.effectiveEndAt,
+			isPublic: !!z.isPublic,
+			tags: z.tags ?? [],
+			createdAt: z.createdAt,
+			createdBy: z.createdBy ?? ''
+		};
+	}
+
+	function zoneTypeFromProto(v: number | string): Zone['zoneType'] {
+		const s = typeof v === 'number' ? ['UNSPECIFIED', 'EXCLUSION', 'INCLUSION', 'BUFFER'][v] : String(v);
+		return (s === 'INCLUSION' || s === 'BUFFER' ? s : 'EXCLUSION') as Zone['zoneType'];
+	}
+	function zoneStatusFromProto(v: number | string): Zone['zoneStatus'] {
+		const s = typeof v === 'number'
+			? ['UNSPECIFIED', 'ACTIVE', 'INACTIVE', 'EXPIRED', 'PENDING'][v]
+			: String(v);
+		return (['ACTIVE', 'INACTIVE', 'EXPIRED', 'PENDING'].includes(s) ? s : 'ACTIVE') as Zone['zoneStatus'];
+	}
+	function zoneCategoryFromProto(v: number | string): string {
+		if (typeof v === 'string') return v;
+		return ['UNSPECIFIED', 'ENVIRONMENTAL', 'REGULATORY', 'INFRASTRUCTURE', 'CULTURAL', 'ECONOMIC', 'OTHER'][v] ?? 'OTHER';
+	}
+
 	// Zone loading and filtering
 	async function loadZones() {
 		try {
-			// TODO: Replace with actual API call
-			// const response = await fetch(`/api/constraint-zones?projectId=${$filters.projectId}`);
-			// const data = await response.json();
-			// zones.set(data);
-
-			// Mock data for demo
-			zones.set([
-				{
-					zoneId: 'zone-env-1',
-					name: 'Protected Habitat Alpha',
-					description: 'Environmentally sensitive area with endangered species',
-					zoneType: 'EXCLUSION',
-					zoneCategory: 'ENVIRONMENTAL',
-					geometryWkt: 'POLYGON((-118.5 35.2, -118.4 35.2, -118.4 35.3, -118.5 35.3, -118.5 35.2))',
-					zoneStatus: 'ACTIVE',
-					effectiveStartAt: new Date().toISOString(),
-					isPublic: false,
-					tags: ['habitat', 'endangered-species', 'protected'],
-					createdAt: new Date(Date.now() - 7 * 24 * 3600 * 1000).toISOString(),
-					createdBy: 'regulatory@solar.com'
-				},
-				{
-					zoneId: 'zone-reg-1',
-					name: 'Designated Solar Zone',
-					description: 'County-approved area for solar development',
-					zoneType: 'INCLUSION',
-					zoneCategory: 'REGULATORY',
-					geometryWkt: 'POLYGON((-118.6 35.0, -118.3 35.0, -118.3 35.4, -118.6 35.4, -118.6 35.0))',
-					zoneStatus: 'ACTIVE',
-					effectiveStartAt: new Date().toISOString(),
-					isPublic: true,
-					tags: ['approved', 'solar', 'development'],
-					createdAt: new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString(),
-					createdBy: 'county@gov.us'
-				},
-				{
-					zoneId: 'zone-inf-1',
-					name: 'Power Line Buffer',
-					description: '500m buffer around high-voltage transmission lines',
-					zoneType: 'BUFFER',
-					zoneCategory: 'INFRASTRUCTURE',
-					geometryWkt: 'LINESTRING(-118.5 35.1, -118.4 35.3)',
-					bufferDistanceM: 500,
-					zoneStatus: 'ACTIVE',
-					effectiveStartAt: new Date().toISOString(),
-					isPublic: false,
-					tags: ['infrastructure', 'buffer', 'transmission'],
-					createdAt: new Date(Date.now() - 14 * 24 * 3600 * 1000).toISOString(),
-					createdBy: 'utility@power.com'
-				}
-			]);
+			const resp = await constraintApi.list({ projectId: $filters.projectId, limit: 200 });
+			zones.set((resp.zones ?? []).map(protoZoneToUi));
 		} catch (error) {
-			console.error('Failed to load zones:', error);
+			structuredLog('error', 'constraint_zones.load', { error: String(error), projectId: $filters.projectId });
+			toast.error('Failed to load constraint zones');
+			zones.set([]);
 		}
 	}
 
@@ -247,68 +238,65 @@
 
 	async function submitForm() {
 		if (!zoneName || !geometryWkt) {
-			alert('Please fill in required fields');
+			toast.warning('Name and geometry are required');
 			return;
 		}
 
-		const zoneData = {
-			name: zoneName,
-			description,
-			zoneType,
-			zoneCategory,
-			geometryWkt,
-			bufferDistanceM: zoneType === 'BUFFER' ? bufferDistance : undefined,
-			zoneStatus,
-			isPublic,
-			tags: tagsInput.split(',').map((t) => t.trim())
-		};
+		const tags = tagsInput.split(',').map((t) => t.trim()).filter(Boolean);
 
 		try {
 			if (isEditing && selectedZone) {
-				const selectedZoneID = selectedZone.zoneId;
-				// TODO: API call to update
-				// await fetch(`/api/constraint-zones/${selectedZone.zoneId}`, {
-				//   method: 'PUT',
-				//   body: JSON.stringify(zoneData)
-				// });
-				zones.update((z) =>
-					z.map((zone) => (zone.zoneId === selectedZoneID ? { ...zone, ...zoneData } : zone))
-				);
+				await constraintApi.update({
+					zoneId: selectedZone.zoneId,
+					name: zoneName,
+					description,
+					zoneType: zoneType as never,
+					zoneCategory: zoneCategory as never,
+					geometryWkt,
+					bufferDistanceMeters: zoneType === 'BUFFER' ? bufferDistance : undefined,
+					zoneStatus: zoneStatus as never,
+					isPublic,
+					tags
+				});
+				toast.success(`Zone "${zoneName}" updated`);
 			} else {
-				// TODO: API call to create
-				// const response = await fetch('/api/constraint-zones', {
-				//   method: 'POST',
-				//   body: JSON.stringify(zoneData)
-				// });
-				const newZone: Zone = {
-					zoneId: `zone-${Date.now()}`,
-					...zoneData,
-					zoneStatus,
-					zoneType,
-					createdAt: new Date().toISOString(),
-					createdBy: 'current-user'
-				};
-				zones.update((z) => [...z, newZone]);
+				await constraintApi.create({
+					projectId: $filters.projectId,
+					name: zoneName,
+					description,
+					zoneType: zoneType as never,
+					zoneCategory: zoneCategory as never,
+					geometryWkt,
+					bufferDistanceMeters: zoneType === 'BUFFER' ? bufferDistance : undefined,
+					isPublic,
+					tags
+				});
+				toast.success(`Zone "${zoneName}" created`);
 			}
 			closeForm();
+			await loadZones();
 		} catch (error) {
-			console.error('Failed to save zone:', error);
-			alert('Failed to save zone');
+			structuredLog('error', 'constraint_zones.save', { error: String(error), name: zoneName });
+			toast.error(`Failed to save zone: ${error instanceof Error ? error.message : 'unknown error'}`);
 		}
 	}
 
 	async function deleteZone(zoneId: string) {
-		if (!confirm('Are you sure you want to delete this zone?')) {
-			return;
-		}
+		const ok = await confirmModal({
+			title: 'Delete this zone?',
+			body: 'The zone will be removed from siting analysis. This cannot be undone.',
+			confirmLabel: 'Delete',
+			danger: true
+		});
+		if (!ok) return;
 
 		try {
-			// TODO: API call to delete
-			// await fetch(`/api/constraint-zones/${zoneId}`, { method: 'DELETE' });
-			zones.update((z) => z.filter((zone) => zone.zoneId !== zoneId));
+			await constraintApi.delete(zoneId);
+			toast.success('Zone deleted');
+			await loadZones();
 		} catch (error) {
-			console.error('Failed to delete zone:', error);
-			alert('Failed to delete zone');
+			structuredLog('error', 'constraint_zones.delete', { error: String(error), zoneId });
+			toast.error('Failed to delete zone');
 		}
 	}
 

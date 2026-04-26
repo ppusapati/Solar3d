@@ -1,0 +1,1567 @@
+openapi: 3.1.0
+info:
+  title: transmission.v1
+paths:
+  /transmission.v1.TransmissionRoutingService/ApproveTransmissionRoute:
+    post:
+      tags:
+        - transmission.v1.TransmissionRoutingService
+      summary: ApproveTransmissionRoute
+      description: ApproveTransmissionRoute approves a reviewed route for downstream delivery.
+      operationId: transmission.v1.TransmissionRoutingService.ApproveTransmissionRoute
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/transmission.v1.ApproveTransmissionRouteRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/transmission.v1.ApproveTransmissionRouteResponse'
+  /transmission.v1.TransmissionRoutingService/CalculateTransmissionRoute:
+    post:
+      tags:
+        - transmission.v1.TransmissionRoutingService
+      summary: CalculateTransmissionRoute
+      description: CalculateTransmissionRoute computes a transmission route and returns the final result.
+      operationId: transmission.v1.TransmissionRoutingService.CalculateTransmissionRoute
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/transmission.v1.CalculateTransmissionRouteRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/transmission.v1.CalculateTransmissionRouteResponse'
+  /transmission.v1.TransmissionRoutingService/DeleteTransmissionRoute:
+    post:
+      tags:
+        - transmission.v1.TransmissionRoutingService
+      summary: DeleteTransmissionRoute
+      description: DeleteTransmissionRoute removes a transmission route.
+      operationId: transmission.v1.TransmissionRoutingService.DeleteTransmissionRoute
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/transmission.v1.DeleteTransmissionRouteRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/transmission.v1.DeleteTransmissionRouteResponse'
+  /transmission.v1.TransmissionRoutingService/ExportTransmissionRoutePack:
+    post:
+      tags:
+        - transmission.v1.TransmissionRoutingService
+      summary: ExportTransmissionRoutePack
+      description: ExportTransmissionRoutePack exports route artifacts required for handoff.
+      operationId: transmission.v1.TransmissionRoutingService.ExportTransmissionRoutePack
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/transmission.v1.ExportTransmissionRoutePackRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/transmission.v1.ExportTransmissionRoutePackResponse'
+  /transmission.v1.TransmissionRoutingService/GetTransmissionRoute:
+    post:
+      tags:
+        - transmission.v1.TransmissionRoutingService
+      summary: GetTransmissionRoute
+      description: GetTransmissionRoute returns a previously calculated transmission route by ID.
+      operationId: transmission.v1.TransmissionRoutingService.GetTransmissionRoute
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/transmission.v1.GetTransmissionRouteRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/transmission.v1.GetTransmissionRouteResponse'
+  /transmission.v1.TransmissionRoutingService/ListTransmissionRoutes:
+    post:
+      tags:
+        - transmission.v1.TransmissionRoutingService
+      summary: ListTransmissionRoutes
+      description: ListTransmissionRoutes lists transmission routes for a project.
+      operationId: transmission.v1.TransmissionRoutingService.ListTransmissionRoutes
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/transmission.v1.ListTransmissionRoutesRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/transmission.v1.ListTransmissionRoutesResponse'
+  /transmission.v1.TransmissionRoutingService/RejectTransmissionRoute:
+    post:
+      tags:
+        - transmission.v1.TransmissionRoutingService
+      summary: RejectTransmissionRoute
+      description: RejectTransmissionRoute rejects a route under engineering review, returning it to draft.
+      operationId: transmission.v1.TransmissionRoutingService.RejectTransmissionRoute
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/transmission.v1.RejectTransmissionRouteRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/transmission.v1.RejectTransmissionRouteResponse'
+  /transmission.v1.TransmissionRoutingService/StreamTransmissionRoute: {}
+  /transmission.v1.TransmissionRoutingService/SubmitTransmissionRouteForReview:
+    post:
+      tags:
+        - transmission.v1.TransmissionRoutingService
+      summary: SubmitTransmissionRouteForReview
+      description: SubmitTransmissionRouteForReview transitions a route into engineering review.
+      operationId: transmission.v1.TransmissionRoutingService.SubmitTransmissionRouteForReview
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/transmission.v1.SubmitTransmissionRouteForReviewRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/transmission.v1.SubmitTransmissionRouteForReviewResponse'
+components:
+  schemas:
+    connect-protocol-version:
+      type: number
+      title: Connect-Protocol-Version
+      enum:
+        - 1
+      description: Define the version of the Connect protocol
+      const: 1
+    connect-timeout-header:
+      type: number
+      title: Connect-Timeout-Ms
+      description: Define the timeout, in ms
+    connect.error:
+      type: object
+      properties:
+        code:
+          type: string
+          examples:
+            - not_found
+          enum:
+            - canceled
+            - unknown
+            - invalid_argument
+            - deadline_exceeded
+            - not_found
+            - already_exists
+            - permission_denied
+            - resource_exhausted
+            - failed_precondition
+            - aborted
+            - out_of_range
+            - unimplemented
+            - internal
+            - unavailable
+            - data_loss
+            - unauthenticated
+          description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+        message:
+          type: string
+          description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/connect.error_details.Any'
+          description: A list of messages that carry the error details. There is no limit on the number of messages.
+      title: Connect Error
+      additionalProperties: true
+      description: 'Error type returned by Connect: https://connectrpc.com/docs/go/errors/#http-representation'
+    connect.error_details.Any:
+      type: object
+      properties:
+        type:
+          type: string
+          description: 'A URL that acts as a globally unique identifier for the type of the serialized message. For example: `type.googleapis.com/google.rpc.ErrorInfo`. This is used to determine the schema of the data in the `value` field and is the discriminator for the `debug` field.'
+        value:
+          type: string
+          format: binary
+          description: The Protobuf message, serialized as bytes and base64-encoded. The specific message type is identified by the `type` field.
+        debug:
+          oneOf:
+            - type: object
+              title: Any
+              additionalProperties: true
+              description: Detailed error information.
+          discriminator:
+            propertyName: type
+          title: Debug
+          description: Deserialized error detail payload. The 'type' field indicates the schema. This field is for easier debugging and should not be relied upon for application logic.
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message, with an additional debug field for ConnectRPC error details.
+    google.protobuf.FieldMask:
+      type: string
+      description: |-
+        `FieldMask` represents a set of symbolic field paths, for example:
+
+             paths: "f.a"
+             paths: "f.b.d"
+
+         Here `f` represents a field in some root message, `a` and `b`
+         fields in the message found in `f`, and `d` a field found in the
+         message in `f.b`.
+
+         Field masks are used to specify a subset of fields that should be
+         returned by a get operation or modified by an update operation.
+         Field masks also have a custom JSON encoding (see below).
+
+         # Field Masks in Projections
+
+         When used in the context of a projection, a response message or
+         sub-message is filtered by the API to only contain those fields as
+         specified in the mask. For example, if the mask in the previous
+         example is applied to a response message as follows:
+
+             f {
+               a : 22
+               b {
+                 d : 1
+                 x : 2
+               }
+               y : 13
+             }
+             z: 8
+
+         The result will not contain specific values for fields x,y and z
+         (their value will be set to the default, and omitted in proto text
+         output):
+
+
+             f {
+               a : 22
+               b {
+                 d : 1
+               }
+             }
+
+         A repeated field is not allowed except at the last position of a
+         paths string.
+
+         If a FieldMask object is not present in a get operation, the
+         operation applies to all fields (as if a FieldMask of all fields
+         had been specified).
+
+         Note that a field mask does not necessarily apply to the
+         top-level response message. In case of a REST get operation, the
+         field mask applies directly to the response, but in case of a REST
+         list operation, the mask instead applies to each individual message
+         in the returned resource list. In case of a REST custom method,
+         other definitions may be used. Where the mask applies will be
+         clearly documented together with its declaration in the API.  In
+         any case, the effect on the returned resource/resources is required
+         behavior for APIs.
+
+         # Field Masks in Update Operations
+
+         A field mask in update operations specifies which fields of the
+         targeted resource are going to be updated. The API is required
+         to only change the values of the fields as specified in the mask
+         and leave the others untouched. If a resource is passed in to
+         describe the updated values, the API ignores the values of all
+         fields not covered by the mask.
+
+         If a repeated field is specified for an update operation, new values will
+         be appended to the existing repeated field in the target resource. Note that
+         a repeated field is only allowed in the last position of a `paths` string.
+
+         If a sub-message is specified in the last position of the field mask for an
+         update operation, then new value will be merged into the existing sub-message
+         in the target resource.
+
+         For example, given the target message:
+
+             f {
+               b {
+                 d: 1
+                 x: 2
+               }
+               c: [1]
+             }
+
+         And an update message:
+
+             f {
+               b {
+                 d: 10
+               }
+               c: [2]
+             }
+
+         then if the field mask is:
+
+          paths: ["f.b", "f.c"]
+
+         then the result will be:
+
+             f {
+               b {
+                 d: 10
+                 x: 2
+               }
+               c: [1, 2]
+             }
+
+         An implementation may provide options to override this default behavior for
+         repeated and message fields.
+
+         In order to reset a field's value to the default, the field must
+         be in the mask and set to the default value in the provided resource.
+         Hence, in order to reset all fields of a resource, provide a default
+         instance of the resource and set all fields in the mask, or do
+         not provide a mask as described below.
+
+         If a field mask is not present on update, the operation applies to
+         all fields (as if a field mask of all fields has been specified).
+         Note that in the presence of schema evolution, this may mean that
+         fields the client does not know and has therefore not filled into
+         the request will be reset to their default. If this is unwanted
+         behavior, a specific service may require a client to always specify
+         a field mask, producing an error if not.
+
+         As with get operations, the location of the resource which
+         describes the updated values in the request message depends on the
+         operation kind. In any case, the effect of the field mask is
+         required to be honored by the API.
+
+         ## Considerations for HTTP REST
+
+         The HTTP kind of an update operation which uses a field mask must
+         be set to PATCH instead of PUT in order to satisfy HTTP semantics
+         (PUT must only be used for full updates).
+
+         # JSON Encoding of Field Masks
+
+         In JSON, a field mask is encoded as a single string where paths are
+         separated by a comma. Fields name in each path are converted
+         to/from lower-camel naming conventions.
+
+         As an example, consider the following message declarations:
+
+             message Profile {
+               User user = 1;
+               Photo photo = 2;
+             }
+             message User {
+               string display_name = 1;
+               string address = 2;
+             }
+
+         In proto a field mask for `Profile` may look as such:
+
+             mask {
+               paths: "user.display_name"
+               paths: "photo"
+             }
+
+         In JSON, the same mask is represented as below:
+
+             {
+               mask: "user.displayName,photo"
+             }
+
+         # Field Masks and Oneof Fields
+
+         Field masks treat fields in oneofs just as regular fields. Consider the
+         following message:
+
+             message SampleMessage {
+               oneof test_oneof {
+                 string name = 4;
+                 SubMessage sub_message = 9;
+               }
+             }
+
+         The field mask can be:
+
+             mask {
+               paths: "name"
+             }
+
+         Or:
+
+             mask {
+               paths: "sub_message"
+             }
+
+         Note that oneof type names ("test_oneof" in this case) cannot be used in
+         paths.
+
+         ## Field Mask Verification
+
+         The implementation of any API method which has a FieldMask type field in the
+         request should verify the included field paths, and return an
+         `INVALID_ARGUMENT` error if any path is unmappable.
+    google.protobuf.Timestamp:
+      type: string
+      examples:
+        - "2023-01-15T01:30:15.01Z"
+        - "2024-12-25T12:00:00Z"
+      format: date-time
+      description: |-
+        A Timestamp represents a point in time independent of any time zone or local
+         calendar, encoded as a count of seconds and fractions of seconds at
+         nanosecond resolution. The count is relative to an epoch at UTC midnight on
+         January 1, 1970, in the proleptic Gregorian calendar which extends the
+         Gregorian calendar backwards to year one.
+
+         All minutes are 60 seconds long. Leap seconds are "smeared" so that no leap
+         second table is needed for interpretation, using a [24-hour linear
+         smear](https://developers.google.com/time/smear).
+
+         The range is from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59.999999999Z. By
+         restricting to that range, we ensure that we can convert to and from [RFC
+         3339](https://www.ietf.org/rfc/rfc3339.txt) date strings.
+
+         # Examples
+
+         Example 1: Compute Timestamp from POSIX `time()`.
+
+             Timestamp timestamp;
+             timestamp.set_seconds(time(NULL));
+             timestamp.set_nanos(0);
+
+         Example 2: Compute Timestamp from POSIX `gettimeofday()`.
+
+             struct timeval tv;
+             gettimeofday(&tv, NULL);
+
+             Timestamp timestamp;
+             timestamp.set_seconds(tv.tv_sec);
+             timestamp.set_nanos(tv.tv_usec * 1000);
+
+         Example 3: Compute Timestamp from Win32 `GetSystemTimeAsFileTime()`.
+
+             FILETIME ft;
+             GetSystemTimeAsFileTime(&ft);
+             UINT64 ticks = (((UINT64)ft.dwHighDateTime) << 32) | ft.dwLowDateTime;
+
+             // A Windows tick is 100 nanoseconds. Windows epoch 1601-01-01T00:00:00Z
+             // is 11644473600 seconds before Unix epoch 1970-01-01T00:00:00Z.
+             Timestamp timestamp;
+             timestamp.set_seconds((INT64) ((ticks / 10000000) - 11644473600LL));
+             timestamp.set_nanos((INT32) ((ticks % 10000000) * 100));
+
+         Example 4: Compute Timestamp from Java `System.currentTimeMillis()`.
+
+             long millis = System.currentTimeMillis();
+
+             Timestamp timestamp = Timestamp.newBuilder().setSeconds(millis / 1000)
+                 .setNanos((int) ((millis % 1000) * 1000000)).build();
+
+         Example 5: Compute Timestamp from Java `Instant.now()`.
+
+             Instant now = Instant.now();
+
+             Timestamp timestamp =
+                 Timestamp.newBuilder().setSeconds(now.getEpochSecond())
+                     .setNanos(now.getNano()).build();
+
+         Example 6: Compute Timestamp from current time in Python.
+
+             timestamp = Timestamp()
+             timestamp.GetCurrentTime()
+
+         # JSON Mapping
+
+         In JSON format, the Timestamp type is encoded as a string in the
+         [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format. That is, the
+         format is "{year}-{month}-{day}T{hour}:{min}:{sec}[.{frac_sec}]Z"
+         where {year} is always expressed using four digits while {month}, {day},
+         {hour}, {min}, and {sec} are zero-padded to two digits each. The fractional
+         seconds, which can go up to 9 digits (i.e. up to 1 nanosecond resolution),
+         are optional. The "Z" suffix indicates the timezone ("UTC"); the timezone
+         is required. A proto3 JSON serializer should always use UTC (as indicated by
+         "Z") when printing the Timestamp type and a proto3 JSON parser should be
+         able to accept both UTC and other timezones (as indicated by an offset).
+
+         For example, "2017-01-15T01:30:15.01Z" encodes 15.01 seconds past
+         01:30 UTC on January 15, 2017.
+
+         In JavaScript, one can convert a Date object to this format using the
+         standard
+         [toISOString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString)
+         method. In Python, a standard `datetime.datetime` object can be converted
+         to this format using
+         [`strftime`](https://docs.python.org/2/library/time.html#time.strftime) with
+         the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one can use
+         the Joda Time's [`ISODateTimeFormat.dateTime()`](
+         http://joda-time.sourceforge.net/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime()
+         ) to obtain a formatter capable of generating timestamps in this format.
+    packages.api.v1.pagination.PaginationRequest:
+      type: object
+      properties:
+        pageOffset:
+          type: integer
+          title: page_offset
+          format: int32
+        pageSize:
+          type: integer
+          title: page_size
+          format: int32
+        sort:
+          type: array
+          items:
+            type: string
+          title: sort
+        fields:
+          title: fields
+          $ref: '#/components/schemas/google.protobuf.FieldMask'
+      title: PaginationRequest
+      additionalProperties: false
+      description: Alias for extension/land modules that reference PaginationRequest
+    packages.api.v1.pagination.PaginationResponse:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+          title: total_count
+          format: int32
+        pageOffset:
+          type: integer
+          title: page_offset
+          format: int32
+        pageSize:
+          type: integer
+          title: page_size
+          format: int32
+        hasNext:
+          type: boolean
+          title: has_next
+      title: PaginationResponse
+      additionalProperties: false
+      description: Paginated list response wrapper
+    transmission.v1.AcceptanceStatus:
+      type: string
+      title: AcceptanceStatus
+      enum:
+        - ACCEPTANCE_STATUS_UNSPECIFIED
+        - ACCEPTANCE_STATUS_DRAFT
+        - ACCEPTANCE_STATUS_REVIEW_PENDING
+        - ACCEPTANCE_STATUS_APPROVED
+        - ACCEPTANCE_STATUS_REJECTED
+      description: |-
+        ========== Acceptance Status Enum ==========
+         AcceptanceStatus is the workflow gate acceptance state — distinct from ApprovalStatus
+         (which tracks the governance review stage). AcceptanceStatus determines whether this
+         artefact satisfies its predecessor gate for phase progression.
+    transmission.v1.ApprovalStatus:
+      type: string
+      title: ApprovalStatus
+      enum:
+        - APPROVAL_STATUS_UNSPECIFIED
+        - APPROVAL_STATUS_DRAFT
+        - APPROVAL_STATUS_ENGINEERING_REVIEW
+        - APPROVAL_STATUS_APPROVED
+        - APPROVAL_STATUS_REJECTED
+    transmission.v1.ApproveTransmissionRouteRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        actor:
+          type: string
+          title: actor
+        note:
+          type: string
+          title: note
+        qualityScore:
+          type: number
+          title: quality_score
+          format: double
+          description: quality_score is the reviewer-assigned quality rating [0, 1].
+        feasibilityScore:
+          type: number
+          title: feasibility_score
+          format: double
+          description: feasibility_score is the reviewer-assigned engineering feasibility score [0, 1].
+        approvalComments:
+          type: array
+          items:
+            type: string
+          title: approval_comments
+          description: approval_comments are free-text comments attached to the approval.
+      title: ApproveTransmissionRouteRequest
+      additionalProperties: false
+      description: |-
+        ApproveTransmissionRouteRequest approves a route in engineering review,
+         setting acceptance_status to APPROVED and recording quality/feasibility scores.
+    transmission.v1.ApproveTransmissionRouteResponse:
+      type: object
+      properties:
+        route:
+          title: route
+          $ref: '#/components/schemas/transmission.v1.TransmissionRoute'
+      title: ApproveTransmissionRouteResponse
+      additionalProperties: false
+      description: ApproveTransmissionRouteResponse returns the route with APPROVED acceptance state.
+    transmission.v1.CalculateTransmissionRouteRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        name:
+          type: string
+          title: name
+        voltageClass:
+          title: voltage_class
+          $ref: '#/components/schemas/transmission.v1.VoltageClass'
+        farmOutputPoint:
+          title: farm_output_point
+          $ref: '#/components/schemas/transmission.v1.Waypoint'
+        gridInjectionPoint:
+          title: grid_injection_point
+          $ref: '#/components/schemas/transmission.v1.Waypoint'
+        constraints:
+          title: constraints
+          $ref: '#/components/schemas/transmission.v1.TransmissionConstraints'
+        elevationRaster:
+          title: elevation_raster
+          $ref: '#/components/schemas/transmission.v1.ElevationRasterInput'
+        obstacleRaster:
+          title: obstacle_raster
+          $ref: '#/components/schemas/transmission.v1.ObstacleRasterInput'
+        vectorFeatures:
+          type: array
+          items:
+            $ref: '#/components/schemas/transmission.v1.VectorFeatureInput'
+          title: vector_features
+      title: CalculateTransmissionRouteRequest
+      additionalProperties: false
+    transmission.v1.CalculateTransmissionRouteResponse:
+      type: object
+      properties:
+        route:
+          title: route
+          $ref: '#/components/schemas/transmission.v1.TransmissionRoute'
+      title: CalculateTransmissionRouteResponse
+      additionalProperties: false
+    transmission.v1.CostBookEntry:
+      type: object
+      properties:
+        category:
+          type: string
+          title: category
+        subcategory:
+          type: string
+          title: subcategory
+        amount:
+          type: number
+          title: amount
+          format: double
+        basis:
+          type: string
+          title: basis
+      title: CostBookEntry
+      additionalProperties: false
+    transmission.v1.CostBreakdown:
+      type: object
+      properties:
+        conductorCost:
+          type: number
+          title: conductor_cost
+          format: double
+        towerCost:
+          type: number
+          title: tower_cost
+          format: double
+        rowAcquisitionCost:
+          type: number
+          title: row_acquisition_cost
+          format: double
+        crossingPremium:
+          type: number
+          title: crossing_premium
+          format: double
+        totalCost:
+          type: number
+          title: total_cost
+          format: double
+        costPerKm:
+          type: number
+          title: cost_per_km
+          format: double
+      title: CostBreakdown
+      additionalProperties: false
+    transmission.v1.DeleteTransmissionRouteRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+      title: DeleteTransmissionRouteRequest
+      additionalProperties: false
+    transmission.v1.DeleteTransmissionRouteResponse:
+      type: object
+      title: DeleteTransmissionRouteResponse
+      additionalProperties: false
+    transmission.v1.ElevationRasterInput:
+      type: object
+      properties:
+        width:
+          type: integer
+          title: width
+          format: int32
+        height:
+          type: integer
+          title: height
+          format: int32
+        cellSizeM:
+          type: number
+          title: cell_size_m
+          format: double
+        originLongitude:
+          type: number
+          title: origin_longitude
+          format: double
+        originLatitude:
+          type: number
+          title: origin_latitude
+          format: double
+        elevations:
+          type: array
+          items:
+            type: number
+            format: double
+          title: elevations
+      title: ElevationRasterInput
+      additionalProperties: false
+    transmission.v1.ExportTransmissionRoutePackRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        generatedBy:
+          type: string
+          title: generated_by
+      title: ExportTransmissionRoutePackRequest
+      additionalProperties: false
+    transmission.v1.ExportTransmissionRoutePackResponse:
+      type: object
+      properties:
+        pack:
+          title: pack
+          $ref: '#/components/schemas/transmission.v1.TransmissionRouteExportPack'
+      title: ExportTransmissionRoutePackResponse
+      additionalProperties: false
+    transmission.v1.GetTransmissionRouteRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+      title: GetTransmissionRouteRequest
+      additionalProperties: false
+    transmission.v1.GetTransmissionRouteResponse:
+      type: object
+      properties:
+        route:
+          title: route
+          $ref: '#/components/schemas/transmission.v1.TransmissionRoute'
+      title: GetTransmissionRouteResponse
+      additionalProperties: false
+    transmission.v1.GovernanceEvent:
+      type: object
+      properties:
+        eventType:
+          type: string
+          title: event_type
+        actor:
+          type: string
+          title: actor
+        note:
+          type: string
+          title: note
+        fromStatus:
+          title: from_status
+          $ref: '#/components/schemas/transmission.v1.ApprovalStatus'
+        toStatus:
+          title: to_status
+          $ref: '#/components/schemas/transmission.v1.ApprovalStatus'
+        occurredAt:
+          title: occurred_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: GovernanceEvent
+      additionalProperties: false
+    transmission.v1.InstallationMode:
+      type: string
+      title: InstallationMode
+      enum:
+        - INSTALLATION_MODE_UNSPECIFIED
+        - INSTALLATION_MODE_OVERHEAD
+        - INSTALLATION_MODE_UNDERGROUND
+    transmission.v1.ListTransmissionRoutesRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        pagination:
+          title: pagination
+          $ref: '#/components/schemas/packages.api.v1.pagination.PaginationRequest'
+      title: ListTransmissionRoutesRequest
+      additionalProperties: false
+    transmission.v1.ListTransmissionRoutesResponse:
+      type: object
+      properties:
+        routes:
+          type: array
+          items:
+            $ref: '#/components/schemas/transmission.v1.TransmissionRoute'
+          title: routes
+        pagination:
+          title: pagination
+          $ref: '#/components/schemas/packages.api.v1.pagination.PaginationResponse'
+      title: ListTransmissionRoutesResponse
+      additionalProperties: false
+    transmission.v1.ObstacleRasterInput:
+      type: object
+      properties:
+        width:
+          type: integer
+          title: width
+          format: int32
+        height:
+          type: integer
+          title: height
+          format: int32
+        cellSizeM:
+          type: number
+          title: cell_size_m
+          format: double
+        originLongitude:
+          type: number
+          title: origin_longitude
+          format: double
+        originLatitude:
+          type: number
+          title: origin_latitude
+          format: double
+        values:
+          type: array
+          items:
+            type: number
+            format: double
+          title: values
+      title: ObstacleRasterInput
+      additionalProperties: false
+    transmission.v1.RejectTransmissionRouteRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        actor:
+          type: string
+          title: actor
+        rejectionReasons:
+          type: array
+          items:
+            type: string
+          title: rejection_reasons
+          description: rejection_reasons must be non-empty; they populate review_metadata.blockers.
+      title: RejectTransmissionRouteRequest
+      additionalProperties: false
+      description: |-
+        RejectTransmissionRouteRequest rejects a route under review,
+         returning it to DRAFT with documented rejection reasons.
+    transmission.v1.RejectTransmissionRouteResponse:
+      type: object
+      properties:
+        route:
+          title: route
+          $ref: '#/components/schemas/transmission.v1.TransmissionRoute'
+      title: RejectTransmissionRouteResponse
+      additionalProperties: false
+      description: RejectTransmissionRouteResponse returns the route with REJECTED acceptance state.
+    transmission.v1.ReviewMetadata:
+      type: object
+      properties:
+        status:
+          title: status
+          description: status is the current acceptance gate state.
+          $ref: '#/components/schemas/transmission.v1.AcceptanceStatus'
+        reviewedByActorId:
+          type: string
+          title: reviewed_by_actor_id
+          description: reviewed_by_actor_id is the user or system actor that performed the review.
+        reviewedAt:
+          title: reviewed_at
+          description: reviewed_at is when the most recent review action occurred.
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        qualityScore:
+          type: number
+          title: quality_score
+          format: double
+          description: quality_score is an overall quality rating [0, 1] assigned by the reviewer.
+        reviewComments:
+          type: array
+          items:
+            type: string
+          title: review_comments
+          description: review_comments are free-text comments attached by the reviewer.
+        blockers:
+          type: array
+          items:
+            type: string
+          title: blockers
+          description: blockers lists unresolved reasons that prevented approval. Empty when approved.
+        approvalTimestampUnixSecs:
+          type: string
+          title: approval_timestamp_unix_secs
+          description: approval_timestamp_unix_secs records the ISO-8601 approval time as a string for audit.
+      title: ReviewMetadata
+      additionalProperties: false
+      description: |-
+        ========== Review Metadata ==========
+         ReviewMetadata captures acceptance workflow state attached to a route artefact.
+         Populated by the acceptance RPCs below; consumed by PlanningWorkflow gate checks.
+    transmission.v1.RouteScore:
+      type: object
+      properties:
+        costScore:
+          type: number
+          title: cost_score
+          format: double
+        riskScore:
+          type: number
+          title: risk_score
+          format: double
+        constructabilityScore:
+          type: number
+          title: constructability_score
+          format: double
+        scheduleScore:
+          type: number
+          title: schedule_score
+          format: double
+        compositeScore:
+          type: number
+          title: composite_score
+          format: double
+        paretoFrontier:
+          type: boolean
+          title: pareto_frontier
+        recommendationReason:
+          type: string
+          title: recommendation_reason
+        dimensionReasons:
+          type: object
+          title: dimension_reasons
+          additionalProperties:
+            type: string
+            title: value
+      title: RouteScore
+      additionalProperties: false
+    transmission.v1.RouteScore.DimensionReasonsEntry:
+      type: object
+      properties:
+        key:
+          type: string
+          title: key
+        value:
+          type: string
+          title: value
+      title: DimensionReasonsEntry
+      additionalProperties: false
+    transmission.v1.SegmentExplanation:
+      type: object
+      properties:
+        fromIndex:
+          type: integer
+          title: from_index
+          format: int32
+        slopeDeg:
+          type: number
+          title: slope_deg
+          format: double
+        landType:
+          type: string
+          title: land_type
+        costMultiplier:
+          type: number
+          title: cost_multiplier
+          format: double
+        decisionReason:
+          type: string
+          title: decision_reason
+        installationMode:
+          title: installation_mode
+          $ref: '#/components/schemas/transmission.v1.InstallationMode'
+      title: SegmentExplanation
+      additionalProperties: false
+    transmission.v1.StreamTransmissionRouteRequest:
+      type: object
+      properties:
+        request:
+          title: request
+          $ref: '#/components/schemas/transmission.v1.CalculateTransmissionRouteRequest'
+      title: StreamTransmissionRouteRequest
+      additionalProperties: false
+    transmission.v1.StreamTransmissionRouteResponse:
+      type: object
+      properties:
+        phase:
+          type: string
+          title: phase
+        percentComplete:
+          type: integer
+          title: percent_complete
+          format: int32
+        message:
+          type: string
+          title: message
+        route:
+          title: route
+          $ref: '#/components/schemas/transmission.v1.TransmissionRoute'
+      title: StreamTransmissionRouteResponse
+      additionalProperties: false
+    transmission.v1.SubmitTransmissionRouteForReviewRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        actor:
+          type: string
+          title: actor
+        note:
+          type: string
+          title: note
+        submissionReason:
+          type: string
+          title: submission_reason
+          description: submission_reason is a required human-readable justification for the review submission.
+      title: SubmitTransmissionRouteForReviewRequest
+      additionalProperties: false
+      description: |-
+        SubmitTransmissionRouteForReviewRequest submits a route for engineering review,
+         transitioning its approval_status to ENGINEERING_REVIEW and acceptance status to REVIEW_PENDING.
+    transmission.v1.SubmitTransmissionRouteForReviewResponse:
+      type: object
+      properties:
+        route:
+          title: route
+          $ref: '#/components/schemas/transmission.v1.TransmissionRoute'
+      title: SubmitTransmissionRouteForReviewResponse
+      additionalProperties: false
+      description: SubmitTransmissionRouteForReviewResponse returns the route with updated approval and acceptance state.
+    transmission.v1.TowerPosition:
+      type: object
+      properties:
+        longitude:
+          type: number
+          title: longitude
+          format: double
+        latitude:
+          type: number
+          title: latitude
+          format: double
+        elevation:
+          type: number
+          title: elevation
+          format: double
+        spanToNextM:
+          type: number
+          title: span_to_next_m
+          format: double
+        heightM:
+          type: number
+          title: height_m
+          format: double
+      title: TowerPosition
+      additionalProperties: false
+    transmission.v1.TowerScheduleEntry:
+      type: object
+      properties:
+        sequence:
+          type: integer
+          title: sequence
+          format: int32
+        longitude:
+          type: number
+          title: longitude
+          format: double
+        latitude:
+          type: number
+          title: latitude
+          format: double
+        elevation:
+          type: number
+          title: elevation
+          format: double
+        spanToNextM:
+          type: number
+          title: span_to_next_m
+          format: double
+        heightM:
+          type: number
+          title: height_m
+          format: double
+        structureType:
+          type: string
+          title: structure_type
+      title: TowerScheduleEntry
+      additionalProperties: false
+    transmission.v1.TraceabilityBundle:
+      type: object
+      properties:
+        algorithmVersion:
+          type: string
+          title: algorithm_version
+        inputFingerprint:
+          type: string
+          title: input_fingerprint
+        routeFingerprint:
+          type: string
+          title: route_fingerprint
+        regressionSignature:
+          type: string
+          title: regression_signature
+        requestSnapshotJson:
+          type: string
+          title: request_snapshot_json
+        dataSnapshotId:
+          type: string
+          title: data_snapshot_id
+        approvedAt:
+          title: approved_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        approvedBy:
+          type: string
+          title: approved_by
+      title: TraceabilityBundle
+      additionalProperties: false
+    transmission.v1.TransmissionConstraints:
+      type: object
+      properties:
+        minSpanM:
+          type: number
+          title: min_span_m
+          format: double
+        maxSpanM:
+          type: number
+          title: max_span_m
+          format: double
+        rowWidthM:
+          type: number
+          title: row_width_m
+          format: double
+        maxSlopeDeg:
+          type: number
+          title: max_slope_deg
+          format: double
+        slopePenaltyFactor:
+          type: number
+          title: slope_penalty_factor
+          format: double
+        waterCrossingCostMult:
+          type: number
+          title: water_crossing_cost_mult
+          format: double
+        roadParallelDiscount:
+          type: number
+          title: road_parallel_discount
+          format: double
+        maxDeflectionDeg:
+          type: number
+          title: max_deflection_deg
+          format: double
+        turnPenaltyFactor:
+          type: number
+          title: turn_penalty_factor
+          format: double
+        offRoadPenalty:
+          type: number
+          title: off_road_penalty
+          format: double
+        roadBufferM:
+          type: number
+          title: road_buffer_m
+          format: double
+      title: TransmissionConstraints
+      additionalProperties: false
+    transmission.v1.TransmissionRoute:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        projectId:
+          type: string
+          title: project_id
+        name:
+          type: string
+          title: name
+        voltageClass:
+          title: voltage_class
+          $ref: '#/components/schemas/transmission.v1.VoltageClass'
+        pathGeojson:
+          type: string
+          title: path_geojson
+        farmOutputPoint:
+          title: farm_output_point
+          $ref: '#/components/schemas/transmission.v1.Waypoint'
+        gridInjectionPoint:
+          title: grid_injection_point
+          $ref: '#/components/schemas/transmission.v1.Waypoint'
+        towerPositions:
+          type: array
+          items:
+            $ref: '#/components/schemas/transmission.v1.TowerPosition'
+          title: tower_positions
+        distanceM:
+          type: number
+          title: distance_m
+          format: double
+        costBreakdown:
+          title: cost_breakdown
+          $ref: '#/components/schemas/transmission.v1.CostBreakdown'
+        routeScore:
+          title: route_score
+          $ref: '#/components/schemas/transmission.v1.RouteScore'
+        segmentExplanations:
+          type: array
+          items:
+            $ref: '#/components/schemas/transmission.v1.SegmentExplanation'
+          title: segment_explanations
+        routeSummary:
+          type: string
+          title: route_summary
+        createdAt:
+          title: created_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        approvalStatus:
+          title: approval_status
+          $ref: '#/components/schemas/transmission.v1.ApprovalStatus'
+        engineeringReviewedAt:
+          title: engineering_reviewed_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        engineeringReviewedBy:
+          type: string
+          title: engineering_reviewed_by
+        approvedAt:
+          title: approved_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        approvedBy:
+          type: string
+          title: approved_by
+        governanceEvents:
+          type: array
+          items:
+            $ref: '#/components/schemas/transmission.v1.GovernanceEvent'
+          title: governance_events
+        electricalNetworkId:
+          type: string
+          title: electrical_network_id
+          description: |-
+            Acceptance gate fields added in Step 15.
+             electrical_network_id links this route to its origin electrical network.
+        reviewMetadata:
+          title: review_metadata
+          description: review_metadata holds the acceptance workflow state (gate check for TransmissionReady).
+          $ref: '#/components/schemas/transmission.v1.ReviewMetadata'
+        protectionDevices:
+          type: array
+          items:
+            type: string
+          title: protection_devices
+          description: protection_devices lists device identifiers validated on this route (IEC 60255).
+        faultIsolationPoints:
+          type: integer
+          title: fault_isolation_points
+          format: int32
+          description: fault_isolation_points is the count of validated fault isolation points on the route.
+        routeConflicts:
+          type: array
+          items:
+            type: string
+          title: route_conflicts
+          description: route_conflicts lists unresolved spatial or electrical conflicts. Empty if route is clean.
+        routeFeasibilityScore:
+          type: number
+          title: route_feasibility_score
+          format: double
+          description: route_feasibility_score is an overall engineering feasibility score [0, 1].
+      title: TransmissionRoute
+      additionalProperties: false
+    transmission.v1.TransmissionRouteExportPack:
+      type: object
+      properties:
+        route:
+          title: route
+          $ref: '#/components/schemas/transmission.v1.TransmissionRoute'
+        towerSchedule:
+          type: array
+          items:
+            $ref: '#/components/schemas/transmission.v1.TowerScheduleEntry'
+          title: tower_schedule
+        undergroundChainage:
+          type: array
+          items:
+            $ref: '#/components/schemas/transmission.v1.UndergroundChainageEntry'
+          title: underground_chainage
+        costBook:
+          type: array
+          items:
+            $ref: '#/components/schemas/transmission.v1.CostBookEntry'
+          title: cost_book
+        traceability:
+          title: traceability
+          $ref: '#/components/schemas/transmission.v1.TraceabilityBundle'
+        generatedAt:
+          title: generated_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        generatedBy:
+          type: string
+          title: generated_by
+      title: TransmissionRouteExportPack
+      additionalProperties: false
+    transmission.v1.UndergroundChainageEntry:
+      type: object
+      properties:
+        segmentIndex:
+          type: integer
+          title: segment_index
+          format: int32
+        startChainageM:
+          type: number
+          title: start_chainage_m
+          format: double
+        endChainageM:
+          type: number
+          title: end_chainage_m
+          format: double
+        lengthM:
+          type: number
+          title: length_m
+          format: double
+        reason:
+          type: string
+          title: reason
+      title: UndergroundChainageEntry
+      additionalProperties: false
+    transmission.v1.VectorFeatureInput:
+      type: object
+      properties:
+        featureType:
+          type: string
+          title: feature_type
+        geometryGeojson:
+          type: string
+          title: geometry_geojson
+        costMultiplier:
+          type: number
+          title: cost_multiplier
+          format: double
+      title: VectorFeatureInput
+      additionalProperties: false
+    transmission.v1.VoltageClass:
+      type: string
+      title: VoltageClass
+      enum:
+        - VOLTAGE_CLASS_UNSPECIFIED
+        - VOLTAGE_CLASS_11KV
+        - VOLTAGE_CLASS_33KV
+        - VOLTAGE_CLASS_HT_66KV
+        - VOLTAGE_CLASS_HT_132KV
+        - VOLTAGE_CLASS_HT_220KV
+        - VOLTAGE_CLASS_HT_400KV
+    transmission.v1.Waypoint:
+      type: object
+      properties:
+        longitude:
+          type: number
+          title: longitude
+          format: double
+        latitude:
+          type: number
+          title: latitude
+          format: double
+        elevation:
+          type: number
+          title: elevation
+          format: double
+      title: Waypoint
+      additionalProperties: false
+security: []
+tags:
+  - name: transmission.v1.TransmissionRoutingService
+    description: |-
+      TransmissionRoutingService manages end-to-end transmission corridor routing
+       with engineering validation, governance workflow, and exportable delivery packs.

@@ -1,0 +1,669 @@
+openapi: 3.1.0
+info:
+  title: weather.v1
+paths:
+  /weather.v1.WeatherService/CalculateYieldExceedance:
+    post:
+      tags:
+        - weather.v1.WeatherService
+      summary: CalculateYieldExceedance
+      description: |-
+        CalculateYieldExceedance computes P50/P90/P99 exceedance probabilities
+         for annual energy yield based on the GHI timeseries of a site.
+      operationId: weather.v1.WeatherService.CalculateYieldExceedance
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/weather.v1.CalculateYieldExceedanceRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/weather.v1.CalculateYieldExceedanceResponse'
+  /weather.v1.WeatherService/DeleteSiteWeather:
+    post:
+      tags:
+        - weather.v1.WeatherService
+      summary: DeleteSiteWeather
+      description: DeleteSiteWeather removes a weather dataset for a site.
+      operationId: weather.v1.WeatherService.DeleteSiteWeather
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/weather.v1.DeleteSiteWeatherRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/weather.v1.DeleteSiteWeatherResponse'
+  /weather.v1.WeatherService/FetchIrradiance:
+    post:
+      tags:
+        - weather.v1.WeatherService
+      summary: FetchIrradiance
+      description: |-
+        FetchIrradiance retrieves hourly irradiance data for a location from the
+         specified upstream source. Returns a timeseries of GHI/DNI/DHI plus
+         ambient temperature. Results are cached server-side after the first fetch.
+      operationId: weather.v1.WeatherService.FetchIrradiance
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/weather.v1.FetchIrradianceRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/weather.v1.FetchIrradianceResponse'
+  /weather.v1.WeatherService/GetHourlyTimeseries:
+    post:
+      tags:
+        - weather.v1.WeatherService
+      summary: GetHourlyTimeseries
+      description: |-
+        GetHourlyTimeseries returns previously-fetched or imported hourly
+         irradiance data for a site.
+      operationId: weather.v1.WeatherService.GetHourlyTimeseries
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/weather.v1.GetHourlyTimeseriesRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/weather.v1.GetHourlyTimeseriesResponse'
+  /weather.v1.WeatherService/ImportTMY:
+    post:
+      tags:
+        - weather.v1.WeatherService
+      summary: ImportTMY
+      description: |-
+        ImportTMY ingests an uploaded TMY file (EPW, TM2, TM3, or CSV) and stores
+         the parsed hourly records for the site.
+      operationId: weather.v1.WeatherService.ImportTMY
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/weather.v1.ImportTMYRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/weather.v1.ImportTMYResponse'
+  /weather.v1.WeatherService/ListSiteWeather:
+    post:
+      tags:
+        - weather.v1.WeatherService
+      summary: ListSiteWeather
+      description: ListSiteWeather returns all weather datasets available for a project.
+      operationId: weather.v1.WeatherService.ListSiteWeather
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/weather.v1.ListSiteWeatherRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/weather.v1.ListSiteWeatherResponse'
+components:
+  schemas:
+    connect-protocol-version:
+      type: number
+      title: Connect-Protocol-Version
+      enum:
+        - 1
+      description: Define the version of the Connect protocol
+      const: 1
+    connect-timeout-header:
+      type: number
+      title: Connect-Timeout-Ms
+      description: Define the timeout, in ms
+    connect.error:
+      type: object
+      properties:
+        code:
+          type: string
+          examples:
+            - not_found
+          enum:
+            - canceled
+            - unknown
+            - invalid_argument
+            - deadline_exceeded
+            - not_found
+            - already_exists
+            - permission_denied
+            - resource_exhausted
+            - failed_precondition
+            - aborted
+            - out_of_range
+            - unimplemented
+            - internal
+            - unavailable
+            - data_loss
+            - unauthenticated
+          description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+        message:
+          type: string
+          description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/connect.error_details.Any'
+          description: A list of messages that carry the error details. There is no limit on the number of messages.
+      title: Connect Error
+      additionalProperties: true
+      description: 'Error type returned by Connect: https://connectrpc.com/docs/go/errors/#http-representation'
+    connect.error_details.Any:
+      type: object
+      properties:
+        type:
+          type: string
+          description: 'A URL that acts as a globally unique identifier for the type of the serialized message. For example: `type.googleapis.com/google.rpc.ErrorInfo`. This is used to determine the schema of the data in the `value` field and is the discriminator for the `debug` field.'
+        value:
+          type: string
+          format: binary
+          description: The Protobuf message, serialized as bytes and base64-encoded. The specific message type is identified by the `type` field.
+        debug:
+          oneOf:
+            - type: object
+              title: Any
+              additionalProperties: true
+              description: Detailed error information.
+          discriminator:
+            propertyName: type
+          title: Debug
+          description: Deserialized error detail payload. The 'type' field indicates the schema. This field is for easier debugging and should not be relied upon for application logic.
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message, with an additional debug field for ConnectRPC error details.
+    google.protobuf.Timestamp:
+      type: string
+      examples:
+        - "2023-01-15T01:30:15.01Z"
+        - "2024-12-25T12:00:00Z"
+      format: date-time
+      description: |-
+        A Timestamp represents a point in time independent of any time zone or local
+         calendar, encoded as a count of seconds and fractions of seconds at
+         nanosecond resolution. The count is relative to an epoch at UTC midnight on
+         January 1, 1970, in the proleptic Gregorian calendar which extends the
+         Gregorian calendar backwards to year one.
+
+         All minutes are 60 seconds long. Leap seconds are "smeared" so that no leap
+         second table is needed for interpretation, using a [24-hour linear
+         smear](https://developers.google.com/time/smear).
+
+         The range is from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59.999999999Z. By
+         restricting to that range, we ensure that we can convert to and from [RFC
+         3339](https://www.ietf.org/rfc/rfc3339.txt) date strings.
+
+         # Examples
+
+         Example 1: Compute Timestamp from POSIX `time()`.
+
+             Timestamp timestamp;
+             timestamp.set_seconds(time(NULL));
+             timestamp.set_nanos(0);
+
+         Example 2: Compute Timestamp from POSIX `gettimeofday()`.
+
+             struct timeval tv;
+             gettimeofday(&tv, NULL);
+
+             Timestamp timestamp;
+             timestamp.set_seconds(tv.tv_sec);
+             timestamp.set_nanos(tv.tv_usec * 1000);
+
+         Example 3: Compute Timestamp from Win32 `GetSystemTimeAsFileTime()`.
+
+             FILETIME ft;
+             GetSystemTimeAsFileTime(&ft);
+             UINT64 ticks = (((UINT64)ft.dwHighDateTime) << 32) | ft.dwLowDateTime;
+
+             // A Windows tick is 100 nanoseconds. Windows epoch 1601-01-01T00:00:00Z
+             // is 11644473600 seconds before Unix epoch 1970-01-01T00:00:00Z.
+             Timestamp timestamp;
+             timestamp.set_seconds((INT64) ((ticks / 10000000) - 11644473600LL));
+             timestamp.set_nanos((INT32) ((ticks % 10000000) * 100));
+
+         Example 4: Compute Timestamp from Java `System.currentTimeMillis()`.
+
+             long millis = System.currentTimeMillis();
+
+             Timestamp timestamp = Timestamp.newBuilder().setSeconds(millis / 1000)
+                 .setNanos((int) ((millis % 1000) * 1000000)).build();
+
+         Example 5: Compute Timestamp from Java `Instant.now()`.
+
+             Instant now = Instant.now();
+
+             Timestamp timestamp =
+                 Timestamp.newBuilder().setSeconds(now.getEpochSecond())
+                     .setNanos(now.getNano()).build();
+
+         Example 6: Compute Timestamp from current time in Python.
+
+             timestamp = Timestamp()
+             timestamp.GetCurrentTime()
+
+         # JSON Mapping
+
+         In JSON format, the Timestamp type is encoded as a string in the
+         [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format. That is, the
+         format is "{year}-{month}-{day}T{hour}:{min}:{sec}[.{frac_sec}]Z"
+         where {year} is always expressed using four digits while {month}, {day},
+         {hour}, {min}, and {sec} are zero-padded to two digits each. The fractional
+         seconds, which can go up to 9 digits (i.e. up to 1 nanosecond resolution),
+         are optional. The "Z" suffix indicates the timezone ("UTC"); the timezone
+         is required. A proto3 JSON serializer should always use UTC (as indicated by
+         "Z") when printing the Timestamp type and a proto3 JSON parser should be
+         able to accept both UTC and other timezones (as indicated by an offset).
+
+         For example, "2017-01-15T01:30:15.01Z" encodes 15.01 seconds past
+         01:30 UTC on January 15, 2017.
+
+         In JavaScript, one can convert a Date object to this format using the
+         standard
+         [toISOString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString)
+         method. In Python, a standard `datetime.datetime` object can be converted
+         to this format using
+         [`strftime`](https://docs.python.org/2/library/time.html#time.strftime) with
+         the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one can use
+         the Joda Time's [`ISODateTimeFormat.dateTime()`](
+         http://joda-time.sourceforge.net/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime()
+         ) to obtain a formatter capable of generating timestamps in this format.
+    weather.v1.CalculateYieldExceedanceRequest:
+      type: object
+      properties:
+        siteWeatherId:
+          type: string
+          title: site_weather_id
+        systemCapacityKw:
+          type: number
+          title: system_capacity_kw
+          format: double
+          description: |-
+            system_capacity_kw is the DC nameplate of the PV system, used to scale
+             GHI into estimated annual energy yield (kWh). If 0, raw GHI exceedance
+             is returned without system scaling.
+      title: CalculateYieldExceedanceRequest
+      additionalProperties: false
+    weather.v1.CalculateYieldExceedanceResponse:
+      type: object
+      properties:
+        siteWeatherId:
+          type: string
+          title: site_weather_id
+        exceedances:
+          type: array
+          items:
+            $ref: '#/components/schemas/weather.v1.YieldExceedance'
+          title: exceedances
+      title: CalculateYieldExceedanceResponse
+      additionalProperties: false
+    weather.v1.DeleteSiteWeatherRequest:
+      type: object
+      properties:
+        siteWeatherId:
+          type: string
+          title: site_weather_id
+      title: DeleteSiteWeatherRequest
+      additionalProperties: false
+    weather.v1.DeleteSiteWeatherResponse:
+      type: object
+      title: DeleteSiteWeatherResponse
+      additionalProperties: false
+    weather.v1.FetchIrradianceRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        latitude:
+          type: number
+          title: latitude
+          format: double
+        longitude:
+          type: number
+          title: longitude
+          format: double
+        source:
+          title: source
+          $ref: '#/components/schemas/weather.v1.WeatherSource'
+        apiKey:
+          type: string
+          title: api_key
+          description: api_key is required for NSRDB and ERA5; ignored for PVGIS and NASA POWER.
+      title: FetchIrradianceRequest
+      additionalProperties: false
+    weather.v1.FetchIrradianceResponse:
+      type: object
+      properties:
+        summary:
+          title: summary
+          $ref: '#/components/schemas/weather.v1.SiteWeatherSummary'
+        records:
+          type: array
+          items:
+            $ref: '#/components/schemas/weather.v1.HourlyRecord'
+          title: records
+      title: FetchIrradianceResponse
+      additionalProperties: false
+    weather.v1.GetHourlyTimeseriesRequest:
+      type: object
+      properties:
+        siteWeatherId:
+          type: string
+          title: site_weather_id
+      title: GetHourlyTimeseriesRequest
+      additionalProperties: false
+    weather.v1.GetHourlyTimeseriesResponse:
+      type: object
+      properties:
+        summary:
+          title: summary
+          $ref: '#/components/schemas/weather.v1.SiteWeatherSummary'
+        records:
+          type: array
+          items:
+            $ref: '#/components/schemas/weather.v1.HourlyRecord'
+          title: records
+      title: GetHourlyTimeseriesResponse
+      additionalProperties: false
+    weather.v1.HourlyRecord:
+      type: object
+      properties:
+        timestamp:
+          title: timestamp
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        ghi:
+          type: number
+          title: ghi
+          format: double
+          description: Global Horizontal Irradiance (W/m²)
+        dni:
+          type: number
+          title: dni
+          format: double
+          description: Direct Normal Irradiance (W/m²)
+        dhi:
+          type: number
+          title: dhi
+          format: double
+          description: Diffuse Horizontal Irradiance (W/m²)
+        ambientTempC:
+          type: number
+          title: ambient_temp_c
+          format: double
+        windSpeedMs:
+          type: number
+          title: wind_speed_ms
+          format: double
+        relativeHumidityPct:
+          type: number
+          title: relative_humidity_pct
+          format: double
+          description: 0-100
+        albedo:
+          type: number
+          title: albedo
+          format: double
+          description: ground reflectance (0-1), if available
+      title: HourlyRecord
+      additionalProperties: false
+      description: |-
+        HourlyRecord is a single-hour observation or modeled irradiance sample.
+         All irradiance values are in W/m². Temperature in °C. Wind speed in m/s.
+    weather.v1.ImportTMYRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        latitude:
+          type: number
+          title: latitude
+          format: double
+        longitude:
+          type: number
+          title: longitude
+          format: double
+        format:
+          title: format
+          description: EPW, TM2, TM3, or CSV
+          $ref: '#/components/schemas/weather.v1.WeatherSource'
+        fileContent:
+          type: string
+          title: file_content
+          format: byte
+        fileName:
+          type: string
+          title: file_name
+      title: ImportTMYRequest
+      additionalProperties: false
+    weather.v1.ImportTMYResponse:
+      type: object
+      properties:
+        summary:
+          title: summary
+          $ref: '#/components/schemas/weather.v1.SiteWeatherSummary'
+        recordsImported:
+          type: integer
+          title: records_imported
+          format: int32
+      title: ImportTMYResponse
+      additionalProperties: false
+    weather.v1.ListSiteWeatherRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+      title: ListSiteWeatherRequest
+      additionalProperties: false
+    weather.v1.ListSiteWeatherResponse:
+      type: object
+      properties:
+        summaries:
+          type: array
+          items:
+            $ref: '#/components/schemas/weather.v1.SiteWeatherSummary'
+          title: summaries
+      title: ListSiteWeatherResponse
+      additionalProperties: false
+    weather.v1.SiteWeatherSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        projectId:
+          type: string
+          title: project_id
+        latitude:
+          type: number
+          title: latitude
+          format: double
+        longitude:
+          type: number
+          title: longitude
+          format: double
+        source:
+          title: source
+          $ref: '#/components/schemas/weather.v1.WeatherSource'
+        recordCount:
+          type: integer
+          title: record_count
+          format: int32
+          description: number of hourly records
+        annualGhiKwhM2:
+          type: number
+          title: annual_ghi_kwh_m2
+          format: double
+        fetchedAt:
+          title: fetched_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: SiteWeatherSummary
+      additionalProperties: false
+      description: SiteWeatherSummary is the metadata envelope for a stored weather dataset.
+    weather.v1.WeatherSource:
+      type: string
+      title: WeatherSource
+      enum:
+        - WEATHER_SOURCE_UNSPECIFIED
+        - WEATHER_SOURCE_PVGIS
+        - WEATHER_SOURCE_NASA_POWER
+        - WEATHER_SOURCE_NSRDB
+        - WEATHER_SOURCE_ERA5
+        - WEATHER_SOURCE_EPW
+        - WEATHER_SOURCE_TM2
+        - WEATHER_SOURCE_TM3
+        - WEATHER_SOURCE_CSV
+      description: |-
+        WeatherSource identifies the upstream provider or file format from which
+         the weather data originates.
+    weather.v1.YieldExceedance:
+      type: object
+      properties:
+        percentile:
+          type: integer
+          title: percentile
+          format: int32
+          description: percentile is 50, 75, 90, 95, or 99.
+        annualGhiKwhM2:
+          type: number
+          title: annual_ghi_kwh_m2
+          format: double
+          description: annual_ghi_kwh_m2 is the GHI value exceeded at this probability.
+      title: YieldExceedance
+      additionalProperties: false
+      description: YieldExceedance holds a single percentile point.
+security: []
+tags:
+  - name: weather.v1.WeatherService
+    description: |-
+      WeatherService provides solar irradiance data from multiple upstream sources
+       (PVGIS, NASA POWER, NSRDB, ERA5) and offers TMY file ingestion, hourly
+       timeseries retrieval, and probabilistic yield exceedance calculations.

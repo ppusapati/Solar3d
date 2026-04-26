@@ -8,11 +8,13 @@ import (
 	"connectrpc.com/connect"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
-	assetv1 "github.com/solar3d/solar3d/gen/asset/v1"
-	assetv1connect "github.com/solar3d/solar3d/gen/asset/v1/assetv1connect"
+	assetv1 "p9e.in/samavaya/solar3d/gen/asset/v1"
+	assetv1connect "p9e.in/samavaya/solar3d/gen/asset/v1/assetv1connect"
+	paginationv1 "p9e.in/samavaya/packages/api/v1/pagination"
+	pkgErrors "p9e.in/samavaya/packages/errors"
 
-	"solar3d/asset-service/internal/domain"
-	"solar3d/asset-service/internal/service"
+	"p9e.in/samavaya/solar3d/asset-service/internal/domain"
+	"p9e.in/samavaya/solar3d/asset-service/internal/service"
 )
 
 type ConnectAssetService struct {
@@ -50,7 +52,7 @@ func (h *ConnectAssetService) CreateAsset(ctx context.Context, req *connect.Requ
 func (h *ConnectAssetService) GetAsset(ctx context.Context, req *connect.Request[assetv1.GetAssetRequest]) (*connect.Response[assetv1.GetAssetResponse], error) {
 	id, err := uuid.Parse(req.Msg.GetId())
 	if err != nil {
-		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("invalid asset id"))
+		return nil, pkgErrors.InvalidArgumentf("invalid asset id: %v", err).ToConnectError()
 	}
 	asset, err := h.svc.GetByID(ctx, id)
 	if err != nil {
@@ -60,6 +62,16 @@ func (h *ConnectAssetService) GetAsset(ctx context.Context, req *connect.Request
 }
 
 func (h *ConnectAssetService) ListAssets(ctx context.Context, req *connect.Request[assetv1.ListAssetsRequest]) (*connect.Response[assetv1.ListAssetsResponse], error) {
+	pagination := req.Msg.GetPagination()
+	offset := pagination.GetPageOffset()
+	size := pagination.GetPageSize()
+	if size == 0 {
+		size = 10
+	}
+	if size > 100 {
+		size = 100
+	}
+
 	filter := domain.AssetFilter{}
 	if c := req.Msg.GetCategoryFilter(); c != assetv1.AssetCategory_ASSET_CATEGORY_UNSPECIFIED {
 		cat := assetCategoryFromProto(c)
@@ -82,22 +94,44 @@ func (h *ConnectAssetService) ListAssets(ctx context.Context, req *connect.Reque
 		return nil, assetConnectError(err)
 	}
 
-	out := make([]*assetv1.Asset, 0, len(assets))
-	for i := range assets {
-		a := assets[i]
+	// Apply pagination
+	totalCount := int32(len(assets))
+	endIdx := int(offset) + int(size)
+	if endIdx > len(assets) {
+		endIdx = len(assets)
+	}
+	if int(offset) > len(assets) {
+		endIdx = int(offset)
+	}
+
+	var paginatedAssets []domain.Asset
+	if int(offset) < len(assets) {
+		paginatedAssets = assets[int(offset):endIdx]
+	}
+
+	out := make([]*assetv1.Asset, 0, len(paginatedAssets))
+	for i := range paginatedAssets {
+		a := paginatedAssets[i]
 		out = append(out, assetToProto(&a))
 	}
+
+	hasNext := int(offset)+int(size) < int(totalCount)
+
 	return connect.NewResponse(&assetv1.ListAssetsResponse{
-		Assets:        out,
-		TotalCount:    int32(len(out)),
-		NextPageToken: "",
+		Assets: out,
+		Pagination: &paginationv1.PaginationResponse{
+			TotalCount: totalCount,
+			PageOffset: offset,
+			PageSize:   size,
+			HasNext:    hasNext,
+		},
 	}), nil
 }
 
 func (h *ConnectAssetService) UpdateAsset(ctx context.Context, req *connect.Request[assetv1.UpdateAssetRequest]) (*connect.Response[assetv1.UpdateAssetResponse], error) {
 	id, err := uuid.Parse(req.Msg.GetId())
 	if err != nil {
-		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("invalid asset id"))
+		return nil, pkgErrors.InvalidArgumentf("invalid asset id: %v", err).ToConnectError()
 	}
 
 	update := domain.UpdateAssetRequest{}
@@ -135,7 +169,7 @@ func (h *ConnectAssetService) UpdateAsset(ctx context.Context, req *connect.Requ
 func (h *ConnectAssetService) DeleteAsset(ctx context.Context, req *connect.Request[assetv1.DeleteAssetRequest]) (*connect.Response[assetv1.DeleteAssetResponse], error) {
 	id, err := uuid.Parse(req.Msg.GetId())
 	if err != nil {
-		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("invalid asset id"))
+		return nil, pkgErrors.InvalidArgumentf("invalid asset id: %v", err).ToConnectError()
 	}
 	if err := h.svc.Delete(ctx, id); err != nil {
 		return nil, assetConnectError(err)
@@ -268,9 +302,11 @@ func assetCategoryToProto(c domain.AssetCategory) assetv1.AssetCategory {
 func assetConnectError(err error) error {
 	switch {
 	case errors.Is(err, pgx.ErrNoRows):
-		return connect.NewError(connect.CodeNotFound, err)
+		return pkgErrors.NotFound("asset", "").ToConnectError()
 	default:
-		return connect.NewError(connect.CodeInternal, err)
+		if pkgErr, ok := err.(*pkgErrors.Error); ok {
+			return pkgErr.ToConnectError()
+		}
+		return pkgErrors.Internal("asset operation failed: %s", err.Error()).ToConnectError()
 	}
 }
-

@@ -20,7 +20,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"solar3d/project-service/internal/domain"
+	"p9e.in/samavaya/solar3d/project-service/internal/domain"
 )
 
 // LOD400Repository wraps a pgxpool.Pool for LOD 400 data access.

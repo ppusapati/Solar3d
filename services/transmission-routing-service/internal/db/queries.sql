@@ -142,6 +142,29 @@ RETURNING id::text, project_id, name, voltage_class,
     metadata::text AS metadata_json,
     route_summary, created_at;
 
+-- name: RejectTransmissionRoute :one
+-- Rejection audit is captured in governance_events; dedicated rejected_at /
+-- rejected_by columns are intentionally omitted so the event stream remains
+-- the single source of truth.
+UPDATE transmission_routes
+SET approval_status = 'rejected',
+    governance_events = @governance_events::jsonb,
+    metadata = @metadata::jsonb,
+    route_summary = @route_summary
+WHERE id = @id
+RETURNING id::text, project_id, name, voltage_class,
+    farm_output_geojson, grid_injection_geojson, path_geojson,
+    tower_positions::text AS tower_positions_json,
+    distance_m, conductor_cost, tower_cost, row_acquisition_cost,
+    crossing_premium, total_cost, cost_per_km,
+    segment_explanations::text AS segment_explanations_json,
+    route_score::text AS route_score_json,
+    approval_status, engineering_reviewed_at, engineering_reviewed_by,
+    approved_at, approved_by,
+    governance_events::text AS governance_events_json,
+    metadata::text AS metadata_json,
+    route_summary, created_at;
+
 -- name: DeleteTransmissionRoute :exec
 DELETE FROM transmission_routes
 WHERE id = @id;

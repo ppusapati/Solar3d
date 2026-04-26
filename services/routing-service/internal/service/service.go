@@ -9,9 +9,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 
-	"solar3d/routing-service/internal/domain"
-	"solar3d/routing-service/internal/repository"
-	"solar3d/shared/orchestration"
+	"p9e.in/samavaya/solar3d/routing-service/internal/domain"
+	"p9e.in/samavaya/solar3d/routing-service/internal/repository"
+	"p9e.in/samavaya/packages/solar3dorch"
 )
 
 type RoutingService struct {

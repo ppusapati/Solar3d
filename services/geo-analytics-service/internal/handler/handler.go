@@ -7,8 +7,8 @@ import (
 	"log"
 	"net/http"
 
-	"solar3d/geo-analytics-service/internal/service"
-	"solar3d/shared/middleware"
+	"p9e.in/samavaya/solar3d/geo-analytics-service/internal/service"
+	"p9e.in/samavaya/packages/httpmiddleware"
 )
 
 // Handler implements HTTP REST handlers for geo-analytics operations

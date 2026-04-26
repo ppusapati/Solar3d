@@ -2,9 +2,10 @@ syntax = "proto3";
 
 package transmission.v1;
 
-option go_package = "github.com/solar3d/solar3d/gen/transmission/v1;transmissionv1";
+option go_package = "p9e.in/samavaya/solar3d/gen/transmission/v1;transmissionv1";
 
 import "google/protobuf/timestamp.proto";
+import "packages/pagination.proto";
 
 // TransmissionRoutingService manages end-to-end transmission corridor routing
 // with engineering validation, governance workflow, and exportable delivery packs.
@@ -294,10 +295,12 @@ message GetTransmissionRouteResponse {
 
 message ListTransmissionRoutesRequest {
   string project_id = 1;
+  packages.api.v1.pagination.PaginationRequest pagination = 2;
 }
 
 message ListTransmissionRoutesResponse {
   repeated TransmissionRoute routes = 1;
+  packages.api.v1.pagination.PaginationResponse pagination = 2;
 }
 
 // SubmitTransmissionRouteForReviewRequest submits a route for engineering review,

@@ -4,12 +4,12 @@ import (
 	"context"
 	"errors"
 
-	"solar3d/compute-service/internal/mappers"
-	"solar3d/compute-service/internal/service"
+	"p9e.in/samavaya/solar3d/compute-service/internal/mappers"
+	"p9e.in/samavaya/solar3d/compute-service/internal/service"
 
 	"connectrpc.com/connect"
-	geov1 "github.com/solar3d/solar3d/gen/geo/v1"
-	geov1connect "github.com/solar3d/solar3d/gen/geo/v1/geov1connect"
+	geov1 "p9e.in/samavaya/solar3d/gen/geo/v1"
+	geov1connect "p9e.in/samavaya/solar3d/gen/geo/v1/geov1connect"
 )
 
 type GeoServiceHandler struct {

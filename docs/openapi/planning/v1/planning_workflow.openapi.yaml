@@ -1,0 +1,809 @@
+openapi: 3.1.0
+info:
+  title: planning.v1
+paths:
+  /planning.v1.PlanningWorkflowService/GetPhaseState:
+    post:
+      tags:
+        - planning.v1.PlanningWorkflowService
+      summary: GetPhaseState
+      description: GetPhaseState retrieves the current phase and transition history for a project.
+      operationId: planning.v1.PlanningWorkflowService.GetPhaseState
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/planning.v1.GetPhaseStateRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/planning.v1.GetPhaseStateResponse'
+  /planning.v1.PlanningWorkflowService/ListPhaseTransitions:
+    post:
+      tags:
+        - planning.v1.PlanningWorkflowService
+      summary: ListPhaseTransitions
+      description: ListPhaseTransitions returns all phase transitions for a project (immutable history).
+      operationId: planning.v1.PlanningWorkflowService.ListPhaseTransitions
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/planning.v1.ListPhaseTransitionsRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/planning.v1.ListPhaseTransitionsResponse'
+  /planning.v1.PlanningWorkflowService/TransitionPhase:
+    post:
+      tags:
+        - planning.v1.PlanningWorkflowService
+      summary: TransitionPhase
+      description: |-
+        TransitionPhase transitions a project from its current phase to a new phase.
+         The transition is idempotent: if already in the target phase, returns success
+         with a "no-op" transition record. Backward transitions (rollback) are allowed
+         only for phases before CommissioningReady.
+      operationId: planning.v1.PlanningWorkflowService.TransitionPhase
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/planning.v1.TransitionPhaseRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/planning.v1.TransitionPhaseResponse'
+  /planning.v1.PlanningWorkflowService/ValidatePhaseReadiness:
+    post:
+      tags:
+        - planning.v1.PlanningWorkflowService
+      summary: ValidatePhaseReadiness
+      description: |-
+        ValidatePhaseReadiness returns blocker reasons if a phase transition would fail,
+         without actually performing the transition. Useful for UX validation.
+      operationId: planning.v1.PlanningWorkflowService.ValidatePhaseReadiness
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/planning.v1.ValidatePhaseReadinessRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/planning.v1.ValidatePhaseReadinessResponse'
+components:
+  schemas:
+    connect-protocol-version:
+      type: number
+      title: Connect-Protocol-Version
+      enum:
+        - 1
+      description: Define the version of the Connect protocol
+      const: 1
+    connect-timeout-header:
+      type: number
+      title: Connect-Timeout-Ms
+      description: Define the timeout, in ms
+    connect.error:
+      type: object
+      properties:
+        code:
+          type: string
+          examples:
+            - not_found
+          enum:
+            - canceled
+            - unknown
+            - invalid_argument
+            - deadline_exceeded
+            - not_found
+            - already_exists
+            - permission_denied
+            - resource_exhausted
+            - failed_precondition
+            - aborted
+            - out_of_range
+            - unimplemented
+            - internal
+            - unavailable
+            - data_loss
+            - unauthenticated
+          description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+        message:
+          type: string
+          description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/connect.error_details.Any'
+          description: A list of messages that carry the error details. There is no limit on the number of messages.
+      title: Connect Error
+      additionalProperties: true
+      description: 'Error type returned by Connect: https://connectrpc.com/docs/go/errors/#http-representation'
+    connect.error_details.Any:
+      type: object
+      properties:
+        type:
+          type: string
+          description: 'A URL that acts as a globally unique identifier for the type of the serialized message. For example: `type.googleapis.com/google.rpc.ErrorInfo`. This is used to determine the schema of the data in the `value` field and is the discriminator for the `debug` field.'
+        value:
+          type: string
+          format: binary
+          description: The Protobuf message, serialized as bytes and base64-encoded. The specific message type is identified by the `type` field.
+        debug:
+          oneOf:
+            - type: object
+              title: Any
+              additionalProperties: true
+              description: Detailed error information.
+          discriminator:
+            propertyName: type
+          title: Debug
+          description: Deserialized error detail payload. The 'type' field indicates the schema. This field is for easier debugging and should not be relied upon for application logic.
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message, with an additional debug field for ConnectRPC error details.
+    google.protobuf.Timestamp:
+      type: string
+      examples:
+        - "2023-01-15T01:30:15.01Z"
+        - "2024-12-25T12:00:00Z"
+      format: date-time
+      description: |-
+        A Timestamp represents a point in time independent of any time zone or local
+         calendar, encoded as a count of seconds and fractions of seconds at
+         nanosecond resolution. The count is relative to an epoch at UTC midnight on
+         January 1, 1970, in the proleptic Gregorian calendar which extends the
+         Gregorian calendar backwards to year one.
+
+         All minutes are 60 seconds long. Leap seconds are "smeared" so that no leap
+         second table is needed for interpretation, using a [24-hour linear
+         smear](https://developers.google.com/time/smear).
+
+         The range is from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59.999999999Z. By
+         restricting to that range, we ensure that we can convert to and from [RFC
+         3339](https://www.ietf.org/rfc/rfc3339.txt) date strings.
+
+         # Examples
+
+         Example 1: Compute Timestamp from POSIX `time()`.
+
+             Timestamp timestamp;
+             timestamp.set_seconds(time(NULL));
+             timestamp.set_nanos(0);
+
+         Example 2: Compute Timestamp from POSIX `gettimeofday()`.
+
+             struct timeval tv;
+             gettimeofday(&tv, NULL);
+
+             Timestamp timestamp;
+             timestamp.set_seconds(tv.tv_sec);
+             timestamp.set_nanos(tv.tv_usec * 1000);
+
+         Example 3: Compute Timestamp from Win32 `GetSystemTimeAsFileTime()`.
+
+             FILETIME ft;
+             GetSystemTimeAsFileTime(&ft);
+             UINT64 ticks = (((UINT64)ft.dwHighDateTime) << 32) | ft.dwLowDateTime;
+
+             // A Windows tick is 100 nanoseconds. Windows epoch 1601-01-01T00:00:00Z
+             // is 11644473600 seconds before Unix epoch 1970-01-01T00:00:00Z.
+             Timestamp timestamp;
+             timestamp.set_seconds((INT64) ((ticks / 10000000) - 11644473600LL));
+             timestamp.set_nanos((INT32) ((ticks % 10000000) * 100));
+
+         Example 4: Compute Timestamp from Java `System.currentTimeMillis()`.
+
+             long millis = System.currentTimeMillis();
+
+             Timestamp timestamp = Timestamp.newBuilder().setSeconds(millis / 1000)
+                 .setNanos((int) ((millis % 1000) * 1000000)).build();
+
+         Example 5: Compute Timestamp from Java `Instant.now()`.
+
+             Instant now = Instant.now();
+
+             Timestamp timestamp =
+                 Timestamp.newBuilder().setSeconds(now.getEpochSecond())
+                     .setNanos(now.getNano()).build();
+
+         Example 6: Compute Timestamp from current time in Python.
+
+             timestamp = Timestamp()
+             timestamp.GetCurrentTime()
+
+         # JSON Mapping
+
+         In JSON format, the Timestamp type is encoded as a string in the
+         [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format. That is, the
+         format is "{year}-{month}-{day}T{hour}:{min}:{sec}[.{frac_sec}]Z"
+         where {year} is always expressed using four digits while {month}, {day},
+         {hour}, {min}, and {sec} are zero-padded to two digits each. The fractional
+         seconds, which can go up to 9 digits (i.e. up to 1 nanosecond resolution),
+         are optional. The "Z" suffix indicates the timezone ("UTC"); the timezone
+         is required. A proto3 JSON serializer should always use UTC (as indicated by
+         "Z") when printing the Timestamp type and a proto3 JSON parser should be
+         able to accept both UTC and other timezones (as indicated by an offset).
+
+         For example, "2017-01-15T01:30:15.01Z" encodes 15.01 seconds past
+         01:30 UTC on January 15, 2017.
+
+         In JavaScript, one can convert a Date object to this format using the
+         standard
+         [toISOString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString)
+         method. In Python, a standard `datetime.datetime` object can be converted
+         to this format using
+         [`strftime`](https://docs.python.org/2/library/time.html#time.strftime) with
+         the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one can use
+         the Joda Time's [`ISODateTimeFormat.dateTime()`](
+         http://joda-time.sourceforge.net/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime()
+         ) to obtain a formatter capable of generating timestamps in this format.
+    planning.v1.CommissioningConfirmation:
+      type: object
+      properties:
+        approvedProjectId:
+          type: string
+          title: approved_project_id
+        twinId:
+          type: string
+          title: twin_id
+          description: Reference to provisioned digital twin
+        provisionedByActorId:
+          type: string
+          title: provisioned_by_actor_id
+        provisionedAt:
+          title: provisioned_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        assetIdentityLinks:
+          type: integer
+          title: asset_identity_links
+          format: int32
+          description: Count of linked asset identities
+      title: CommissioningConfirmation
+      additionalProperties: false
+      description: 'CommissioningConfirmation evidence: Twin provisioned and asset identities linked.'
+    planning.v1.ElectricalSignoff:
+      type: object
+      properties:
+        layoutId:
+          type: string
+          title: layout_id
+        electricalAnalysisId:
+          type: string
+          title: electrical_analysis_id
+          description: Reference to electrical service validation run
+        validatedByActorId:
+          type: string
+          title: validated_by_actor_id
+        validatedAt:
+          title: validated_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        violations:
+          type: array
+          items:
+            type: string
+          title: violations
+          description: Empty if no violations
+        electricalFeasibilityScore:
+          type: number
+          title: electrical_feasibility_score
+          format: double
+      title: ElectricalSignoff
+      additionalProperties: false
+      description: 'ElectricalSignoff evidence: Electrical validation passed.'
+    planning.v1.GetPhaseStateRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+      title: GetPhaseStateRequest
+      additionalProperties: false
+    planning.v1.GetPhaseStateResponse:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        currentPhase:
+          title: current_phase
+          $ref: '#/components/schemas/planning.v1.WorkflowPhase'
+        phaseEnteredAt:
+          title: phase_entered_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        lastTransition:
+          title: last_transition
+          description: Most recent transition record
+          $ref: '#/components/schemas/planning.v1.PhaseTransition'
+      title: GetPhaseStateResponse
+      additionalProperties: false
+    planning.v1.LayoutApproval:
+      type: object
+      properties:
+        candidateId:
+          type: string
+          title: candidate_id
+          description: Selected MLCandidate ID
+        mlExperimentId:
+          type: string
+          title: ml_experiment_id
+          description: Reference to ML phase output
+        approvedByActorId:
+          type: string
+          title: approved_by_actor_id
+        approvedAt:
+          title: approved_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        candidateCompositeScore:
+          type: number
+          title: candidate_composite_score
+          format: double
+        selectionRationale:
+          type: string
+          title: selection_rationale
+      title: LayoutApproval
+      additionalProperties: false
+      description: 'LayoutApproval evidence: ML candidate set complete and preferred candidate selected.'
+    planning.v1.ListPhaseTransitionsRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        pageSize:
+          type: integer
+          title: page_size
+          format: int32
+          description: Default 50, max 200
+        pageToken:
+          type: string
+          title: page_token
+      title: ListPhaseTransitionsRequest
+      additionalProperties: false
+    planning.v1.ListPhaseTransitionsResponse:
+      type: object
+      properties:
+        transitions:
+          type: array
+          items:
+            $ref: '#/components/schemas/planning.v1.PhaseTransition'
+          title: transitions
+        nextPageToken:
+          type: string
+          title: next_page_token
+      title: ListPhaseTransitionsResponse
+      additionalProperties: false
+    planning.v1.PhaseTransition:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+          description: UUID
+        projectId:
+          type: string
+          title: project_id
+        fromPhase:
+          title: from_phase
+          $ref: '#/components/schemas/planning.v1.WorkflowPhase'
+        toPhase:
+          title: to_phase
+          $ref: '#/components/schemas/planning.v1.WorkflowPhase'
+        evidence:
+          title: evidence
+          $ref: '#/components/schemas/planning.v1.TransitionEvidence'
+        occurredAt:
+          title: occurred_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        actorId:
+          type: string
+          title: actor_id
+          description: User or system ID that performed transition
+        reason:
+          type: string
+          title: reason
+          description: Human-readable reason for transition
+        isRollback:
+          type: boolean
+          title: is_rollback
+          description: True if this transition is a rollback
+        rollbackReason:
+          type: string
+          title: rollback_reason
+          description: Reason for rollback, if applicable
+      title: PhaseTransition
+      additionalProperties: false
+      description: |-
+        PhaseTransition represents a single immutable transition record.
+         All transitions are logged and never deleted (audit trail).
+    planning.v1.PlanningAcceptance:
+      type: object
+      properties:
+        boundaryId:
+          type: string
+          title: boundary_id
+          description: Reference to boundary artifact
+        acceptedByActorId:
+          type: string
+          title: accepted_by_actor_id
+          description: User or system actor ID
+        acceptedAt:
+          title: accepted_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        notes:
+          type: string
+          title: notes
+      title: PlanningAcceptance
+      additionalProperties: false
+      description: PlanningAcceptance marks the boundary and planning inputs as accepted.
+    planning.v1.ReviewApproval:
+      type: object
+      properties:
+        transmissionRouteId:
+          type: string
+          title: transmission_route_id
+        lod400ChecklistId:
+          type: string
+          title: lod_400_checklist_id
+          description: Reference to LOD checklist review
+        reviewedByActorId:
+          type: string
+          title: reviewed_by_actor_id
+        reviewedAt:
+          title: reviewed_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        mandatoryItemsVerified:
+          type: integer
+          title: mandatory_items_verified
+          format: int32
+        blockers:
+          type: array
+          items:
+            type: string
+          title: blockers
+          description: Empty if all blockers resolved
+        qualityScore:
+          type: number
+          title: quality_score
+          format: double
+          description: '[0, 1]'
+      title: ReviewApproval
+      additionalProperties: false
+      description: 'ReviewApproval evidence: LOD 400 checklist passed + quality gate cleared.'
+    planning.v1.StakeholderApproval:
+      type: object
+      properties:
+        reviewApprovedLayoutId:
+          type: string
+          title: review_approved_layout_id
+        approvedByActorId:
+          type: string
+          title: approved_by_actor_id
+          description: Stakeholder user ID
+        actorRole:
+          type: string
+          title: actor_role
+          description: e.g., "designer", "manager", "owner"
+        approvedAt:
+          title: approved_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        approvalNotes:
+          type: string
+          title: approval_notes
+      title: StakeholderApproval
+      additionalProperties: false
+      description: 'StakeholderApproval evidence: Manager/stakeholder approval for commissioning.'
+    planning.v1.TransitionEvidence:
+      type: object
+      oneOf:
+        - type: object
+          properties:
+            commissioningConfirmation:
+              title: commissioning_confirmation
+              $ref: '#/components/schemas/planning.v1.CommissioningConfirmation'
+          title: commissioning_confirmation
+          required:
+            - commissioningConfirmation
+        - type: object
+          properties:
+            electricalSignoff:
+              title: electrical_signoff
+              $ref: '#/components/schemas/planning.v1.ElectricalSignoff'
+          title: electrical_signoff
+          required:
+            - electricalSignoff
+        - type: object
+          properties:
+            layoutApproval:
+              title: layout_approval
+              $ref: '#/components/schemas/planning.v1.LayoutApproval'
+          title: layout_approval
+          required:
+            - layoutApproval
+        - type: object
+          properties:
+            planningAcceptance:
+              title: planning_acceptance
+              $ref: '#/components/schemas/planning.v1.PlanningAcceptance'
+          title: planning_acceptance
+          required:
+            - planningAcceptance
+        - type: object
+          properties:
+            reviewApproval:
+              title: review_approval
+              $ref: '#/components/schemas/planning.v1.ReviewApproval'
+          title: review_approval
+          required:
+            - reviewApproval
+        - type: object
+          properties:
+            stakeholderApproval:
+              title: stakeholder_approval
+              $ref: '#/components/schemas/planning.v1.StakeholderApproval'
+          title: stakeholder_approval
+          required:
+            - stakeholderApproval
+        - type: object
+          properties:
+            transmissionSignoff:
+              title: transmission_signoff
+              $ref: '#/components/schemas/planning.v1.TransmissionSignoff'
+          title: transmission_signoff
+          required:
+            - transmissionSignoff
+      title: TransitionEvidence
+      additionalProperties: false
+      description: TransitionEvidence wraps all possible evidence types.
+    planning.v1.TransitionPhaseRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        targetPhase:
+          title: target_phase
+          $ref: '#/components/schemas/planning.v1.WorkflowPhase'
+        evidence:
+          title: evidence
+          description: Evidence required for target phase
+          $ref: '#/components/schemas/planning.v1.TransitionEvidence'
+        actorId:
+          type: string
+          title: actor_id
+          description: User or system initiating transition
+        reason:
+          type: string
+          title: reason
+          description: Human-readable transition reason
+      title: TransitionPhaseRequest
+      additionalProperties: false
+    planning.v1.TransitionPhaseResponse:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        previousPhase:
+          title: previous_phase
+          $ref: '#/components/schemas/planning.v1.WorkflowPhase'
+        currentPhase:
+          title: current_phase
+          $ref: '#/components/schemas/planning.v1.WorkflowPhase'
+        transitionRecord:
+          title: transition_record
+          description: The created transition record
+          $ref: '#/components/schemas/planning.v1.PhaseTransition'
+        wasNoop:
+          type: boolean
+          title: was_noop
+          description: True if already in target phase
+      title: TransitionPhaseResponse
+      additionalProperties: false
+    planning.v1.TransmissionSignoff:
+      type: object
+      properties:
+        electricalLayoutId:
+          type: string
+          title: electrical_layout_id
+        transmissionRouteId:
+          type: string
+          title: transmission_route_id
+          description: Reference to transmission service route
+        approvedByActorId:
+          type: string
+          title: approved_by_actor_id
+        approvedAt:
+          title: approved_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        protectionDevices:
+          type: array
+          items:
+            type: string
+          title: protection_devices
+        faultIsolationPoints:
+          type: integer
+          title: fault_isolation_points
+          format: int32
+      title: TransmissionSignoff
+      additionalProperties: false
+      description: 'TransmissionSignoff evidence: Transmission routing and protection complete.'
+    planning.v1.ValidatePhaseReadinessRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        targetPhase:
+          title: target_phase
+          description: Check if transition to this phase is valid
+          $ref: '#/components/schemas/planning.v1.WorkflowPhase'
+        evidence:
+          title: evidence
+          description: 'Optional: validate with provided evidence'
+          $ref: '#/components/schemas/planning.v1.TransitionEvidence'
+      title: ValidatePhaseReadinessRequest
+      additionalProperties: false
+    planning.v1.ValidatePhaseReadinessResponse:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        currentPhase:
+          title: current_phase
+          $ref: '#/components/schemas/planning.v1.WorkflowPhase'
+        targetPhase:
+          title: target_phase
+          $ref: '#/components/schemas/planning.v1.WorkflowPhase'
+        isValid:
+          type: boolean
+          title: is_valid
+          description: True if transition is allowed
+        blockerReasons:
+          type: array
+          items:
+            type: string
+          title: blocker_reasons
+          description: Non-empty list explains why transition would fail
+        canTransitionAfter:
+          title: can_transition_after
+          description: 'Optional: when blockers lift'
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: ValidatePhaseReadinessResponse
+      additionalProperties: false
+    planning.v1.WorkflowPhase:
+      type: string
+      title: WorkflowPhase
+      enum:
+        - WORKFLOW_PHASE_UNSPECIFIED
+        - PLANNING
+        - LAYOUT_READY
+        - ELECTRICAL_READY
+        - TRANSMISSION_READY
+        - REVIEW_READY
+        - APPROVED
+        - COMMISSIONING_READY
+        - ARCHIVED
+    planning.v1.WorkflowState:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        currentPhase:
+          title: current_phase
+          $ref: '#/components/schemas/planning.v1.WorkflowPhase'
+        phaseEnteredAt:
+          title: phase_entered_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        totalTransitions:
+          type: integer
+          title: total_transitions
+          format: int32
+          description: Count of all transitions
+        activeBlockers:
+          type: array
+          items:
+            type: string
+          title: active_blockers
+          description: Blockers preventing further progress
+        actorBlockedSince:
+          type: string
+          title: actor_blocked_since
+          description: Actor ID if phase transition is blocked
+      title: WorkflowState
+      additionalProperties: false
+      description: WorkflowState represents the immutable state snapshot at any point.
+security: []
+tags:
+  - name: planning.v1.PlanningWorkflowService
+    description: |-
+      PlanningWorkflowService manages transitions through the planning, design,
+       validation, and approval workflow phases for solar projects.
+
+       The workflow is deterministic and sequential: projects progress from Planning
+       through LayoutReady, ElectricalReady, TransmissionReady, ReviewReady, Approved,
+       and finally CommissioningReady. Each transition is gated by predecessor phase
+       acceptance and validated evidence payloads.

@@ -11,7 +11,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
-	drawingv1 "github.com/solar3d/solar3d/gen/drawing/v1"
+	drawingv1 "p9e.in/samavaya/solar3d/gen/drawing/v1"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

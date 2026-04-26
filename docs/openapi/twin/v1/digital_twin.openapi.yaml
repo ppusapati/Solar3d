@@ -1,0 +1,606 @@
+openapi: 3.1.0
+info:
+  title: twin.v1
+paths:
+  /twin.v1.DigitalTwinService/DeprovisionTwin:
+    post:
+      tags:
+        - twin.v1.DigitalTwinService
+      summary: DeprovisionTwin
+      description: |-
+        DeprovisionTwin marks a twin as decommissioned.  Decommissioned twins are
+         immutable; telemetry ingestion is rejected for decommissioned twins.
+      operationId: twin.v1.DigitalTwinService.DeprovisionTwin
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/twin.v1.DeprovisionTwinRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/twin.v1.DeprovisionTwinResponse'
+  /twin.v1.DigitalTwinService/GetTwinState:
+    post:
+      tags:
+        - twin.v1.DigitalTwinService
+      summary: GetTwinState
+      description: |-
+        GetTwinState retrieves the current twin including its operational state.
+         Returns NOT_FOUND if the twin_id does not exist.
+      operationId: twin.v1.DigitalTwinService.GetTwinState
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/twin.v1.GetTwinStateRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/twin.v1.GetTwinStateResponse'
+  /twin.v1.DigitalTwinService/ListTwinsByProject:
+    post:
+      tags:
+        - twin.v1.DigitalTwinService
+      summary: ListTwinsByProject
+      description: ListTwinsByProject returns all twins for a project ordered by provisioned_at desc.
+      operationId: twin.v1.DigitalTwinService.ListTwinsByProject
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/twin.v1.ListTwinsByProjectRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/twin.v1.ListTwinsByProjectResponse'
+  /twin.v1.DigitalTwinService/ProvisionTwin:
+    post:
+      tags:
+        - twin.v1.DigitalTwinService
+      summary: ProvisionTwin
+      description: |-
+        ProvisionTwin creates a new digital twin from an approved project lineage.
+         Requires an approved project_id and the IDs of the three design artifacts
+         (layout, electrical network, transmission route) that form the approved revision.
+      operationId: twin.v1.DigitalTwinService.ProvisionTwin
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/twin.v1.ProvisionTwinRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/twin.v1.ProvisionTwinResponse'
+  /twin.v1.DigitalTwinService/UpdateTwinState:
+    post:
+      tags:
+        - twin.v1.DigitalTwinService
+      summary: UpdateTwinState
+      description: |-
+        UpdateTwinState patches the mutable operational state fields (power, availability,
+         active fault count, health score).  All other fields are immutable after provisioning.
+      operationId: twin.v1.DigitalTwinService.UpdateTwinState
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/twin.v1.UpdateTwinStateRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/twin.v1.UpdateTwinStateResponse'
+components:
+  schemas:
+    connect-protocol-version:
+      type: number
+      title: Connect-Protocol-Version
+      enum:
+        - 1
+      description: Define the version of the Connect protocol
+      const: 1
+    connect-timeout-header:
+      type: number
+      title: Connect-Timeout-Ms
+      description: Define the timeout, in ms
+    connect.error:
+      type: object
+      properties:
+        code:
+          type: string
+          examples:
+            - not_found
+          enum:
+            - canceled
+            - unknown
+            - invalid_argument
+            - deadline_exceeded
+            - not_found
+            - already_exists
+            - permission_denied
+            - resource_exhausted
+            - failed_precondition
+            - aborted
+            - out_of_range
+            - unimplemented
+            - internal
+            - unavailable
+            - data_loss
+            - unauthenticated
+          description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+        message:
+          type: string
+          description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/connect.error_details.Any'
+          description: A list of messages that carry the error details. There is no limit on the number of messages.
+      title: Connect Error
+      additionalProperties: true
+      description: 'Error type returned by Connect: https://connectrpc.com/docs/go/errors/#http-representation'
+    connect.error_details.Any:
+      type: object
+      properties:
+        type:
+          type: string
+          description: 'A URL that acts as a globally unique identifier for the type of the serialized message. For example: `type.googleapis.com/google.rpc.ErrorInfo`. This is used to determine the schema of the data in the `value` field and is the discriminator for the `debug` field.'
+        value:
+          type: string
+          format: binary
+          description: The Protobuf message, serialized as bytes and base64-encoded. The specific message type is identified by the `type` field.
+        debug:
+          oneOf:
+            - type: object
+              title: Any
+              additionalProperties: true
+              description: Detailed error information.
+          discriminator:
+            propertyName: type
+          title: Debug
+          description: Deserialized error detail payload. The 'type' field indicates the schema. This field is for easier debugging and should not be relied upon for application logic.
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message, with an additional debug field for ConnectRPC error details.
+    google.protobuf.Timestamp:
+      type: string
+      examples:
+        - "2023-01-15T01:30:15.01Z"
+        - "2024-12-25T12:00:00Z"
+      format: date-time
+      description: |-
+        A Timestamp represents a point in time independent of any time zone or local
+         calendar, encoded as a count of seconds and fractions of seconds at
+         nanosecond resolution. The count is relative to an epoch at UTC midnight on
+         January 1, 1970, in the proleptic Gregorian calendar which extends the
+         Gregorian calendar backwards to year one.
+
+         All minutes are 60 seconds long. Leap seconds are "smeared" so that no leap
+         second table is needed for interpretation, using a [24-hour linear
+         smear](https://developers.google.com/time/smear).
+
+         The range is from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59.999999999Z. By
+         restricting to that range, we ensure that we can convert to and from [RFC
+         3339](https://www.ietf.org/rfc/rfc3339.txt) date strings.
+
+         # Examples
+
+         Example 1: Compute Timestamp from POSIX `time()`.
+
+             Timestamp timestamp;
+             timestamp.set_seconds(time(NULL));
+             timestamp.set_nanos(0);
+
+         Example 2: Compute Timestamp from POSIX `gettimeofday()`.
+
+             struct timeval tv;
+             gettimeofday(&tv, NULL);
+
+             Timestamp timestamp;
+             timestamp.set_seconds(tv.tv_sec);
+             timestamp.set_nanos(tv.tv_usec * 1000);
+
+         Example 3: Compute Timestamp from Win32 `GetSystemTimeAsFileTime()`.
+
+             FILETIME ft;
+             GetSystemTimeAsFileTime(&ft);
+             UINT64 ticks = (((UINT64)ft.dwHighDateTime) << 32) | ft.dwLowDateTime;
+
+             // A Windows tick is 100 nanoseconds. Windows epoch 1601-01-01T00:00:00Z
+             // is 11644473600 seconds before Unix epoch 1970-01-01T00:00:00Z.
+             Timestamp timestamp;
+             timestamp.set_seconds((INT64) ((ticks / 10000000) - 11644473600LL));
+             timestamp.set_nanos((INT32) ((ticks % 10000000) * 100));
+
+         Example 4: Compute Timestamp from Java `System.currentTimeMillis()`.
+
+             long millis = System.currentTimeMillis();
+
+             Timestamp timestamp = Timestamp.newBuilder().setSeconds(millis / 1000)
+                 .setNanos((int) ((millis % 1000) * 1000000)).build();
+
+         Example 5: Compute Timestamp from Java `Instant.now()`.
+
+             Instant now = Instant.now();
+
+             Timestamp timestamp =
+                 Timestamp.newBuilder().setSeconds(now.getEpochSecond())
+                     .setNanos(now.getNano()).build();
+
+         Example 6: Compute Timestamp from current time in Python.
+
+             timestamp = Timestamp()
+             timestamp.GetCurrentTime()
+
+         # JSON Mapping
+
+         In JSON format, the Timestamp type is encoded as a string in the
+         [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format. That is, the
+         format is "{year}-{month}-{day}T{hour}:{min}:{sec}[.{frac_sec}]Z"
+         where {year} is always expressed using four digits while {month}, {day},
+         {hour}, {min}, and {sec} are zero-padded to two digits each. The fractional
+         seconds, which can go up to 9 digits (i.e. up to 1 nanosecond resolution),
+         are optional. The "Z" suffix indicates the timezone ("UTC"); the timezone
+         is required. A proto3 JSON serializer should always use UTC (as indicated by
+         "Z") when printing the Timestamp type and a proto3 JSON parser should be
+         able to accept both UTC and other timezones (as indicated by an offset).
+
+         For example, "2017-01-15T01:30:15.01Z" encodes 15.01 seconds past
+         01:30 UTC on January 15, 2017.
+
+         In JavaScript, one can convert a Date object to this format using the
+         standard
+         [toISOString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString)
+         method. In Python, a standard `datetime.datetime` object can be converted
+         to this format using
+         [`strftime`](https://docs.python.org/2/library/time.html#time.strftime) with
+         the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one can use
+         the Joda Time's [`ISODateTimeFormat.dateTime()`](
+         http://joda-time.sourceforge.net/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime()
+         ) to obtain a formatter capable of generating timestamps in this format.
+    twin.v1.DeprovisionTwinRequest:
+      type: object
+      properties:
+        twinId:
+          type: string
+          title: twin_id
+        actorId:
+          type: string
+          title: actor_id
+        reason:
+          type: string
+          title: reason
+      title: DeprovisionTwinRequest
+      additionalProperties: false
+    twin.v1.DeprovisionTwinResponse:
+      type: object
+      properties:
+        twin:
+          title: twin
+          $ref: '#/components/schemas/twin.v1.DigitalTwin'
+      title: DeprovisionTwinResponse
+      additionalProperties: false
+    twin.v1.DigitalTwin:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        projectId:
+          type: string
+          title: project_id
+        layoutId:
+          type: string
+          title: layout_id
+          description: 'layout_id: ID of the approved layout artifact this twin was provisioned from.'
+        electricalNetworkId:
+          type: string
+          title: electrical_network_id
+          description: 'electrical_network_id: ID of the validated electrical network artifact.'
+        transmissionRouteId:
+          type: string
+          title: transmission_route_id
+          description: 'transmission_route_id: ID of the approved transmission route artifact.'
+        approvedRevisionId:
+          type: string
+          title: approved_revision_id
+          description: 'approved_revision_id: Identifier of the approval record (StakeholderApproval evidence ID).'
+        status:
+          title: status
+          $ref: '#/components/schemas/twin.v1.TwinStatus'
+        operationalState:
+          title: operational_state
+          $ref: '#/components/schemas/twin.v1.OperationalState'
+        provisionedByActorId:
+          type: string
+          title: provisioned_by_actor_id
+        provisionedAt:
+          title: provisioned_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        lastTelemetryAt:
+          title: last_telemetry_at
+          description: 'last_telemetry_at: Timestamp of most recently ingested sensor reading.'
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        decommissionedAt:
+          title: decommissioned_at
+          description: 'decommissioned_at: Set only when status = TWIN_STATUS_DECOMMISSIONED.'
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        assetIdentityLinkCount:
+          type: integer
+          title: asset_identity_link_count
+          format: int32
+          description: 'asset_identity_link_count: Number of AssetIdentity records linked to this twin.'
+        metadataJson:
+          type: string
+          title: metadata_json
+          description: 'metadata_json: Free-form JSON for SCADA integration metadata, site codes, etc.'
+        createdAt:
+          title: created_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        updatedAt:
+          title: updated_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: DigitalTwin
+      additionalProperties: false
+      description: |-
+        DigitalTwin is the canonical representation of a provisioned project twin.
+         Immutable fields: id, project_id, layout_id, electrical_network_id,
+         transmission_route_id, approved_revision_id, provisioned_by_actor_id, provisioned_at.
+         Mutable fields: status, operational_state, last_telemetry_at, decommissioned_at,
+         asset_identity_link_count, metadata_json.
+    twin.v1.GetTwinStateRequest:
+      type: object
+      properties:
+        twinId:
+          type: string
+          title: twin_id
+      title: GetTwinStateRequest
+      additionalProperties: false
+    twin.v1.GetTwinStateResponse:
+      type: object
+      properties:
+        twin:
+          title: twin
+          $ref: '#/components/schemas/twin.v1.DigitalTwin'
+      title: GetTwinStateResponse
+      additionalProperties: false
+    twin.v1.ListTwinsByProjectRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        pageSize:
+          type: integer
+          title: page_size
+          format: int32
+        pageToken:
+          type: string
+          title: page_token
+      title: ListTwinsByProjectRequest
+      additionalProperties: false
+    twin.v1.ListTwinsByProjectResponse:
+      type: object
+      properties:
+        twins:
+          type: array
+          items:
+            $ref: '#/components/schemas/twin.v1.DigitalTwin'
+          title: twins
+        nextPageToken:
+          type: string
+          title: next_page_token
+        totalCount:
+          type: integer
+          title: total_count
+          format: int32
+      title: ListTwinsByProjectResponse
+      additionalProperties: false
+    twin.v1.OperationalState:
+      type: object
+      properties:
+        powerOutputKw:
+          type: number
+          title: power_output_kw
+          format: double
+          description: 'power_output_kw: Current AC output power in kilowatts.'
+        availabilityPercent:
+          type: number
+          title: availability_percent
+          format: double
+          description: 'availability_percent: Plant availability [0, 100].'
+        activeFaultCount:
+          type: integer
+          title: active_fault_count
+          format: int32
+          description: 'active_fault_count: Number of unresolved faults currently active.'
+        healthScore:
+          type: number
+          title: health_score
+          format: double
+          description: 'health_score: Composite health indicator [0, 1] where 1 = nominal.'
+        lastInspectedAt:
+          title: last_inspected_at
+          description: 'last_inspected_at: Timestamp of last manual or automated inspection.'
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: OperationalState
+      additionalProperties: false
+      description: |-
+        OperationalState holds the mutable runtime metrics for a digital twin.
+         Values are updated by telemetry ingestion and fault reporting.
+    twin.v1.ProvisionTwinRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        layoutId:
+          type: string
+          title: layout_id
+        electricalNetworkId:
+          type: string
+          title: electrical_network_id
+        transmissionRouteId:
+          type: string
+          title: transmission_route_id
+        approvedRevisionId:
+          type: string
+          title: approved_revision_id
+          description: 'approved_revision_id: Stakeholder approval evidence record ID from the workflow.'
+        provisionedByActorId:
+          type: string
+          title: provisioned_by_actor_id
+        metadataJson:
+          type: string
+          title: metadata_json
+          description: 'metadata_json: Optional SCADA/site integration metadata in JSON format.'
+      title: ProvisionTwinRequest
+      additionalProperties: false
+    twin.v1.ProvisionTwinResponse:
+      type: object
+      properties:
+        twin:
+          title: twin
+          $ref: '#/components/schemas/twin.v1.DigitalTwin'
+      title: ProvisionTwinResponse
+      additionalProperties: false
+    twin.v1.TwinStatus:
+      type: string
+      title: TwinStatus
+      enum:
+        - TWIN_STATUS_UNSPECIFIED
+        - TWIN_STATUS_PROVISIONING
+        - TWIN_STATUS_ACTIVE
+        - TWIN_STATUS_SUSPENDED
+        - TWIN_STATUS_DECOMMISSIONED
+    twin.v1.UpdateTwinStateRequest:
+      type: object
+      properties:
+        twinId:
+          type: string
+          title: twin_id
+        operationalState:
+          title: operational_state
+          $ref: '#/components/schemas/twin.v1.OperationalState'
+        lastTelemetryAt:
+          title: last_telemetry_at
+          description: 'last_telemetry_at: Updated by TelemetryService after each successful ingest.'
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: UpdateTwinStateRequest
+      additionalProperties: false
+    twin.v1.UpdateTwinStateResponse:
+      type: object
+      properties:
+        twin:
+          title: twin
+          $ref: '#/components/schemas/twin.v1.DigitalTwin'
+      title: UpdateTwinStateResponse
+      additionalProperties: false
+security: []
+tags:
+  - name: twin.v1.DigitalTwinService
+    description: |-
+      DigitalTwinService manages the lifecycle of digital twins provisioned from
+       approved solar project lineage.  A twin is provisioned exactly once per
+       approved project revision; it holds operational state and links design asset
+       IDs to physical/operational identities via the AssetIdentityService.

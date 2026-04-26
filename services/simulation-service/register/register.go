@@ -6,11 +6,11 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
-	simulationv1connect "github.com/solar3d/solar3d/gen/simulation/v1/simulationv1connect"
+	simulationv1connect "p9e.in/samavaya/solar3d/gen/simulation/v1/simulationv1connect"
 
-	"solar3d/simulation-service/internal/handler"
-	"solar3d/simulation-service/internal/repository"
-	"solar3d/simulation-service/internal/service"
+	"p9e.in/samavaya/solar3d/simulation-service/internal/handler"
+	"p9e.in/samavaya/solar3d/simulation-service/internal/repository"
+	"p9e.in/samavaya/solar3d/simulation-service/internal/service"
 )
 
 // Register wires the simulation-service handlers onto mux.

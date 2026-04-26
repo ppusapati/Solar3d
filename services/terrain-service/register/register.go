@@ -8,12 +8,12 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
-	terrainv1connect "github.com/solar3d/solar3d/gen/terrain/v1/terrainv1connect"
+	terrainv1connect "p9e.in/samavaya/solar3d/gen/terrain/v1/terrainv1connect"
 
-	"solar3d/terrain-service/internal/handler"
-	"solar3d/terrain-service/internal/repository"
-	"solar3d/terrain-service/internal/service"
-	"solar3d/terrain-service/internal/worker"
+	"p9e.in/samavaya/solar3d/terrain-service/internal/handler"
+	"p9e.in/samavaya/solar3d/terrain-service/internal/repository"
+	"p9e.in/samavaya/solar3d/terrain-service/internal/service"
+	"p9e.in/samavaya/solar3d/terrain-service/internal/worker"
 )
 
 // Register wires the terrain-service handlers onto mux and starts background workers.

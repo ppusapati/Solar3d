@@ -9,12 +9,12 @@ import (
 	"time"
 
 	"github.com/rs/zerolog"
-	drawingv1connect "github.com/solar3d/solar3d/gen/drawing/v1/drawingv1connect"
+	drawingv1connect "p9e.in/samavaya/solar3d/gen/drawing/v1/drawingv1connect"
 
-	"solar3d/cad-annotation-service/internal/config"
-	"solar3d/cad-annotation-service/internal/handler"
-	"solar3d/cad-annotation-service/internal/service"
-	mw "solar3d/shared/middleware"
+	"p9e.in/samavaya/solar3d/cad-annotation-service/internal/config"
+	"p9e.in/samavaya/solar3d/cad-annotation-service/internal/handler"
+	"p9e.in/samavaya/solar3d/cad-annotation-service/internal/service"
+	mw "p9e.in/samavaya/packages/httpmiddleware"
 )
 
 func main() {
@@ -47,7 +47,7 @@ func main() {
 	path, connectHandler := drawingv1connect.NewCadAnnotationServiceHandler(h)
 	mux.Handle(path, connectHandler)
 
-	chain := mw.Chain(mw.Recovery(logger), mw.IDempotencyKeyMiddleware, mw.CORS, mw.Logging(logger), mw.NewRateLimiter(100, 200).Middleware)
+	chain := mw.Chain(mw.Recovery(logger), mw.DeprecateRESTAliases(logger), mw.IDempotencyKeyMiddleware, mw.CORS, mw.Logging(logger), mw.NewRateLimiter(100, 200).Middleware)
 	srv := &http.Server{Addr: fmt.Sprintf(":%d", cfg.Port), Handler: chain(mux), ReadHeaderTimeout: 10 * time.Second, ReadTimeout: 30 * time.Second, WriteTimeout: 30 * time.Second, IdleTimeout: 120 * time.Second}
 
 	errCh := make(chan error, 1)

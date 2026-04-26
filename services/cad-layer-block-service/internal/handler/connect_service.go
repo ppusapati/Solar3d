@@ -7,10 +7,10 @@ import (
 	"strconv"
 
 	connect "connectrpc.com/connect"
-	drawingv1 "github.com/solar3d/solar3d/gen/drawing/v1"
-	drawingv1connect "github.com/solar3d/solar3d/gen/drawing/v1/drawingv1connect"
+	drawingv1 "p9e.in/samavaya/solar3d/gen/drawing/v1"
+	drawingv1connect "p9e.in/samavaya/solar3d/gen/drawing/v1/drawingv1connect"
 
-	"solar3d/cad-layer-block-service/internal/service"
+	"p9e.in/samavaya/solar3d/cad-layer-block-service/internal/service"
 )
 
 type ConnectCadLayerBlockService struct {

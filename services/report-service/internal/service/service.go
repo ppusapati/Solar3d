@@ -11,9 +11,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 
-	"solar3d/report-service/internal/domain"
-	"solar3d/report-service/internal/repository"
-	"solar3d/shared/audit"
+	"p9e.in/samavaya/solar3d/report-service/internal/domain"
+	"p9e.in/samavaya/solar3d/report-service/internal/repository"
+	"p9e.in/samavaya/packages/audit"
 )
 
 type ReportService struct {

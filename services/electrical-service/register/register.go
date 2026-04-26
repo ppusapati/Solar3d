@@ -6,11 +6,11 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
-	electricalv1connect "github.com/solar3d/solar3d/gen/electrical/v1/electricalv1connect"
+	electricalv1connect "p9e.in/samavaya/solar3d/gen/electrical/v1/electricalv1connect"
 
-	"solar3d/electrical-service/internal/handler"
-	"solar3d/electrical-service/internal/repository"
-	"solar3d/electrical-service/internal/service"
+	"p9e.in/samavaya/solar3d/electrical-service/internal/handler"
+	"p9e.in/samavaya/solar3d/electrical-service/internal/repository"
+	"p9e.in/samavaya/solar3d/electrical-service/internal/service"
 )
 
 // Register wires the electrical-service handlers onto mux.

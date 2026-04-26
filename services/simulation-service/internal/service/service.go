@@ -9,9 +9,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 
-	"solar3d/shared/orchestration"
-	"solar3d/simulation-service/internal/domain"
-	"solar3d/simulation-service/internal/repository"
+	"p9e.in/samavaya/packages/solar3dorch"
+	"p9e.in/samavaya/solar3d/simulation-service/internal/domain"
+	"p9e.in/samavaya/solar3d/simulation-service/internal/repository"
 )
 
 type SimulationService struct {

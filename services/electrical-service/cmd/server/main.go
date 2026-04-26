@@ -10,14 +10,14 @@ import (
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	electricalv1connect "github.com/solar3d/solar3d/gen/electrical/v1/electricalv1connect"
+	electricalv1connect "p9e.in/samavaya/solar3d/gen/electrical/v1/electricalv1connect"
 
-	"solar3d/electrical-service/internal/config"
-	"solar3d/electrical-service/internal/db"
-	"solar3d/electrical-service/internal/handler"
-	"solar3d/electrical-service/internal/repository"
-	"solar3d/electrical-service/internal/service"
-	mw "solar3d/shared/middleware"
+	"p9e.in/samavaya/solar3d/electrical-service/internal/config"
+	"p9e.in/samavaya/solar3d/electrical-service/internal/db"
+	"p9e.in/samavaya/solar3d/electrical-service/internal/handler"
+	"p9e.in/samavaya/solar3d/electrical-service/internal/repository"
+	"p9e.in/samavaya/solar3d/electrical-service/internal/service"
+	mw "p9e.in/samavaya/packages/httpmiddleware"
 )
 
 func main() {
@@ -62,16 +62,12 @@ func main() {
 	connectPath, connectHandler := electricalv1connect.NewElectricalServiceHandler(handler.NewConnectElectricalService(svc))
 	mux.Handle(connectPath, connectHandler)
 
-	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"status":"ok"}`))
-	})
+	mux.HandleFunc("GET /healthz", mw.HealthzHandler(pool))
 
 	// Apply middleware chain: Recovery → RequestID → CORS → Logging → RateLimit
 	limiter := mw.NewRateLimiter(100, 200)
 	chain := mw.Chain(
-		mw.Recovery(logger),
+		mw.Recovery(logger), mw.DeprecateRESTAliases(logger),
 		mw.IDempotencyKeyMiddleware,
 		mw.CORS,
 		mw.Logging(logger),

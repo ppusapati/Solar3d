@@ -1,9 +1,9 @@
 package mappers
 
 import (
-	"solar3d/compute-service/internal/models"
+	"p9e.in/samavaya/solar3d/compute-service/internal/models"
 
-	geov1 "github.com/solar3d/solar3d/gen/geo/v1"
+	geov1 "p9e.in/samavaya/solar3d/gen/geo/v1"
 )
 
 func ProtoToBufferPoint(req *geov1.BufferPointRequest) *models.BufferPointRequest {

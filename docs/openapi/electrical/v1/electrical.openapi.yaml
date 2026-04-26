@@ -1,0 +1,1719 @@
+openapi: 3.1.0
+info:
+  title: electrical.v1
+paths:
+  /electrical.v1.ElectricalService/ApproveNetwork:
+    post:
+      tags:
+        - electrical.v1.ElectricalService
+      summary: ApproveNetwork
+      description: ApproveNetwork sets review_metadata.status to APPROVED, enabling TransmissionReady transition.
+      operationId: electrical.v1.ElectricalService.ApproveNetwork
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/electrical.v1.ApproveNetworkRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/electrical.v1.ApproveNetworkResponse'
+  /electrical.v1.ElectricalService/AssignInverter:
+    post:
+      tags:
+        - electrical.v1.ElectricalService
+      summary: AssignInverter
+      description: Inverter operations
+      operationId: electrical.v1.ElectricalService.AssignInverter
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/electrical.v1.AssignInverterRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/electrical.v1.AssignInverterResponse'
+  /electrical.v1.ElectricalService/AutoGenerateStrings:
+    post:
+      tags:
+        - electrical.v1.ElectricalService
+      summary: AutoGenerateStrings
+      description: AutoGenerateStrings generates panel strings automatically based on inverter groups.
+      operationId: electrical.v1.ElectricalService.AutoGenerateStrings
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/electrical.v1.AutoGenerateStringsRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/electrical.v1.AutoGenerateStringsResponse'
+  /electrical.v1.ElectricalService/CalculateACCapacity:
+    post:
+      tags:
+        - electrical.v1.ElectricalService
+      summary: CalculateACCapacity
+      description: CalculateACCapacity computes total AC output capacity for the network.
+      operationId: electrical.v1.ElectricalService.CalculateACCapacity
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/electrical.v1.CalculateACCapacityRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/electrical.v1.CalculateACCapacityResponse'
+  /electrical.v1.ElectricalService/CalculateDCCapacity:
+    post:
+      tags:
+        - electrical.v1.ElectricalService
+      summary: CalculateDCCapacity
+      description: Calculations
+      operationId: electrical.v1.ElectricalService.CalculateDCCapacity
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/electrical.v1.CalculateDCCapacityRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/electrical.v1.CalculateDCCapacityResponse'
+  /electrical.v1.ElectricalService/CalculateLosses:
+    post:
+      tags:
+        - electrical.v1.ElectricalService
+      summary: CalculateLosses
+      description: CalculateLosses computes cable, mismatch, and system losses for the network.
+      operationId: electrical.v1.ElectricalService.CalculateLosses
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/electrical.v1.CalculateLossesRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/electrical.v1.CalculateLossesResponse'
+  /electrical.v1.ElectricalService/CreateNetwork:
+    post:
+      tags:
+        - electrical.v1.ElectricalService
+      summary: CreateNetwork
+      description: CreateNetwork creates a new electrical network for a project layout.
+      operationId: electrical.v1.ElectricalService.CreateNetwork
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/electrical.v1.CreateNetworkRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/electrical.v1.CreateNetworkResponse'
+  /electrical.v1.ElectricalService/CreateString:
+    post:
+      tags:
+        - electrical.v1.ElectricalService
+      summary: CreateString
+      description: String operations
+      operationId: electrical.v1.ElectricalService.CreateString
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/electrical.v1.CreateStringRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/electrical.v1.CreateStringResponse'
+  /electrical.v1.ElectricalService/DeleteNetwork:
+    post:
+      tags:
+        - electrical.v1.ElectricalService
+      summary: DeleteNetwork
+      description: DeleteNetwork permanently removes an electrical network and all its strings.
+      operationId: electrical.v1.ElectricalService.DeleteNetwork
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/electrical.v1.DeleteNetworkRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/electrical.v1.DeleteNetworkResponse'
+  /electrical.v1.ElectricalService/GenerateNetworkBOM:
+    post:
+      tags:
+        - electrical.v1.ElectricalService
+      summary: GenerateNetworkBOM
+      description: GenerateNetworkBOM derives BOM item counts directly from the live network topology.
+      operationId: electrical.v1.ElectricalService.GenerateNetworkBOM
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/electrical.v1.GenerateNetworkBOMRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/electrical.v1.GenerateNetworkBOMResponse'
+  /electrical.v1.ElectricalService/GetNetwork:
+    post:
+      tags:
+        - electrical.v1.ElectricalService
+      summary: GetNetwork
+      description: GetNetwork retrieves an electrical network by ID including review metadata.
+      operationId: electrical.v1.ElectricalService.GetNetwork
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/electrical.v1.GetNetworkRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/electrical.v1.GetNetworkResponse'
+  /electrical.v1.ElectricalService/ListInverterGroups:
+    post:
+      tags:
+        - electrical.v1.ElectricalService
+      summary: ListInverterGroups
+      description: ListInverterGroups returns all inverter groups and their assigned strings.
+      operationId: electrical.v1.ElectricalService.ListInverterGroups
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/electrical.v1.ListInverterGroupsRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/electrical.v1.ListInverterGroupsResponse'
+  /electrical.v1.ElectricalService/ListNetworks:
+    post:
+      tags:
+        - electrical.v1.ElectricalService
+      summary: ListNetworks
+      description: ListNetworks returns all electrical networks for a project.
+      operationId: electrical.v1.ElectricalService.ListNetworks
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/electrical.v1.ListNetworksRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/electrical.v1.ListNetworksResponse'
+  /electrical.v1.ElectricalService/ListStrings:
+    post:
+      tags:
+        - electrical.v1.ElectricalService
+      summary: ListStrings
+      description: ListStrings returns all strings for a network.
+      operationId: electrical.v1.ElectricalService.ListStrings
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/electrical.v1.ListStringsRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/electrical.v1.ListStringsResponse'
+  /electrical.v1.ElectricalService/RejectNetwork:
+    post:
+      tags:
+        - electrical.v1.ElectricalService
+      summary: RejectNetwork
+      description: RejectNetwork sets review_metadata.status to REJECTED and records blocker reasons.
+      operationId: electrical.v1.ElectricalService.RejectNetwork
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/electrical.v1.RejectNetworkRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/electrical.v1.RejectNetworkResponse'
+  /electrical.v1.ElectricalService/SubmitNetworkForReview:
+    post:
+      tags:
+        - electrical.v1.ElectricalService
+      summary: SubmitNetworkForReview
+      description: |-
+        Acceptance workflow — gates the ElectricalReady -> TransmissionReady phase transition.
+         SubmitNetworkForReview transitions review_metadata.status to REVIEW_PENDING.
+      operationId: electrical.v1.ElectricalService.SubmitNetworkForReview
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/electrical.v1.SubmitNetworkForReviewRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/electrical.v1.SubmitNetworkForReviewResponse'
+  /electrical.v1.ElectricalService/ValidateNetwork:
+    post:
+      tags:
+        - electrical.v1.ElectricalService
+      summary: ValidateNetwork
+      description: 'ValidateNetwork performs full topology validation: all strings assigned, no orphans, MPPT limits.'
+      operationId: electrical.v1.ElectricalService.ValidateNetwork
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/electrical.v1.ValidateNetworkRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/electrical.v1.ValidateNetworkResponse'
+  /electrical.v1.ElectricalService/ValidateSizing:
+    post:
+      tags:
+        - electrical.v1.ElectricalService
+      summary: ValidateSizing
+      description: ValidateSizing performs parametric sizing validation against design constraints.
+      operationId: electrical.v1.ElectricalService.ValidateSizing
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/electrical.v1.ValidateSizingRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/electrical.v1.ValidateSizingResponse'
+components:
+  schemas:
+    connect-protocol-version:
+      type: number
+      title: Connect-Protocol-Version
+      enum:
+        - 1
+      description: Define the version of the Connect protocol
+      const: 1
+    connect-timeout-header:
+      type: number
+      title: Connect-Timeout-Ms
+      description: Define the timeout, in ms
+    connect.error:
+      type: object
+      properties:
+        code:
+          type: string
+          examples:
+            - not_found
+          enum:
+            - canceled
+            - unknown
+            - invalid_argument
+            - deadline_exceeded
+            - not_found
+            - already_exists
+            - permission_denied
+            - resource_exhausted
+            - failed_precondition
+            - aborted
+            - out_of_range
+            - unimplemented
+            - internal
+            - unavailable
+            - data_loss
+            - unauthenticated
+          description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+        message:
+          type: string
+          description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/connect.error_details.Any'
+          description: A list of messages that carry the error details. There is no limit on the number of messages.
+      title: Connect Error
+      additionalProperties: true
+      description: 'Error type returned by Connect: https://connectrpc.com/docs/go/errors/#http-representation'
+    connect.error_details.Any:
+      type: object
+      properties:
+        type:
+          type: string
+          description: 'A URL that acts as a globally unique identifier for the type of the serialized message. For example: `type.googleapis.com/google.rpc.ErrorInfo`. This is used to determine the schema of the data in the `value` field and is the discriminator for the `debug` field.'
+        value:
+          type: string
+          format: binary
+          description: The Protobuf message, serialized as bytes and base64-encoded. The specific message type is identified by the `type` field.
+        debug:
+          oneOf:
+            - type: object
+              title: Any
+              additionalProperties: true
+              description: Detailed error information.
+          discriminator:
+            propertyName: type
+          title: Debug
+          description: Deserialized error detail payload. The 'type' field indicates the schema. This field is for easier debugging and should not be relied upon for application logic.
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message, with an additional debug field for ConnectRPC error details.
+    electrical.v1.AcceptanceStatus:
+      type: string
+      title: AcceptanceStatus
+      enum:
+        - ACCEPTANCE_STATUS_UNSPECIFIED
+        - ACCEPTANCE_STATUS_DRAFT
+        - ACCEPTANCE_STATUS_REVIEW_PENDING
+        - ACCEPTANCE_STATUS_APPROVED
+        - ACCEPTANCE_STATUS_REJECTED
+      description: |-
+        ========== Acceptance Status Enum ==========
+         AcceptanceStatus is the workflow gate state for an electrical network artefact.
+         Determines whether this network satisfies the ElectricalReady gate for phase progression.
+    electrical.v1.ApproveNetworkRequest:
+      type: object
+      properties:
+        networkId:
+          type: string
+          title: network_id
+        qualityScore:
+          type: number
+          title: quality_score
+          format: double
+          description: '[0, 1]'
+        feasibilityScore:
+          type: number
+          title: feasibility_score
+          format: double
+          description: '[0, 1]'
+        approvalComments:
+          type: array
+          items:
+            type: string
+          title: approval_comments
+        approvedByActorId:
+          type: string
+          title: approved_by_actor_id
+      title: ApproveNetworkRequest
+      additionalProperties: false
+    electrical.v1.ApproveNetworkResponse:
+      type: object
+      properties:
+        network:
+          title: network
+          $ref: '#/components/schemas/electrical.v1.ElectricalNetwork'
+        reviewMetadata:
+          title: review_metadata
+          $ref: '#/components/schemas/electrical.v1.ReviewMetadata'
+      title: ApproveNetworkResponse
+      additionalProperties: false
+    electrical.v1.AssignInverterRequest:
+      type: object
+      properties:
+        networkId:
+          type: string
+          title: network_id
+        inverterAssetId:
+          type: string
+          title: inverter_asset_id
+        stringIds:
+          type: array
+          items:
+            type: string
+          title: string_ids
+        positionGeojson:
+          type: string
+          title: position_geojson
+      title: AssignInverterRequest
+      additionalProperties: false
+    electrical.v1.AssignInverterResponse:
+      type: object
+      properties:
+        inverterGroup:
+          title: inverter_group
+          $ref: '#/components/schemas/electrical.v1.InverterGroup'
+      title: AssignInverterResponse
+      additionalProperties: false
+    electrical.v1.AutoGenerateStringsRequest:
+      type: object
+      properties:
+        networkId:
+          type: string
+          title: network_id
+        layoutId:
+          type: string
+          title: layout_id
+        panelsPerString:
+          type: integer
+          title: panels_per_string
+          format: int32
+        inverterAssetId:
+          type: string
+          title: inverter_asset_id
+        stringsPerInverter:
+          type: integer
+          title: strings_per_inverter
+          format: int32
+        totalPanels:
+          type: integer
+          title: total_panels
+          format: int32
+        panelVoltage:
+          type: number
+          title: panel_voltage
+          format: double
+        panelCurrent:
+          type: number
+          title: panel_current
+          format: double
+        panelPowerW:
+          type: number
+          title: panel_power_w
+          format: double
+        inverterAcKw:
+          type: number
+          title: inverter_ac_kw
+          format: double
+      title: AutoGenerateStringsRequest
+      additionalProperties: false
+    electrical.v1.AutoGenerateStringsResponse:
+      type: object
+      properties:
+        stringsCreated:
+          type: integer
+          title: strings_created
+          format: int32
+        inverterGroupsCreated:
+          type: integer
+          title: inverter_groups_created
+          format: int32
+        totalDcKw:
+          type: number
+          title: total_dc_kw
+          format: double
+        totalAcKw:
+          type: number
+          title: total_ac_kw
+          format: double
+        network:
+          title: network
+          $ref: '#/components/schemas/electrical.v1.ElectricalNetwork'
+      title: AutoGenerateStringsResponse
+      additionalProperties: false
+    electrical.v1.CalculateACCapacityRequest:
+      type: object
+      properties:
+        networkId:
+          type: string
+          title: network_id
+      title: CalculateACCapacityRequest
+      additionalProperties: false
+    electrical.v1.CalculateACCapacityResponse:
+      type: object
+      properties:
+        totalAcKw:
+          type: number
+          title: total_ac_kw
+          format: double
+        dcAcRatio:
+          type: number
+          title: dc_ac_ratio
+          format: double
+        totalInverters:
+          type: integer
+          title: total_inverters
+          format: int32
+      title: CalculateACCapacityResponse
+      additionalProperties: false
+    electrical.v1.CalculateDCCapacityRequest:
+      type: object
+      properties:
+        networkId:
+          type: string
+          title: network_id
+      title: CalculateDCCapacityRequest
+      additionalProperties: false
+    electrical.v1.CalculateDCCapacityResponse:
+      type: object
+      properties:
+        totalDcKw:
+          type: number
+          title: total_dc_kw
+          format: double
+        totalPanels:
+          type: integer
+          title: total_panels
+          format: int32
+        totalStrings:
+          type: integer
+          title: total_strings
+          format: int32
+      title: CalculateDCCapacityResponse
+      additionalProperties: false
+    electrical.v1.CalculateLossesRequest:
+      type: object
+      properties:
+        networkId:
+          type: string
+          title: network_id
+      title: CalculateLossesRequest
+      additionalProperties: false
+    electrical.v1.CalculateLossesResponse:
+      type: object
+      properties:
+        dcCableLossPercent:
+          type: number
+          title: dc_cable_loss_percent
+          format: double
+        acCableLossPercent:
+          type: number
+          title: ac_cable_loss_percent
+          format: double
+        inverterLossPercent:
+          type: number
+          title: inverter_loss_percent
+          format: double
+        transformerLossPercent:
+          type: number
+          title: transformer_loss_percent
+          format: double
+        totalLossPercent:
+          type: number
+          title: total_loss_percent
+          format: double
+      title: CalculateLossesResponse
+      additionalProperties: false
+    electrical.v1.CreateNetworkRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        layoutId:
+          type: string
+          title: layout_id
+        name:
+          type: string
+          title: name
+      title: CreateNetworkRequest
+      additionalProperties: false
+    electrical.v1.CreateNetworkResponse:
+      type: object
+      properties:
+        network:
+          title: network
+          $ref: '#/components/schemas/electrical.v1.ElectricalNetwork'
+      title: CreateNetworkResponse
+      additionalProperties: false
+    electrical.v1.CreateStringRequest:
+      type: object
+      properties:
+        networkId:
+          type: string
+          title: network_id
+        panelIds:
+          type: array
+          items:
+            type: string
+          title: panel_ids
+        inverterGroupId:
+          type: string
+          title: inverter_group_id
+        panelVoltage:
+          type: number
+          title: panel_voltage
+          format: double
+        panelCurrent:
+          type: number
+          title: panel_current
+          format: double
+      title: CreateStringRequest
+      additionalProperties: false
+    electrical.v1.CreateStringResponse:
+      type: object
+      properties:
+        panelString:
+          title: panel_string
+          $ref: '#/components/schemas/electrical.v1.PanelString'
+      title: CreateStringResponse
+      additionalProperties: false
+    electrical.v1.DeleteNetworkRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+      title: DeleteNetworkRequest
+      additionalProperties: false
+    electrical.v1.DeleteNetworkResponse:
+      type: object
+      title: DeleteNetworkResponse
+      additionalProperties: false
+    electrical.v1.ElectricalNetwork:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        projectId:
+          type: string
+          title: project_id
+        layoutId:
+          type: string
+          title: layout_id
+        name:
+          type: string
+          title: name
+        totalDcCapacityKw:
+          type: number
+          title: total_dc_capacity_kw
+          format: double
+        totalAcCapacityKw:
+          type: number
+          title: total_ac_capacity_kw
+          format: double
+        dcAcRatio:
+          type: number
+          title: dc_ac_ratio
+          format: double
+        stringCount:
+          type: integer
+          title: string_count
+          format: int32
+        inverterCount:
+          type: integer
+          title: inverter_count
+          format: int32
+        createdAt:
+          title: created_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        reviewMetadata:
+          title: review_metadata
+          $ref: '#/components/schemas/electrical.v1.ReviewMetadata'
+        validationViolations:
+          type: array
+          items:
+            type: string
+          title: validation_violations
+          description: Empty if all validations pass
+        electricalFeasibilityScore:
+          type: number
+          title: electrical_feasibility_score
+          format: double
+          description: '[0, 1]'
+      title: ElectricalNetwork
+      additionalProperties: false
+    electrical.v1.GenerateNetworkBOMRequest:
+      type: object
+      properties:
+        networkId:
+          type: string
+          title: network_id
+        panelUnitCost:
+          type: number
+          title: panel_unit_cost
+          format: double
+          description: Optional cost parameters; zero values omit cost columns.
+        inverterUnitCost:
+          type: number
+          title: inverter_unit_cost
+          format: double
+        cableCostPerM:
+          type: number
+          title: cable_cost_per_m
+          format: double
+        mountingCostPerPanel:
+          type: number
+          title: mounting_cost_per_panel
+          format: double
+        currencyCode:
+          type: string
+          title: currency_code
+      title: GenerateNetworkBOMRequest
+      additionalProperties: false
+      description: GenerateNetworkBOM derives bill-of-materials item counts from live network topology.
+    electrical.v1.GenerateNetworkBOMResponse:
+      type: object
+      properties:
+        networkId:
+          type: string
+          title: network_id
+        panelCount:
+          type: integer
+          title: panel_count
+          format: int32
+        stringCount:
+          type: integer
+          title: string_count
+          format: int32
+        inverterGroupCount:
+          type: integer
+          title: inverter_group_count
+          format: int32
+        totalDcKw:
+          type: number
+          title: total_dc_kw
+          format: double
+        totalAcKw:
+          type: number
+          title: total_ac_kw
+          format: double
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/electrical.v1.NetworkBOMItem'
+          title: items
+        totalCost:
+          type: number
+          title: total_cost
+          format: double
+        currencyCode:
+          type: string
+          title: currency_code
+      title: GenerateNetworkBOMResponse
+      additionalProperties: false
+    electrical.v1.GetNetworkRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+      title: GetNetworkRequest
+      additionalProperties: false
+    electrical.v1.GetNetworkResponse:
+      type: object
+      properties:
+        network:
+          title: network
+          $ref: '#/components/schemas/electrical.v1.ElectricalNetwork'
+      title: GetNetworkResponse
+      additionalProperties: false
+    electrical.v1.InverterGroup:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        networkId:
+          type: string
+          title: network_id
+        inverterAssetId:
+          type: string
+          title: inverter_asset_id
+        stringIds:
+          type: array
+          items:
+            type: string
+          title: string_ids
+        dcInputKw:
+          type: number
+          title: dc_input_kw
+          format: double
+        acOutputKw:
+          type: number
+          title: ac_output_kw
+          format: double
+        dcAcRatio:
+          type: number
+          title: dc_ac_ratio
+          format: double
+        positionGeojson:
+          type: string
+          title: position_geojson
+      title: InverterGroup
+      additionalProperties: false
+    electrical.v1.ListInverterGroupsRequest:
+      type: object
+      properties:
+        networkId:
+          type: string
+          title: network_id
+      title: ListInverterGroupsRequest
+      additionalProperties: false
+    electrical.v1.ListInverterGroupsResponse:
+      type: object
+      properties:
+        inverterGroups:
+          type: array
+          items:
+            $ref: '#/components/schemas/electrical.v1.InverterGroup'
+          title: inverter_groups
+      title: ListInverterGroupsResponse
+      additionalProperties: false
+    electrical.v1.ListNetworksRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+      title: ListNetworksRequest
+      additionalProperties: false
+    electrical.v1.ListNetworksResponse:
+      type: object
+      properties:
+        networks:
+          type: array
+          items:
+            $ref: '#/components/schemas/electrical.v1.ElectricalNetwork'
+          title: networks
+      title: ListNetworksResponse
+      additionalProperties: false
+    electrical.v1.ListStringsRequest:
+      type: object
+      properties:
+        networkId:
+          type: string
+          title: network_id
+      title: ListStringsRequest
+      additionalProperties: false
+    electrical.v1.ListStringsResponse:
+      type: object
+      properties:
+        strings:
+          type: array
+          items:
+            $ref: '#/components/schemas/electrical.v1.PanelString'
+          title: strings
+      title: ListStringsResponse
+      additionalProperties: false
+    electrical.v1.NetworkBOMItem:
+      type: object
+      properties:
+        category:
+          type: string
+          title: category
+        name:
+          type: string
+          title: name
+        quantity:
+          type: integer
+          title: quantity
+          format: int32
+        unit:
+          type: string
+          title: unit
+        unitCost:
+          type: number
+          title: unit_cost
+          format: double
+        totalCost:
+          type: number
+          title: total_cost
+          format: double
+      title: NetworkBOMItem
+      additionalProperties: false
+    electrical.v1.NetworkTopologyIssue:
+      type: object
+      properties:
+        code:
+          type: string
+          title: code
+          description: e.g. "UNASSIGNED_STRING", "DUPLICATE_PANEL", "MPPT_OVER_SUBSCRIBED"
+        message:
+          type: string
+          title: message
+        entityId:
+          type: string
+          title: entity_id
+          description: string_id or inverter_group_id causing the issue
+      title: NetworkTopologyIssue
+      additionalProperties: false
+    electrical.v1.PanelString:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        networkId:
+          type: string
+          title: network_id
+        inverterGroupId:
+          type: string
+          title: inverter_group_id
+        panelIds:
+          type: array
+          items:
+            type: string
+          title: panel_ids
+        panelCount:
+          type: integer
+          title: panel_count
+          format: int32
+        stringVoltage:
+          type: number
+          title: string_voltage
+          format: double
+        stringCurrent:
+          type: number
+          title: string_current
+          format: double
+        stringPowerW:
+          type: number
+          title: string_power_w
+          format: double
+      title: PanelString
+      additionalProperties: false
+    electrical.v1.RejectNetworkRequest:
+      type: object
+      properties:
+        networkId:
+          type: string
+          title: network_id
+        rejectionReasons:
+          type: array
+          items:
+            type: string
+          title: rejection_reasons
+        rejectedByActorId:
+          type: string
+          title: rejected_by_actor_id
+      title: RejectNetworkRequest
+      additionalProperties: false
+    electrical.v1.RejectNetworkResponse:
+      type: object
+      properties:
+        network:
+          title: network
+          $ref: '#/components/schemas/electrical.v1.ElectricalNetwork'
+        reviewMetadata:
+          title: review_metadata
+          $ref: '#/components/schemas/electrical.v1.ReviewMetadata'
+      title: RejectNetworkResponse
+      additionalProperties: false
+    electrical.v1.ReviewMetadata:
+      type: object
+      properties:
+        status:
+          title: status
+          description: status is the current acceptance gate state.
+          $ref: '#/components/schemas/electrical.v1.AcceptanceStatus'
+        reviewedByActorId:
+          type: string
+          title: reviewed_by_actor_id
+          description: reviewed_by_actor_id is the user or system actor that performed the review action.
+        reviewedAt:
+          title: reviewed_at
+          description: reviewed_at is the timestamp of the most recent review action.
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        qualityScore:
+          type: number
+          title: quality_score
+          format: double
+          description: quality_score is a reviewer-assigned [0, 1] quality rating.
+        reviewComments:
+          type: array
+          items:
+            type: string
+          title: review_comments
+          description: review_comments are free-text annotations from the reviewer.
+        blockers:
+          type: array
+          items:
+            type: string
+          title: blockers
+          description: blockers are unresolved reasons preventing approval. Empty when approved.
+        approvalTimestampUnixSecs:
+          type: string
+          title: approval_timestamp_unix_secs
+          description: approval_timestamp_unix_secs records the ISO-8601 approval time for the audit trail.
+      title: ReviewMetadata
+      additionalProperties: false
+      description: |-
+        ========== Review Metadata ==========
+         ReviewMetadata captures the acceptance workflow state attached to an electrical network.
+         Populated by the SubmitNetworkForReview / ApproveNetwork / RejectNetwork RPCs.
+         Consumed by PlanningWorkflow gate enforcement for the ElectricalReady -> TransmissionReady transition.
+    electrical.v1.SizingViolation:
+      type: object
+      properties:
+        code:
+          type: string
+          title: code
+        message:
+          type: string
+          title: message
+        limit:
+          type: number
+          title: limit
+          format: double
+        actual:
+          type: number
+          title: actual
+          format: double
+      title: SizingViolation
+      additionalProperties: false
+    electrical.v1.SubmitNetworkForReviewRequest:
+      type: object
+      properties:
+        networkId:
+          type: string
+          title: network_id
+        submissionReason:
+          type: string
+          title: submission_reason
+        submittedByActorId:
+          type: string
+          title: submitted_by_actor_id
+      title: SubmitNetworkForReviewRequest
+      additionalProperties: false
+      description: ========== Acceptance Request/Response Messages ==========
+    electrical.v1.SubmitNetworkForReviewResponse:
+      type: object
+      properties:
+        network:
+          title: network
+          $ref: '#/components/schemas/electrical.v1.ElectricalNetwork'
+        reviewMetadata:
+          title: review_metadata
+          $ref: '#/components/schemas/electrical.v1.ReviewMetadata'
+      title: SubmitNetworkForReviewResponse
+      additionalProperties: false
+    electrical.v1.ValidateNetworkRequest:
+      type: object
+      properties:
+        networkId:
+          type: string
+          title: network_id
+        inverterMpptCount:
+          type: integer
+          title: inverter_mppt_count
+          format: int32
+          description: Optional inverter MPPT count limit for over-subscription checking.
+        maxStringsPerMppt:
+          type: integer
+          title: max_strings_per_mppt
+          format: int32
+      title: ValidateNetworkRequest
+      additionalProperties: false
+      description: ValidateNetwork checks full network topology consistency.
+    electrical.v1.ValidateNetworkResponse:
+      type: object
+      properties:
+        valid:
+          type: boolean
+          title: valid
+        issues:
+          type: array
+          items:
+            $ref: '#/components/schemas/electrical.v1.NetworkTopologyIssue'
+          title: issues
+        totalStrings:
+          type: integer
+          title: total_strings
+          format: int32
+        assignedStrings:
+          type: integer
+          title: assigned_strings
+          format: int32
+        unassignedStrings:
+          type: integer
+          title: unassigned_strings
+          format: int32
+        totalPanels:
+          type: integer
+          title: total_panels
+          format: int32
+        duplicatePanelRefs:
+          type: integer
+          title: duplicate_panel_refs
+          format: int32
+        totalDcKw:
+          type: number
+          title: total_dc_kw
+          format: double
+        totalAcKw:
+          type: number
+          title: total_ac_kw
+          format: double
+        dcAcRatio:
+          type: number
+          title: dc_ac_ratio
+          format: double
+      title: ValidateNetworkResponse
+      additionalProperties: false
+    electrical.v1.ValidateSizingRequest:
+      type: object
+      properties:
+        networkId:
+          type: string
+          title: network_id
+        panelVocV:
+          type: number
+          title: panel_voc_v
+          format: double
+          description: Panel electrical characteristics open-circuit voltage per panel
+        panelVmpV:
+          type: number
+          title: panel_vmp_v
+          format: double
+          description: max-power-point voltage per panel
+        panelIscA:
+          type: number
+          title: panel_isc_a
+          format: double
+          description: short-circuit current per panel
+        panelImpA:
+          type: number
+          title: panel_imp_a
+          format: double
+          description: max-power-point current per panel
+        panelsPerString:
+          type: integer
+          title: panels_per_string
+          format: int32
+        inverterVdcMaxV:
+          type: number
+          title: inverter_vdc_max_v
+          format: double
+          description: Inverter input limits (from datasheet)
+        inverterVmpptMinV:
+          type: number
+          title: inverter_vmppt_min_v
+          format: double
+        inverterVmpptMaxV:
+          type: number
+          title: inverter_vmppt_max_v
+          format: double
+        inverterIdcMaxA:
+          type: number
+          title: inverter_idc_max_a
+          format: double
+        inverterAcKw:
+          type: number
+          title: inverter_ac_kw
+          format: double
+          description: AC output
+        dcAcRatioMin:
+          type: number
+          title: dc_ac_ratio_min
+          format: double
+          description: Target sizing range
+        dcAcRatioMax:
+          type: number
+          title: dc_ac_ratio_max
+          format: double
+        tempCoeffVocPctPerC:
+          type: number
+          title: temp_coeff_voc_pct_per_c
+          format: double
+          description: Temperature correction factors (IEC 62548) negative, e.g. -0.29
+        lowestExpectedTempC:
+          type: number
+          title: lowest_expected_temp_c
+          format: double
+          description: for cold-day Voc check
+        highestExpectedTempC:
+          type: number
+          title: highest_expected_temp_c
+          format: double
+          description: for hot-day Vmp check
+      title: ValidateSizingRequest
+      additionalProperties: false
+      description: ValidateSizing checks DC/AC sizing constraints against parametric limits.
+    electrical.v1.ValidateSizingResponse:
+      type: object
+      properties:
+        valid:
+          type: boolean
+          title: valid
+        violations:
+          type: array
+          items:
+            $ref: '#/components/schemas/electrical.v1.SizingViolation'
+          title: violations
+        stringVocColdV:
+          type: number
+          title: string_voc_cold_v
+          format: double
+        stringVmpHotV:
+          type: number
+          title: string_vmp_hot_v
+          format: double
+        dcStringPowerKw:
+          type: number
+          title: dc_string_power_kw
+          format: double
+        dcAcRatio:
+          type: number
+          title: dc_ac_ratio
+          format: double
+        maxPanelsPerString:
+          type: integer
+          title: max_panels_per_string
+          format: int32
+        minPanelsPerString:
+          type: integer
+          title: min_panels_per_string
+          format: int32
+      title: ValidateSizingResponse
+      additionalProperties: false
+    google.protobuf.Timestamp:
+      type: string
+      examples:
+        - "2023-01-15T01:30:15.01Z"
+        - "2024-12-25T12:00:00Z"
+      format: date-time
+      description: |-
+        A Timestamp represents a point in time independent of any time zone or local
+         calendar, encoded as a count of seconds and fractions of seconds at
+         nanosecond resolution. The count is relative to an epoch at UTC midnight on
+         January 1, 1970, in the proleptic Gregorian calendar which extends the
+         Gregorian calendar backwards to year one.
+
+         All minutes are 60 seconds long. Leap seconds are "smeared" so that no leap
+         second table is needed for interpretation, using a [24-hour linear
+         smear](https://developers.google.com/time/smear).
+
+         The range is from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59.999999999Z. By
+         restricting to that range, we ensure that we can convert to and from [RFC
+         3339](https://www.ietf.org/rfc/rfc3339.txt) date strings.
+
+         # Examples
+
+         Example 1: Compute Timestamp from POSIX `time()`.
+
+             Timestamp timestamp;
+             timestamp.set_seconds(time(NULL));
+             timestamp.set_nanos(0);
+
+         Example 2: Compute Timestamp from POSIX `gettimeofday()`.
+
+             struct timeval tv;
+             gettimeofday(&tv, NULL);
+
+             Timestamp timestamp;
+             timestamp.set_seconds(tv.tv_sec);
+             timestamp.set_nanos(tv.tv_usec * 1000);
+
+         Example 3: Compute Timestamp from Win32 `GetSystemTimeAsFileTime()`.
+
+             FILETIME ft;
+             GetSystemTimeAsFileTime(&ft);
+             UINT64 ticks = (((UINT64)ft.dwHighDateTime) << 32) | ft.dwLowDateTime;
+
+             // A Windows tick is 100 nanoseconds. Windows epoch 1601-01-01T00:00:00Z
+             // is 11644473600 seconds before Unix epoch 1970-01-01T00:00:00Z.
+             Timestamp timestamp;
+             timestamp.set_seconds((INT64) ((ticks / 10000000) - 11644473600LL));
+             timestamp.set_nanos((INT32) ((ticks % 10000000) * 100));
+
+         Example 4: Compute Timestamp from Java `System.currentTimeMillis()`.
+
+             long millis = System.currentTimeMillis();
+
+             Timestamp timestamp = Timestamp.newBuilder().setSeconds(millis / 1000)
+                 .setNanos((int) ((millis % 1000) * 1000000)).build();
+
+         Example 5: Compute Timestamp from Java `Instant.now()`.
+
+             Instant now = Instant.now();
+
+             Timestamp timestamp =
+                 Timestamp.newBuilder().setSeconds(now.getEpochSecond())
+                     .setNanos(now.getNano()).build();
+
+         Example 6: Compute Timestamp from current time in Python.
+
+             timestamp = Timestamp()
+             timestamp.GetCurrentTime()
+
+         # JSON Mapping
+
+         In JSON format, the Timestamp type is encoded as a string in the
+         [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format. That is, the
+         format is "{year}-{month}-{day}T{hour}:{min}:{sec}[.{frac_sec}]Z"
+         where {year} is always expressed using four digits while {month}, {day},
+         {hour}, {min}, and {sec} are zero-padded to two digits each. The fractional
+         seconds, which can go up to 9 digits (i.e. up to 1 nanosecond resolution),
+         are optional. The "Z" suffix indicates the timezone ("UTC"); the timezone
+         is required. A proto3 JSON serializer should always use UTC (as indicated by
+         "Z") when printing the Timestamp type and a proto3 JSON parser should be
+         able to accept both UTC and other timezones (as indicated by an offset).
+
+         For example, "2017-01-15T01:30:15.01Z" encodes 15.01 seconds past
+         01:30 UTC on January 15, 2017.
+
+         In JavaScript, one can convert a Date object to this format using the
+         standard
+         [toISOString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString)
+         method. In Python, a standard `datetime.datetime` object can be converted
+         to this format using
+         [`strftime`](https://docs.python.org/2/library/time.html#time.strftime) with
+         the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one can use
+         the Joda Time's [`ISODateTimeFormat.dateTime()`](
+         http://joda-time.sourceforge.net/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime()
+         ) to obtain a formatter capable of generating timestamps in this format.
+security: []
+tags:
+  - name: electrical.v1.ElectricalService
+    description: |-
+      ElectricalService manages electrical network topology for solar farm layouts,
+       including string configuration, inverter assignment, capacity calculations,
+       network topology validation, BOM derivation, and the acceptance workflow gate
+       required for ElectricalReady -> TransmissionReady phase progression.

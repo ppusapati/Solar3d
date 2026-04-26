@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"solar3d/simulation-service/internal/domain"
+	"p9e.in/samavaya/solar3d/simulation-service/internal/domain"
 )
 
 // SolarSimulationEngine uses extended-compute to calculate solar yield

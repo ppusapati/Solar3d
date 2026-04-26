@@ -4,12 +4,12 @@ import (
 	"context"
 	"errors"
 
-	"solar3d/compute-service/internal/mappers"
-	"solar3d/compute-service/internal/service"
+	"p9e.in/samavaya/solar3d/compute-service/internal/mappers"
+	"p9e.in/samavaya/solar3d/compute-service/internal/service"
 
 	"connectrpc.com/connect"
-	optimizationv1 "github.com/solar3d/solar3d/gen/optimization/v1"
-	optimizationv1connect "github.com/solar3d/solar3d/gen/optimization/v1/optimizationv1connect"
+	optimizationv1 "p9e.in/samavaya/solar3d/gen/optimization/v1"
+	optimizationv1connect "p9e.in/samavaya/solar3d/gen/optimization/v1/optimizationv1connect"
 )
 
 // OptimizationServiceHandler implements connectRPC optimization service.

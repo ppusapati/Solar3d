@@ -7,10 +7,10 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	transmissionv1 "github.com/solar3d/solar3d/gen/transmission/v1"
+	transmissionv1 "p9e.in/samavaya/solar3d/gen/transmission/v1"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"solar3d/transmission-routing-service/internal/domain"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/domain"
 )
 
 // buildMinimalElevationRaster creates a minimal elevation raster when none is provided.

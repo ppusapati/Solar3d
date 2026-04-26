@@ -7,17 +7,17 @@ import (
 	"testing"
 
 	"connectrpc.com/connect"
-	commissioningv1 "github.com/solar3d/solar3d/gen/commissioning/v1"
-	drawingv1 "github.com/solar3d/solar3d/gen/drawing/v1"
-	geov1 "github.com/solar3d/solar3d/gen/geo/v1"
-	graphv1 "github.com/solar3d/solar3d/gen/graph/v1"
-	mlinferencev1 "github.com/solar3d/solar3d/gen/ml_inference/v1"
-	optimizationv1 "github.com/solar3d/solar3d/gen/optimization/v1"
-	protectionv1 "github.com/solar3d/solar3d/gen/protection/v1"
-	simulationv1 "github.com/solar3d/solar3d/gen/simulation/v1"
-	structuralv1 "github.com/solar3d/solar3d/gen/structural/v1"
+	commissioningv1 "p9e.in/samavaya/solar3d/gen/commissioning/v1"
+	drawingv1 "p9e.in/samavaya/solar3d/gen/drawing/v1"
+	geov1 "p9e.in/samavaya/solar3d/gen/geo/v1"
+	graphv1 "p9e.in/samavaya/solar3d/gen/graph/v1"
+	mlinferencev1 "p9e.in/samavaya/solar3d/gen/ml_inference/v1"
+	optimizationv1 "p9e.in/samavaya/solar3d/gen/optimization/v1"
+	protectionv1 "p9e.in/samavaya/solar3d/gen/protection/v1"
+	simulationv1 "p9e.in/samavaya/solar3d/gen/simulation/v1"
+	structuralv1 "p9e.in/samavaya/solar3d/gen/structural/v1"
 
-	"solar3d/compute-orchestration-service/internal/domain"
+	"p9e.in/samavaya/solar3d/compute-orchestration-service/internal/domain"
 )
 
 func TestExecuteAdvancedAnalyticsWorkflowSuccess(t *testing.T) {

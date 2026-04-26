@@ -1,0 +1,152 @@
+syntax = "proto3";
+
+package weather.v1;
+
+option go_package = "p9e.in/samavaya/solar3d/gen/weather/v1;weatherv1";
+
+import "google/protobuf/timestamp.proto";
+
+// WeatherService provides solar irradiance data from multiple upstream sources
+// (PVGIS, NASA POWER, NSRDB, ERA5) and offers TMY file ingestion, hourly
+// timeseries retrieval, and probabilistic yield exceedance calculations.
+service WeatherService {
+  // FetchIrradiance retrieves hourly irradiance data for a location from the
+  // specified upstream source. Returns a timeseries of GHI/DNI/DHI plus
+  // ambient temperature. Results are cached server-side after the first fetch.
+  rpc FetchIrradiance(FetchIrradianceRequest) returns (FetchIrradianceResponse);
+
+  // ImportTMY ingests an uploaded TMY file (EPW, TM2, TM3, or CSV) and stores
+  // the parsed hourly records for the site.
+  rpc ImportTMY(ImportTMYRequest) returns (ImportTMYResponse);
+
+  // GetHourlyTimeseries returns previously-fetched or imported hourly
+  // irradiance data for a site.
+  rpc GetHourlyTimeseries(GetHourlyTimeseriesRequest) returns (GetHourlyTimeseriesResponse);
+
+  // ListSiteWeather returns all weather datasets available for a project.
+  rpc ListSiteWeather(ListSiteWeatherRequest) returns (ListSiteWeatherResponse);
+
+  // CalculateYieldExceedance computes P50/P90/P99 exceedance probabilities
+  // for annual energy yield based on the GHI timeseries of a site.
+  rpc CalculateYieldExceedance(CalculateYieldExceedanceRequest) returns (CalculateYieldExceedanceResponse);
+
+  // DeleteSiteWeather removes a weather dataset for a site.
+  rpc DeleteSiteWeather(DeleteSiteWeatherRequest) returns (DeleteSiteWeatherResponse);
+}
+
+// ========== Enums ==========
+
+// WeatherSource identifies the upstream provider or file format from which
+// the weather data originates.
+enum WeatherSource {
+  WEATHER_SOURCE_UNSPECIFIED = 0;
+  WEATHER_SOURCE_PVGIS = 1;        // EU JRC Photovoltaic Geographical Info System
+  WEATHER_SOURCE_NASA_POWER = 2;   // NASA Prediction of Worldwide Energy Resources
+  WEATHER_SOURCE_NSRDB = 3;        // NREL National Solar Radiation Database
+  WEATHER_SOURCE_ERA5 = 4;         // ECMWF ERA5 reanalysis
+  WEATHER_SOURCE_EPW = 5;          // EnergyPlus Weather file upload
+  WEATHER_SOURCE_TM2 = 6;          // TMY2 file upload
+  WEATHER_SOURCE_TM3 = 7;          // TMY3 file upload
+  WEATHER_SOURCE_CSV = 8;          // Generic CSV upload
+}
+
+// ========== Messages ==========
+
+// HourlyRecord is a single-hour observation or modeled irradiance sample.
+// All irradiance values are in W/m². Temperature in °C. Wind speed in m/s.
+message HourlyRecord {
+  google.protobuf.Timestamp timestamp = 1;
+  double ghi = 2;           // Global Horizontal Irradiance (W/m²)
+  double dni = 3;           // Direct Normal Irradiance (W/m²)
+  double dhi = 4;           // Diffuse Horizontal Irradiance (W/m²)
+  double ambient_temp_c = 5;
+  double wind_speed_ms = 6;
+  double relative_humidity_pct = 7; // 0-100
+  double albedo = 8;        // ground reflectance (0-1), if available
+}
+
+// SiteWeatherSummary is the metadata envelope for a stored weather dataset.
+message SiteWeatherSummary {
+  string id = 1;
+  string project_id = 2;
+  double latitude = 3;
+  double longitude = 4;
+  WeatherSource source = 5;
+  int32 record_count = 6;   // number of hourly records
+  double annual_ghi_kwh_m2 = 7;
+  google.protobuf.Timestamp fetched_at = 8;
+}
+
+// YieldExceedance holds a single percentile point.
+message YieldExceedance {
+  // percentile is 50, 75, 90, 95, or 99.
+  int32 percentile = 1;
+  // annual_ghi_kwh_m2 is the GHI value exceeded at this probability.
+  double annual_ghi_kwh_m2 = 2;
+}
+
+// ========== Request / Response ==========
+
+message FetchIrradianceRequest {
+  string project_id = 1;
+  double latitude = 2;
+  double longitude = 3;
+  WeatherSource source = 4;
+  // api_key is required for NSRDB and ERA5; ignored for PVGIS and NASA POWER.
+  string api_key = 5;
+}
+
+message FetchIrradianceResponse {
+  SiteWeatherSummary summary = 1;
+  repeated HourlyRecord records = 2;
+}
+
+message ImportTMYRequest {
+  string project_id = 1;
+  double latitude = 2;
+  double longitude = 3;
+  WeatherSource format = 4;   // EPW, TM2, TM3, or CSV
+  bytes file_content = 5;
+  string file_name = 6;
+}
+
+message ImportTMYResponse {
+  SiteWeatherSummary summary = 1;
+  int32 records_imported = 2;
+}
+
+message GetHourlyTimeseriesRequest {
+  string site_weather_id = 1;
+}
+
+message GetHourlyTimeseriesResponse {
+  SiteWeatherSummary summary = 1;
+  repeated HourlyRecord records = 2;
+}
+
+message ListSiteWeatherRequest {
+  string project_id = 1;
+}
+
+message ListSiteWeatherResponse {
+  repeated SiteWeatherSummary summaries = 1;
+}
+
+message CalculateYieldExceedanceRequest {
+  string site_weather_id = 1;
+  // system_capacity_kw is the DC nameplate of the PV system, used to scale
+  // GHI into estimated annual energy yield (kWh). If 0, raw GHI exceedance
+  // is returned without system scaling.
+  double system_capacity_kw = 2;
+}
+
+message CalculateYieldExceedanceResponse {
+  string site_weather_id = 1;
+  repeated YieldExceedance exceedances = 2;
+}
+
+message DeleteSiteWeatherRequest {
+  string site_weather_id = 1;
+}
+
+message DeleteSiteWeatherResponse {}

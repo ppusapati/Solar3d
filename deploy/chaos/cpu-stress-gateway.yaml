@@ -1,0 +1,21 @@
+---
+# Chaos Mesh — StressChaos: CPU saturation on one gateway pod.
+# Expected behaviour: load balancer shifts traffic away; HPA scales out;
+# p95 latency recovers within 3 minutes.
+apiVersion: chaos-mesh.org/v1alpha1
+kind: StressChaos
+metadata:
+  name: stress-gateway-cpu
+  namespace: solar3d-staging
+spec:
+  mode: one
+  selector:
+    namespaces:
+      - solar3d-staging
+    labelSelectors:
+      app: api-gateway
+  stressors:
+    cpu:
+      workers: 4
+      load: 95
+  duration: '10m'

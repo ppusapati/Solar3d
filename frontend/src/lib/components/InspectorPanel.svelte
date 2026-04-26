@@ -13,6 +13,8 @@
 	import AssetLibrary from './AssetLibrary.svelte';
 	import PanelGeneratorForm from './PanelGeneratorForm.svelte';
 	import SolarPanel3DViewer from './SolarPanel3DViewer.svelte';
+	import { toast } from '$lib/core/stores/toast';
+	import { structuredLog } from '$lib/core/error-handling';
 
 	let show3dPanel = false;
 	import SimulationPanel from './SimulationPanel.svelte';
@@ -119,8 +121,10 @@
 		savingCapacity = true;
 		try {
 			await updateProject($activeProject.id, { target_capacity_mw: capacityInput });
+			toast.success('Capacity updated');
 		} catch (err) {
-			console.error('Failed to update project capacity:', err);
+			structuredLog('error', 'project.update_capacity_failed', { error: String(err), projectId: $activeProject.id });
+			toast.error(`Failed to update capacity: ${err instanceof Error ? err.message : 'unknown error'}`);
 		} finally {
 			savingCapacity = false;
 		}

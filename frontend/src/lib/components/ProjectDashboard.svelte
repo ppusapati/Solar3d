@@ -12,6 +12,8 @@
 	} from '$lib/core/stores';
 	import { projectsApi, terrainApi, type Site, type CadParseFeature } from '$lib/core/api';
 	import type { Project } from '$lib/core/api';
+	import { toast } from '$lib/core/stores/toast';
+	import { confirm as confirmModal } from '$lib/core/stores/confirm';
 
 	export let open = false;
 	export let onopenProject: ((detail: { project: Project }) => void) | undefined = undefined;
@@ -338,7 +340,7 @@
 
 	async function detectGpsLocation() {
 		if (!navigator.geolocation) {
-			alert('Geolocation is not supported by your browser.');
+			toast.error('Geolocation is not supported by your browser.');
 			return;
 		}
 		isDetectingGps = true;
@@ -349,7 +351,7 @@
 				isDetectingGps = false;
 			},
 			() => {
-				alert('Unable to detect location. Please allow location access.');
+				toast.error('Unable to detect location. Please allow location access.');
 				isDetectingGps = false;
 			},
 			{ enableHighAccuracy: true, timeout: 10000 }
@@ -450,7 +452,13 @@
 	}
 
 	async function handleDelete(id: string, name: string) {
-		if (!confirm(`Delete project "${name}"? This cannot be undone.`)) return;
+		const ok = await confirmModal({
+			title: `Delete project "${name}"?`,
+			body: 'This cannot be undone. All associated layouts, simulations, and reports will also be removed.',
+			confirmLabel: 'Delete',
+			danger: true
+		});
+		if (!ok) return;
 		await deleteProject(id);
 	}
 

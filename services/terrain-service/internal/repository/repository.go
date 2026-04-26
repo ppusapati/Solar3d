@@ -11,7 +11,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
 
-	"solar3d/terrain-service/internal/domain"
+	"p9e.in/samavaya/solar3d/terrain-service/internal/domain"
 )
 
 // Repository handles persistence of terrain layer metadata using PostgreSQL

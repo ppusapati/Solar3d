@@ -117,6 +117,7 @@ const (
 	ApprovalStatusDraft             ApprovalStatus = "draft"
 	ApprovalStatusEngineeringReview ApprovalStatus = "engineering_review"
 	ApprovalStatusApproved          ApprovalStatus = "approved"
+	ApprovalStatusRejected          ApprovalStatus = "rejected"
 )
 
 type GovernanceEvent struct {

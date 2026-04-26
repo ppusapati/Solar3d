@@ -13,12 +13,12 @@ import (
 	connect "connectrpc.com/connect"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
-	drawingv1 "github.com/solar3d/solar3d/gen/drawing/v1"
-	drawingv1connect "github.com/solar3d/solar3d/gen/drawing/v1/drawingv1connect"
-	projectv1 "github.com/solar3d/solar3d/gen/project/v1"
-	projectv1connect "github.com/solar3d/solar3d/gen/project/v1/projectv1connect"
+	drawingv1 "p9e.in/samavaya/solar3d/gen/drawing/v1"
+	drawingv1connect "p9e.in/samavaya/solar3d/gen/drawing/v1/drawingv1connect"
+	projectv1 "p9e.in/samavaya/solar3d/gen/project/v1"
+	projectv1connect "p9e.in/samavaya/solar3d/gen/project/v1/projectv1connect"
 
-	"solar3d/api-gateway-service/internal/service"
+	"p9e.in/samavaya/solar3d/api-gateway-service/internal/service"
 )
 
 // ─── mock ProjectServiceClient ────────────────────────────────────────────────

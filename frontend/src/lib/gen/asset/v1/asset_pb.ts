@@ -6,13 +6,15 @@ import type { GenEnum, GenFile, GenMessage, GenService } from "@bufbuild/protobu
 import { enumDesc, fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import { file_google_protobuf_timestamp } from "@bufbuild/protobuf/wkt";
+import type { PaginationRequest, PaginationResponse } from "../../packages/pagination_pb.js";
+import { file_packages_pagination } from "../../packages/pagination_pb.js";
 import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file asset/v1/asset.proto.
  */
 export const file_asset_v1_asset: GenFile = /*@__PURE__*/
-  fileDesc("ChRhc3NldC92MS9hc3NldC5wcm90bxIIYXNzZXQudjEi9QIKBUFzc2V0EgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSFAoMbWFudWZhY3R1cmVyGAMgASgJEg0KBW1vZGVsGAQgASgJEikKCGNhdGVnb3J5GAUgASgOMhcuYXNzZXQudjEuQXNzZXRDYXRlZ29yeRIoCgpkaW1lbnNpb25zGAYgASgLMhQuYXNzZXQudjEuRGltZW5zaW9ucxIyCgplbGVjdHJpY2FsGAcgASgLMh4uYXNzZXQudjEuRWxlY3RyaWNhbFBhcmFtZXRlcnMSFQoNbW9kZWxfM2RfcGF0aBgIIAEoCRIWCg5kYXRhc2hlZXRfcGF0aBgJIAEoCRIVCg1tZXRhZGF0YV9qc29uGAogASgJEi4KCmNyZWF0ZWRfYXQYCyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEi4KCnVwZGF0ZWRfYXQYDCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIlYKCkRpbWVuc2lvbnMSEAoId2lkdGhfbW0YASABKAESEQoJaGVpZ2h0X21tGAIgASgBEhAKCGRlcHRoX21tGAMgASgBEhEKCXdlaWdodF9rZxgEIAEoASKTAwoURWxlY3RyaWNhbFBhcmFtZXRlcnMSFQoNcmF0ZWRfcG93ZXJfdxgBIAEoARILCgN2b2MYAiABKAESCwoDaXNjGAMgASgBEgsKA3ZtcBgEIAEoARILCgNpbXAYBSABKAESEgoKZWZmaWNpZW5jeRgGIAEoARIdChV0ZW1wX2NvZWZmaWNpZW50X3BtYXgYByABKAESHAoUdGVtcF9jb2VmZmljaWVudF92b2MYCCABKAESFgoObWF4X2RjX2lucHV0X3cYCSABKAESFwoPbWF4X2FjX291dHB1dF93GAogASgBEhIKCm1wcHRfY291bnQYCyABKAUSGQoRbWF4X2lucHV0X3ZvbHRhZ2UYDCABKAESGQoRbWluX2lucHV0X3ZvbHRhZ2UYDSABKAESHAoUbWF4X3N0cmluZ3NfcGVyX21wcHQYDiABKAUSEgoKa3ZhX3JhdGluZxgPIAEoARIXCg9wcmltYXJ5X3ZvbHRhZ2UYECABKAESGQoRc2Vjb25kYXJ5X3ZvbHRhZ2UYESABKAEi/gEKEkNyZWF0ZUFzc2V0UmVxdWVzdBIMCgRuYW1lGAEgASgJEhQKDG1hbnVmYWN0dXJlchgCIAEoCRINCgVtb2RlbBgDIAEoCRIpCghjYXRlZ29yeRgEIAEoDjIXLmFzc2V0LnYxLkFzc2V0Q2F0ZWdvcnkSKAoKZGltZW5zaW9ucxgFIAEoCzIULmFzc2V0LnYxLkRpbWVuc2lvbnMSMgoKZWxlY3RyaWNhbBgGIAEoCzIeLmFzc2V0LnYxLkVsZWN0cmljYWxQYXJhbWV0ZXJzEhUKDW1vZGVsXzNkX3BhdGgYByABKAkSFQoNbWV0YWRhdGFfanNvbhgIIAEoCSI1ChNDcmVhdGVBc3NldFJlc3BvbnNlEh4KBWFzc2V0GAEgASgLMg8uYXNzZXQudjEuQXNzZXQiHQoPR2V0QXNzZXRSZXF1ZXN0EgoKAmlkGAEgASgJIjIKEEdldEFzc2V0UmVzcG9uc2USHgoFYXNzZXQYASABKAsyDy5hc3NldC52MS5Bc3NldCKJAQoRTGlzdEFzc2V0c1JlcXVlc3QSMAoPY2F0ZWdvcnlfZmlsdGVyGAEgASgOMhcuYXNzZXQudjEuQXNzZXRDYXRlZ29yeRIbChNtYW51ZmFjdHVyZXJfZmlsdGVyGAIgASgJEhEKCXBhZ2Vfc2l6ZRgDIAEoBRISCgpwYWdlX3Rva2VuGAQgASgJImMKEkxpc3RBc3NldHNSZXNwb25zZRIfCgZhc3NldHMYASADKAsyDy5hc3NldC52MS5Bc3NldBIXCg9uZXh0X3BhZ2VfdG9rZW4YAiABKAkSEwoLdG90YWxfY291bnQYAyABKAUi3wEKElVwZGF0ZUFzc2V0UmVxdWVzdBIKCgJpZBgBIAEoCRIMCgRuYW1lGAIgASgJEhQKDG1hbnVmYWN0dXJlchgDIAEoCRINCgVtb2RlbBgEIAEoCRIoCgpkaW1lbnNpb25zGAUgASgLMhQuYXNzZXQudjEuRGltZW5zaW9ucxIyCgplbGVjdHJpY2FsGAYgASgLMh4uYXNzZXQudjEuRWxlY3RyaWNhbFBhcmFtZXRlcnMSFQoNbW9kZWxfM2RfcGF0aBgHIAEoCRIVCg1tZXRhZGF0YV9qc29uGAggASgJIjUKE1VwZGF0ZUFzc2V0UmVzcG9uc2USHgoFYXNzZXQYASABKAsyDy5hc3NldC52MS5Bc3NldCIgChJEZWxldGVBc3NldFJlcXVlc3QSCgoCaWQYASABKAkiFQoTRGVsZXRlQXNzZXRSZXNwb25zZSr2AgoNQXNzZXRDYXRlZ29yeRIeChpBU1NFVF9DQVRFR09SWV9VTlNQRUNJRklFRBAAEh4KGkFTU0VUX0NBVEVHT1JZX1NPTEFSX1BBTkVMEAESGgoWQVNTRVRfQ0FURUdPUllfVFJBQ0tFUhACEiIKHkFTU0VUX0NBVEVHT1JZX1NUUklOR19JTlZFUlRFUhADEiMKH0FTU0VUX0NBVEVHT1JZX0NFTlRSQUxfSU5WRVJURVIQBBIeChpBU1NFVF9DQVRFR09SWV9UUkFOU0ZPUk1FUhAFEh8KG0FTU0VUX0NBVEVHT1JZX0pVTkNUSU9OX0JPWBAGEh8KG0FTU0VUX0NBVEVHT1JZX0NPTUJJTkVSX0JPWBAHEhgKFEFTU0VUX0NBVEVHT1JZX0NBQkxFEAgSJQohQVNTRVRfQ0FURUdPUllfTU9VTlRJTkdfU1RSVUNUVVJFEAkSHQoZQVNTRVRfQ0FURUdPUllfU1VCU1RBVElPThAKMv4CCgxBc3NldFNlcnZpY2USSgoLQ3JlYXRlQXNzZXQSHC5hc3NldC52MS5DcmVhdGVBc3NldFJlcXVlc3QaHS5hc3NldC52MS5DcmVhdGVBc3NldFJlc3BvbnNlEkEKCEdldEFzc2V0EhkuYXNzZXQudjEuR2V0QXNzZXRSZXF1ZXN0GhouYXNzZXQudjEuR2V0QXNzZXRSZXNwb25zZRJHCgpMaXN0QXNzZXRzEhsuYXNzZXQudjEuTGlzdEFzc2V0c1JlcXVlc3QaHC5hc3NldC52MS5MaXN0QXNzZXRzUmVzcG9uc2USSgoLVXBkYXRlQXNzZXQSHC5hc3NldC52MS5VcGRhdGVBc3NldFJlcXVlc3QaHS5hc3NldC52MS5VcGRhdGVBc3NldFJlc3BvbnNlEkoKC0RlbGV0ZUFzc2V0EhwuYXNzZXQudjEuRGVsZXRlQXNzZXRSZXF1ZXN0Gh0uYXNzZXQudjEuRGVsZXRlQXNzZXRSZXNwb25zZUKMAQoMY29tLmFzc2V0LnYxQgpBc3NldFByb3RvUAFaL2dpdGh1Yi5jb20vc29sYXIzZC9zb2xhcjNkL2dlbi9hc3NldC92MTthc3NldHYxogIDQVhYqgIIQXNzZXQuVjHKAghBc3NldFxWMeICFEFzc2V0XFYxXEdQQk1ldGFkYXRh6gIJQXNzZXQ6OlYxYgZwcm90bzM", [file_google_protobuf_timestamp]);
+  fileDesc("ChRhc3NldC92MS9hc3NldC5wcm90bxIIYXNzZXQudjEi9QIKBUFzc2V0EgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSFAoMbWFudWZhY3R1cmVyGAMgASgJEg0KBW1vZGVsGAQgASgJEikKCGNhdGVnb3J5GAUgASgOMhcuYXNzZXQudjEuQXNzZXRDYXRlZ29yeRIoCgpkaW1lbnNpb25zGAYgASgLMhQuYXNzZXQudjEuRGltZW5zaW9ucxIyCgplbGVjdHJpY2FsGAcgASgLMh4uYXNzZXQudjEuRWxlY3RyaWNhbFBhcmFtZXRlcnMSFQoNbW9kZWxfM2RfcGF0aBgIIAEoCRIWCg5kYXRhc2hlZXRfcGF0aBgJIAEoCRIVCg1tZXRhZGF0YV9qc29uGAogASgJEi4KCmNyZWF0ZWRfYXQYCyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEi4KCnVwZGF0ZWRfYXQYDCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIuMBCgpEaW1lbnNpb25zEhAKCHdpZHRoX21tGAEgASgBEhEKCWhlaWdodF9tbRgCIAEoARIQCghkZXB0aF9tbRgDIAEoARIRCgl3ZWlnaHRfa2cYBCABKAESEgoKY2VsbF9jb3VudBgFIAEoBRIxCg9jZWxsX3RlY2hub2xvZ3kYBiABKA4yGC5hc3NldC52MS5DZWxsVGVjaG5vbG9neRInCgpmcmFtZV90eXBlGAcgASgOMhMuYXNzZXQudjEuRnJhbWVUeXBlEhsKE21vdW50aW5nX2hvbGVfY291bnQYCCABKAUi3wgKFEVsZWN0cmljYWxQYXJhbWV0ZXJzEhUKDXJhdGVkX3Bvd2VyX3cYASABKAESCwoDdm9jGAIgASgBEgsKA2lzYxgDIAEoARILCgN2bXAYBCABKAESCwoDaW1wGAUgASgBEhIKCmVmZmljaWVuY3kYBiABKAESHQoVdGVtcF9jb2VmZmljaWVudF9wbWF4GAcgASgBEhwKFHRlbXBfY29lZmZpY2llbnRfdm9jGAggASgBEhYKDm1heF9kY19pbnB1dF93GAkgASgBEhcKD21heF9hY19vdXRwdXRfdxgKIAEoARISCgptcHB0X2NvdW50GAsgASgFEhkKEW1heF9pbnB1dF92b2x0YWdlGAwgASgBEhkKEW1pbl9pbnB1dF92b2x0YWdlGA0gASgBEhwKFG1heF9zdHJpbmdzX3Blcl9tcHB0GA4gASgFEhIKCmt2YV9yYXRpbmcYDyABKAESFwoPcHJpbWFyeV92b2x0YWdlGBAgASgBEhkKEXNlY29uZGFyeV92b2x0YWdlGBEgASgBEhwKFHRlbXBfY29lZmZpY2llbnRfaXNjGBIgASgBEg4KBm5vY3RfYxgTIAEoARIXCg9iaWZhY2lhbF9mYWN0b3IYFCABKAESGgoSbWF4X3N5c3RlbV92b2x0YWdlGBUgASgBEhwKFHNlcmllc19mdXNlX3JhdGluZ19hGBYgASgBEiMKG25vbWluYWxfcG93ZXJfdG9sZXJhbmNlX3BjdBgXIAEoARIXCg9jZWxsc19pbl9zZXJpZXMYGCABKAUSGQoRY2VsbHNfaW5fcGFyYWxsZWwYGSABKAUSFwoPZXVyb19lZmZpY2llbmN5GBogASgBEhYKDmNlY19lZmZpY2llbmN5GBsgASgBEhYKDm1heF9lZmZpY2llbmN5GBwgASgBEhgKEG1wcHRfbWluX3ZvbHRhZ2UYHSABKAESGAoQbXBwdF9tYXhfdm9sdGFnZRgeIAEoARIXCg9zdGFydHVwX3ZvbHRhZ2UYHyABKAESHgoWbWF4X2RjX2lucHV0X2N1cnJlbnRfYRggIAEoARIcChRtYXhfb3V0cHV0X2N1cnJlbnRfYRghIAEoARIZChFyYXRlZF9hY19vdXRwdXRfdxgiIAEoARIWCg5hY19waGFzZV9jb3VudBgjIAEoBRIXCg9hY19mcmVxdWVuY3lfaHoYJCABKAESGgoSbm9taW5hbF9hY192b2x0YWdlGCUgASgBEhsKE25pZ2h0X2NvbnN1bXB0aW9uX3cYJiABKAESHAoUb3BlcmF0aW5nX3RlbXBfbWluX2MYJyABKAESHAoUb3BlcmF0aW5nX3RlbXBfbWF4X2MYKCABKAESLAoIdG9wb2xvZ3kYKSABKA4yGi5hc3NldC52MS5JbnZlcnRlclRvcG9sb2d5Ei0KCWdyaWRfdHlwZRgqIAEoDjIaLmFzc2V0LnYxLkludmVydGVyR3JpZFR5cGUi/gEKEkNyZWF0ZUFzc2V0UmVxdWVzdBIMCgRuYW1lGAEgASgJEhQKDG1hbnVmYWN0dXJlchgCIAEoCRINCgVtb2RlbBgDIAEoCRIpCghjYXRlZ29yeRgEIAEoDjIXLmFzc2V0LnYxLkFzc2V0Q2F0ZWdvcnkSKAoKZGltZW5zaW9ucxgFIAEoCzIULmFzc2V0LnYxLkRpbWVuc2lvbnMSMgoKZWxlY3RyaWNhbBgGIAEoCzIeLmFzc2V0LnYxLkVsZWN0cmljYWxQYXJhbWV0ZXJzEhUKDW1vZGVsXzNkX3BhdGgYByABKAkSFQoNbWV0YWRhdGFfanNvbhgIIAEoCSI1ChNDcmVhdGVBc3NldFJlc3BvbnNlEh4KBWFzc2V0GAEgASgLMg8uYXNzZXQudjEuQXNzZXQiHQoPR2V0QXNzZXRSZXF1ZXN0EgoKAmlkGAEgASgJIjIKEEdldEFzc2V0UmVzcG9uc2USHgoFYXNzZXQYASABKAsyDy5hc3NldC52MS5Bc3NldCKlAQoRTGlzdEFzc2V0c1JlcXVlc3QSMAoPY2F0ZWdvcnlfZmlsdGVyGAEgASgOMhcuYXNzZXQudjEuQXNzZXRDYXRlZ29yeRIbChNtYW51ZmFjdHVyZXJfZmlsdGVyGAIgASgJEkEKCnBhZ2luYXRpb24YAyABKAsyLS5wYWNrYWdlcy5hcGkudjEucGFnaW5hdGlvbi5QYWdpbmF0aW9uUmVxdWVzdCJ5ChJMaXN0QXNzZXRzUmVzcG9uc2USHwoGYXNzZXRzGAEgAygLMg8uYXNzZXQudjEuQXNzZXQSQgoKcGFnaW5hdGlvbhgCIAEoCzIuLnBhY2thZ2VzLmFwaS52MS5wYWdpbmF0aW9uLlBhZ2luYXRpb25SZXNwb25zZSLfAQoSVXBkYXRlQXNzZXRSZXF1ZXN0EgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSFAoMbWFudWZhY3R1cmVyGAMgASgJEg0KBW1vZGVsGAQgASgJEigKCmRpbWVuc2lvbnMYBSABKAsyFC5hc3NldC52MS5EaW1lbnNpb25zEjIKCmVsZWN0cmljYWwYBiABKAsyHi5hc3NldC52MS5FbGVjdHJpY2FsUGFyYW1ldGVycxIVCg1tb2RlbF8zZF9wYXRoGAcgASgJEhUKDW1ldGFkYXRhX2pzb24YCCABKAkiNQoTVXBkYXRlQXNzZXRSZXNwb25zZRIeCgVhc3NldBgBIAEoCzIPLmFzc2V0LnYxLkFzc2V0IiAKEkRlbGV0ZUFzc2V0UmVxdWVzdBIKCgJpZBgBIAEoCSIVChNEZWxldGVBc3NldFJlc3BvbnNlKvYCCg1Bc3NldENhdGVnb3J5Eh4KGkFTU0VUX0NBVEVHT1JZX1VOU1BFQ0lGSUVEEAASHgoaQVNTRVRfQ0FURUdPUllfU09MQVJfUEFORUwQARIaChZBU1NFVF9DQVRFR09SWV9UUkFDS0VSEAISIgoeQVNTRVRfQ0FURUdPUllfU1RSSU5HX0lOVkVSVEVSEAMSIwofQVNTRVRfQ0FURUdPUllfQ0VOVFJBTF9JTlZFUlRFUhAEEh4KGkFTU0VUX0NBVEVHT1JZX1RSQU5TRk9STUVSEAUSHwobQVNTRVRfQ0FURUdPUllfSlVOQ1RJT05fQk9YEAYSHwobQVNTRVRfQ0FURUdPUllfQ09NQklORVJfQk9YEAcSGAoUQVNTRVRfQ0FURUdPUllfQ0FCTEUQCBIlCiFBU1NFVF9DQVRFR09SWV9NT1VOVElOR19TVFJVQ1RVUkUQCRIdChlBU1NFVF9DQVRFR09SWV9TVUJTVEFUSU9OEAoq9gEKDkNlbGxUZWNobm9sb2d5Eh8KG0NFTExfVEVDSE5PTE9HWV9VTlNQRUNJRklFRBAAEh0KGUNFTExfVEVDSE5PTE9HWV9NT05PX1BFUkMQARIYChRDRUxMX1RFQ0hOT0xPR1lfUE9MWRACEhoKFkNFTExfVEVDSE5PTE9HWV9UT1BDT04QAxIXChNDRUxMX1RFQ0hOT0xPR1lfSEpUEAQSFwoTQ0VMTF9URUNITk9MT0dZX0lCQxAFEh0KGUNFTExfVEVDSE5PTE9HWV9USElOX0ZJTE0QBhIdChlDRUxMX1RFQ0hOT0xPR1lfUEVSQ19QTFVTEAcqggEKCUZyYW1lVHlwZRIaChZGUkFNRV9UWVBFX1VOU1BFQ0lGSUVEEAASIAocRlJBTUVfVFlQRV9BTk9ESVpFRF9BTFVNSU5VTRABEh0KGUZSQU1FX1RZUEVfQkxBQ0tfQU5PRElaRUQQAhIYChRGUkFNRV9UWVBFX0ZSQU1FTEVTUxADKqkBChBJbnZlcnRlclRvcG9sb2d5EiEKHUlOVkVSVEVSX1RPUE9MT0dZX1VOU1BFQ0lGSUVEEAASJgoiSU5WRVJURVJfVE9QT0xPR1lfVFJBTlNGT1JNRVJfTEVTUxABEiQKIElOVkVSVEVSX1RPUE9MT0dZX0hGX1RSQU5TRk9STUVSEAISJAogSU5WRVJURVJfVE9QT0xPR1lfTEZfVFJBTlNGT1JNRVIQAyqYAQoQSW52ZXJ0ZXJHcmlkVHlwZRIiCh5JTlZFUlRFUl9HUklEX1RZUEVfVU5TUEVDSUZJRUQQABIgChxJTlZFUlRFUl9HUklEX1RZUEVfR1JJRF9USUVEEAESHQoZSU5WRVJURVJfR1JJRF9UWVBFX0hZQlJJRBACEh8KG0lOVkVSVEVSX0dSSURfVFlQRV9PRkZfR1JJRBADMv4CCgxBc3NldFNlcnZpY2USSgoLQ3JlYXRlQXNzZXQSHC5hc3NldC52MS5DcmVhdGVBc3NldFJlcXVlc3QaHS5hc3NldC52MS5DcmVhdGVBc3NldFJlc3BvbnNlEkEKCEdldEFzc2V0EhkuYXNzZXQudjEuR2V0QXNzZXRSZXF1ZXN0GhouYXNzZXQudjEuR2V0QXNzZXRSZXNwb25zZRJHCgpMaXN0QXNzZXRzEhsuYXNzZXQudjEuTGlzdEFzc2V0c1JlcXVlc3QaHC5hc3NldC52MS5MaXN0QXNzZXRzUmVzcG9uc2USSgoLVXBkYXRlQXNzZXQSHC5hc3NldC52MS5VcGRhdGVBc3NldFJlcXVlc3QaHS5hc3NldC52MS5VcGRhdGVBc3NldFJlc3BvbnNlEkoKC0RlbGV0ZUFzc2V0EhwuYXNzZXQudjEuRGVsZXRlQXNzZXRSZXF1ZXN0Gh0uYXNzZXQudjEuRGVsZXRlQXNzZXRSZXNwb25zZUKJAQoMY29tLmFzc2V0LnYxQgpBc3NldFByb3RvUAFaLHA5ZS5pbi9zYW1hdmF5YS9zb2xhcjNkL2dlbi9hc3NldC92MTthc3NldHYxogIDQVhYqgIIQXNzZXQuVjHKAghBc3NldFxWMeICFEFzc2V0XFYxXEdQQk1ldGFkYXRh6gIJQXNzZXQ6OlYxYgZwcm90bzM", [file_google_protobuf_timestamp, file_packages_pagination]);
 
 /**
  * @generated from message asset.v1.Asset
@@ -109,6 +111,36 @@ export type Dimensions = Message<"asset.v1.Dimensions"> & {
    * @generated from field: double weight_kg = 4;
    */
   weightKg: number;
+
+  /**
+   * Panel-specific mechanical details used by structural + mounting calculations.
+   *
+   * e.g. 144, 132, 120
+   *
+   * @generated from field: int32 cell_count = 5;
+   */
+  cellCount: number;
+
+  /**
+   * mono-facial mono PERC, TOPCon, HJT, etc.
+   *
+   * @generated from field: asset.v1.CellTechnology cell_technology = 6;
+   */
+  cellTechnology: CellTechnology;
+
+  /**
+   * anodized aluminum, black anodized, frameless
+   *
+   * @generated from field: asset.v1.FrameType frame_type = 7;
+   */
+  frameType: FrameType;
+
+  /**
+   * typical 8 for 72-cell, 4 for smaller modules
+   *
+   * @generated from field: int32 mounting_hole_count = 8;
+   */
+  mountingHoleCount: number;
 };
 
 /**
@@ -123,49 +155,65 @@ export const DimensionsSchema: GenMessage<Dimensions> = /*@__PURE__*/
  */
 export type ElectricalParameters = Message<"asset.v1.ElectricalParameters"> & {
   /**
-   * Panel parameters
+   * ========== Panel parameters (STC: 1000 W/m², 25°C, AM1.5) ==========
+   *
+   * Pmax (W)
    *
    * @generated from field: double rated_power_w = 1;
    */
   ratedPowerW: number;
 
   /**
+   * Voc (V)
+   *
    * @generated from field: double voc = 2;
    */
   voc: number;
 
   /**
+   * Isc (A)
+   *
    * @generated from field: double isc = 3;
    */
   isc: number;
 
   /**
+   * Vmp (V)
+   *
    * @generated from field: double vmp = 4;
    */
   vmp: number;
 
   /**
+   * Imp (A)
+   *
    * @generated from field: double imp = 5;
    */
   imp: number;
 
   /**
+   * module efficiency (0-1)
+   *
    * @generated from field: double efficiency = 6;
    */
   efficiency: number;
 
   /**
+   * γ (%/°C) — typically negative
+   *
    * @generated from field: double temp_coefficient_pmax = 7;
    */
   tempCoefficientPmax: number;
 
   /**
+   * β (%/°C) — typically negative
+   *
    * @generated from field: double temp_coefficient_voc = 8;
    */
   tempCoefficientVoc: number;
 
   /**
-   * Inverter parameters
+   * ========== Inverter parameters ==========
    *
    * @generated from field: double max_dc_input_w = 9;
    */
@@ -197,7 +245,7 @@ export type ElectricalParameters = Message<"asset.v1.ElectricalParameters"> & {
   maxStringsPerMppt: number;
 
   /**
-   * Transformer parameters
+   * ========== Transformer parameters ==========
    *
    * @generated from field: double kva_rating = 15;
    */
@@ -212,6 +260,179 @@ export type ElectricalParameters = Message<"asset.v1.ElectricalParameters"> & {
    * @generated from field: double secondary_voltage = 17;
    */
   secondaryVoltage: number;
+
+  /**
+   * ========== Extended panel parameters (PAN-sourced) ==========
+   *
+   * α (%/°C) — typically small positive
+   *
+   * @generated from field: double temp_coefficient_isc = 18;
+   */
+  tempCoefficientIsc: number;
+
+  /**
+   * Nominal Operating Cell Temperature (°C), typically 43-48
+   *
+   * @generated from field: double noct_c = 19;
+   */
+  noctC: number;
+
+  /**
+   * 0 for mono-facial, 0.65-0.85 for bifacial modules
+   *
+   * @generated from field: double bifacial_factor = 20;
+   */
+  bifacialFactor: number;
+
+  /**
+   * UL/IEC system voltage rating (e.g. 1500)
+   *
+   * @generated from field: double max_system_voltage = 21;
+   */
+  maxSystemVoltage: number;
+
+  /**
+   * max series fuse for string protection
+   *
+   * @generated from field: double series_fuse_rating_a = 22;
+   */
+  seriesFuseRatingA: number;
+
+  /**
+   * manufacturer tolerance (e.g. +3/0%)
+   *
+   * @generated from field: double nominal_power_tolerance_pct = 23;
+   */
+  nominalPowerTolerancePct: number;
+
+  /**
+   * Cell-level reference for single-diode models. Populated from PAN; optional.
+   *
+   * @generated from field: int32 cells_in_series = 24;
+   */
+  cellsInSeries: number;
+
+  /**
+   * @generated from field: int32 cells_in_parallel = 25;
+   */
+  cellsInParallel: number;
+
+  /**
+   * ========== Extended inverter parameters (OND-sourced) ==========
+   *
+   * European weighted efficiency (0-1)
+   *
+   * @generated from field: double euro_efficiency = 26;
+   */
+  euroEfficiency: number;
+
+  /**
+   * CEC weighted efficiency (0-1)
+   *
+   * @generated from field: double cec_efficiency = 27;
+   */
+  cecEfficiency: number;
+
+  /**
+   * peak efficiency (0-1)
+   *
+   * @generated from field: double max_efficiency = 28;
+   */
+  maxEfficiency: number;
+
+  /**
+   * MPPT tracking range lower bound (V)
+   *
+   * @generated from field: double mppt_min_voltage = 29;
+   */
+  mpptMinVoltage: number;
+
+  /**
+   * MPPT tracking range upper bound (V)
+   *
+   * @generated from field: double mppt_max_voltage = 30;
+   */
+  mpptMaxVoltage: number;
+
+  /**
+   * DC voltage at which inverter begins tracking (V)
+   *
+   * @generated from field: double startup_voltage = 31;
+   */
+  startupVoltage: number;
+
+  /**
+   * total DC input current limit (A)
+   *
+   * @generated from field: double max_dc_input_current_a = 32;
+   */
+  maxDcInputCurrentA: number;
+
+  /**
+   * nominal AC output current (A)
+   *
+   * @generated from field: double max_output_current_a = 33;
+   */
+  maxOutputCurrentA: number;
+
+  /**
+   * continuous AC output at rated conditions (W)
+   *
+   * @generated from field: double rated_ac_output_w = 34;
+   */
+  ratedAcOutputW: number;
+
+  /**
+   * 1 for residential, 3 for commercial/utility
+   *
+   * @generated from field: int32 ac_phase_count = 35;
+   */
+  acPhaseCount: number;
+
+  /**
+   * 50 or 60
+   *
+   * @generated from field: double ac_frequency_hz = 36;
+   */
+  acFrequencyHz: number;
+
+  /**
+   * nominal output voltage (V)
+   *
+   * @generated from field: double nominal_ac_voltage = 37;
+   */
+  nominalAcVoltage: number;
+
+  /**
+   * self-consumption at night (W)
+   *
+   * @generated from field: double night_consumption_w = 38;
+   */
+  nightConsumptionW: number;
+
+  /**
+   * °C
+   *
+   * @generated from field: double operating_temp_min_c = 39;
+   */
+  operatingTempMinC: number;
+
+  /**
+   * °C
+   *
+   * @generated from field: double operating_temp_max_c = 40;
+   */
+  operatingTempMaxC: number;
+
+  /**
+   * @generated from field: asset.v1.InverterTopology topology = 41;
+   */
+  topology: InverterTopology;
+
+  /**
+   * @generated from field: asset.v1.InverterGridType grid_type = 42;
+   */
+  gridType: InverterGridType;
 };
 
 /**
@@ -339,14 +560,9 @@ export type ListAssetsRequest = Message<"asset.v1.ListAssetsRequest"> & {
   manufacturerFilter: string;
 
   /**
-   * @generated from field: int32 page_size = 3;
+   * @generated from field: packages.api.v1.pagination.PaginationRequest pagination = 3;
    */
-  pageSize: number;
-
-  /**
-   * @generated from field: string page_token = 4;
-   */
-  pageToken: string;
+  pagination?: PaginationRequest;
 };
 
 /**
@@ -366,14 +582,9 @@ export type ListAssetsResponse = Message<"asset.v1.ListAssetsResponse"> & {
   assets: Asset[];
 
   /**
-   * @generated from field: string next_page_token = 2;
+   * @generated from field: packages.api.v1.pagination.PaginationResponse pagination = 2;
    */
-  nextPageToken: string;
-
-  /**
-   * @generated from field: int32 total_count = 3;
-   */
-  totalCount: number;
+  pagination?: PaginationResponse;
 };
 
 /**
@@ -547,6 +758,186 @@ export enum AssetCategory {
  */
 export const AssetCategorySchema: GenEnum<AssetCategory> = /*@__PURE__*/
   enumDesc(file_asset_v1_asset, 0);
+
+/**
+ * CellTechnology captures the PV cell architecture. Drives efficiency, temp
+ * coefficients, and bifacial behavior in downstream modeling.
+ *
+ * @generated from enum asset.v1.CellTechnology
+ */
+export enum CellTechnology {
+  /**
+   * @generated from enum value: CELL_TECHNOLOGY_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * mono-crystalline PERC
+   *
+   * @generated from enum value: CELL_TECHNOLOGY_MONO_PERC = 1;
+   */
+  MONO_PERC = 1,
+
+  /**
+   * poly-crystalline (legacy)
+   *
+   * @generated from enum value: CELL_TECHNOLOGY_POLY = 2;
+   */
+  POLY = 2,
+
+  /**
+   * n-type TOPCon
+   *
+   * @generated from enum value: CELL_TECHNOLOGY_TOPCON = 3;
+   */
+  TOPCON = 3,
+
+  /**
+   * heterojunction
+   *
+   * @generated from enum value: CELL_TECHNOLOGY_HJT = 4;
+   */
+  HJT = 4,
+
+  /**
+   * interdigitated back-contact
+   *
+   * @generated from enum value: CELL_TECHNOLOGY_IBC = 5;
+   */
+  IBC = 5,
+
+  /**
+   * CIGS, CdTe, a-Si
+   *
+   * @generated from enum value: CELL_TECHNOLOGY_THIN_FILM = 6;
+   */
+  THIN_FILM = 6,
+
+  /**
+   * enhanced PERC (TOPCon predecessors)
+   *
+   * @generated from enum value: CELL_TECHNOLOGY_PERC_PLUS = 7;
+   */
+  PERC_PLUS = 7,
+}
+
+/**
+ * Describes the enum asset.v1.CellTechnology.
+ */
+export const CellTechnologySchema: GenEnum<CellTechnology> = /*@__PURE__*/
+  enumDesc(file_asset_v1_asset, 1);
+
+/**
+ * FrameType identifies module frame material/finish; affects clamp selection.
+ *
+ * @generated from enum asset.v1.FrameType
+ */
+export enum FrameType {
+  /**
+   * @generated from enum value: FRAME_TYPE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: FRAME_TYPE_ANODIZED_ALUMINUM = 1;
+   */
+  ANODIZED_ALUMINUM = 1,
+
+  /**
+   * @generated from enum value: FRAME_TYPE_BLACK_ANODIZED = 2;
+   */
+  BLACK_ANODIZED = 2,
+
+  /**
+   * @generated from enum value: FRAME_TYPE_FRAMELESS = 3;
+   */
+  FRAMELESS = 3,
+}
+
+/**
+ * Describes the enum asset.v1.FrameType.
+ */
+export const FrameTypeSchema: GenEnum<FrameType> = /*@__PURE__*/
+  enumDesc(file_asset_v1_asset, 2);
+
+/**
+ * InverterTopology identifies the galvanic isolation architecture. Drives
+ * grounding strategy, arc-fault detection requirements, and efficiency curve
+ * shape. Modern utility-scale string inverters are almost universally
+ * transformer-less; legacy installations use LF transformer types.
+ *
+ * @generated from enum asset.v1.InverterTopology
+ */
+export enum InverterTopology {
+  /**
+   * @generated from enum value: INVERTER_TOPOLOGY_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * modern standard
+   *
+   * @generated from enum value: INVERTER_TOPOLOGY_TRANSFORMER_LESS = 1;
+   */
+  TRANSFORMER_LESS = 1,
+
+  /**
+   * high-frequency
+   *
+   * @generated from enum value: INVERTER_TOPOLOGY_HF_TRANSFORMER = 2;
+   */
+  HF_TRANSFORMER = 2,
+
+  /**
+   * line-frequency
+   *
+   * @generated from enum value: INVERTER_TOPOLOGY_LF_TRANSFORMER = 3;
+   */
+  LF_TRANSFORMER = 3,
+}
+
+/**
+ * Describes the enum asset.v1.InverterTopology.
+ */
+export const InverterTopologySchema: GenEnum<InverterTopology> = /*@__PURE__*/
+  enumDesc(file_asset_v1_asset, 3);
+
+/**
+ * InverterGridType describes how the inverter interacts with the utility grid
+ * and local storage. Gates which downstream features (battery dispatch,
+ * anti-islanding protection) are applicable.
+ *
+ * @generated from enum asset.v1.InverterGridType
+ */
+export enum InverterGridType {
+  /**
+   * @generated from enum value: INVERTER_GRID_TYPE_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: INVERTER_GRID_TYPE_GRID_TIED = 1;
+   */
+  GRID_TIED = 1,
+
+  /**
+   * grid + battery
+   *
+   * @generated from enum value: INVERTER_GRID_TYPE_HYBRID = 2;
+   */
+  HYBRID = 2,
+
+  /**
+   * @generated from enum value: INVERTER_GRID_TYPE_OFF_GRID = 3;
+   */
+  OFF_GRID = 3,
+}
+
+/**
+ * Describes the enum asset.v1.InverterGridType.
+ */
+export const InverterGridTypeSchema: GenEnum<InverterGridType> = /*@__PURE__*/
+  enumDesc(file_asset_v1_asset, 4);
 
 /**
  * @generated from service asset.v1.AssetService

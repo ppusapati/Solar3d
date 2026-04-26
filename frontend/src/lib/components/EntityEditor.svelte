@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher, tick } from 'svelte';
 	import { selectedEntityId } from '$lib/core/stores';
+	import { confirm as confirmModal } from '$lib/core/stores/confirm';
 
 	const dispatch = createEventDispatcher<{
 		update: { id: string; property: string; value: any };
@@ -27,11 +28,16 @@
 		}
 	}
 
-	function handleDelete() {
-		if ($selectedEntityId && confirm('Delete this entity?')) {
-			dispatch('delete', { id: $selectedEntityId });
-			selectedEntityId.set(null);
-		}
+	async function handleDelete() {
+		if (!$selectedEntityId) return;
+		const ok = await confirmModal({
+			title: 'Delete this entity?',
+			confirmLabel: 'Delete',
+			danger: true
+		});
+		if (!ok) return;
+		dispatch('delete', { id: $selectedEntityId });
+		selectedEntityId.set(null);
 	}
 
 	function handleDeselect() {

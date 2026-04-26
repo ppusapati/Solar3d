@@ -8,11 +8,11 @@ import (
 	connect "connectrpc.com/connect"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
-	electricalv1 "github.com/solar3d/solar3d/gen/electrical/v1"
-	electricalv1connect "github.com/solar3d/solar3d/gen/electrical/v1/electricalv1connect"
+	electricalv1 "p9e.in/samavaya/solar3d/gen/electrical/v1"
+	electricalv1connect "p9e.in/samavaya/solar3d/gen/electrical/v1/electricalv1connect"
 
-	"solar3d/electrical-service/internal/domain"
-	"solar3d/electrical-service/internal/service"
+	"p9e.in/samavaya/solar3d/electrical-service/internal/domain"
+	"p9e.in/samavaya/solar3d/electrical-service/internal/service"
 )
 
 type ConnectElectricalService struct {

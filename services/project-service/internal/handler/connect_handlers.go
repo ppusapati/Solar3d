@@ -13,9 +13,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 
-	"solar3d/project-service/internal/domain"
-	"solar3d/project-service/internal/gis"
-	"solar3d/project-service/internal/service"
+	"p9e.in/samavaya/solar3d/project-service/internal/domain"
+	"p9e.in/samavaya/solar3d/project-service/internal/gis"
+	"p9e.in/samavaya/solar3d/project-service/internal/service"
 )
 
 // ProjectHandler exposes the project service over HTTP/JSON following

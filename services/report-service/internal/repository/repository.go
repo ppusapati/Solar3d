@@ -11,7 +11,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"solar3d/report-service/internal/domain"
+	"p9e.in/samavaya/solar3d/report-service/internal/domain"
 )
 
 // ErrNoLOD400Assessment is returned by GetLatestLOD400ReadyStatus when no LOD 400

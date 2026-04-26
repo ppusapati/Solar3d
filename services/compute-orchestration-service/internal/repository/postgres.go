@@ -13,8 +13,9 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"solar3d/compute-orchestration-service/internal/db"
-	"solar3d/compute-orchestration-service/internal/domain"
+	"p9e.in/samavaya/packages/database/pgxpostgres"
+	"p9e.in/samavaya/solar3d/compute-orchestration-service/internal/db"
+	"p9e.in/samavaya/solar3d/compute-orchestration-service/internal/domain"
 )
 
 type PostgresRepository struct {
@@ -25,13 +26,9 @@ type PostgresRepository struct {
 var _ Store = (*PostgresRepository)(nil)
 
 func NewPostgresRepository(ctx context.Context, databaseURL string) (*PostgresRepository, error) {
-	pool, err := pgxpool.New(ctx, databaseURL)
+	pool, _, err := pgxpostgres.NewPgxFromDSN(ctx, databaseURL, pgxpostgres.DefaultPoolOptions())
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect postgres: %w", err)
-	}
-	if err := pool.Ping(ctx); err != nil {
-		pool.Close()
-		return nil, fmt.Errorf("failed to ping postgres: %w", err)
 	}
 	return &PostgresRepository{pool: pool, q: db.New(pool)}, nil
 }

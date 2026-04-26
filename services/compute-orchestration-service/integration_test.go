@@ -17,13 +17,13 @@ import (
 	"time"
 
 	"connectrpc.com/connect"
-	orchestrationv1 "github.com/solar3d/solar3d/gen/orchestration/v1"
-	orchestrationv1connect "github.com/solar3d/solar3d/gen/orchestration/v1/orchestrationv1connect"
+	orchestrationv1 "p9e.in/samavaya/solar3d/gen/orchestration/v1"
+	orchestrationv1connect "p9e.in/samavaya/solar3d/gen/orchestration/v1/orchestrationv1connect"
 
-	"solar3d/compute-orchestration-service/internal/domain"
-	"solar3d/compute-orchestration-service/internal/handler"
-	"solar3d/compute-orchestration-service/internal/repository"
-	"solar3d/compute-orchestration-service/internal/service"
+	"p9e.in/samavaya/solar3d/compute-orchestration-service/internal/domain"
+	"p9e.in/samavaya/solar3d/compute-orchestration-service/internal/handler"
+	"p9e.in/samavaya/solar3d/compute-orchestration-service/internal/repository"
+	"p9e.in/samavaya/solar3d/compute-orchestration-service/internal/service"
 )
 
 // TestEndToEndOrchestration tests the complete lifecycle:

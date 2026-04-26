@@ -43,8 +43,8 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
-	"solar3d/project-service/internal/domain"
-	"solar3d/project-service/internal/repository"
+	"p9e.in/samavaya/solar3d/project-service/internal/domain"
+	"p9e.in/samavaya/solar3d/project-service/internal/repository"
 )
 
 const (

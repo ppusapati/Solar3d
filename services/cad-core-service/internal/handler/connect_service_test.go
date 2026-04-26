@@ -7,7 +7,7 @@ import (
 
 	connect "connectrpc.com/connect"
 
-	"solar3d/cad-core-service/internal/service"
+	"p9e.in/samavaya/solar3d/cad-core-service/internal/service"
 )
 
 func TestToConnectError_StaleConflictIncludesMetadata(t *testing.T) {

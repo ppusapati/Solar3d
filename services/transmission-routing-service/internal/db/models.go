@@ -36,4 +36,3 @@ type TransmissionRoute struct {
 	RouteSummary          string             `json:"route_summary"`
 	CreatedAt             pgtype.Timestamptz `json:"created_at"`
 }
-

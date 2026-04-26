@@ -9,7 +9,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"solar3d/electrical-service/internal/domain"
+	"p9e.in/samavaya/solar3d/electrical-service/internal/domain"
 )
 
 type ElectricalRepository struct {

@@ -6,12 +6,12 @@ import (
 
 	connect "connectrpc.com/connect"
 	"github.com/google/uuid"
-	protectionv1 "github.com/solar3d/solar3d/gen/protection/v1"
-	protectionv1connect "github.com/solar3d/solar3d/gen/protection/v1/protectionv1connect"
+	protectionv1 "p9e.in/samavaya/solar3d/gen/protection/v1"
+	protectionv1connect "p9e.in/samavaya/solar3d/gen/protection/v1/protectionv1connect"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"solar3d/protection-service/internal/domain"
-	"solar3d/protection-service/internal/service"
+	"p9e.in/samavaya/solar3d/protection-service/internal/domain"
+	"p9e.in/samavaya/solar3d/protection-service/internal/service"
 )
 
 type ConnectProtectionService struct {

@@ -1,0 +1,925 @@
+openapi: 3.1.0
+info:
+  title: extended.v1
+paths:
+  /extended.v1.ExtendedService/CalculateInterRowShading:
+    post:
+      tags:
+        - extended.v1.ExtendedService
+      summary: CalculateInterRowShading
+      description: CalculateInterRowShading computes inter-row shading loss for a fixed-tilt or single-axis tracker array.
+      operationId: extended.v1.ExtendedService.CalculateInterRowShading
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/extended.v1.CalculateInterRowShadingRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/extended.v1.CalculateInterRowShadingResponse'
+  /extended.v1.ExtendedService/CalculateYieldUncertainty:
+    post:
+      tags:
+        - extended.v1.ExtendedService
+      summary: CalculateYieldUncertainty
+      description: CalculateYieldUncertainty estimates P50/P90/P99 annual yield from a base energy estimate and uncertainty inputs.
+      operationId: extended.v1.ExtendedService.CalculateYieldUncertainty
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/extended.v1.CalculateYieldUncertaintyRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/extended.v1.CalculateYieldUncertaintyResponse'
+  /extended.v1.ExtendedService/ClimateImpact:
+    post:
+      tags:
+        - extended.v1.ExtendedService
+      summary: ClimateImpact
+      description: ClimateImpact aggregates climate uncertainty factors into a unified impact view.
+      operationId: extended.v1.ExtendedService.ClimateImpact
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/extended.v1.ClimateImpactRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/extended.v1.ClimateImpactResponse'
+  /extended.v1.ExtendedService/CompareFinancialScenarios:
+    post:
+      tags:
+        - extended.v1.ExtendedService
+      summary: CompareFinancialScenarios
+      description: CompareFinancialScenarios evaluates a full scenario set against engineering and finance assumptions.
+      operationId: extended.v1.ExtendedService.CompareFinancialScenarios
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/extended.v1.CompareFinancialScenariosRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/extended.v1.CompareFinancialScenariosResponse'
+  /extended.v1.ExtendedService/FinancialMetrics:
+    post:
+      tags:
+        - extended.v1.ExtendedService
+      summary: FinancialMetrics
+      description: FinancialMetrics computes investment performance indicators for a project.
+      operationId: extended.v1.ExtendedService.FinancialMetrics
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/extended.v1.FinancialMetricsRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/extended.v1.FinancialMetricsResponse'
+  /extended.v1.ExtendedService/GetFinancialScenarioSet:
+    post:
+      tags:
+        - extended.v1.ExtendedService
+      summary: GetFinancialScenarioSet
+      description: GetFinancialScenarioSet retrieves saved scenario assumptions for a specific project/layout.
+      operationId: extended.v1.ExtendedService.GetFinancialScenarioSet
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/extended.v1.GetFinancialScenarioSetRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/extended.v1.GetFinancialScenarioSetResponse'
+  /extended.v1.ExtendedService/GetFinancialScenarioSetVersions:
+    post:
+      tags:
+        - extended.v1.ExtendedService
+      summary: GetFinancialScenarioSetVersions
+      description: GetFinancialScenarioSetVersions returns the version history of scenario assumptions for a layout.
+      operationId: extended.v1.ExtendedService.GetFinancialScenarioSetVersions
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/extended.v1.GetFinancialScenarioSetVersionsRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/extended.v1.GetFinancialScenarioSetVersionsResponse'
+  /extended.v1.ExtendedService/ListFinancialScenarioSets:
+    post:
+      tags:
+        - extended.v1.ExtendedService
+      summary: ListFinancialScenarioSets
+      description: ListFinancialScenarioSets lists all saved scenario sets for a project.
+      operationId: extended.v1.ExtendedService.ListFinancialScenarioSets
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/extended.v1.ListFinancialScenarioSetsRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/extended.v1.ListFinancialScenarioSetsResponse'
+  /extended.v1.ExtendedService/SaveFinancialScenarioSet:
+    post:
+      tags:
+        - extended.v1.ExtendedService
+      summary: SaveFinancialScenarioSet
+      description: SaveFinancialScenarioSet stores scenario assumptions for a specific project/layout.
+      operationId: extended.v1.ExtendedService.SaveFinancialScenarioSet
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/extended.v1.SaveFinancialScenarioSetRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/extended.v1.SaveFinancialScenarioSetResponse'
+  /extended.v1.ExtendedService/SolarTransposition:
+    post:
+      tags:
+        - extended.v1.ExtendedService
+      summary: SolarTransposition
+      description: SolarTransposition computes plane-of-array irradiance and incidence terms.
+      operationId: extended.v1.ExtendedService.SolarTransposition
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/extended.v1.SolarTranspositionRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/extended.v1.SolarTranspositionResponse'
+components:
+  schemas:
+    connect-protocol-version:
+      type: number
+      title: Connect-Protocol-Version
+      enum:
+        - 1
+      description: Define the version of the Connect protocol
+      const: 1
+    connect-timeout-header:
+      type: number
+      title: Connect-Timeout-Ms
+      description: Define the timeout, in ms
+    connect.error:
+      type: object
+      properties:
+        code:
+          type: string
+          examples:
+            - not_found
+          enum:
+            - canceled
+            - unknown
+            - invalid_argument
+            - deadline_exceeded
+            - not_found
+            - already_exists
+            - permission_denied
+            - resource_exhausted
+            - failed_precondition
+            - aborted
+            - out_of_range
+            - unimplemented
+            - internal
+            - unavailable
+            - data_loss
+            - unauthenticated
+          description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+        message:
+          type: string
+          description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/connect.error_details.Any'
+          description: A list of messages that carry the error details. There is no limit on the number of messages.
+      title: Connect Error
+      additionalProperties: true
+      description: 'Error type returned by Connect: https://connectrpc.com/docs/go/errors/#http-representation'
+    connect.error_details.Any:
+      type: object
+      properties:
+        type:
+          type: string
+          description: 'A URL that acts as a globally unique identifier for the type of the serialized message. For example: `type.googleapis.com/google.rpc.ErrorInfo`. This is used to determine the schema of the data in the `value` field and is the discriminator for the `debug` field.'
+        value:
+          type: string
+          format: binary
+          description: The Protobuf message, serialized as bytes and base64-encoded. The specific message type is identified by the `type` field.
+        debug:
+          oneOf:
+            - type: object
+              title: Any
+              additionalProperties: true
+              description: Detailed error information.
+          discriminator:
+            propertyName: type
+          title: Debug
+          description: Deserialized error detail payload. The 'type' field indicates the schema. This field is for easier debugging and should not be relied upon for application logic.
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message, with an additional debug field for ConnectRPC error details.
+    extended.v1.CalculateInterRowShadingRequest:
+      type: object
+      properties:
+        tiltDeg:
+          type: number
+          title: tilt_deg
+          format: double
+          description: panel tilt (0 for tracker, use max tilt for tracker worst-case)
+        gcr:
+          type: number
+          title: gcr
+          format: double
+          description: ground coverage ratio (pitch / panel_length)
+        latitudeDeg:
+          type: number
+          title: latitude_deg
+          format: double
+          description: site latitude
+        analysisDays:
+          type: integer
+          title: analysis_days
+          format: int32
+          description: number of sky points to sample (0 = default 365)
+        isTracker:
+          type: boolean
+          title: is_tracker
+          description: single-axis tracker; backtracking applied
+      title: CalculateInterRowShadingRequest
+      additionalProperties: false
+      description: Inter-row shading request for fixed-tilt or single-axis tracker arrays.
+    extended.v1.CalculateInterRowShadingResponse:
+      type: object
+      properties:
+        annualShadingLossPercent:
+          type: number
+          title: annual_shading_loss_percent
+          format: double
+        nearShadingLossPercent:
+          type: number
+          title: near_shading_loss_percent
+          format: double
+          description: horizon/row shading only (no far shading)
+        optimalGcr:
+          type: number
+          title: optimal_gcr
+          format: double
+          description: GCR minimising shading loss for given tilt
+        note:
+          type: string
+          title: note
+      title: CalculateInterRowShadingResponse
+      additionalProperties: false
+    extended.v1.CalculateYieldUncertaintyRequest:
+      type: object
+      properties:
+        p50AnnualKwh:
+          type: number
+          title: p50_annual_kwh
+          format: double
+          description: best-estimate (P50) annual energy, kWh
+        interannualVariabilityPct:
+          type: number
+          title: interannual_variability_pct
+          format: double
+          description: σ from long-term irradiance variance, % (e.g. 5)
+        measurementUncertaintyPct:
+          type: number
+          title: measurement_uncertainty_pct
+          format: double
+          description: pyranometer/satellite data uncertainty (e.g. 3)
+        modelUncertaintyPct:
+          type: number
+          title: model_uncertainty_pct
+          format: double
+          description: energy model uncertainty (e.g. 4)
+        soilingUncertaintyPct:
+          type: number
+          title: soiling_uncertainty_pct
+          format: double
+          description: soiling scenario spread (e.g. 2)
+        degradationUncertaintyPct:
+          type: number
+          title: degradation_uncertainty_pct
+          format: double
+          description: module degradation σ (e.g. 1)
+      title: CalculateYieldUncertaintyRequest
+      additionalProperties: false
+      description: Yield uncertainty request for P-value estimation.
+    extended.v1.CalculateYieldUncertaintyResponse:
+      type: object
+      properties:
+        p50Kwh:
+          type: number
+          title: p50_kwh
+          format: double
+        p90Kwh:
+          type: number
+          title: p90_kwh
+          format: double
+          description: ~1.28σ below P50
+        p99Kwh:
+          type: number
+          title: p99_kwh
+          format: double
+          description: ~2.33σ below P50
+        combinedUncertaintyPct:
+          type: number
+          title: combined_uncertainty_pct
+          format: double
+      title: CalculateYieldUncertaintyResponse
+      additionalProperties: false
+    extended.v1.ClimateImpactRequest:
+      type: object
+      properties:
+        tempImpact:
+          type: number
+          title: temp_impact
+          format: double
+        soilingImpact:
+          type: number
+          title: soiling_impact
+          format: double
+        windImpact:
+          type: number
+          title: wind_impact
+          format: double
+        availabilityImpact:
+          type: number
+          title: availability_impact
+          format: double
+      title: ClimateImpactRequest
+      additionalProperties: false
+    extended.v1.ClimateImpactResponse:
+      type: object
+      properties:
+        soilingFactorChange:
+          type: number
+          title: soiling_factor_change
+          format: double
+        efficiencyFactorChange:
+          type: number
+          title: efficiency_factor_change
+          format: double
+        moduleTemperatureIncrease:
+          type: number
+          title: module_temperature_increase
+          format: double
+        availabilityImpactPercent:
+          type: number
+          title: availability_impact_percent
+          format: double
+      title: ClimateImpactResponse
+      additionalProperties: false
+    extended.v1.CompareFinancialScenariosRequest:
+      type: object
+      properties:
+        annualYieldKwh:
+          type: number
+          title: annual_yield_kwh
+          format: double
+        annualOmUsd:
+          type: number
+          title: annual_om_usd
+          format: double
+        projectLifeYears:
+          type: integer
+          title: project_life_years
+          format: int32
+        baseInitialInvestment:
+          type: number
+          title: base_initial_investment
+          format: double
+        prBaseline:
+          type: number
+          title: pr_baseline
+          format: double
+        scenarios:
+          type: array
+          items:
+            $ref: '#/components/schemas/extended.v1.FinancialScenario'
+          title: scenarios
+      title: CompareFinancialScenariosRequest
+      additionalProperties: false
+    extended.v1.CompareFinancialScenariosResponse:
+      type: object
+      properties:
+        scenarios:
+          type: array
+          items:
+            $ref: '#/components/schemas/extended.v1.FinancialScenarioResult'
+          title: scenarios
+      title: CompareFinancialScenariosResponse
+      additionalProperties: false
+    extended.v1.FinancialMetricsRequest:
+      type: object
+      properties:
+        annualCashflows:
+          type: array
+          items:
+            type: number
+            format: double
+          title: annual_cashflows
+        initialInvestment:
+          type: number
+          title: initial_investment
+          format: double
+        discountRate:
+          type: number
+          title: discount_rate
+          format: double
+        prBaseline:
+          type: number
+          title: pr_baseline
+          format: double
+        prActual:
+          type: number
+          title: pr_actual
+          format: double
+      title: FinancialMetricsRequest
+      additionalProperties: false
+    extended.v1.FinancialMetricsResponse:
+      type: object
+      properties:
+        npvUsd:
+          type: number
+          title: npv_usd
+          format: double
+        irrPercent:
+          type: number
+          title: irr_percent
+          format: double
+        piCoeff:
+          type: number
+          title: pi_coeff
+          format: double
+        cropPercent:
+          type: number
+          title: crop_percent
+          format: double
+      title: FinancialMetricsResponse
+      additionalProperties: false
+    extended.v1.FinancialScenario:
+      type: object
+      properties:
+        name:
+          type: string
+          title: name
+        electricityPrice:
+          type: number
+          title: electricity_price
+          format: double
+        escalationRatePercent:
+          type: number
+          title: escalation_rate_percent
+          format: double
+        degradationRatePercent:
+          type: number
+          title: degradation_rate_percent
+          format: double
+        discountRatePercent:
+          type: number
+          title: discount_rate_percent
+          format: double
+        prActual:
+          type: number
+          title: pr_actual
+          format: double
+        capexMultiplier:
+          type: number
+          title: capex_multiplier
+          format: double
+      title: FinancialScenario
+      additionalProperties: false
+    extended.v1.FinancialScenarioResult:
+      type: object
+      properties:
+        name:
+          type: string
+          title: name
+        metrics:
+          title: metrics
+          $ref: '#/components/schemas/extended.v1.FinancialMetricsResponse'
+        annualRevenueUsd:
+          type: number
+          title: annual_revenue_usd
+          format: double
+        netAnnualCashflowUsd:
+          type: number
+          title: net_annual_cashflow_usd
+          format: double
+        simplePaybackYears:
+          type: number
+          title: simple_payback_years
+          format: double
+        roiPercent:
+          type: number
+          title: roi_percent
+          format: double
+      title: FinancialScenarioResult
+      additionalProperties: false
+    extended.v1.FinancialScenarioSetSummary:
+      type: object
+      properties:
+        layoutId:
+          type: string
+          title: layout_id
+        scenarioCount:
+          type: integer
+          title: scenario_count
+          format: int32
+        updatedAtRfc3339:
+          type: string
+          title: updated_at_rfc3339
+      title: FinancialScenarioSetSummary
+      additionalProperties: false
+    extended.v1.FinancialScenarioSetVersion:
+      type: object
+      properties:
+        scenarios:
+          type: array
+          items:
+            $ref: '#/components/schemas/extended.v1.FinancialScenario'
+          title: scenarios
+        savedAtRfc3339:
+          type: string
+          title: saved_at_rfc3339
+      title: FinancialScenarioSetVersion
+      additionalProperties: false
+    extended.v1.GetFinancialScenarioSetRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        layoutId:
+          type: string
+          title: layout_id
+      title: GetFinancialScenarioSetRequest
+      additionalProperties: false
+    extended.v1.GetFinancialScenarioSetResponse:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        layoutId:
+          type: string
+          title: layout_id
+        scenarios:
+          type: array
+          items:
+            $ref: '#/components/schemas/extended.v1.FinancialScenario'
+          title: scenarios
+        updatedAtRfc3339:
+          type: string
+          title: updated_at_rfc3339
+      title: GetFinancialScenarioSetResponse
+      additionalProperties: false
+    extended.v1.GetFinancialScenarioSetVersionsRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        layoutId:
+          type: string
+          title: layout_id
+      title: GetFinancialScenarioSetVersionsRequest
+      additionalProperties: false
+    extended.v1.GetFinancialScenarioSetVersionsResponse:
+      type: object
+      properties:
+        versions:
+          type: array
+          items:
+            $ref: '#/components/schemas/extended.v1.FinancialScenarioSetVersion'
+          title: versions
+      title: GetFinancialScenarioSetVersionsResponse
+      additionalProperties: false
+    extended.v1.ListFinancialScenarioSetsRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+      title: ListFinancialScenarioSetsRequest
+      additionalProperties: false
+    extended.v1.ListFinancialScenarioSetsResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/extended.v1.FinancialScenarioSetSummary'
+          title: items
+      title: ListFinancialScenarioSetsResponse
+      additionalProperties: false
+    extended.v1.SaveFinancialScenarioSetRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        layoutId:
+          type: string
+          title: layout_id
+        scenarios:
+          type: array
+          items:
+            $ref: '#/components/schemas/extended.v1.FinancialScenario'
+          title: scenarios
+      title: SaveFinancialScenarioSetRequest
+      additionalProperties: false
+    extended.v1.SaveFinancialScenarioSetResponse:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        layoutId:
+          type: string
+          title: layout_id
+        scenarios:
+          type: array
+          items:
+            $ref: '#/components/schemas/extended.v1.FinancialScenario'
+          title: scenarios
+        updatedAtRfc3339:
+          type: string
+          title: updated_at_rfc3339
+      title: SaveFinancialScenarioSetResponse
+      additionalProperties: false
+    extended.v1.SolarTranspositionRequest:
+      type: object
+      properties:
+        ghiWm2:
+          type: number
+          title: ghi_wm2
+          format: double
+        dhiWm2:
+          type: number
+          title: dhi_wm2
+          format: double
+        windSpeedMs:
+          type: number
+          title: wind_speed_ms
+          format: double
+        temperatureC:
+          type: number
+          title: temperature_c
+          format: double
+        surfaceTiltDeg:
+          type: number
+          title: surface_tilt_deg
+          format: double
+        surfaceAzimuth:
+          type: number
+          title: surface_azimuth
+          format: double
+        solarAltitude:
+          type: number
+          title: solar_altitude
+          format: double
+        solarAzimuth:
+          type: number
+          title: solar_azimuth
+          format: double
+      title: SolarTranspositionRequest
+      additionalProperties: false
+    extended.v1.SolarTranspositionResponse:
+      type: object
+      properties:
+        poaIrradiance:
+          type: number
+          title: poa_irradiance
+          format: double
+        aoi:
+          type: number
+          title: aoi
+          format: double
+        incidenceModulation:
+          type: number
+          title: incidence_modulation
+          format: double
+      title: SolarTranspositionResponse
+      additionalProperties: false
+security: []
+tags:
+  - name: extended.v1.ExtendedService
+    description: ExtendedService exposes advanced compute modules built on extended-compute.

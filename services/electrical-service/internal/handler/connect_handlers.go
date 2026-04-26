@@ -7,8 +7,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 
-	"solar3d/electrical-service/internal/domain"
-	"solar3d/electrical-service/internal/service"
+	"p9e.in/samavaya/solar3d/electrical-service/internal/domain"
+	"p9e.in/samavaya/solar3d/electrical-service/internal/service"
 )
 
 type ElectricalHandler struct {

@@ -11,7 +11,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog/log"
 
-	"solar3d/layout-service/internal/domain"
+	"p9e.in/samavaya/solar3d/layout-service/internal/domain"
 )
 
 // CandidatePanelArtifact represents one frozen panel geometry row from the

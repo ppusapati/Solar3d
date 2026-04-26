@@ -6,13 +6,80 @@ import type { GenEnum, GenFile, GenMessage, GenService } from "@bufbuild/protobu
 import { enumDesc, fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import { file_google_protobuf_timestamp } from "@bufbuild/protobuf/wkt";
+import type { PaginationRequest, PaginationResponse } from "../../packages/pagination_pb.js";
+import { file_packages_pagination } from "../../packages/pagination_pb.js";
 import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file transmission/v1/transmission.proto.
  */
 export const file_transmission_v1_transmission: GenFile = /*@__PURE__*/
-  fileDesc("CiJ0cmFuc21pc3Npb24vdjEvdHJhbnNtaXNzaW9uLnByb3RvEg90cmFuc21pc3Npb24udjEiQgoIV2F5cG9pbnQSEQoJbG9uZ2l0dWRlGAEgASgBEhAKCGxhdGl0dWRlGAIgASgBEhEKCWVsZXZhdGlvbhgDIAEoASK3AgoXVHJhbnNtaXNzaW9uQ29uc3RyYWludHMSEgoKbWluX3NwYW5fbRgBIAEoARISCgptYXhfc3Bhbl9tGAIgASgBEhMKC3Jvd193aWR0aF9tGAMgASgBEhUKDW1heF9zbG9wZV9kZWcYBCABKAESHAoUc2xvcGVfcGVuYWx0eV9mYWN0b3IYBSABKAESIAoYd2F0ZXJfY3Jvc3NpbmdfY29zdF9tdWx0GAYgASgBEh4KFnJvYWRfcGFyYWxsZWxfZGlzY291bnQYByABKAESGgoSbWF4X2RlZmxlY3Rpb25fZGVnGAggASgBEhsKE3R1cm5fcGVuYWx0eV9mYWN0b3IYCSABKAESGAoQb2ZmX3JvYWRfcGVuYWx0eRgKIAEoARIVCg1yb2FkX2J1ZmZlcl9tGAsgASgBIpEBChRFbGV2YXRpb25SYXN0ZXJJbnB1dBINCgV3aWR0aBgBIAEoBRIOCgZoZWlnaHQYAiABKAUSEwoLY2VsbF9zaXplX20YAyABKAESGAoQb3JpZ2luX2xvbmdpdHVkZRgEIAEoARIXCg9vcmlnaW5fbGF0aXR1ZGUYBSABKAESEgoKZWxldmF0aW9ucxgGIAMoASKMAQoTT2JzdGFjbGVSYXN0ZXJJbnB1dBINCgV3aWR0aBgBIAEoBRIOCgZoZWlnaHQYAiABKAUSEwoLY2VsbF9zaXplX20YAyABKAESGAoQb3JpZ2luX2xvbmdpdHVkZRgEIAEoARIXCg9vcmlnaW5fbGF0aXR1ZGUYBSABKAESDgoGdmFsdWVzGAYgAygBIl0KElZlY3RvckZlYXR1cmVJbnB1dBIUCgxmZWF0dXJlX3R5cGUYASABKAkSGAoQZ2VvbWV0cnlfZ2VvanNvbhgCIAEoCRIXCg9jb3N0X211bHRpcGxpZXIYAyABKAEicQoNVG93ZXJQb3NpdGlvbhIRCglsb25naXR1ZGUYASABKAESEAoIbGF0aXR1ZGUYAiABKAESEQoJZWxldmF0aW9uGAMgASgBEhYKDnNwYW5fdG9fbmV4dF9tGAQgASgBEhAKCGhlaWdodF9tGAUgASgBIr4BChJTZWdtZW50RXhwbGFuYXRpb24SEgoKZnJvbV9pbmRleBgBIAEoBRIRCglzbG9wZV9kZWcYAiABKAESEQoJbGFuZF90eXBlGAMgASgJEhcKD2Nvc3RfbXVsdGlwbGllchgEIAEoARIXCg9kZWNpc2lvbl9yZWFzb24YBSABKAkSPAoRaW5zdGFsbGF0aW9uX21vZGUYBiABKA4yIS50cmFuc21pc3Npb24udjEuSW5zdGFsbGF0aW9uTW9kZSKcAQoNQ29zdEJyZWFrZG93bhIWCg5jb25kdWN0b3JfY29zdBgBIAEoARISCgp0b3dlcl9jb3N0GAIgASgBEhwKFHJvd19hY3F1aXNpdGlvbl9jb3N0GAMgASgBEhgKEGNyb3NzaW5nX3ByZW1pdW0YBCABKAESEgoKdG90YWxfY29zdBgFIAEoARITCgtjb3N0X3Blcl9rbRgGIAEoASLEAgoKUm91dGVTY29yZRISCgpjb3N0X3Njb3JlGAEgASgBEhIKCnJpc2tfc2NvcmUYAiABKAESHgoWY29uc3RydWN0YWJpbGl0eV9zY29yZRgDIAEoARIWCg5zY2hlZHVsZV9zY29yZRgEIAEoARIXCg9jb21wb3NpdGVfc2NvcmUYBSABKAESFwoPcGFyZXRvX2Zyb250aWVyGAYgASgIEh0KFXJlY29tbWVuZGF0aW9uX3JlYXNvbhgHIAEoCRJMChFkaW1lbnNpb25fcmVhc29ucxgIIAMoCzIxLnRyYW5zbWlzc2lvbi52MS5Sb3V0ZVNjb3JlLkRpbWVuc2lvblJlYXNvbnNFbnRyeRo3ChVEaW1lbnNpb25SZWFzb25zRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASLdAQoPR292ZXJuYW5jZUV2ZW50EhIKCmV2ZW50X3R5cGUYASABKAkSDQoFYWN0b3IYAiABKAkSDAoEbm90ZRgDIAEoCRI0Cgtmcm9tX3N0YXR1cxgEIAEoDjIfLnRyYW5zbWlzc2lvbi52MS5BcHByb3ZhbFN0YXR1cxIyCgl0b19zdGF0dXMYBSABKA4yHy50cmFuc21pc3Npb24udjEuQXBwcm92YWxTdGF0dXMSLwoLb2NjdXJyZWRfYXQYBiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIoICChJUcmFjZWFiaWxpdHlCdW5kbGUSGQoRYWxnb3JpdGhtX3ZlcnNpb24YASABKAkSGQoRaW5wdXRfZmluZ2VycHJpbnQYAiABKAkSGQoRcm91dGVfZmluZ2VycHJpbnQYAyABKAkSHAoUcmVncmVzc2lvbl9zaWduYXR1cmUYBCABKAkSHQoVcmVxdWVzdF9zbmFwc2hvdF9qc29uGAUgASgJEhgKEGRhdGFfc25hcHNob3RfaWQYBiABKAkSLwoLYXBwcm92ZWRfYXQYByABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEhMKC2FwcHJvdmVkX2J5GAggASgJIqABChJUb3dlclNjaGVkdWxlRW50cnkSEAoIc2VxdWVuY2UYASABKAUSEQoJbG9uZ2l0dWRlGAIgASgBEhAKCGxhdGl0dWRlGAMgASgBEhEKCWVsZXZhdGlvbhgEIAEoARIWCg5zcGFuX3RvX25leHRfbRgFIAEoARIQCghoZWlnaHRfbRgGIAEoARIWCg5zdHJ1Y3R1cmVfdHlwZRgHIAEoCSKFAQoYVW5kZXJncm91bmRDaGFpbmFnZUVudHJ5EhUKDXNlZ21lbnRfaW5kZXgYASABKAUSGAoQc3RhcnRfY2hhaW5hZ2VfbRgCIAEoARIWCg5lbmRfY2hhaW5hZ2VfbRgDIAEoARIQCghsZW5ndGhfbRgEIAEoARIOCgZyZWFzb24YBSABKAkiVQoNQ29zdEJvb2tFbnRyeRIQCghjYXRlZ29yeRgBIAEoCRITCgtzdWJjYXRlZ29yeRgCIAEoCRIOCgZhbW91bnQYAyABKAESDQoFYmFzaXMYBCABKAkijAMKG1RyYW5zbWlzc2lvblJvdXRlRXhwb3J0UGFjaxIxCgVyb3V0ZRgBIAEoCzIiLnRyYW5zbWlzc2lvbi52MS5UcmFuc21pc3Npb25Sb3V0ZRI7Cg50b3dlcl9zY2hlZHVsZRgCIAMoCzIjLnRyYW5zbWlzc2lvbi52MS5Ub3dlclNjaGVkdWxlRW50cnkSRwoUdW5kZXJncm91bmRfY2hhaW5hZ2UYAyADKAsyKS50cmFuc21pc3Npb24udjEuVW5kZXJncm91bmRDaGFpbmFnZUVudHJ5EjEKCWNvc3RfYm9vaxgEIAMoCzIeLnRyYW5zbWlzc2lvbi52MS5Db3N0Qm9va0VudHJ5EjkKDHRyYWNlYWJpbGl0eRgFIAEoCzIjLnRyYW5zbWlzc2lvbi52MS5UcmFjZWFiaWxpdHlCdW5kbGUSMAoMZ2VuZXJhdGVkX2F0GAYgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIUCgxnZW5lcmF0ZWRfYnkYByABKAki2AYKEVRyYW5zbWlzc2lvblJvdXRlEgoKAmlkGAEgASgJEhIKCnByb2plY3RfaWQYAiABKAkSDAoEbmFtZRgDIAEoCRI0Cg12b2x0YWdlX2NsYXNzGAQgASgOMh0udHJhbnNtaXNzaW9uLnYxLlZvbHRhZ2VDbGFzcxIUCgxwYXRoX2dlb2pzb24YBSABKAkSNAoRZmFybV9vdXRwdXRfcG9pbnQYBiABKAsyGS50cmFuc21pc3Npb24udjEuV2F5cG9pbnQSNwoUZ3JpZF9pbmplY3Rpb25fcG9pbnQYByABKAsyGS50cmFuc21pc3Npb24udjEuV2F5cG9pbnQSNwoPdG93ZXJfcG9zaXRpb25zGAggAygLMh4udHJhbnNtaXNzaW9uLnYxLlRvd2VyUG9zaXRpb24SEgoKZGlzdGFuY2VfbRgJIAEoARI2Cg5jb3N0X2JyZWFrZG93bhgKIAEoCzIeLnRyYW5zbWlzc2lvbi52MS5Db3N0QnJlYWtkb3duEjAKC3JvdXRlX3Njb3JlGA4gASgLMhsudHJhbnNtaXNzaW9uLnYxLlJvdXRlU2NvcmUSQQoUc2VnbWVudF9leHBsYW5hdGlvbnMYCyADKAsyIy50cmFuc21pc3Npb24udjEuU2VnbWVudEV4cGxhbmF0aW9uEhUKDXJvdXRlX3N1bW1hcnkYDCABKAkSLgoKY3JlYXRlZF9hdBgNIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASOAoPYXBwcm92YWxfc3RhdHVzGA8gASgOMh8udHJhbnNtaXNzaW9uLnYxLkFwcHJvdmFsU3RhdHVzEjsKF2VuZ2luZWVyaW5nX3Jldmlld2VkX2F0GBAgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIfChdlbmdpbmVlcmluZ19yZXZpZXdlZF9ieRgRIAEoCRIvCgthcHByb3ZlZF9hdBgSIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASEwoLYXBwcm92ZWRfYnkYEyABKAkSOwoRZ292ZXJuYW5jZV9ldmVudHMYFCADKAsyIC50cmFuc21pc3Npb24udjEuR292ZXJuYW5jZUV2ZW50IucDCiFDYWxjdWxhdGVUcmFuc21pc3Npb25Sb3V0ZVJlcXVlc3QSEgoKcHJvamVjdF9pZBgBIAEoCRIMCgRuYW1lGAIgASgJEjQKDXZvbHRhZ2VfY2xhc3MYAyABKA4yHS50cmFuc21pc3Npb24udjEuVm9sdGFnZUNsYXNzEjQKEWZhcm1fb3V0cHV0X3BvaW50GAQgASgLMhkudHJhbnNtaXNzaW9uLnYxLldheXBvaW50EjcKFGdyaWRfaW5qZWN0aW9uX3BvaW50GAUgASgLMhkudHJhbnNtaXNzaW9uLnYxLldheXBvaW50Ej0KC2NvbnN0cmFpbnRzGAYgASgLMigudHJhbnNtaXNzaW9uLnYxLlRyYW5zbWlzc2lvbkNvbnN0cmFpbnRzEj8KEGVsZXZhdGlvbl9yYXN0ZXIYByABKAsyJS50cmFuc21pc3Npb24udjEuRWxldmF0aW9uUmFzdGVySW5wdXQSPQoPb2JzdGFjbGVfcmFzdGVyGAggASgLMiQudHJhbnNtaXNzaW9uLnYxLk9ic3RhY2xlUmFzdGVySW5wdXQSPAoPdmVjdG9yX2ZlYXR1cmVzGAkgAygLMiMudHJhbnNtaXNzaW9uLnYxLlZlY3RvckZlYXR1cmVJbnB1dCJXCiJDYWxjdWxhdGVUcmFuc21pc3Npb25Sb3V0ZVJlc3BvbnNlEjEKBXJvdXRlGAEgASgLMiIudHJhbnNtaXNzaW9uLnYxLlRyYW5zbWlzc2lvblJvdXRlImUKHlN0cmVhbVRyYW5zbWlzc2lvblJvdXRlUmVxdWVzdBJDCgdyZXF1ZXN0GAEgASgLMjIudHJhbnNtaXNzaW9uLnYxLkNhbGN1bGF0ZVRyYW5zbWlzc2lvblJvdXRlUmVxdWVzdCKOAQofU3RyZWFtVHJhbnNtaXNzaW9uUm91dGVSZXNwb25zZRINCgVwaGFzZRgBIAEoCRIYChBwZXJjZW50X2NvbXBsZXRlGAIgASgFEg8KB21lc3NhZ2UYAyABKAkSMQoFcm91dGUYBCABKAsyIi50cmFuc21pc3Npb24udjEuVHJhbnNtaXNzaW9uUm91dGUiKQobR2V0VHJhbnNtaXNzaW9uUm91dGVSZXF1ZXN0EgoKAmlkGAEgASgJIlEKHEdldFRyYW5zbWlzc2lvblJvdXRlUmVzcG9uc2USMQoFcm91dGUYASABKAsyIi50cmFuc21pc3Npb24udjEuVHJhbnNtaXNzaW9uUm91dGUiMwodTGlzdFRyYW5zbWlzc2lvblJvdXRlc1JlcXVlc3QSEgoKcHJvamVjdF9pZBgBIAEoCSJUCh5MaXN0VHJhbnNtaXNzaW9uUm91dGVzUmVzcG9uc2USMgoGcm91dGVzGAEgAygLMiIudHJhbnNtaXNzaW9uLnYxLlRyYW5zbWlzc2lvblJvdXRlIlIKJ1N1Ym1pdFRyYW5zbWlzc2lvblJvdXRlRm9yUmV2aWV3UmVxdWVzdBIKCgJpZBgBIAEoCRINCgVhY3RvchgCIAEoCRIMCgRub3RlGAMgASgJIl0KKFN1Ym1pdFRyYW5zbWlzc2lvblJvdXRlRm9yUmV2aWV3UmVzcG9uc2USMQoFcm91dGUYASABKAsyIi50cmFuc21pc3Npb24udjEuVHJhbnNtaXNzaW9uUm91dGUiSgofQXBwcm92ZVRyYW5zbWlzc2lvblJvdXRlUmVxdWVzdBIKCgJpZBgBIAEoCRINCgVhY3RvchgCIAEoCRIMCgRub3RlGAMgASgJIlUKIEFwcHJvdmVUcmFuc21pc3Npb25Sb3V0ZVJlc3BvbnNlEjEKBXJvdXRlGAEgASgLMiIudHJhbnNtaXNzaW9uLnYxLlRyYW5zbWlzc2lvblJvdXRlIkYKIkV4cG9ydFRyYW5zbWlzc2lvblJvdXRlUGFja1JlcXVlc3QSCgoCaWQYASABKAkSFAoMZ2VuZXJhdGVkX2J5GAIgASgJImEKI0V4cG9ydFRyYW5zbWlzc2lvblJvdXRlUGFja1Jlc3BvbnNlEjoKBHBhY2sYASABKAsyLC50cmFuc21pc3Npb24udjEuVHJhbnNtaXNzaW9uUm91dGVFeHBvcnRQYWNrIiwKHkRlbGV0ZVRyYW5zbWlzc2lvblJvdXRlUmVxdWVzdBIKCgJpZBgBIAEoCSIhCh9EZWxldGVUcmFuc21pc3Npb25Sb3V0ZVJlc3BvbnNlKswBCgxWb2x0YWdlQ2xhc3MSHQoZVk9MVEFHRV9DTEFTU19VTlNQRUNJRklFRBAAEhYKElZPTFRBR0VfQ0xBU1NfMTFLVhABEhYKElZPTFRBR0VfQ0xBU1NfMzNLVhACEhkKFVZPTFRBR0VfQ0xBU1NfSFRfNjZLVhADEhoKFlZPTFRBR0VfQ0xBU1NfSFRfMTMyS1YQBBIaChZWT0xUQUdFX0NMQVNTX0hUXzIyMEtWEAUSGgoWVk9MVEFHRV9DTEFTU19IVF80MDBLVhAGKpIBCg5BcHByb3ZhbFN0YXR1cxIfChtBUFBST1ZBTF9TVEFUVVNfVU5TUEVDSUZJRUQQABIZChVBUFBST1ZBTF9TVEFUVVNfRFJBRlQQARImCiJBUFBST1ZBTF9TVEFUVVNfRU5HSU5FRVJJTkdfUkVWSUVXEAISHAoYQVBQUk9WQUxfU1RBVFVTX0FQUFJPVkVEEAMqeAoQSW5zdGFsbGF0aW9uTW9kZRIhCh1JTlNUQUxMQVRJT05fTU9ERV9VTlNQRUNJRklFRBAAEh4KGklOU1RBTExBVElPTl9NT0RFX09WRVJIRUFEEAESIQodSU5TVEFMTEFUSU9OX01PREVfVU5ERVJHUk9VTkQQAjK4CAoaVHJhbnNtaXNzaW9uUm91dGluZ1NlcnZpY2UShQEKGkNhbGN1bGF0ZVRyYW5zbWlzc2lvblJvdXRlEjIudHJhbnNtaXNzaW9uLnYxLkNhbGN1bGF0ZVRyYW5zbWlzc2lvblJvdXRlUmVxdWVzdBozLnRyYW5zbWlzc2lvbi52MS5DYWxjdWxhdGVUcmFuc21pc3Npb25Sb3V0ZVJlc3BvbnNlEn4KF1N0cmVhbVRyYW5zbWlzc2lvblJvdXRlEi8udHJhbnNtaXNzaW9uLnYxLlN0cmVhbVRyYW5zbWlzc2lvblJvdXRlUmVxdWVzdBowLnRyYW5zbWlzc2lvbi52MS5TdHJlYW1UcmFuc21pc3Npb25Sb3V0ZVJlc3BvbnNlMAEScwoUR2V0VHJhbnNtaXNzaW9uUm91dGUSLC50cmFuc21pc3Npb24udjEuR2V0VHJhbnNtaXNzaW9uUm91dGVSZXF1ZXN0Gi0udHJhbnNtaXNzaW9uLnYxLkdldFRyYW5zbWlzc2lvblJvdXRlUmVzcG9uc2USeQoWTGlzdFRyYW5zbWlzc2lvblJvdXRlcxIuLnRyYW5zbWlzc2lvbi52MS5MaXN0VHJhbnNtaXNzaW9uUm91dGVzUmVxdWVzdBovLnRyYW5zbWlzc2lvbi52MS5MaXN0VHJhbnNtaXNzaW9uUm91dGVzUmVzcG9uc2USlwEKIFN1Ym1pdFRyYW5zbWlzc2lvblJvdXRlRm9yUmV2aWV3EjgudHJhbnNtaXNzaW9uLnYxLlN1Ym1pdFRyYW5zbWlzc2lvblJvdXRlRm9yUmV2aWV3UmVxdWVzdBo5LnRyYW5zbWlzc2lvbi52MS5TdWJtaXRUcmFuc21pc3Npb25Sb3V0ZUZvclJldmlld1Jlc3BvbnNlEn8KGEFwcHJvdmVUcmFuc21pc3Npb25Sb3V0ZRIwLnRyYW5zbWlzc2lvbi52MS5BcHByb3ZlVHJhbnNtaXNzaW9uUm91dGVSZXF1ZXN0GjEudHJhbnNtaXNzaW9uLnYxLkFwcHJvdmVUcmFuc21pc3Npb25Sb3V0ZVJlc3BvbnNlEogBChtFeHBvcnRUcmFuc21pc3Npb25Sb3V0ZVBhY2sSMy50cmFuc21pc3Npb24udjEuRXhwb3J0VHJhbnNtaXNzaW9uUm91dGVQYWNrUmVxdWVzdBo0LnRyYW5zbWlzc2lvbi52MS5FeHBvcnRUcmFuc21pc3Npb25Sb3V0ZVBhY2tSZXNwb25zZRJ8ChdEZWxldGVUcmFuc21pc3Npb25Sb3V0ZRIvLnRyYW5zbWlzc2lvbi52MS5EZWxldGVUcmFuc21pc3Npb25Sb3V0ZVJlcXVlc3QaMC50cmFuc21pc3Npb24udjEuRGVsZXRlVHJhbnNtaXNzaW9uUm91dGVSZXNwb25zZULEAQoTY29tLnRyYW5zbWlzc2lvbi52MUIRVHJhbnNtaXNzaW9uUHJvdG9QAVo9Z2l0aHViLmNvbS9zb2xhcjNkL3NvbGFyM2QvZ2VuL3RyYW5zbWlzc2lvbi92MTt0cmFuc21pc3Npb252MaICA1RYWKoCD1RyYW5zbWlzc2lvbi5WMcoCD1RyYW5zbWlzc2lvblxWMeICG1RyYW5zbWlzc2lvblxWMVxHUEJNZXRhZGF0YeoCEFRyYW5zbWlzc2lvbjo6VjFiBnByb3RvMw", [file_google_protobuf_timestamp]);
+  fileDesc("CiJ0cmFuc21pc3Npb24vdjEvdHJhbnNtaXNzaW9uLnByb3RvEg90cmFuc21pc3Npb24udjEi+gEKDlJldmlld01ldGFkYXRhEjEKBnN0YXR1cxgBIAEoDjIhLnRyYW5zbWlzc2lvbi52MS5BY2NlcHRhbmNlU3RhdHVzEhwKFHJldmlld2VkX2J5X2FjdG9yX2lkGAIgASgJEi8KC3Jldmlld2VkX2F0GAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIVCg1xdWFsaXR5X3Njb3JlGAQgASgBEhcKD3Jldmlld19jb21tZW50cxgFIAMoCRIQCghibG9ja2VycxgGIAMoCRIkChxhcHByb3ZhbF90aW1lc3RhbXBfdW5peF9zZWNzGAcgASgJIkIKCFdheXBvaW50EhEKCWxvbmdpdHVkZRgBIAEoARIQCghsYXRpdHVkZRgCIAEoARIRCgllbGV2YXRpb24YAyABKAEitwIKF1RyYW5zbWlzc2lvbkNvbnN0cmFpbnRzEhIKCm1pbl9zcGFuX20YASABKAESEgoKbWF4X3NwYW5fbRgCIAEoARITCgtyb3dfd2lkdGhfbRgDIAEoARIVCg1tYXhfc2xvcGVfZGVnGAQgASgBEhwKFHNsb3BlX3BlbmFsdHlfZmFjdG9yGAUgASgBEiAKGHdhdGVyX2Nyb3NzaW5nX2Nvc3RfbXVsdBgGIAEoARIeChZyb2FkX3BhcmFsbGVsX2Rpc2NvdW50GAcgASgBEhoKEm1heF9kZWZsZWN0aW9uX2RlZxgIIAEoARIbChN0dXJuX3BlbmFsdHlfZmFjdG9yGAkgASgBEhgKEG9mZl9yb2FkX3BlbmFsdHkYCiABKAESFQoNcm9hZF9idWZmZXJfbRgLIAEoASKRAQoURWxldmF0aW9uUmFzdGVySW5wdXQSDQoFd2lkdGgYASABKAUSDgoGaGVpZ2h0GAIgASgFEhMKC2NlbGxfc2l6ZV9tGAMgASgBEhgKEG9yaWdpbl9sb25naXR1ZGUYBCABKAESFwoPb3JpZ2luX2xhdGl0dWRlGAUgASgBEhIKCmVsZXZhdGlvbnMYBiADKAEijAEKE09ic3RhY2xlUmFzdGVySW5wdXQSDQoFd2lkdGgYASABKAUSDgoGaGVpZ2h0GAIgASgFEhMKC2NlbGxfc2l6ZV9tGAMgASgBEhgKEG9yaWdpbl9sb25naXR1ZGUYBCABKAESFwoPb3JpZ2luX2xhdGl0dWRlGAUgASgBEg4KBnZhbHVlcxgGIAMoASJdChJWZWN0b3JGZWF0dXJlSW5wdXQSFAoMZmVhdHVyZV90eXBlGAEgASgJEhgKEGdlb21ldHJ5X2dlb2pzb24YAiABKAkSFwoPY29zdF9tdWx0aXBsaWVyGAMgASgBInEKDVRvd2VyUG9zaXRpb24SEQoJbG9uZ2l0dWRlGAEgASgBEhAKCGxhdGl0dWRlGAIgASgBEhEKCWVsZXZhdGlvbhgDIAEoARIWCg5zcGFuX3RvX25leHRfbRgEIAEoARIQCghoZWlnaHRfbRgFIAEoASK+AQoSU2VnbWVudEV4cGxhbmF0aW9uEhIKCmZyb21faW5kZXgYASABKAUSEQoJc2xvcGVfZGVnGAIgASgBEhEKCWxhbmRfdHlwZRgDIAEoCRIXCg9jb3N0X211bHRpcGxpZXIYBCABKAESFwoPZGVjaXNpb25fcmVhc29uGAUgASgJEjwKEWluc3RhbGxhdGlvbl9tb2RlGAYgASgOMiEudHJhbnNtaXNzaW9uLnYxLkluc3RhbGxhdGlvbk1vZGUinAEKDUNvc3RCcmVha2Rvd24SFgoOY29uZHVjdG9yX2Nvc3QYASABKAESEgoKdG93ZXJfY29zdBgCIAEoARIcChRyb3dfYWNxdWlzaXRpb25fY29zdBgDIAEoARIYChBjcm9zc2luZ19wcmVtaXVtGAQgASgBEhIKCnRvdGFsX2Nvc3QYBSABKAESEwoLY29zdF9wZXJfa20YBiABKAEixAIKClJvdXRlU2NvcmUSEgoKY29zdF9zY29yZRgBIAEoARISCgpyaXNrX3Njb3JlGAIgASgBEh4KFmNvbnN0cnVjdGFiaWxpdHlfc2NvcmUYAyABKAESFgoOc2NoZWR1bGVfc2NvcmUYBCABKAESFwoPY29tcG9zaXRlX3Njb3JlGAUgASgBEhcKD3BhcmV0b19mcm9udGllchgGIAEoCBIdChVyZWNvbW1lbmRhdGlvbl9yZWFzb24YByABKAkSTAoRZGltZW5zaW9uX3JlYXNvbnMYCCADKAsyMS50cmFuc21pc3Npb24udjEuUm91dGVTY29yZS5EaW1lbnNpb25SZWFzb25zRW50cnkaNwoVRGltZW5zaW9uUmVhc29uc0VudHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCToCOAEi3QEKD0dvdmVybmFuY2VFdmVudBISCgpldmVudF90eXBlGAEgASgJEg0KBWFjdG9yGAIgASgJEgwKBG5vdGUYAyABKAkSNAoLZnJvbV9zdGF0dXMYBCABKA4yHy50cmFuc21pc3Npb24udjEuQXBwcm92YWxTdGF0dXMSMgoJdG9fc3RhdHVzGAUgASgOMh8udHJhbnNtaXNzaW9uLnYxLkFwcHJvdmFsU3RhdHVzEi8KC29jY3VycmVkX2F0GAYgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcCKCAgoSVHJhY2VhYmlsaXR5QnVuZGxlEhkKEWFsZ29yaXRobV92ZXJzaW9uGAEgASgJEhkKEWlucHV0X2ZpbmdlcnByaW50GAIgASgJEhkKEXJvdXRlX2ZpbmdlcnByaW50GAMgASgJEhwKFHJlZ3Jlc3Npb25fc2lnbmF0dXJlGAQgASgJEh0KFXJlcXVlc3Rfc25hcHNob3RfanNvbhgFIAEoCRIYChBkYXRhX3NuYXBzaG90X2lkGAYgASgJEi8KC2FwcHJvdmVkX2F0GAcgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBITCgthcHByb3ZlZF9ieRgIIAEoCSKgAQoSVG93ZXJTY2hlZHVsZUVudHJ5EhAKCHNlcXVlbmNlGAEgASgFEhEKCWxvbmdpdHVkZRgCIAEoARIQCghsYXRpdHVkZRgDIAEoARIRCgllbGV2YXRpb24YBCABKAESFgoOc3Bhbl90b19uZXh0X20YBSABKAESEAoIaGVpZ2h0X20YBiABKAESFgoOc3RydWN0dXJlX3R5cGUYByABKAkihQEKGFVuZGVyZ3JvdW5kQ2hhaW5hZ2VFbnRyeRIVCg1zZWdtZW50X2luZGV4GAEgASgFEhgKEHN0YXJ0X2NoYWluYWdlX20YAiABKAESFgoOZW5kX2NoYWluYWdlX20YAyABKAESEAoIbGVuZ3RoX20YBCABKAESDgoGcmVhc29uGAUgASgJIlUKDUNvc3RCb29rRW50cnkSEAoIY2F0ZWdvcnkYASABKAkSEwoLc3ViY2F0ZWdvcnkYAiABKAkSDgoGYW1vdW50GAMgASgBEg0KBWJhc2lzGAQgASgJIowDChtUcmFuc21pc3Npb25Sb3V0ZUV4cG9ydFBhY2sSMQoFcm91dGUYASABKAsyIi50cmFuc21pc3Npb24udjEuVHJhbnNtaXNzaW9uUm91dGUSOwoOdG93ZXJfc2NoZWR1bGUYAiADKAsyIy50cmFuc21pc3Npb24udjEuVG93ZXJTY2hlZHVsZUVudHJ5EkcKFHVuZGVyZ3JvdW5kX2NoYWluYWdlGAMgAygLMikudHJhbnNtaXNzaW9uLnYxLlVuZGVyZ3JvdW5kQ2hhaW5hZ2VFbnRyeRIxCgljb3N0X2Jvb2sYBCADKAsyHi50cmFuc21pc3Npb24udjEuQ29zdEJvb2tFbnRyeRI5Cgx0cmFjZWFiaWxpdHkYBSABKAsyIy50cmFuc21pc3Npb24udjEuVHJhY2VhYmlsaXR5QnVuZGxlEjAKDGdlbmVyYXRlZF9hdBgGIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASFAoMZ2VuZXJhdGVkX2J5GAcgASgJIqcIChFUcmFuc21pc3Npb25Sb3V0ZRIKCgJpZBgBIAEoCRISCgpwcm9qZWN0X2lkGAIgASgJEgwKBG5hbWUYAyABKAkSNAoNdm9sdGFnZV9jbGFzcxgEIAEoDjIdLnRyYW5zbWlzc2lvbi52MS5Wb2x0YWdlQ2xhc3MSFAoMcGF0aF9nZW9qc29uGAUgASgJEjQKEWZhcm1fb3V0cHV0X3BvaW50GAYgASgLMhkudHJhbnNtaXNzaW9uLnYxLldheXBvaW50EjcKFGdyaWRfaW5qZWN0aW9uX3BvaW50GAcgASgLMhkudHJhbnNtaXNzaW9uLnYxLldheXBvaW50EjcKD3Rvd2VyX3Bvc2l0aW9ucxgIIAMoCzIeLnRyYW5zbWlzc2lvbi52MS5Ub3dlclBvc2l0aW9uEhIKCmRpc3RhbmNlX20YCSABKAESNgoOY29zdF9icmVha2Rvd24YCiABKAsyHi50cmFuc21pc3Npb24udjEuQ29zdEJyZWFrZG93bhIwCgtyb3V0ZV9zY29yZRgOIAEoCzIbLnRyYW5zbWlzc2lvbi52MS5Sb3V0ZVNjb3JlEkEKFHNlZ21lbnRfZXhwbGFuYXRpb25zGAsgAygLMiMudHJhbnNtaXNzaW9uLnYxLlNlZ21lbnRFeHBsYW5hdGlvbhIVCg1yb3V0ZV9zdW1tYXJ5GAwgASgJEi4KCmNyZWF0ZWRfYXQYDSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEjgKD2FwcHJvdmFsX3N0YXR1cxgPIAEoDjIfLnRyYW5zbWlzc2lvbi52MS5BcHByb3ZhbFN0YXR1cxI7ChdlbmdpbmVlcmluZ19yZXZpZXdlZF9hdBgQIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASHwoXZW5naW5lZXJpbmdfcmV2aWV3ZWRfYnkYESABKAkSLwoLYXBwcm92ZWRfYXQYEiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEhMKC2FwcHJvdmVkX2J5GBMgASgJEjsKEWdvdmVybmFuY2VfZXZlbnRzGBQgAygLMiAudHJhbnNtaXNzaW9uLnYxLkdvdmVybmFuY2VFdmVudBIdChVlbGVjdHJpY2FsX25ldHdvcmtfaWQYFSABKAkSOAoPcmV2aWV3X21ldGFkYXRhGBYgASgLMh8udHJhbnNtaXNzaW9uLnYxLlJldmlld01ldGFkYXRhEhoKEnByb3RlY3Rpb25fZGV2aWNlcxgXIAMoCRIeChZmYXVsdF9pc29sYXRpb25fcG9pbnRzGBggASgFEhcKD3JvdXRlX2NvbmZsaWN0cxgZIAMoCRIfChdyb3V0ZV9mZWFzaWJpbGl0eV9zY29yZRgaIAEoASLnAwohQ2FsY3VsYXRlVHJhbnNtaXNzaW9uUm91dGVSZXF1ZXN0EhIKCnByb2plY3RfaWQYASABKAkSDAoEbmFtZRgCIAEoCRI0Cg12b2x0YWdlX2NsYXNzGAMgASgOMh0udHJhbnNtaXNzaW9uLnYxLlZvbHRhZ2VDbGFzcxI0ChFmYXJtX291dHB1dF9wb2ludBgEIAEoCzIZLnRyYW5zbWlzc2lvbi52MS5XYXlwb2ludBI3ChRncmlkX2luamVjdGlvbl9wb2ludBgFIAEoCzIZLnRyYW5zbWlzc2lvbi52MS5XYXlwb2ludBI9Cgtjb25zdHJhaW50cxgGIAEoCzIoLnRyYW5zbWlzc2lvbi52MS5UcmFuc21pc3Npb25Db25zdHJhaW50cxI/ChBlbGV2YXRpb25fcmFzdGVyGAcgASgLMiUudHJhbnNtaXNzaW9uLnYxLkVsZXZhdGlvblJhc3RlcklucHV0Ej0KD29ic3RhY2xlX3Jhc3RlchgIIAEoCzIkLnRyYW5zbWlzc2lvbi52MS5PYnN0YWNsZVJhc3RlcklucHV0EjwKD3ZlY3Rvcl9mZWF0dXJlcxgJIAMoCzIjLnRyYW5zbWlzc2lvbi52MS5WZWN0b3JGZWF0dXJlSW5wdXQiVwoiQ2FsY3VsYXRlVHJhbnNtaXNzaW9uUm91dGVSZXNwb25zZRIxCgVyb3V0ZRgBIAEoCzIiLnRyYW5zbWlzc2lvbi52MS5UcmFuc21pc3Npb25Sb3V0ZSJlCh5TdHJlYW1UcmFuc21pc3Npb25Sb3V0ZVJlcXVlc3QSQwoHcmVxdWVzdBgBIAEoCzIyLnRyYW5zbWlzc2lvbi52MS5DYWxjdWxhdGVUcmFuc21pc3Npb25Sb3V0ZVJlcXVlc3QijgEKH1N0cmVhbVRyYW5zbWlzc2lvblJvdXRlUmVzcG9uc2USDQoFcGhhc2UYASABKAkSGAoQcGVyY2VudF9jb21wbGV0ZRgCIAEoBRIPCgdtZXNzYWdlGAMgASgJEjEKBXJvdXRlGAQgASgLMiIudHJhbnNtaXNzaW9uLnYxLlRyYW5zbWlzc2lvblJvdXRlIikKG0dldFRyYW5zbWlzc2lvblJvdXRlUmVxdWVzdBIKCgJpZBgBIAEoCSJRChxHZXRUcmFuc21pc3Npb25Sb3V0ZVJlc3BvbnNlEjEKBXJvdXRlGAEgASgLMiIudHJhbnNtaXNzaW9uLnYxLlRyYW5zbWlzc2lvblJvdXRlInYKHUxpc3RUcmFuc21pc3Npb25Sb3V0ZXNSZXF1ZXN0EhIKCnByb2plY3RfaWQYASABKAkSQQoKcGFnaW5hdGlvbhgCIAEoCzItLnBhY2thZ2VzLmFwaS52MS5wYWdpbmF0aW9uLlBhZ2luYXRpb25SZXF1ZXN0IpgBCh5MaXN0VHJhbnNtaXNzaW9uUm91dGVzUmVzcG9uc2USMgoGcm91dGVzGAEgAygLMiIudHJhbnNtaXNzaW9uLnYxLlRyYW5zbWlzc2lvblJvdXRlEkIKCnBhZ2luYXRpb24YAiABKAsyLi5wYWNrYWdlcy5hcGkudjEucGFnaW5hdGlvbi5QYWdpbmF0aW9uUmVzcG9uc2UibQonU3VibWl0VHJhbnNtaXNzaW9uUm91dGVGb3JSZXZpZXdSZXF1ZXN0EgoKAmlkGAEgASgJEg0KBWFjdG9yGAIgASgJEgwKBG5vdGUYAyABKAkSGQoRc3VibWlzc2lvbl9yZWFzb24YBCABKAkiXQooU3VibWl0VHJhbnNtaXNzaW9uUm91dGVGb3JSZXZpZXdSZXNwb25zZRIxCgVyb3V0ZRgBIAEoCzIiLnRyYW5zbWlzc2lvbi52MS5UcmFuc21pc3Npb25Sb3V0ZSKXAQofQXBwcm92ZVRyYW5zbWlzc2lvblJvdXRlUmVxdWVzdBIKCgJpZBgBIAEoCRINCgVhY3RvchgCIAEoCRIMCgRub3RlGAMgASgJEhUKDXF1YWxpdHlfc2NvcmUYBCABKAESGQoRZmVhc2liaWxpdHlfc2NvcmUYBSABKAESGQoRYXBwcm92YWxfY29tbWVudHMYBiADKAkiVQogQXBwcm92ZVRyYW5zbWlzc2lvblJvdXRlUmVzcG9uc2USMQoFcm91dGUYASABKAsyIi50cmFuc21pc3Npb24udjEuVHJhbnNtaXNzaW9uUm91dGUiVgoeUmVqZWN0VHJhbnNtaXNzaW9uUm91dGVSZXF1ZXN0EgoKAmlkGAEgASgJEg0KBWFjdG9yGAIgASgJEhkKEXJlamVjdGlvbl9yZWFzb25zGAMgAygJIlQKH1JlamVjdFRyYW5zbWlzc2lvblJvdXRlUmVzcG9uc2USMQoFcm91dGUYASABKAsyIi50cmFuc21pc3Npb24udjEuVHJhbnNtaXNzaW9uUm91dGUiRgoiRXhwb3J0VHJhbnNtaXNzaW9uUm91dGVQYWNrUmVxdWVzdBIKCgJpZBgBIAEoCRIUCgxnZW5lcmF0ZWRfYnkYAiABKAkiYQojRXhwb3J0VHJhbnNtaXNzaW9uUm91dGVQYWNrUmVzcG9uc2USOgoEcGFjaxgBIAEoCzIsLnRyYW5zbWlzc2lvbi52MS5UcmFuc21pc3Npb25Sb3V0ZUV4cG9ydFBhY2siLAoeRGVsZXRlVHJhbnNtaXNzaW9uUm91dGVSZXF1ZXN0EgoKAmlkGAEgASgJIiEKH0RlbGV0ZVRyYW5zbWlzc2lvblJvdXRlUmVzcG9uc2UquAEKEEFjY2VwdGFuY2VTdGF0dXMSIQodQUNDRVBUQU5DRV9TVEFUVVNfVU5TUEVDSUZJRUQQABIbChdBQ0NFUFRBTkNFX1NUQVRVU19EUkFGVBABEiQKIEFDQ0VQVEFOQ0VfU1RBVFVTX1JFVklFV19QRU5ESU5HEAISHgoaQUNDRVBUQU5DRV9TVEFUVVNfQVBQUk9WRUQQAxIeChpBQ0NFUFRBTkNFX1NUQVRVU19SRUpFQ1RFRBAEKswBCgxWb2x0YWdlQ2xhc3MSHQoZVk9MVEFHRV9DTEFTU19VTlNQRUNJRklFRBAAEhYKElZPTFRBR0VfQ0xBU1NfMTFLVhABEhYKElZPTFRBR0VfQ0xBU1NfMzNLVhACEhkKFVZPTFRBR0VfQ0xBU1NfSFRfNjZLVhADEhoKFlZPTFRBR0VfQ0xBU1NfSFRfMTMyS1YQBBIaChZWT0xUQUdFX0NMQVNTX0hUXzIyMEtWEAUSGgoWVk9MVEFHRV9DTEFTU19IVF80MDBLVhAGKrABCg5BcHByb3ZhbFN0YXR1cxIfChtBUFBST1ZBTF9TVEFUVVNfVU5TUEVDSUZJRUQQABIZChVBUFBST1ZBTF9TVEFUVVNfRFJBRlQQARImCiJBUFBST1ZBTF9TVEFUVVNfRU5HSU5FRVJJTkdfUkVWSUVXEAISHAoYQVBQUk9WQUxfU1RBVFVTX0FQUFJPVkVEEAMSHAoYQVBQUk9WQUxfU1RBVFVTX1JFSkVDVEVEEAQqeAoQSW5zdGFsbGF0aW9uTW9kZRIhCh1JTlNUQUxMQVRJT05fTU9ERV9VTlNQRUNJRklFRBAAEh4KGklOU1RBTExBVElPTl9NT0RFX09WRVJIRUFEEAESIQodSU5TVEFMTEFUSU9OX01PREVfVU5ERVJHUk9VTkQQAjK2CQoaVHJhbnNtaXNzaW9uUm91dGluZ1NlcnZpY2UShQEKGkNhbGN1bGF0ZVRyYW5zbWlzc2lvblJvdXRlEjIudHJhbnNtaXNzaW9uLnYxLkNhbGN1bGF0ZVRyYW5zbWlzc2lvblJvdXRlUmVxdWVzdBozLnRyYW5zbWlzc2lvbi52MS5DYWxjdWxhdGVUcmFuc21pc3Npb25Sb3V0ZVJlc3BvbnNlEn4KF1N0cmVhbVRyYW5zbWlzc2lvblJvdXRlEi8udHJhbnNtaXNzaW9uLnYxLlN0cmVhbVRyYW5zbWlzc2lvblJvdXRlUmVxdWVzdBowLnRyYW5zbWlzc2lvbi52MS5TdHJlYW1UcmFuc21pc3Npb25Sb3V0ZVJlc3BvbnNlMAEScwoUR2V0VHJhbnNtaXNzaW9uUm91dGUSLC50cmFuc21pc3Npb24udjEuR2V0VHJhbnNtaXNzaW9uUm91dGVSZXF1ZXN0Gi0udHJhbnNtaXNzaW9uLnYxLkdldFRyYW5zbWlzc2lvblJvdXRlUmVzcG9uc2USeQoWTGlzdFRyYW5zbWlzc2lvblJvdXRlcxIuLnRyYW5zbWlzc2lvbi52MS5MaXN0VHJhbnNtaXNzaW9uUm91dGVzUmVxdWVzdBovLnRyYW5zbWlzc2lvbi52MS5MaXN0VHJhbnNtaXNzaW9uUm91dGVzUmVzcG9uc2USlwEKIFN1Ym1pdFRyYW5zbWlzc2lvblJvdXRlRm9yUmV2aWV3EjgudHJhbnNtaXNzaW9uLnYxLlN1Ym1pdFRyYW5zbWlzc2lvblJvdXRlRm9yUmV2aWV3UmVxdWVzdBo5LnRyYW5zbWlzc2lvbi52MS5TdWJtaXRUcmFuc21pc3Npb25Sb3V0ZUZvclJldmlld1Jlc3BvbnNlEn8KGEFwcHJvdmVUcmFuc21pc3Npb25Sb3V0ZRIwLnRyYW5zbWlzc2lvbi52MS5BcHByb3ZlVHJhbnNtaXNzaW9uUm91dGVSZXF1ZXN0GjEudHJhbnNtaXNzaW9uLnYxLkFwcHJvdmVUcmFuc21pc3Npb25Sb3V0ZVJlc3BvbnNlEogBChtFeHBvcnRUcmFuc21pc3Npb25Sb3V0ZVBhY2sSMy50cmFuc21pc3Npb24udjEuRXhwb3J0VHJhbnNtaXNzaW9uUm91dGVQYWNrUmVxdWVzdBo0LnRyYW5zbWlzc2lvbi52MS5FeHBvcnRUcmFuc21pc3Npb25Sb3V0ZVBhY2tSZXNwb25zZRJ8ChdEZWxldGVUcmFuc21pc3Npb25Sb3V0ZRIvLnRyYW5zbWlzc2lvbi52MS5EZWxldGVUcmFuc21pc3Npb25Sb3V0ZVJlcXVlc3QaMC50cmFuc21pc3Npb24udjEuRGVsZXRlVHJhbnNtaXNzaW9uUm91dGVSZXNwb25zZRJ8ChdSZWplY3RUcmFuc21pc3Npb25Sb3V0ZRIvLnRyYW5zbWlzc2lvbi52MS5SZWplY3RUcmFuc21pc3Npb25Sb3V0ZVJlcXVlc3QaMC50cmFuc21pc3Npb24udjEuUmVqZWN0VHJhbnNtaXNzaW9uUm91dGVSZXNwb25zZULBAQoTY29tLnRyYW5zbWlzc2lvbi52MUIRVHJhbnNtaXNzaW9uUHJvdG9QAVo6cDllLmluL3NhbWF2YXlhL3NvbGFyM2QvZ2VuL3RyYW5zbWlzc2lvbi92MTt0cmFuc21pc3Npb252MaICA1RYWKoCD1RyYW5zbWlzc2lvbi5WMcoCD1RyYW5zbWlzc2lvblxWMeICG1RyYW5zbWlzc2lvblxWMVxHUEJNZXRhZGF0YeoCEFRyYW5zbWlzc2lvbjo6VjFiBnByb3RvMw", [file_google_protobuf_timestamp, file_packages_pagination]);
+
+/**
+ * ========== Review Metadata ==========
+ * ReviewMetadata captures acceptance workflow state attached to a route artefact.
+ * Populated by the acceptance RPCs below; consumed by PlanningWorkflow gate checks.
+ *
+ * @generated from message transmission.v1.ReviewMetadata
+ */
+export type ReviewMetadata = Message<"transmission.v1.ReviewMetadata"> & {
+  /**
+   * status is the current acceptance gate state.
+   *
+   * @generated from field: transmission.v1.AcceptanceStatus status = 1;
+   */
+  status: AcceptanceStatus;
+
+  /**
+   * reviewed_by_actor_id is the user or system actor that performed the review.
+   *
+   * @generated from field: string reviewed_by_actor_id = 2;
+   */
+  reviewedByActorId: string;
+
+  /**
+   * reviewed_at is when the most recent review action occurred.
+   *
+   * @generated from field: google.protobuf.Timestamp reviewed_at = 3;
+   */
+  reviewedAt?: Timestamp;
+
+  /**
+   * quality_score is an overall quality rating [0, 1] assigned by the reviewer.
+   *
+   * @generated from field: double quality_score = 4;
+   */
+  qualityScore: number;
+
+  /**
+   * review_comments are free-text comments attached by the reviewer.
+   *
+   * @generated from field: repeated string review_comments = 5;
+   */
+  reviewComments: string[];
+
+  /**
+   * blockers lists unresolved reasons that prevented approval. Empty when approved.
+   *
+   * @generated from field: repeated string blockers = 6;
+   */
+  blockers: string[];
+
+  /**
+   * approval_timestamp_unix_secs records the ISO-8601 approval time as a string for audit.
+   *
+   * @generated from field: string approval_timestamp_unix_secs = 7;
+   */
+  approvalTimestampUnixSecs: string;
+};
+
+/**
+ * Describes the message transmission.v1.ReviewMetadata.
+ * Use `create(ReviewMetadataSchema)` to create a new message.
+ */
+export const ReviewMetadataSchema: GenMessage<ReviewMetadata> = /*@__PURE__*/
+  messageDesc(file_transmission_v1_transmission, 0);
 
 /**
  * @generated from message transmission.v1.Waypoint
@@ -39,7 +106,7 @@ export type Waypoint = Message<"transmission.v1.Waypoint"> & {
  * Use `create(WaypointSchema)` to create a new message.
  */
 export const WaypointSchema: GenMessage<Waypoint> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 0);
+  messageDesc(file_transmission_v1_transmission, 1);
 
 /**
  * @generated from message transmission.v1.TransmissionConstraints
@@ -106,7 +173,7 @@ export type TransmissionConstraints = Message<"transmission.v1.TransmissionConst
  * Use `create(TransmissionConstraintsSchema)` to create a new message.
  */
 export const TransmissionConstraintsSchema: GenMessage<TransmissionConstraints> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 1);
+  messageDesc(file_transmission_v1_transmission, 2);
 
 /**
  * @generated from message transmission.v1.ElevationRasterInput
@@ -148,7 +215,7 @@ export type ElevationRasterInput = Message<"transmission.v1.ElevationRasterInput
  * Use `create(ElevationRasterInputSchema)` to create a new message.
  */
 export const ElevationRasterInputSchema: GenMessage<ElevationRasterInput> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 2);
+  messageDesc(file_transmission_v1_transmission, 3);
 
 /**
  * @generated from message transmission.v1.ObstacleRasterInput
@@ -190,7 +257,7 @@ export type ObstacleRasterInput = Message<"transmission.v1.ObstacleRasterInput">
  * Use `create(ObstacleRasterInputSchema)` to create a new message.
  */
 export const ObstacleRasterInputSchema: GenMessage<ObstacleRasterInput> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 3);
+  messageDesc(file_transmission_v1_transmission, 4);
 
 /**
  * @generated from message transmission.v1.VectorFeatureInput
@@ -217,7 +284,7 @@ export type VectorFeatureInput = Message<"transmission.v1.VectorFeatureInput"> &
  * Use `create(VectorFeatureInputSchema)` to create a new message.
  */
 export const VectorFeatureInputSchema: GenMessage<VectorFeatureInput> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 4);
+  messageDesc(file_transmission_v1_transmission, 5);
 
 /**
  * @generated from message transmission.v1.TowerPosition
@@ -254,7 +321,7 @@ export type TowerPosition = Message<"transmission.v1.TowerPosition"> & {
  * Use `create(TowerPositionSchema)` to create a new message.
  */
 export const TowerPositionSchema: GenMessage<TowerPosition> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 5);
+  messageDesc(file_transmission_v1_transmission, 6);
 
 /**
  * @generated from message transmission.v1.SegmentExplanation
@@ -296,7 +363,7 @@ export type SegmentExplanation = Message<"transmission.v1.SegmentExplanation"> &
  * Use `create(SegmentExplanationSchema)` to create a new message.
  */
 export const SegmentExplanationSchema: GenMessage<SegmentExplanation> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 6);
+  messageDesc(file_transmission_v1_transmission, 7);
 
 /**
  * @generated from message transmission.v1.CostBreakdown
@@ -338,7 +405,7 @@ export type CostBreakdown = Message<"transmission.v1.CostBreakdown"> & {
  * Use `create(CostBreakdownSchema)` to create a new message.
  */
 export const CostBreakdownSchema: GenMessage<CostBreakdown> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 7);
+  messageDesc(file_transmission_v1_transmission, 8);
 
 /**
  * @generated from message transmission.v1.RouteScore
@@ -390,7 +457,7 @@ export type RouteScore = Message<"transmission.v1.RouteScore"> & {
  * Use `create(RouteScoreSchema)` to create a new message.
  */
 export const RouteScoreSchema: GenMessage<RouteScore> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 8);
+  messageDesc(file_transmission_v1_transmission, 9);
 
 /**
  * @generated from message transmission.v1.GovernanceEvent
@@ -432,7 +499,7 @@ export type GovernanceEvent = Message<"transmission.v1.GovernanceEvent"> & {
  * Use `create(GovernanceEventSchema)` to create a new message.
  */
 export const GovernanceEventSchema: GenMessage<GovernanceEvent> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 9);
+  messageDesc(file_transmission_v1_transmission, 10);
 
 /**
  * @generated from message transmission.v1.TraceabilityBundle
@@ -484,7 +551,7 @@ export type TraceabilityBundle = Message<"transmission.v1.TraceabilityBundle"> &
  * Use `create(TraceabilityBundleSchema)` to create a new message.
  */
 export const TraceabilityBundleSchema: GenMessage<TraceabilityBundle> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 10);
+  messageDesc(file_transmission_v1_transmission, 11);
 
 /**
  * @generated from message transmission.v1.TowerScheduleEntry
@@ -531,7 +598,7 @@ export type TowerScheduleEntry = Message<"transmission.v1.TowerScheduleEntry"> &
  * Use `create(TowerScheduleEntrySchema)` to create a new message.
  */
 export const TowerScheduleEntrySchema: GenMessage<TowerScheduleEntry> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 11);
+  messageDesc(file_transmission_v1_transmission, 12);
 
 /**
  * @generated from message transmission.v1.UndergroundChainageEntry
@@ -568,7 +635,7 @@ export type UndergroundChainageEntry = Message<"transmission.v1.UndergroundChain
  * Use `create(UndergroundChainageEntrySchema)` to create a new message.
  */
 export const UndergroundChainageEntrySchema: GenMessage<UndergroundChainageEntry> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 12);
+  messageDesc(file_transmission_v1_transmission, 13);
 
 /**
  * @generated from message transmission.v1.CostBookEntry
@@ -600,7 +667,7 @@ export type CostBookEntry = Message<"transmission.v1.CostBookEntry"> & {
  * Use `create(CostBookEntrySchema)` to create a new message.
  */
 export const CostBookEntrySchema: GenMessage<CostBookEntry> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 13);
+  messageDesc(file_transmission_v1_transmission, 14);
 
 /**
  * @generated from message transmission.v1.TransmissionRouteExportPack
@@ -647,7 +714,7 @@ export type TransmissionRouteExportPack = Message<"transmission.v1.TransmissionR
  * Use `create(TransmissionRouteExportPackSchema)` to create a new message.
  */
 export const TransmissionRouteExportPackSchema: GenMessage<TransmissionRouteExportPack> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 14);
+  messageDesc(file_transmission_v1_transmission, 15);
 
 /**
  * @generated from message transmission.v1.TransmissionRoute
@@ -752,6 +819,49 @@ export type TransmissionRoute = Message<"transmission.v1.TransmissionRoute"> & {
    * @generated from field: repeated transmission.v1.GovernanceEvent governance_events = 20;
    */
   governanceEvents: GovernanceEvent[];
+
+  /**
+   * Acceptance gate fields added in Step 15.
+   * electrical_network_id links this route to its origin electrical network.
+   *
+   * @generated from field: string electrical_network_id = 21;
+   */
+  electricalNetworkId: string;
+
+  /**
+   * review_metadata holds the acceptance workflow state (gate check for TransmissionReady).
+   *
+   * @generated from field: transmission.v1.ReviewMetadata review_metadata = 22;
+   */
+  reviewMetadata?: ReviewMetadata;
+
+  /**
+   * protection_devices lists device identifiers validated on this route (IEC 60255).
+   *
+   * @generated from field: repeated string protection_devices = 23;
+   */
+  protectionDevices: string[];
+
+  /**
+   * fault_isolation_points is the count of validated fault isolation points on the route.
+   *
+   * @generated from field: int32 fault_isolation_points = 24;
+   */
+  faultIsolationPoints: number;
+
+  /**
+   * route_conflicts lists unresolved spatial or electrical conflicts. Empty if route is clean.
+   *
+   * @generated from field: repeated string route_conflicts = 25;
+   */
+  routeConflicts: string[];
+
+  /**
+   * route_feasibility_score is an overall engineering feasibility score [0, 1].
+   *
+   * @generated from field: double route_feasibility_score = 26;
+   */
+  routeFeasibilityScore: number;
 };
 
 /**
@@ -759,7 +869,7 @@ export type TransmissionRoute = Message<"transmission.v1.TransmissionRoute"> & {
  * Use `create(TransmissionRouteSchema)` to create a new message.
  */
 export const TransmissionRouteSchema: GenMessage<TransmissionRoute> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 15);
+  messageDesc(file_transmission_v1_transmission, 16);
 
 /**
  * @generated from message transmission.v1.CalculateTransmissionRouteRequest
@@ -816,7 +926,7 @@ export type CalculateTransmissionRouteRequest = Message<"transmission.v1.Calcula
  * Use `create(CalculateTransmissionRouteRequestSchema)` to create a new message.
  */
 export const CalculateTransmissionRouteRequestSchema: GenMessage<CalculateTransmissionRouteRequest> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 16);
+  messageDesc(file_transmission_v1_transmission, 17);
 
 /**
  * @generated from message transmission.v1.CalculateTransmissionRouteResponse
@@ -833,7 +943,7 @@ export type CalculateTransmissionRouteResponse = Message<"transmission.v1.Calcul
  * Use `create(CalculateTransmissionRouteResponseSchema)` to create a new message.
  */
 export const CalculateTransmissionRouteResponseSchema: GenMessage<CalculateTransmissionRouteResponse> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 17);
+  messageDesc(file_transmission_v1_transmission, 18);
 
 /**
  * @generated from message transmission.v1.StreamTransmissionRouteRequest
@@ -850,7 +960,7 @@ export type StreamTransmissionRouteRequest = Message<"transmission.v1.StreamTran
  * Use `create(StreamTransmissionRouteRequestSchema)` to create a new message.
  */
 export const StreamTransmissionRouteRequestSchema: GenMessage<StreamTransmissionRouteRequest> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 18);
+  messageDesc(file_transmission_v1_transmission, 19);
 
 /**
  * @generated from message transmission.v1.StreamTransmissionRouteResponse
@@ -882,7 +992,7 @@ export type StreamTransmissionRouteResponse = Message<"transmission.v1.StreamTra
  * Use `create(StreamTransmissionRouteResponseSchema)` to create a new message.
  */
 export const StreamTransmissionRouteResponseSchema: GenMessage<StreamTransmissionRouteResponse> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 19);
+  messageDesc(file_transmission_v1_transmission, 20);
 
 /**
  * @generated from message transmission.v1.GetTransmissionRouteRequest
@@ -899,7 +1009,7 @@ export type GetTransmissionRouteRequest = Message<"transmission.v1.GetTransmissi
  * Use `create(GetTransmissionRouteRequestSchema)` to create a new message.
  */
 export const GetTransmissionRouteRequestSchema: GenMessage<GetTransmissionRouteRequest> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 20);
+  messageDesc(file_transmission_v1_transmission, 21);
 
 /**
  * @generated from message transmission.v1.GetTransmissionRouteResponse
@@ -916,7 +1026,7 @@ export type GetTransmissionRouteResponse = Message<"transmission.v1.GetTransmiss
  * Use `create(GetTransmissionRouteResponseSchema)` to create a new message.
  */
 export const GetTransmissionRouteResponseSchema: GenMessage<GetTransmissionRouteResponse> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 21);
+  messageDesc(file_transmission_v1_transmission, 22);
 
 /**
  * @generated from message transmission.v1.ListTransmissionRoutesRequest
@@ -926,6 +1036,11 @@ export type ListTransmissionRoutesRequest = Message<"transmission.v1.ListTransmi
    * @generated from field: string project_id = 1;
    */
   projectId: string;
+
+  /**
+   * @generated from field: packages.api.v1.pagination.PaginationRequest pagination = 2;
+   */
+  pagination?: PaginationRequest;
 };
 
 /**
@@ -933,7 +1048,7 @@ export type ListTransmissionRoutesRequest = Message<"transmission.v1.ListTransmi
  * Use `create(ListTransmissionRoutesRequestSchema)` to create a new message.
  */
 export const ListTransmissionRoutesRequestSchema: GenMessage<ListTransmissionRoutesRequest> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 22);
+  messageDesc(file_transmission_v1_transmission, 23);
 
 /**
  * @generated from message transmission.v1.ListTransmissionRoutesResponse
@@ -943,6 +1058,11 @@ export type ListTransmissionRoutesResponse = Message<"transmission.v1.ListTransm
    * @generated from field: repeated transmission.v1.TransmissionRoute routes = 1;
    */
   routes: TransmissionRoute[];
+
+  /**
+   * @generated from field: packages.api.v1.pagination.PaginationResponse pagination = 2;
+   */
+  pagination?: PaginationResponse;
 };
 
 /**
@@ -950,9 +1070,12 @@ export type ListTransmissionRoutesResponse = Message<"transmission.v1.ListTransm
  * Use `create(ListTransmissionRoutesResponseSchema)` to create a new message.
  */
 export const ListTransmissionRoutesResponseSchema: GenMessage<ListTransmissionRoutesResponse> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 23);
+  messageDesc(file_transmission_v1_transmission, 24);
 
 /**
+ * SubmitTransmissionRouteForReviewRequest submits a route for engineering review,
+ * transitioning its approval_status to ENGINEERING_REVIEW and acceptance status to REVIEW_PENDING.
+ *
  * @generated from message transmission.v1.SubmitTransmissionRouteForReviewRequest
  */
 export type SubmitTransmissionRouteForReviewRequest = Message<"transmission.v1.SubmitTransmissionRouteForReviewRequest"> & {
@@ -970,6 +1093,13 @@ export type SubmitTransmissionRouteForReviewRequest = Message<"transmission.v1.S
    * @generated from field: string note = 3;
    */
   note: string;
+
+  /**
+   * submission_reason is a required human-readable justification for the review submission.
+   *
+   * @generated from field: string submission_reason = 4;
+   */
+  submissionReason: string;
 };
 
 /**
@@ -977,9 +1107,11 @@ export type SubmitTransmissionRouteForReviewRequest = Message<"transmission.v1.S
  * Use `create(SubmitTransmissionRouteForReviewRequestSchema)` to create a new message.
  */
 export const SubmitTransmissionRouteForReviewRequestSchema: GenMessage<SubmitTransmissionRouteForReviewRequest> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 24);
+  messageDesc(file_transmission_v1_transmission, 25);
 
 /**
+ * SubmitTransmissionRouteForReviewResponse returns the route with updated approval and acceptance state.
+ *
  * @generated from message transmission.v1.SubmitTransmissionRouteForReviewResponse
  */
 export type SubmitTransmissionRouteForReviewResponse = Message<"transmission.v1.SubmitTransmissionRouteForReviewResponse"> & {
@@ -994,9 +1126,12 @@ export type SubmitTransmissionRouteForReviewResponse = Message<"transmission.v1.
  * Use `create(SubmitTransmissionRouteForReviewResponseSchema)` to create a new message.
  */
 export const SubmitTransmissionRouteForReviewResponseSchema: GenMessage<SubmitTransmissionRouteForReviewResponse> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 25);
+  messageDesc(file_transmission_v1_transmission, 26);
 
 /**
+ * ApproveTransmissionRouteRequest approves a route in engineering review,
+ * setting acceptance_status to APPROVED and recording quality/feasibility scores.
+ *
  * @generated from message transmission.v1.ApproveTransmissionRouteRequest
  */
 export type ApproveTransmissionRouteRequest = Message<"transmission.v1.ApproveTransmissionRouteRequest"> & {
@@ -1014,6 +1149,27 @@ export type ApproveTransmissionRouteRequest = Message<"transmission.v1.ApproveTr
    * @generated from field: string note = 3;
    */
   note: string;
+
+  /**
+   * quality_score is the reviewer-assigned quality rating [0, 1].
+   *
+   * @generated from field: double quality_score = 4;
+   */
+  qualityScore: number;
+
+  /**
+   * feasibility_score is the reviewer-assigned engineering feasibility score [0, 1].
+   *
+   * @generated from field: double feasibility_score = 5;
+   */
+  feasibilityScore: number;
+
+  /**
+   * approval_comments are free-text comments attached to the approval.
+   *
+   * @generated from field: repeated string approval_comments = 6;
+   */
+  approvalComments: string[];
 };
 
 /**
@@ -1021,9 +1177,11 @@ export type ApproveTransmissionRouteRequest = Message<"transmission.v1.ApproveTr
  * Use `create(ApproveTransmissionRouteRequestSchema)` to create a new message.
  */
 export const ApproveTransmissionRouteRequestSchema: GenMessage<ApproveTransmissionRouteRequest> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 26);
+  messageDesc(file_transmission_v1_transmission, 27);
 
 /**
+ * ApproveTransmissionRouteResponse returns the route with APPROVED acceptance state.
+ *
  * @generated from message transmission.v1.ApproveTransmissionRouteResponse
  */
 export type ApproveTransmissionRouteResponse = Message<"transmission.v1.ApproveTransmissionRouteResponse"> & {
@@ -1038,7 +1196,58 @@ export type ApproveTransmissionRouteResponse = Message<"transmission.v1.ApproveT
  * Use `create(ApproveTransmissionRouteResponseSchema)` to create a new message.
  */
 export const ApproveTransmissionRouteResponseSchema: GenMessage<ApproveTransmissionRouteResponse> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 27);
+  messageDesc(file_transmission_v1_transmission, 28);
+
+/**
+ * RejectTransmissionRouteRequest rejects a route under review,
+ * returning it to DRAFT with documented rejection reasons.
+ *
+ * @generated from message transmission.v1.RejectTransmissionRouteRequest
+ */
+export type RejectTransmissionRouteRequest = Message<"transmission.v1.RejectTransmissionRouteRequest"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * @generated from field: string actor = 2;
+   */
+  actor: string;
+
+  /**
+   * rejection_reasons must be non-empty; they populate review_metadata.blockers.
+   *
+   * @generated from field: repeated string rejection_reasons = 3;
+   */
+  rejectionReasons: string[];
+};
+
+/**
+ * Describes the message transmission.v1.RejectTransmissionRouteRequest.
+ * Use `create(RejectTransmissionRouteRequestSchema)` to create a new message.
+ */
+export const RejectTransmissionRouteRequestSchema: GenMessage<RejectTransmissionRouteRequest> = /*@__PURE__*/
+  messageDesc(file_transmission_v1_transmission, 29);
+
+/**
+ * RejectTransmissionRouteResponse returns the route with REJECTED acceptance state.
+ *
+ * @generated from message transmission.v1.RejectTransmissionRouteResponse
+ */
+export type RejectTransmissionRouteResponse = Message<"transmission.v1.RejectTransmissionRouteResponse"> & {
+  /**
+   * @generated from field: transmission.v1.TransmissionRoute route = 1;
+   */
+  route?: TransmissionRoute;
+};
+
+/**
+ * Describes the message transmission.v1.RejectTransmissionRouteResponse.
+ * Use `create(RejectTransmissionRouteResponseSchema)` to create a new message.
+ */
+export const RejectTransmissionRouteResponseSchema: GenMessage<RejectTransmissionRouteResponse> = /*@__PURE__*/
+  messageDesc(file_transmission_v1_transmission, 30);
 
 /**
  * @generated from message transmission.v1.ExportTransmissionRoutePackRequest
@@ -1060,7 +1269,7 @@ export type ExportTransmissionRoutePackRequest = Message<"transmission.v1.Export
  * Use `create(ExportTransmissionRoutePackRequestSchema)` to create a new message.
  */
 export const ExportTransmissionRoutePackRequestSchema: GenMessage<ExportTransmissionRoutePackRequest> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 28);
+  messageDesc(file_transmission_v1_transmission, 31);
 
 /**
  * @generated from message transmission.v1.ExportTransmissionRoutePackResponse
@@ -1077,7 +1286,7 @@ export type ExportTransmissionRoutePackResponse = Message<"transmission.v1.Expor
  * Use `create(ExportTransmissionRoutePackResponseSchema)` to create a new message.
  */
 export const ExportTransmissionRoutePackResponseSchema: GenMessage<ExportTransmissionRoutePackResponse> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 29);
+  messageDesc(file_transmission_v1_transmission, 32);
 
 /**
  * @generated from message transmission.v1.DeleteTransmissionRouteRequest
@@ -1094,7 +1303,7 @@ export type DeleteTransmissionRouteRequest = Message<"transmission.v1.DeleteTran
  * Use `create(DeleteTransmissionRouteRequestSchema)` to create a new message.
  */
 export const DeleteTransmissionRouteRequestSchema: GenMessage<DeleteTransmissionRouteRequest> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 30);
+  messageDesc(file_transmission_v1_transmission, 33);
 
 /**
  * @generated from message transmission.v1.DeleteTransmissionRouteResponse
@@ -1107,7 +1316,48 @@ export type DeleteTransmissionRouteResponse = Message<"transmission.v1.DeleteTra
  * Use `create(DeleteTransmissionRouteResponseSchema)` to create a new message.
  */
 export const DeleteTransmissionRouteResponseSchema: GenMessage<DeleteTransmissionRouteResponse> = /*@__PURE__*/
-  messageDesc(file_transmission_v1_transmission, 31);
+  messageDesc(file_transmission_v1_transmission, 34);
+
+/**
+ * ========== Acceptance Status Enum ==========
+ * AcceptanceStatus is the workflow gate acceptance state — distinct from ApprovalStatus
+ * (which tracks the governance review stage). AcceptanceStatus determines whether this
+ * artefact satisfies its predecessor gate for phase progression.
+ *
+ * @generated from enum transmission.v1.AcceptanceStatus
+ */
+export enum AcceptanceStatus {
+  /**
+   * @generated from enum value: ACCEPTANCE_STATUS_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * @generated from enum value: ACCEPTANCE_STATUS_DRAFT = 1;
+   */
+  DRAFT = 1,
+
+  /**
+   * @generated from enum value: ACCEPTANCE_STATUS_REVIEW_PENDING = 2;
+   */
+  REVIEW_PENDING = 2,
+
+  /**
+   * @generated from enum value: ACCEPTANCE_STATUS_APPROVED = 3;
+   */
+  APPROVED = 3,
+
+  /**
+   * @generated from enum value: ACCEPTANCE_STATUS_REJECTED = 4;
+   */
+  REJECTED = 4,
+}
+
+/**
+ * Describes the enum transmission.v1.AcceptanceStatus.
+ */
+export const AcceptanceStatusSchema: GenEnum<AcceptanceStatus> = /*@__PURE__*/
+  enumDesc(file_transmission_v1_transmission, 0);
 
 /**
  * @generated from enum transmission.v1.VoltageClass
@@ -1153,7 +1403,7 @@ export enum VoltageClass {
  * Describes the enum transmission.v1.VoltageClass.
  */
 export const VoltageClassSchema: GenEnum<VoltageClass> = /*@__PURE__*/
-  enumDesc(file_transmission_v1_transmission, 0);
+  enumDesc(file_transmission_v1_transmission, 1);
 
 /**
  * @generated from enum transmission.v1.ApprovalStatus
@@ -1178,13 +1428,18 @@ export enum ApprovalStatus {
    * @generated from enum value: APPROVAL_STATUS_APPROVED = 3;
    */
   APPROVED = 3,
+
+  /**
+   * @generated from enum value: APPROVAL_STATUS_REJECTED = 4;
+   */
+  REJECTED = 4,
 }
 
 /**
  * Describes the enum transmission.v1.ApprovalStatus.
  */
 export const ApprovalStatusSchema: GenEnum<ApprovalStatus> = /*@__PURE__*/
-  enumDesc(file_transmission_v1_transmission, 1);
+  enumDesc(file_transmission_v1_transmission, 2);
 
 /**
  * @generated from enum transmission.v1.InstallationMode
@@ -1210,13 +1465,18 @@ export enum InstallationMode {
  * Describes the enum transmission.v1.InstallationMode.
  */
 export const InstallationModeSchema: GenEnum<InstallationMode> = /*@__PURE__*/
-  enumDesc(file_transmission_v1_transmission, 2);
+  enumDesc(file_transmission_v1_transmission, 3);
 
 /**
+ * TransmissionRoutingService manages end-to-end transmission corridor routing
+ * with engineering validation, governance workflow, and exportable delivery packs.
+ *
  * @generated from service transmission.v1.TransmissionRoutingService
  */
 export const TransmissionRoutingService: GenService<{
   /**
+   * CalculateTransmissionRoute computes a transmission route and returns the final result.
+   *
    * @generated from rpc transmission.v1.TransmissionRoutingService.CalculateTransmissionRoute
    */
   calculateTransmissionRoute: {
@@ -1225,6 +1485,8 @@ export const TransmissionRoutingService: GenService<{
     output: typeof CalculateTransmissionRouteResponseSchema;
   },
   /**
+   * StreamTransmissionRoute streams phase progress updates and emits the final route.
+   *
    * @generated from rpc transmission.v1.TransmissionRoutingService.StreamTransmissionRoute
    */
   streamTransmissionRoute: {
@@ -1233,6 +1495,8 @@ export const TransmissionRoutingService: GenService<{
     output: typeof StreamTransmissionRouteResponseSchema;
   },
   /**
+   * GetTransmissionRoute returns a previously calculated transmission route by ID.
+   *
    * @generated from rpc transmission.v1.TransmissionRoutingService.GetTransmissionRoute
    */
   getTransmissionRoute: {
@@ -1241,6 +1505,8 @@ export const TransmissionRoutingService: GenService<{
     output: typeof GetTransmissionRouteResponseSchema;
   },
   /**
+   * ListTransmissionRoutes lists transmission routes for a project.
+   *
    * @generated from rpc transmission.v1.TransmissionRoutingService.ListTransmissionRoutes
    */
   listTransmissionRoutes: {
@@ -1249,6 +1515,8 @@ export const TransmissionRoutingService: GenService<{
     output: typeof ListTransmissionRoutesResponseSchema;
   },
   /**
+   * SubmitTransmissionRouteForReview transitions a route into engineering review.
+   *
    * @generated from rpc transmission.v1.TransmissionRoutingService.SubmitTransmissionRouteForReview
    */
   submitTransmissionRouteForReview: {
@@ -1257,6 +1525,8 @@ export const TransmissionRoutingService: GenService<{
     output: typeof SubmitTransmissionRouteForReviewResponseSchema;
   },
   /**
+   * ApproveTransmissionRoute approves a reviewed route for downstream delivery.
+   *
    * @generated from rpc transmission.v1.TransmissionRoutingService.ApproveTransmissionRoute
    */
   approveTransmissionRoute: {
@@ -1265,6 +1535,8 @@ export const TransmissionRoutingService: GenService<{
     output: typeof ApproveTransmissionRouteResponseSchema;
   },
   /**
+   * ExportTransmissionRoutePack exports route artifacts required for handoff.
+   *
    * @generated from rpc transmission.v1.TransmissionRoutingService.ExportTransmissionRoutePack
    */
   exportTransmissionRoutePack: {
@@ -1273,12 +1545,24 @@ export const TransmissionRoutingService: GenService<{
     output: typeof ExportTransmissionRoutePackResponseSchema;
   },
   /**
+   * DeleteTransmissionRoute removes a transmission route.
+   *
    * @generated from rpc transmission.v1.TransmissionRoutingService.DeleteTransmissionRoute
    */
   deleteTransmissionRoute: {
     methodKind: "unary";
     input: typeof DeleteTransmissionRouteRequestSchema;
     output: typeof DeleteTransmissionRouteResponseSchema;
+  },
+  /**
+   * RejectTransmissionRoute rejects a route under engineering review, returning it to draft.
+   *
+   * @generated from rpc transmission.v1.TransmissionRoutingService.RejectTransmissionRoute
+   */
+  rejectTransmissionRoute: {
+    methodKind: "unary";
+    input: typeof RejectTransmissionRouteRequestSchema;
+    output: typeof RejectTransmissionRouteResponseSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_transmission_v1_transmission, 0);

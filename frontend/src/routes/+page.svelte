@@ -20,6 +20,7 @@
 	import MapSearch from '$lib/components/MapSearch.svelte';
 	import StatusBar from '$lib/components/StatusBar.svelte';
 	import ToastNotification from '$lib/components/ToastNotification.svelte';
+	import ConfirmModal from '$lib/components/ConfirmModal.svelte';
 	import KeyboardShortcuts from '$lib/components/KeyboardShortcuts.svelte';
 	import Minimap from '$lib/components/Minimap.svelte';
 	import SnapGrid from '$lib/modules/map/SnapGrid.svelte';
@@ -2256,6 +2257,7 @@ import type { AppView } from '$lib/core/stores/map';
 </div>
 
 <ToastNotification />
+<ConfirmModal />
 <KeyboardShortcuts bind:open={showShortcuts} />
 
 {#if showRoadWidthDialog}

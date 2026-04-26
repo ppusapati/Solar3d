@@ -8,12 +8,12 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
-	layoutv1connect "github.com/solar3d/solar3d/gen/layout/v1/layoutv1connect"
+	layoutv1connect "p9e.in/samavaya/solar3d/gen/layout/v1/layoutv1connect"
 
-	"solar3d/layout-service/internal/config"
-	"solar3d/layout-service/internal/handler"
-	"solar3d/layout-service/internal/repository"
-	"solar3d/layout-service/internal/service"
+	"p9e.in/samavaya/solar3d/layout-service/internal/config"
+	"p9e.in/samavaya/solar3d/layout-service/internal/handler"
+	"p9e.in/samavaya/solar3d/layout-service/internal/repository"
+	"p9e.in/samavaya/solar3d/layout-service/internal/service"
 )
 
 // Register wires the layout-service handlers onto mux.

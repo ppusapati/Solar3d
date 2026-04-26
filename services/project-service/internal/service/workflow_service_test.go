@@ -11,8 +11,8 @@ import (
 	"github.com/rs/zerolog"
 
 	"solar3d/compute/planning"
-	"solar3d/project-service/internal/domain"
-	"solar3d/project-service/internal/repository"
+	"p9e.in/samavaya/solar3d/project-service/internal/domain"
+	"p9e.in/samavaya/solar3d/project-service/internal/repository"
 )
 
 // MockProjectRepository implements repository.ProjectRepository for testing.

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package planning.v1;
 
-option go_package = "github.com/solar3d/solar3d/gen/planning/v1;planningv1";
+option go_package = "p9e.in/samavaya/solar3d/gen/planning/v1;planningv1";
 
 import "google/protobuf/timestamp.proto";
 

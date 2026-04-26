@@ -6,12 +6,12 @@ import (
 	"time"
 
 	"connectrpc.com/connect"
-	orchestrationv1 "github.com/solar3d/solar3d/gen/orchestration/v1"
-	orchestrationv1connect "github.com/solar3d/solar3d/gen/orchestration/v1/orchestrationv1connect"
+	orchestrationv1 "p9e.in/samavaya/solar3d/gen/orchestration/v1"
+	orchestrationv1connect "p9e.in/samavaya/solar3d/gen/orchestration/v1/orchestrationv1connect"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"solar3d/compute-orchestration-service/internal/domain"
-	"solar3d/compute-orchestration-service/internal/service"
+	"p9e.in/samavaya/solar3d/compute-orchestration-service/internal/domain"
+	"p9e.in/samavaya/solar3d/compute-orchestration-service/internal/service"
 )
 
 type ConnectHandler struct {

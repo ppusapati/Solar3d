@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"solar3d/optimization-service/internal/client"
+	"p9e.in/samavaya/solar3d/optimization-service/internal/client"
 )
 
 // OptimizationCompute defines the interface for optimization-compute operations

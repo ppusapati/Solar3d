@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"solar3d/compute-service/internal/repository"
+	"p9e.in/samavaya/solar3d/compute-service/internal/repository"
 )
 
 // TestKMLIntegration_EndToEnd tests complete KML upload → parse → validate → store → query flow.

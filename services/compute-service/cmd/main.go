@@ -13,21 +13,21 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgxpool"
-
-	"solar3d/compute-service/internal/handler"
-	"solar3d/compute-service/internal/repository"
-	"solar3d/compute-service/internal/service"
+	"p9e.in/samavaya/packages/database/pgxpostgres"
+	"p9e.in/samavaya/solar3d/compute-service/internal/handler"
+	"p9e.in/samavaya/solar3d/compute-service/internal/repository"
+	"p9e.in/samavaya/solar3d/compute-service/internal/service"
 
 	"connectrpc.com/connect"
 
-	extendedv1connect "github.com/solar3d/solar3d/gen/extended/v1/extendedv1connect"
-	geov1connect "github.com/solar3d/solar3d/gen/geo/v1/geov1connect"
-	graphv1connect "github.com/solar3d/solar3d/gen/graph/v1/graphv1connect"
-	ml_inferencev1connect "github.com/solar3d/solar3d/gen/ml_inference/v1/ml_inferencev1connect"
-	optimizationv1connect "github.com/solar3d/solar3d/gen/optimization/v1/optimizationv1connect"
-	simulationv1connect "github.com/solar3d/solar3d/gen/simulation/v1/simulationv1connect"
-	terrainv1connect "github.com/solar3d/solar3d/gen/terrain/v1/terrainv1connect"
+	constraintv1connect "p9e.in/samavaya/solar3d/gen/constraint/v1/constraintv1connect"
+	extendedv1connect "p9e.in/samavaya/solar3d/gen/extended/v1/extendedv1connect"
+	geov1connect "p9e.in/samavaya/solar3d/gen/geo/v1/geov1connect"
+	graphv1connect "p9e.in/samavaya/solar3d/gen/graph/v1/graphv1connect"
+	ml_inferencev1connect "p9e.in/samavaya/solar3d/gen/ml_inference/v1/ml_inferencev1connect"
+	optimizationv1connect "p9e.in/samavaya/solar3d/gen/optimization/v1/optimizationv1connect"
+	simulationv1connect "p9e.in/samavaya/solar3d/gen/simulation/v1/simulationv1connect"
+	terrainv1connect "p9e.in/samavaya/solar3d/gen/terrain/v1/terrainv1connect"
 )
 
 func ensureHTTPServiceReachable(ctx context.Context, rawURL string, serviceName string) error {
@@ -127,20 +127,11 @@ func main() {
 		log.Fatalf("startup dependency check failed: %v", err)
 	}
 
-	poolConfig, err := pgxpool.ParseConfig(databaseURL)
+	pool, closePool, err := pgxpostgres.NewPgxFromDSN(startupCtx, databaseURL, pgxpostgres.DefaultPoolOptions())
 	if err != nil {
-		log.Fatalf("invalid DATABASE_URL: %v", err)
+		log.Fatalf("failed to initialise database pool: %v", err)
 	}
-
-	pool, err := pgxpool.NewWithConfig(startupCtx, poolConfig)
-	if err != nil {
-		log.Fatalf("failed to create database connection pool: %v", err)
-	}
-	defer pool.Close()
-
-	if err := pool.Ping(startupCtx); err != nil {
-		log.Fatalf("failed to ping database: %v", err)
-	}
+	defer closePool()
 
 	// Initialize repository layer (Rust compute bindings)
 	mlInferenceRepo := repository.NewRustMLInferenceRepository(mlBridgeURL)
@@ -151,6 +142,7 @@ func main() {
 	extendedRepo := repository.NewRustExtendedRepository(extendedBridgeURL, scenarioStorePath)
 	graphRepo := repository.NewRustGraphRepository(graphBridgeURL)
 	geoRepo := repository.NewRustGeoRepository(geoBridgeURL)
+	constraintRepo := repository.NewPgConstraintRepository(pool)
 
 	// Initialize service layer (business logic)
 	mlInferenceService := service.NewMLInferenceService(mlInferenceRepo)
@@ -161,6 +153,7 @@ func main() {
 	extendedService := service.NewExtendedService(extendedRepo)
 	graphService := service.NewGraphService(graphRepo)
 	geoService := service.NewGeoService(geoRepo)
+	constraintZoneService := service.NewConstraintZoneService(constraintRepo)
 
 	httpClient := &http.Client{Timeout: 45 * time.Second}
 	terrainLifecycleClient := terrainv1connect.NewTerrainServiceClient(httpClient, terrainServiceURL, connect.WithGRPC())
@@ -174,6 +167,7 @@ func main() {
 	extendedHandler := handler.NewExtendedServiceHandler(extendedService)
 	graphHandler := handler.NewGraphServiceHandler(graphService)
 	geoHandler := handler.NewGeoServiceHandler(geoService)
+	constraintHandler := handler.NewConstraintZoneHandler(constraintZoneService)
 
 	// Create HTTP multiplexer for connectRPC
 	mux := http.NewServeMux()
@@ -205,6 +199,10 @@ func main() {
 	// Register Geo service
 	geoPath, geoConnectHandler := geov1connect.NewGeoServiceHandler(geoHandler)
 	mux.Handle(geoPath, geoConnectHandler)
+
+	// Register ConstraintZone service (PostGIS-backed CRUD + siting analysis)
+	constraintPath, constraintConnectHandler := constraintv1connect.NewConstraintZoneServiceHandler(constraintHandler)
+	mux.Handle(constraintPath, constraintConnectHandler)
 
 	// Create HTTP server with connectRPC support
 	httpServer := &http.Server{

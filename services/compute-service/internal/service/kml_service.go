@@ -7,12 +7,13 @@ import (
 	"crypto/sha256"
 	"fmt"
 	"io"
+	"log"
 	"strings"
 	"time"
 
-	"solar3d/compute-service/internal/models"
-	"solar3d/compute-service/internal/parser"
-	"solar3d/compute-service/internal/repository"
+	"p9e.in/samavaya/solar3d/compute-service/internal/models"
+	"p9e.in/samavaya/solar3d/compute-service/internal/parser"
+	"p9e.in/samavaya/solar3d/compute-service/internal/repository"
 )
 
 // KMLService orchestrates KML ingestion, parsing, and geometry storage.
@@ -169,7 +170,9 @@ func (s *KMLService) processUploadAsync(ctx context.Context, uploadJobID string,
 
 	if err != nil {
 		errMsg := fmt.Sprintf("Failed to parse KML: %v", err)
-		_ = s.repo.UpdateUploadJobStatus(ctx, uploadJobID, "FAILED", &errMsg, time.Now(), 0, 0)
+		if updErr := s.repo.UpdateUploadJobStatus(ctx, uploadJobID, "FAILED", &errMsg, time.Now(), 0, 0); updErr != nil {
+			log.Printf("event=kml.status_update_failed job_id=%s err=%v", uploadJobID, updErr)
+		}
 		return
 	}
 
@@ -228,16 +231,23 @@ func (s *KMLService) processUploadAsync(ctx context.Context, uploadJobID string,
 
 		geometriesImported++
 
-		// Update progress
-		_ = s.repo.UpdateUploadJobProgress(ctx, uploadJobID, len(kmlDoc.Features), geometriesImported)
+		// Update progress (best-effort — a transient progress write failure
+		// must not abort the import; the final status update is the source of truth)
+		if err := s.repo.UpdateUploadJobProgress(ctx, uploadJobID, len(kmlDoc.Features), geometriesImported); err != nil {
+			log.Printf("event=kml.progress_update_failed job_id=%s err=%v", uploadJobID, err)
+		}
 	}
 
 	// Finalize upload job
 	if geometriesImported > 0 {
-		_ = s.repo.UpdateUploadJobStatus(ctx, uploadJobID, "COMPLETED", nil, time.Now(), len(kmlDoc.Features), geometriesImported)
+		if err := s.repo.UpdateUploadJobStatus(ctx, uploadJobID, "COMPLETED", nil, time.Now(), len(kmlDoc.Features), geometriesImported); err != nil {
+			log.Printf("event=kml.status_update_failed job_id=%s err=%v", uploadJobID, err)
+		}
 	} else {
 		errMsg := "No valid geometries were imported"
-		_ = s.repo.UpdateUploadJobStatus(ctx, uploadJobID, "FAILED", &errMsg, time.Now(), len(kmlDoc.Features), 0)
+		if err := s.repo.UpdateUploadJobStatus(ctx, uploadJobID, "FAILED", &errMsg, time.Now(), len(kmlDoc.Features), 0); err != nil {
+			log.Printf("event=kml.status_update_failed job_id=%s err=%v", uploadJobID, err)
+		}
 	}
 }
 

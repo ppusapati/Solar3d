@@ -7,9 +7,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 
-	"solar3d/asset-service/internal/domain"
-	"solar3d/asset-service/internal/repository"
-	"solar3d/shared/audit"
+	"p9e.in/samavaya/solar3d/asset-service/internal/domain"
+	"p9e.in/samavaya/solar3d/asset-service/internal/repository"
+	"p9e.in/samavaya/packages/audit"
 )
 
 type AssetService struct {

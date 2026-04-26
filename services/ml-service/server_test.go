@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"solar3d/ml-service/internal/handler"
-	"solar3d/ml-service/internal/service"
+	"p9e.in/samavaya/solar3d/ml-service/internal/handler"
+	"p9e.in/samavaya/solar3d/ml-service/internal/service"
 )
 
 // newHandler creates a handler wired to the pure-Go backend for testing.

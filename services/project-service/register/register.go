@@ -1,6 +1,6 @@
 // Package projectservice exposes a single Register function that wires the
 // project service onto an existing http.ServeMux for use in a monolith binary.
-// Because register.go lives inside the solar3d/project-service module it is
+// Because register.go lives inside the p9e.in/samavaya/solar3d/project-service module it is
 // allowed to import the internal packages below.
 package register
 
@@ -9,11 +9,11 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
-	projectv1connect "github.com/solar3d/solar3d/gen/project/v1/projectv1connect"
+	projectv1connect "p9e.in/samavaya/solar3d/gen/project/v1/projectv1connect"
 
-	"solar3d/project-service/internal/handler"
-	"solar3d/project-service/internal/repository"
-	"solar3d/project-service/internal/service"
+	"p9e.in/samavaya/solar3d/project-service/internal/handler"
+	"p9e.in/samavaya/solar3d/project-service/internal/repository"
+	"p9e.in/samavaya/solar3d/project-service/internal/service"
 )
 
 // Register wires the project-service handlers onto mux.

@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"solar3d/compute-orchestration-service/internal/domain"
+	"p9e.in/samavaya/solar3d/compute-orchestration-service/internal/domain"
 )
 
 // Store defines persistence behavior for orchestration jobs.

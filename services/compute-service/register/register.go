@@ -8,18 +8,18 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
-	extendedv1connect "github.com/solar3d/solar3d/gen/extended/v1/extendedv1connect"
-	geov1connect "github.com/solar3d/solar3d/gen/geo/v1/geov1connect"
-	graphv1connect "github.com/solar3d/solar3d/gen/graph/v1/graphv1connect"
-	kmlv1connect "github.com/solar3d/solar3d/gen/kml/v1/kmlv1connect"
-	ml_inferencev1connect "github.com/solar3d/solar3d/gen/ml_inference/v1/ml_inferencev1connect"
-	optimizationv1connect "github.com/solar3d/solar3d/gen/optimization/v1/optimizationv1connect"
-	simulationv1connect "github.com/solar3d/solar3d/gen/simulation/v1/simulationv1connect"
-	terrainv1connect "github.com/solar3d/solar3d/gen/terrain/v1/terrainv1connect"
+	extendedv1connect "p9e.in/samavaya/solar3d/gen/extended/v1/extendedv1connect"
+	geov1connect "p9e.in/samavaya/solar3d/gen/geo/v1/geov1connect"
+	graphv1connect "p9e.in/samavaya/solar3d/gen/graph/v1/graphv1connect"
+	kmlv1connect "p9e.in/samavaya/solar3d/gen/kml/v1/kmlv1connect"
+	ml_inferencev1connect "p9e.in/samavaya/solar3d/gen/ml_inference/v1/ml_inferencev1connect"
+	optimizationv1connect "p9e.in/samavaya/solar3d/gen/optimization/v1/optimizationv1connect"
+	simulationv1connect "p9e.in/samavaya/solar3d/gen/simulation/v1/simulationv1connect"
+	terrainv1connect "p9e.in/samavaya/solar3d/gen/terrain/v1/terrainv1connect"
 
-	"solar3d/compute-service/internal/handler"
-	"solar3d/compute-service/internal/repository"
-	"solar3d/compute-service/internal/service"
+	"p9e.in/samavaya/solar3d/compute-service/internal/handler"
+	"p9e.in/samavaya/solar3d/compute-service/internal/repository"
+	"p9e.in/samavaya/solar3d/compute-service/internal/service"
 )
 
 // Register wires the compute-service handlers (all compute operations via ConnectRPC)

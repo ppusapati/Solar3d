@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package graph.v1;
 
-option go_package = "github.com/solar3d/solar3d/gen/graph/v1;graphv1";
+option go_package = "p9e.in/samavaya/solar3d/gen/graph/v1;graphv1";
 
 import "graph/v1/graph_domain.proto";
 

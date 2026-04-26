@@ -5,7 +5,7 @@ package constraint.v1;
 import "google/protobuf/timestamp.proto";
 import "common/v1/primitives.proto";
 
-option go_package = "github.com/solar3d/solar3d/gen/constraint/v1;constraintv1";
+option go_package = "p9e.in/samavaya/solar3d/gen/constraint/v1;constraintv1";
 
 // ConstraintZoneService provides zone management and siting conflict analysis.
 service ConstraintZoneService {

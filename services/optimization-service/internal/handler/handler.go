@@ -3,12 +3,13 @@ package handler
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 
-	"solar3d/optimization-service/internal/service"
-	"solar3d/shared/middleware"
+	pkgErrors "p9e.in/samavaya/packages/errors"
+
+	"p9e.in/samavaya/solar3d/optimization-service/internal/service"
+	"p9e.in/samavaya/packages/httpmiddleware"
 )
 
 // Handler implements HTTP REST handlers for optimization operations
@@ -97,16 +98,16 @@ type OptimizeWithPSORequest struct {
 
 func (h *Handler) OptimizeWithPSO(ctx context.Context, req *OptimizeWithPSORequest) (map[string]interface{}, error) {
 	if req == nil {
-		return nil, fmt.Errorf("validation failed: request is nil")
+		return nil, pkgErrors.InvalidArgumentf("validation failed: request is nil")
 	}
 	if req.SwarmSize < 2 {
-		return nil, fmt.Errorf("validation failed: swarmSize must be at least 2")
+		return nil, pkgErrors.InvalidArgumentf("validation failed: swarmSize must be at least 2")
 	}
 	if req.Generations < 1 {
-		return nil, fmt.Errorf("validation failed: generations must be at least 1")
+		return nil, pkgErrors.InvalidArgumentf("validation failed: generations must be at least 1")
 	}
 	if len(req.Bounds) == 0 {
-		return nil, fmt.Errorf("validation failed: bounds cannot be empty")
+		return nil, pkgErrors.InvalidArgumentf("validation failed: bounds cannot be empty")
 	}
 
 	config := &service.PSOConfig{
@@ -121,7 +122,7 @@ func (h *Handler) OptimizeWithPSO(ctx context.Context, req *OptimizeWithPSOReque
 	result, err := h.svc.OptimizeWithPSO(ctx, config, req.ObjectiveName, req.Bounds)
 	if err != nil {
 		log.Printf("OptimizeWithPSO error: %v", err)
-		return nil, fmt.Errorf("PSO optimization failed: %w", err)
+		return nil, pkgErrors.Internal("PSO optimization failed", err.Error())
 	}
 
 	return map[string]interface{}{"best_x": result.BestX, "best_value": result.BestValue, "generations": result.Generations, "compute_ms": result.ComputeMs}, nil
@@ -140,16 +141,16 @@ type OptimizeWithGARequest struct {
 
 func (h *Handler) OptimizeWithGA(ctx context.Context, req *OptimizeWithGARequest) (map[string]interface{}, error) {
 	if req == nil {
-		return nil, fmt.Errorf("validation failed: request is nil")
+		return nil, pkgErrors.InvalidArgumentf("validation failed: request is nil")
 	}
 	if req.PopulationSize < 2 {
-		return nil, fmt.Errorf("validation failed: populationSize must be at least 2")
+		return nil, pkgErrors.InvalidArgumentf("validation failed: populationSize must be at least 2")
 	}
 	if req.Generations < 1 {
-		return nil, fmt.Errorf("validation failed: generations must be at least 1")
+		return nil, pkgErrors.InvalidArgumentf("validation failed: generations must be at least 1")
 	}
 	if len(req.Bounds) == 0 {
-		return nil, fmt.Errorf("validation failed: bounds cannot be empty")
+		return nil, pkgErrors.InvalidArgumentf("validation failed: bounds cannot be empty")
 	}
 
 	config := &service.GAConfig{
@@ -163,7 +164,7 @@ func (h *Handler) OptimizeWithGA(ctx context.Context, req *OptimizeWithGARequest
 	result, err := h.svc.OptimizeWithGA(ctx, config, req.ObjectiveName, req.Bounds)
 	if err != nil {
 		log.Printf("OptimizeWithGA error: %v", err)
-		return nil, fmt.Errorf("GA optimization failed: %w", err)
+		return nil, pkgErrors.Internal("GA optimization failed", err.Error())
 	}
 
 	return map[string]interface{}{"best_x": result.BestX, "best_value": result.BestValue, "generations": result.Generations, "compute_ms": result.ComputeMs}, nil
@@ -181,16 +182,16 @@ type OptimizeWithSARequest struct {
 
 func (h *Handler) OptimizeWithSimulatedAnnealing(ctx context.Context, req *OptimizeWithSARequest) (map[string]interface{}, error) {
 	if req == nil {
-		return nil, fmt.Errorf("validation failed: request is nil")
+		return nil, pkgErrors.InvalidArgumentf("validation failed: request is nil")
 	}
 	if req.InitialTemp <= 0 {
-		return nil, fmt.Errorf("validation failed: initialTemp must be positive")
+		return nil, pkgErrors.InvalidArgumentf("validation failed: initialTemp must be positive")
 	}
 	if req.CoolingRate <= 0 || req.CoolingRate > 1 {
-		return nil, fmt.Errorf("validation failed: coolingRate must be between 0 and 1")
+		return nil, pkgErrors.InvalidArgumentf("validation failed: coolingRate must be between 0 and 1")
 	}
 	if len(req.Bounds) == 0 {
-		return nil, fmt.Errorf("validation failed: bounds cannot be empty")
+		return nil, pkgErrors.InvalidArgumentf("validation failed: bounds cannot be empty")
 	}
 
 	config := &service.SAConfig{
@@ -203,7 +204,7 @@ func (h *Handler) OptimizeWithSimulatedAnnealing(ctx context.Context, req *Optim
 	result, err := h.svc.OptimizeWithSimulatedAnnealing(ctx, config, req.ObjectiveName, req.Bounds)
 	if err != nil {
 		log.Printf("OptimizeWithSimulatedAnnealing error: %v", err)
-		return nil, fmt.Errorf("SA optimization failed: %w", err)
+		return nil, pkgErrors.Internal("SA optimization failed", err.Error())
 	}
 
 	return map[string]interface{}{"best_x": result.BestX, "best_value": result.BestValue, "generations": result.Generations, "compute_ms": result.ComputeMs}, nil
@@ -213,4 +214,3 @@ func (h *Handler) OptimizeWithSimulatedAnnealing(ctx context.Context, req *Optim
 func (h *Handler) Health(ctx context.Context) error {
 	return h.svc.Health(ctx)
 }
-

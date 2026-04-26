@@ -7,7 +7,7 @@ import (
 
 	connect "connectrpc.com/connect"
 
-	"solar3d/plot-sheet-service/internal/service"
+	"p9e.in/samavaya/solar3d/plot-sheet-service/internal/service"
 )
 
 func TestToConnectError_ConflictMetadataHeaders(t *testing.T) {

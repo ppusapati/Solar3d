@@ -8,9 +8,9 @@ import (
 	"strings"
 	"time"
 
-	"solar3d/ml-service/internal/client"
-	"solar3d/ml-service/internal/handler"
-	"solar3d/ml-service/internal/service"
+	"p9e.in/samavaya/solar3d/ml-service/internal/client"
+	"p9e.in/samavaya/solar3d/ml-service/internal/handler"
+	"p9e.in/samavaya/solar3d/ml-service/internal/service"
 )
 
 // Register wires ml-service HTTP routes onto mux.

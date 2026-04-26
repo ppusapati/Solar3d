@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package twin.v1;
 
-option go_package = "github.com/solar3d/solar3d/gen/twin/v1;twinv1";
+option go_package = "p9e.in/samavaya/solar3d/gen/twin/v1;twinv1";
 
 import "google/protobuf/timestamp.proto";
 

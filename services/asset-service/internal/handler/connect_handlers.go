@@ -7,8 +7,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 
-	"solar3d/asset-service/internal/domain"
-	"solar3d/asset-service/internal/service"
+	"p9e.in/samavaya/solar3d/asset-service/internal/domain"
+	"p9e.in/samavaya/solar3d/asset-service/internal/service"
 )
 
 type AssetHandler struct {

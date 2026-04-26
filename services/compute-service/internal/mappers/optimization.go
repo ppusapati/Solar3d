@@ -1,9 +1,9 @@
 package mappers
 
 import (
-	"solar3d/compute-service/internal/models"
+	"p9e.in/samavaya/solar3d/compute-service/internal/models"
 
-	optimizationv1 "github.com/solar3d/solar3d/gen/optimization/v1"
+	optimizationv1 "p9e.in/samavaya/solar3d/gen/optimization/v1"
 )
 
 func ProtoToParetoFrontier(req *optimizationv1.AddToFrontierRequest) *models.ParetoFrontierRequest {

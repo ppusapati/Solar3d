@@ -2,10 +2,10 @@ syntax = "proto3";
 
 package commissioning.v1;
 
-option go_package = "github.com/solar3d/solar3d/gen/commissioning/v1;commissioningv1";
+option go_package = "p9e.in/samavaya/solar3d/gen/commissioning/v1;commissioningv1";
 
 import "google/protobuf/timestamp.proto";
-
+import "packages/pagination.proto";
 // CommissioningService manages commissioning checklists, signoff workflows,
 // formal handover records, and as-built artifact registration for solar projects.
 service CommissioningService {
@@ -159,9 +159,11 @@ message GetChecklistResponse {
 
 message ListChecklistsRequest {
   string project_id = 1;
+  packages.api.v1.pagination.PaginationRequest pagination = 2;
 }
 message ListChecklistsResponse {
   repeated CommissioningChecklist checklists = 1;
+  packages.api.v1.pagination.PaginationResponse pagination = 2;
 }
 
 // ── ChecklistItem RPCs ───────────────────────────────────────────────────────
@@ -202,9 +204,11 @@ message SignOffChecklistResponse {
 
 message ListSignoffsRequest {
   string checklist_id = 1;
+  packages.api.v1.pagination.PaginationRequest pagination = 2;
 }
 message ListSignoffsResponse {
   repeated CommissioningSignoff signoffs = 1;
+  packages.api.v1.pagination.PaginationResponse pagination = 2;
 }
 
 // ── Handover RPCs ─────────────────────────────────────────────────────────────
@@ -246,9 +250,11 @@ message RecordAsBuiltResponse {
 
 message ListAsBuiltArtifactsRequest {
   string project_id = 1;
+  packages.api.v1.pagination.PaginationRequest pagination = 2;
 }
 message ListAsBuiltArtifactsResponse {
   repeated AsBuiltArtifact artifacts = 1;
+  packages.api.v1.pagination.PaginationResponse pagination = 2;
 }
 
 // ── Report ────────────────────────────────────────────────────────────────────

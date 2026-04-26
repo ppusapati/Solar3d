@@ -34,36 +34,38 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
+
+	"p9e.in/samavaya/packages/database/pgxpostgres"
 	"github.com/rs/zerolog"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 
-	mw "solar3d/shared/middleware"
+	mw "p9e.in/samavaya/packages/httpmiddleware"
 
 	// Service register packages
-	apigatewayregister "solar3d/api-gateway-service/register"
-	assetregister "solar3d/asset-service/register"
-	cadannotationregister "solar3d/cad-annotation-service/register"
-	cadcoreregister "solar3d/cad-core-service/register"
-	cadlayerblockregister "solar3d/cad-layer-block-service/register"
-	computeorchestrationregister "solar3d/compute-orchestration-service/register"
-	computeregister "solar3d/compute-service/register"
-	drawingrevisionregister "solar3d/drawing-revision-service/register"
-	electricalregister "solar3d/electrical-service/register"
-	geoanalyticsregister "solar3d/geo-analytics-service/register"
-	graphregister "solar3d/graph-service/register"
-	interopregister "solar3d/interop-service/register"
-	layoutregister "solar3d/layout-service/register"
-	mlregister "solar3d/ml-service/register"
-	optimizationregister "solar3d/optimization-service/register"
-	plotsheetregister "solar3d/plot-sheet-service/register"
-	projectregister "solar3d/project-service/register"
-	reportregister "solar3d/report-service/register"
-	routingregister "solar3d/routing-service/register"
-	simulationregister "solar3d/simulation-service/register"
-	terrainregister "solar3d/terrain-service/register"
-	transmissionroutingregister "solar3d/transmission-routing-service/register"
-	twinregister "solar3d/twin-service/register"
+	apigatewayregister "p9e.in/samavaya/solar3d/api-gateway-service/register"
+	assetregister "p9e.in/samavaya/solar3d/asset-service/register"
+	cadannotationregister "p9e.in/samavaya/solar3d/cad-annotation-service/register"
+	cadcoreregister "p9e.in/samavaya/solar3d/cad-core-service/register"
+	cadlayerblockregister "p9e.in/samavaya/solar3d/cad-layer-block-service/register"
+	computeorchestrationregister "p9e.in/samavaya/solar3d/compute-orchestration-service/register"
+	computeregister "p9e.in/samavaya/solar3d/compute-service/register"
+	drawingrevisionregister "p9e.in/samavaya/solar3d/drawing-revision-service/register"
+	electricalregister "p9e.in/samavaya/solar3d/electrical-service/register"
+	geoanalyticsregister "p9e.in/samavaya/solar3d/geo-analytics-service/register"
+	graphregister "p9e.in/samavaya/solar3d/graph-service/register"
+	interopregister "p9e.in/samavaya/solar3d/interop-service/register"
+	layoutregister "p9e.in/samavaya/solar3d/layout-service/register"
+	mlregister "p9e.in/samavaya/solar3d/ml-service/register"
+	optimizationregister "p9e.in/samavaya/solar3d/optimization-service/register"
+	plotsheetregister "p9e.in/samavaya/solar3d/plot-sheet-service/register"
+	projectregister "p9e.in/samavaya/solar3d/project-service/register"
+	reportregister "p9e.in/samavaya/solar3d/report-service/register"
+	routingregister "p9e.in/samavaya/solar3d/routing-service/register"
+	simulationregister "p9e.in/samavaya/solar3d/simulation-service/register"
+	terrainregister "p9e.in/samavaya/solar3d/terrain-service/register"
+	transmissionroutingregister "p9e.in/samavaya/solar3d/transmission-routing-service/register"
+	twinregister "p9e.in/samavaya/solar3d/twin-service/register"
 )
 
 func main() {
@@ -114,24 +116,17 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	poolCfg, err := pgxpool.ParseConfig(databaseURL)
-	if err != nil {
-		logger.Fatal().Err(err).Msg("invalid DATABASE_URL")
-	}
-	poolCfg.MaxConns = 50
-	poolCfg.MinConns = 5
-	poolCfg.MaxConnLifetime = 30 * time.Minute
-	poolCfg.MaxConnIdleTime = 5 * time.Minute
+	// Monolith intentionally uses a larger pool since it hosts every service in
+	// one process; override the Solar3D defaults accordingly.
+	monolithPool := pgxpostgres.DefaultPoolOptions()
+	monolithPool.MaxConns = 50
+	monolithPool.MinConns = 5
 
-	pool, err := pgxpool.NewWithConfig(ctx, poolCfg)
+	pool, closePool, err := pgxpostgres.NewPgxFromDSN(ctx, databaseURL, monolithPool)
 	if err != nil {
-		logger.Fatal().Err(err).Msg("failed to create database connection pool")
+		logger.Fatal().Err(err).Msg("failed to initialise database pool")
 	}
-	defer pool.Close()
-
-	if err := pool.Ping(ctx); err != nil {
-		logger.Fatal().Err(err).Msg("failed to ping database")
-	}
+	defer closePool()
 	logger.Info().Msg("database connected")
 
 	if err := applyMigrations(ctx, pool, logger); err != nil {
@@ -142,11 +137,7 @@ func main() {
 	mux := http.NewServeMux()
 
 	// Healthz endpoint
-	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, _ *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte(`{"service":"solar3d-monolith","status":"ok"}`))
-	})
+	mux.HandleFunc("GET /healthz", mw.HealthzHandler(pool))
 
 	// Register all services in dependency order
 	logger.Info().Msg("registering services")

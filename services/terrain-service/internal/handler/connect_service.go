@@ -9,12 +9,12 @@ import (
 	connect "connectrpc.com/connect"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
-	terrainv1 "github.com/solar3d/solar3d/gen/terrain/v1"
-	terrainv1connect "github.com/solar3d/solar3d/gen/terrain/v1/terrainv1connect"
+	terrainv1 "p9e.in/samavaya/solar3d/gen/terrain/v1"
+	terrainv1connect "p9e.in/samavaya/solar3d/gen/terrain/v1/terrainv1connect"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"solar3d/terrain-service/internal/domain"
-	"solar3d/terrain-service/internal/service"
+	"p9e.in/samavaya/solar3d/terrain-service/internal/domain"
+	"p9e.in/samavaya/solar3d/terrain-service/internal/service"
 )
 
 type ConnectTerrainService struct {

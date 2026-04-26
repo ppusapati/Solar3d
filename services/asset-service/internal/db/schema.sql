@@ -1,6 +1,17 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-CREATE TYPE asset_category AS ENUM ('panel', 'inverter', 'transformer', 'tracker', 'cable', 'mounting', 'meter', 'other');
+CREATE TYPE asset_category AS ENUM (
+    'panel',
+    'inverter',
+    'transformer',
+    'tracker',
+    'combiner',
+    'fuse',
+    'cable',
+    'mounting',
+    'meter',
+    'other'
+);
 
 CREATE TABLE assets (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),

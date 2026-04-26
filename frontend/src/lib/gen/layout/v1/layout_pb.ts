@@ -12,7 +12,73 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file layout/v1/layout.proto.
  */
 export const file_layout_v1_layout: GenFile = /*@__PURE__*/
-  fileDesc("ChZsYXlvdXQvdjEvbGF5b3V0LnByb3RvEglsYXlvdXQudjEi2wEKBkxheW91dBIKCgJpZBgBIAEoCRISCgpwcm9qZWN0X2lkGAIgASgJEgwKBG5hbWUYAyABKAkSFAoMdG90YWxfcGFuZWxzGAQgASgFEhkKEXRvdGFsX2NhcGFjaXR5X2t3GAUgASgBEhIKCnRpbGVfY291bnQYBiABKAUSLgoKY3JlYXRlZF9hdBgHIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASLgoKdXBkYXRlZF9hdBgIIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAi7gEKCUNvbXBvbmVudBIKCgJpZBgBIAEoCRIRCglsYXlvdXRfaWQYAiABKAkSEAoIYXNzZXRfaWQYAyABKAkSMAoOY29tcG9uZW50X3R5cGUYBCABKA4yGC5sYXlvdXQudjEuQ29tcG9uZW50VHlwZRIlCghwb3NpdGlvbhgFIAEoCzITLmxheW91dC52MS5Qb3NpdGlvbhIQCghyb3RhdGlvbhgGIAEoARIVCg1tZXRhZGF0YV9qc29uGAcgASgJEi4KCmNyZWF0ZWRfYXQYCCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIkIKCFBvc2l0aW9uEhEKCWxvbmdpdHVkZRgBIAEoARIQCghsYXRpdHVkZRgCIAEoARIRCgllbGV2YXRpb24YAyABKAEiwAEKCkxheW91dFRpbGUSCgoCaWQYASABKAkSEQoJbGF5b3V0X2lkGAIgASgJEiQKBGJib3gYAyABKAsyFi5sYXlvdXQudjEuQm91bmRpbmdCb3gSEQoJbG9kX2xldmVsGAQgASgFEhMKC3BhbmVsX2NvdW50GAUgASgFEhUKDW1ldGFkYXRhX2pzb24YBiABKAkSLgoKY3JlYXRlZF9hdBgHIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAimgEKBVBhbmVsEgoKAmlkGAEgASgJEg8KB3RpbGVfaWQYAiABKAkSEQoJc3RyaW5nX2lkGAMgASgJEhgKEGdlb21ldHJ5X2dlb2pzb24YBCABKAkSDAoEdGlsdBgFIAEoARIPCgdhemltdXRoGAYgASgBEhEKCWVsZXZhdGlvbhgHIAEoARIVCg1tZXRhZGF0YV9qc29uGAggASgJIkkKC0JvdW5kaW5nQm94Eg0KBW1pbl94GAEgASgBEg0KBW1pbl95GAIgASgBEg0KBW1heF94GAMgASgBEg0KBW1heF95GAQgASgBIsQBChBQYW5lbEFycmF5UGFyYW1zEhMKC3BhbmVsX3dpZHRoGAEgASgBEhQKDHBhbmVsX2hlaWdodBgCIAEoARISCgp0aWx0X2FuZ2xlGAMgASgBEg8KB2F6aW11dGgYBCABKAESEwoLcm93X3NwYWNpbmcYBSABKAESFgoOY29sdW1uX3NwYWNpbmcYBiABKAESGQoRZmlsbF9hcmVhX2dlb2pzb24YByABKAkSGAoQdGVycmFpbl9sYXllcl9pZBgIIAEoCSI3ChNDcmVhdGVMYXlvdXRSZXF1ZXN0EhIKCnByb2plY3RfaWQYASABKAkSDAoEbmFtZRgCIAEoCSI5ChRDcmVhdGVMYXlvdXRSZXNwb25zZRIhCgZsYXlvdXQYASABKAsyES5sYXlvdXQudjEuTGF5b3V0Ih4KEEdldExheW91dFJlcXVlc3QSCgoCaWQYASABKAkiNgoRR2V0TGF5b3V0UmVzcG9uc2USIQoGbGF5b3V0GAEgASgLMhEubGF5b3V0LnYxLkxheW91dCIoChJMaXN0TGF5b3V0c1JlcXVlc3QSEgoKcHJvamVjdF9pZBgBIAEoCSI5ChNMaXN0TGF5b3V0c1Jlc3BvbnNlEiIKB2xheW91dHMYASADKAsyES5sYXlvdXQudjEuTGF5b3V0IiEKE0RlbGV0ZUxheW91dFJlcXVlc3QSCgoCaWQYASABKAkiFgoURGVsZXRlTGF5b3V0UmVzcG9uc2UivgEKFVBsYWNlQ29tcG9uZW50UmVxdWVzdBIRCglsYXlvdXRfaWQYASABKAkSEAoIYXNzZXRfaWQYAiABKAkSMAoOY29tcG9uZW50X3R5cGUYAyABKA4yGC5sYXlvdXQudjEuQ29tcG9uZW50VHlwZRIlCghwb3NpdGlvbhgEIAEoCzITLmxheW91dC52MS5Qb3NpdGlvbhIQCghyb3RhdGlvbhgFIAEoARIVCg1tZXRhZGF0YV9qc29uGAYgASgJIkEKFlBsYWNlQ29tcG9uZW50UmVzcG9uc2USJwoJY29tcG9uZW50GAEgASgLMhQubGF5b3V0LnYxLkNvbXBvbmVudCJlChRNb3ZlQ29tcG9uZW50UmVxdWVzdBIUCgxjb21wb25lbnRfaWQYASABKAkSJQoIcG9zaXRpb24YAiABKAsyEy5sYXlvdXQudjEuUG9zaXRpb24SEAoIcm90YXRpb24YAyABKAEiQAoVTW92ZUNvbXBvbmVudFJlc3BvbnNlEicKCWNvbXBvbmVudBgBIAEoCzIULmxheW91dC52MS5Db21wb25lbnQiLgoWUmVtb3ZlQ29tcG9uZW50UmVxdWVzdBIUCgxjb21wb25lbnRfaWQYASABKAkiGQoXUmVtb3ZlQ29tcG9uZW50UmVzcG9uc2UiWQoVTGlzdENvbXBvbmVudHNSZXF1ZXN0EhEKCWxheW91dF9pZBgBIAEoCRItCgt0eXBlX2ZpbHRlchgCIAEoDjIYLmxheW91dC52MS5Db21wb25lbnRUeXBlIkIKFkxpc3RDb21wb25lbnRzUmVzcG9uc2USKAoKY29tcG9uZW50cxgBIAMoCzIULmxheW91dC52MS5Db21wb25lbnQiWwoZR2VuZXJhdGVQYW5lbEFycmF5UmVxdWVzdBIRCglsYXlvdXRfaWQYASABKAkSKwoGcGFyYW1zGAIgASgLMhsubGF5b3V0LnYxLlBhbmVsQXJyYXlQYXJhbXMiYAoaR2VuZXJhdGVQYW5lbEFycmF5UmVzcG9uc2USFgoOcGFuZWxzX2NyZWF0ZWQYASABKAUSFQoNdGlsZXNfY3JlYXRlZBgCIAEoBRITCgtjYXBhY2l0eV9rdxgDIAEoASJhCg9HZXRUaWxlc1JlcXVlc3QSEQoJbGF5b3V0X2lkGAEgASgJEigKCHZpZXdwb3J0GAIgASgLMhYubGF5b3V0LnYxLkJvdW5kaW5nQm94EhEKCWxvZF9sZXZlbBgDIAEoBSI4ChBHZXRUaWxlc1Jlc3BvbnNlEiQKBXRpbGVzGAEgAygLMhUubGF5b3V0LnYxLkxheW91dFRpbGUiJwoUR2V0VGlsZVBhbmVsc1JlcXVlc3QSDwoHdGlsZV9pZBgBIAEoCSI5ChVHZXRUaWxlUGFuZWxzUmVzcG9uc2USIAoGcGFuZWxzGAEgAygLMhAubGF5b3V0LnYxLlBhbmVsKoMCCg1Db21wb25lbnRUeXBlEh4KGkNPTVBPTkVOVF9UWVBFX1VOU1BFQ0lGSUVEEAASGAoUQ09NUE9ORU5UX1RZUEVfUEFORUwQARIbChdDT01QT05FTlRfVFlQRV9JTlZFUlRFUhACEh4KGkNPTVBPTkVOVF9UWVBFX1RSQU5TRk9STUVSEAMSHwobQ09NUE9ORU5UX1RZUEVfSlVOQ1RJT05fQk9YEAQSHQoZQ09NUE9ORU5UX1RZUEVfU1VCU1RBVElPThAFEhoKFkNPTVBPTkVOVF9UWVBFX1RSQUNLRVIQBhIfChtDT01QT05FTlRfVFlQRV9DT01CSU5FUl9CT1gQBzKfBwoNTGF5b3V0U2VydmljZRJPCgxDcmVhdGVMYXlvdXQSHi5sYXlvdXQudjEuQ3JlYXRlTGF5b3V0UmVxdWVzdBofLmxheW91dC52MS5DcmVhdGVMYXlvdXRSZXNwb25zZRJGCglHZXRMYXlvdXQSGy5sYXlvdXQudjEuR2V0TGF5b3V0UmVxdWVzdBocLmxheW91dC52MS5HZXRMYXlvdXRSZXNwb25zZRJMCgtMaXN0TGF5b3V0cxIdLmxheW91dC52MS5MaXN0TGF5b3V0c1JlcXVlc3QaHi5sYXlvdXQudjEuTGlzdExheW91dHNSZXNwb25zZRJPCgxEZWxldGVMYXlvdXQSHi5sYXlvdXQudjEuRGVsZXRlTGF5b3V0UmVxdWVzdBofLmxheW91dC52MS5EZWxldGVMYXlvdXRSZXNwb25zZRJVCg5QbGFjZUNvbXBvbmVudBIgLmxheW91dC52MS5QbGFjZUNvbXBvbmVudFJlcXVlc3QaIS5sYXlvdXQudjEuUGxhY2VDb21wb25lbnRSZXNwb25zZRJSCg1Nb3ZlQ29tcG9uZW50Eh8ubGF5b3V0LnYxLk1vdmVDb21wb25lbnRSZXF1ZXN0GiAubGF5b3V0LnYxLk1vdmVDb21wb25lbnRSZXNwb25zZRJYCg9SZW1vdmVDb21wb25lbnQSIS5sYXlvdXQudjEuUmVtb3ZlQ29tcG9uZW50UmVxdWVzdBoiLmxheW91dC52MS5SZW1vdmVDb21wb25lbnRSZXNwb25zZRJVCg5MaXN0Q29tcG9uZW50cxIgLmxheW91dC52MS5MaXN0Q29tcG9uZW50c1JlcXVlc3QaIS5sYXlvdXQudjEuTGlzdENvbXBvbmVudHNSZXNwb25zZRJhChJHZW5lcmF0ZVBhbmVsQXJyYXkSJC5sYXlvdXQudjEuR2VuZXJhdGVQYW5lbEFycmF5UmVxdWVzdBolLmxheW91dC52MS5HZW5lcmF0ZVBhbmVsQXJyYXlSZXNwb25zZRJDCghHZXRUaWxlcxIaLmxheW91dC52MS5HZXRUaWxlc1JlcXVlc3QaGy5sYXlvdXQudjEuR2V0VGlsZXNSZXNwb25zZRJSCg1HZXRUaWxlUGFuZWxzEh8ubGF5b3V0LnYxLkdldFRpbGVQYW5lbHNSZXF1ZXN0GiAubGF5b3V0LnYxLkdldFRpbGVQYW5lbHNSZXNwb25zZUKUAQoNY29tLmxheW91dC52MUILTGF5b3V0UHJvdG9QAVoxZ2l0aHViLmNvbS9zb2xhcjNkL3NvbGFyM2QvZ2VuL2xheW91dC92MTtsYXlvdXR2MaICA0xYWKoCCUxheW91dC5WMcoCCUxheW91dFxWMeICFUxheW91dFxWMVxHUEJNZXRhZGF0YeoCCkxheW91dDo6VjFiBnByb3RvMw", [file_google_protobuf_timestamp]);
+  fileDesc("ChZsYXlvdXQvdjEvbGF5b3V0LnByb3RvEglsYXlvdXQudjEi9AEKDlJldmlld01ldGFkYXRhEisKBnN0YXR1cxgBIAEoDjIbLmxheW91dC52MS5BY2NlcHRhbmNlU3RhdHVzEhwKFHJldmlld2VkX2J5X2FjdG9yX2lkGAIgASgJEi8KC3Jldmlld2VkX2F0GAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIVCg1xdWFsaXR5X3Njb3JlGAQgASgBEhcKD3Jldmlld19jb21tZW50cxgFIAMoCRIQCghibG9ja2VycxgGIAMoCRIkChxhcHByb3ZhbF90aW1lc3RhbXBfdW5peF9zZWNzGAcgASgJIqUCCgZMYXlvdXQSCgoCaWQYASABKAkSEgoKcHJvamVjdF9pZBgCIAEoCRIMCgRuYW1lGAMgASgJEhQKDHRvdGFsX3BhbmVscxgEIAEoBRIZChF0b3RhbF9jYXBhY2l0eV9rdxgFIAEoARISCgp0aWxlX2NvdW50GAYgASgFEi4KCmNyZWF0ZWRfYXQYByABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEi4KCnVwZGF0ZWRfYXQYCCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEjIKD3Jldmlld19tZXRhZGF0YRgJIAEoCzIZLmxheW91dC52MS5SZXZpZXdNZXRhZGF0YRIUCgxjYW5kaWRhdGVfaWQYCiABKAki7gEKCUNvbXBvbmVudBIKCgJpZBgBIAEoCRIRCglsYXlvdXRfaWQYAiABKAkSEAoIYXNzZXRfaWQYAyABKAkSMAoOY29tcG9uZW50X3R5cGUYBCABKA4yGC5sYXlvdXQudjEuQ29tcG9uZW50VHlwZRIlCghwb3NpdGlvbhgFIAEoCzITLmxheW91dC52MS5Qb3NpdGlvbhIQCghyb3RhdGlvbhgGIAEoARIVCg1tZXRhZGF0YV9qc29uGAcgASgJEi4KCmNyZWF0ZWRfYXQYCCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIkIKCFBvc2l0aW9uEhEKCWxvbmdpdHVkZRgBIAEoARIQCghsYXRpdHVkZRgCIAEoARIRCgllbGV2YXRpb24YAyABKAEiwAEKCkxheW91dFRpbGUSCgoCaWQYASABKAkSEQoJbGF5b3V0X2lkGAIgASgJEiQKBGJib3gYAyABKAsyFi5sYXlvdXQudjEuQm91bmRpbmdCb3gSEQoJbG9kX2xldmVsGAQgASgFEhMKC3BhbmVsX2NvdW50GAUgASgFEhUKDW1ldGFkYXRhX2pzb24YBiABKAkSLgoKY3JlYXRlZF9hdBgHIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAimgEKBVBhbmVsEgoKAmlkGAEgASgJEg8KB3RpbGVfaWQYAiABKAkSEQoJc3RyaW5nX2lkGAMgASgJEhgKEGdlb21ldHJ5X2dlb2pzb24YBCABKAkSDAoEdGlsdBgFIAEoARIPCgdhemltdXRoGAYgASgBEhEKCWVsZXZhdGlvbhgHIAEoARIVCg1tZXRhZGF0YV9qc29uGAggASgJIkkKC0JvdW5kaW5nQm94Eg0KBW1pbl94GAEgASgBEg0KBW1pbl95GAIgASgBEg0KBW1heF94GAMgASgBEg0KBW1heF95GAQgASgBImsKHFN1Ym1pdExheW91dEZvclJldmlld1JlcXVlc3QSEQoJbGF5b3V0X2lkGAEgASgJEhkKEXN1Ym1pc3Npb25fcmVhc29uGAIgASgJEh0KFXN1Ym1pdHRlZF9ieV9hY3Rvcl9pZBgDIAEoCSJ2Ch1TdWJtaXRMYXlvdXRGb3JSZXZpZXdSZXNwb25zZRIhCgZsYXlvdXQYASABKAsyES5sYXlvdXQudjEuTGF5b3V0EjIKD3Jldmlld19tZXRhZGF0YRgCIAEoCzIZLmxheW91dC52MS5SZXZpZXdNZXRhZGF0YSJ5ChRBcHByb3ZlTGF5b3V0UmVxdWVzdBIRCglsYXlvdXRfaWQYASABKAkSFQoNcXVhbGl0eV9zY29yZRgCIAEoARIZChFhcHByb3ZhbF9jb21tZW50cxgDIAMoCRIcChRhcHByb3ZlZF9ieV9hY3Rvcl9pZBgEIAEoCSJuChVBcHByb3ZlTGF5b3V0UmVzcG9uc2USIQoGbGF5b3V0GAEgASgLMhEubGF5b3V0LnYxLkxheW91dBIyCg9yZXZpZXdfbWV0YWRhdGEYAiABKAsyGS5sYXlvdXQudjEuUmV2aWV3TWV0YWRhdGEiYQoTUmVqZWN0TGF5b3V0UmVxdWVzdBIRCglsYXlvdXRfaWQYASABKAkSGQoRcmVqZWN0aW9uX3JlYXNvbnMYAiADKAkSHAoUcmVqZWN0ZWRfYnlfYWN0b3JfaWQYAyABKAkibQoUUmVqZWN0TGF5b3V0UmVzcG9uc2USIQoGbGF5b3V0GAEgASgLMhEubGF5b3V0LnYxLkxheW91dBIyCg9yZXZpZXdfbWV0YWRhdGEYAiABKAsyGS5sYXlvdXQudjEuUmV2aWV3TWV0YWRhdGEixAEKEFBhbmVsQXJyYXlQYXJhbXMSEwoLcGFuZWxfd2lkdGgYASABKAESFAoMcGFuZWxfaGVpZ2h0GAIgASgBEhIKCnRpbHRfYW5nbGUYAyABKAESDwoHYXppbXV0aBgEIAEoARITCgtyb3dfc3BhY2luZxgFIAEoARIWCg5jb2x1bW5fc3BhY2luZxgGIAEoARIZChFmaWxsX2FyZWFfZ2VvanNvbhgHIAEoCRIYChB0ZXJyYWluX2xheWVyX2lkGAggASgJIjcKE0NyZWF0ZUxheW91dFJlcXVlc3QSEgoKcHJvamVjdF9pZBgBIAEoCRIMCgRuYW1lGAIgASgJIjkKFENyZWF0ZUxheW91dFJlc3BvbnNlEiEKBmxheW91dBgBIAEoCzIRLmxheW91dC52MS5MYXlvdXQiHgoQR2V0TGF5b3V0UmVxdWVzdBIKCgJpZBgBIAEoCSI2ChFHZXRMYXlvdXRSZXNwb25zZRIhCgZsYXlvdXQYASABKAsyES5sYXlvdXQudjEuTGF5b3V0IigKEkxpc3RMYXlvdXRzUmVxdWVzdBISCgpwcm9qZWN0X2lkGAEgASgJIjkKE0xpc3RMYXlvdXRzUmVzcG9uc2USIgoHbGF5b3V0cxgBIAMoCzIRLmxheW91dC52MS5MYXlvdXQiIQoTRGVsZXRlTGF5b3V0UmVxdWVzdBIKCgJpZBgBIAEoCSIWChREZWxldGVMYXlvdXRSZXNwb25zZSK+AQoVUGxhY2VDb21wb25lbnRSZXF1ZXN0EhEKCWxheW91dF9pZBgBIAEoCRIQCghhc3NldF9pZBgCIAEoCRIwCg5jb21wb25lbnRfdHlwZRgDIAEoDjIYLmxheW91dC52MS5Db21wb25lbnRUeXBlEiUKCHBvc2l0aW9uGAQgASgLMhMubGF5b3V0LnYxLlBvc2l0aW9uEhAKCHJvdGF0aW9uGAUgASgBEhUKDW1ldGFkYXRhX2pzb24YBiABKAkiQQoWUGxhY2VDb21wb25lbnRSZXNwb25zZRInCgljb21wb25lbnQYASABKAsyFC5sYXlvdXQudjEuQ29tcG9uZW50ImUKFE1vdmVDb21wb25lbnRSZXF1ZXN0EhQKDGNvbXBvbmVudF9pZBgBIAEoCRIlCghwb3NpdGlvbhgCIAEoCzITLmxheW91dC52MS5Qb3NpdGlvbhIQCghyb3RhdGlvbhgDIAEoASJAChVNb3ZlQ29tcG9uZW50UmVzcG9uc2USJwoJY29tcG9uZW50GAEgASgLMhQubGF5b3V0LnYxLkNvbXBvbmVudCIuChZSZW1vdmVDb21wb25lbnRSZXF1ZXN0EhQKDGNvbXBvbmVudF9pZBgBIAEoCSIZChdSZW1vdmVDb21wb25lbnRSZXNwb25zZSJZChVMaXN0Q29tcG9uZW50c1JlcXVlc3QSEQoJbGF5b3V0X2lkGAEgASgJEi0KC3R5cGVfZmlsdGVyGAIgASgOMhgubGF5b3V0LnYxLkNvbXBvbmVudFR5cGUiQgoWTGlzdENvbXBvbmVudHNSZXNwb25zZRIoCgpjb21wb25lbnRzGAEgAygLMhQubGF5b3V0LnYxLkNvbXBvbmVudCJbChlHZW5lcmF0ZVBhbmVsQXJyYXlSZXF1ZXN0EhEKCWxheW91dF9pZBgBIAEoCRIrCgZwYXJhbXMYAiABKAsyGy5sYXlvdXQudjEuUGFuZWxBcnJheVBhcmFtcyJgChpHZW5lcmF0ZVBhbmVsQXJyYXlSZXNwb25zZRIWCg5wYW5lbHNfY3JlYXRlZBgBIAEoBRIVCg10aWxlc19jcmVhdGVkGAIgASgFEhMKC2NhcGFjaXR5X2t3GAMgASgBImEKD0dldFRpbGVzUmVxdWVzdBIRCglsYXlvdXRfaWQYASABKAkSKAoIdmlld3BvcnQYAiABKAsyFi5sYXlvdXQudjEuQm91bmRpbmdCb3gSEQoJbG9kX2xldmVsGAMgASgFIjgKEEdldFRpbGVzUmVzcG9uc2USJAoFdGlsZXMYASADKAsyFS5sYXlvdXQudjEuTGF5b3V0VGlsZSInChRHZXRUaWxlUGFuZWxzUmVxdWVzdBIPCgd0aWxlX2lkGAEgASgJIjkKFUdldFRpbGVQYW5lbHNSZXNwb25zZRIgCgZwYW5lbHMYASADKAsyEC5sYXlvdXQudjEuUGFuZWwquAEKEEFjY2VwdGFuY2VTdGF0dXMSIQodQUNDRVBUQU5DRV9TVEFUVVNfVU5TUEVDSUZJRUQQABIbChdBQ0NFUFRBTkNFX1NUQVRVU19EUkFGVBABEiQKIEFDQ0VQVEFOQ0VfU1RBVFVTX1JFVklFV19QRU5ESU5HEAISHgoaQUNDRVBUQU5DRV9TVEFUVVNfQVBQUk9WRUQQAxIeChpBQ0NFUFRBTkNFX1NUQVRVU19SRUpFQ1RFRBAEKoMCCg1Db21wb25lbnRUeXBlEh4KGkNPTVBPTkVOVF9UWVBFX1VOU1BFQ0lGSUVEEAASGAoUQ09NUE9ORU5UX1RZUEVfUEFORUwQARIbChdDT01QT05FTlRfVFlQRV9JTlZFUlRFUhACEh4KGkNPTVBPTkVOVF9UWVBFX1RSQU5TRk9STUVSEAMSHwobQ09NUE9ORU5UX1RZUEVfSlVOQ1RJT05fQk9YEAQSHQoZQ09NUE9ORU5UX1RZUEVfU1VCU1RBVElPThAFEhoKFkNPTVBPTkVOVF9UWVBFX1RSQUNLRVIQBhIfChtDT01QT05FTlRfVFlQRV9DT01CSU5FUl9CT1gQBzKwCQoNTGF5b3V0U2VydmljZRJPCgxDcmVhdGVMYXlvdXQSHi5sYXlvdXQudjEuQ3JlYXRlTGF5b3V0UmVxdWVzdBofLmxheW91dC52MS5DcmVhdGVMYXlvdXRSZXNwb25zZRJGCglHZXRMYXlvdXQSGy5sYXlvdXQudjEuR2V0TGF5b3V0UmVxdWVzdBocLmxheW91dC52MS5HZXRMYXlvdXRSZXNwb25zZRJMCgtMaXN0TGF5b3V0cxIdLmxheW91dC52MS5MaXN0TGF5b3V0c1JlcXVlc3QaHi5sYXlvdXQudjEuTGlzdExheW91dHNSZXNwb25zZRJPCgxEZWxldGVMYXlvdXQSHi5sYXlvdXQudjEuRGVsZXRlTGF5b3V0UmVxdWVzdBofLmxheW91dC52MS5EZWxldGVMYXlvdXRSZXNwb25zZRJVCg5QbGFjZUNvbXBvbmVudBIgLmxheW91dC52MS5QbGFjZUNvbXBvbmVudFJlcXVlc3QaIS5sYXlvdXQudjEuUGxhY2VDb21wb25lbnRSZXNwb25zZRJSCg1Nb3ZlQ29tcG9uZW50Eh8ubGF5b3V0LnYxLk1vdmVDb21wb25lbnRSZXF1ZXN0GiAubGF5b3V0LnYxLk1vdmVDb21wb25lbnRSZXNwb25zZRJYCg9SZW1vdmVDb21wb25lbnQSIS5sYXlvdXQudjEuUmVtb3ZlQ29tcG9uZW50UmVxdWVzdBoiLmxheW91dC52MS5SZW1vdmVDb21wb25lbnRSZXNwb25zZRJVCg5MaXN0Q29tcG9uZW50cxIgLmxheW91dC52MS5MaXN0Q29tcG9uZW50c1JlcXVlc3QaIS5sYXlvdXQudjEuTGlzdENvbXBvbmVudHNSZXNwb25zZRJhChJHZW5lcmF0ZVBhbmVsQXJyYXkSJC5sYXlvdXQudjEuR2VuZXJhdGVQYW5lbEFycmF5UmVxdWVzdBolLmxheW91dC52MS5HZW5lcmF0ZVBhbmVsQXJyYXlSZXNwb25zZRJDCghHZXRUaWxlcxIaLmxheW91dC52MS5HZXRUaWxlc1JlcXVlc3QaGy5sYXlvdXQudjEuR2V0VGlsZXNSZXNwb25zZRJSCg1HZXRUaWxlUGFuZWxzEh8ubGF5b3V0LnYxLkdldFRpbGVQYW5lbHNSZXF1ZXN0GiAubGF5b3V0LnYxLkdldFRpbGVQYW5lbHNSZXNwb25zZRJqChVTdWJtaXRMYXlvdXRGb3JSZXZpZXcSJy5sYXlvdXQudjEuU3VibWl0TGF5b3V0Rm9yUmV2aWV3UmVxdWVzdBooLmxheW91dC52MS5TdWJtaXRMYXlvdXRGb3JSZXZpZXdSZXNwb25zZRJSCg1BcHByb3ZlTGF5b3V0Eh8ubGF5b3V0LnYxLkFwcHJvdmVMYXlvdXRSZXF1ZXN0GiAubGF5b3V0LnYxLkFwcHJvdmVMYXlvdXRSZXNwb25zZRJPCgxSZWplY3RMYXlvdXQSHi5sYXlvdXQudjEuUmVqZWN0TGF5b3V0UmVxdWVzdBofLmxheW91dC52MS5SZWplY3RMYXlvdXRSZXNwb25zZUKRAQoNY29tLmxheW91dC52MUILTGF5b3V0UHJvdG9QAVoucDllLmluL3NhbWF2YXlhL3NvbGFyM2QvZ2VuL2xheW91dC92MTtsYXlvdXR2MaICA0xYWKoCCUxheW91dC5WMcoCCUxheW91dFxWMeICFUxheW91dFxWMVxHUEJNZXRhZGF0YeoCCkxheW91dDo6VjFiBnByb3RvMw", [file_google_protobuf_timestamp]);
+
+/**
+ * ========== Review Metadata ==========
+ * ReviewMetadata captures the acceptance workflow state attached to a layout.
+ * Populated by the SubmitLayoutForReview / ApproveLayout / RejectLayout RPCs.
+ * Consumed by PlanningWorkflow gate enforcement for the LayoutReady -> ElectricalReady transition.
+ *
+ * @generated from message layout.v1.ReviewMetadata
+ */
+export type ReviewMetadata = Message<"layout.v1.ReviewMetadata"> & {
+  /**
+   * status is the current acceptance gate state.
+   *
+   * @generated from field: layout.v1.AcceptanceStatus status = 1;
+   */
+  status: AcceptanceStatus;
+
+  /**
+   * reviewed_by_actor_id is the user or system actor that performed the review action.
+   *
+   * @generated from field: string reviewed_by_actor_id = 2;
+   */
+  reviewedByActorId: string;
+
+  /**
+   * reviewed_at is the timestamp of the most recent review action.
+   *
+   * @generated from field: google.protobuf.Timestamp reviewed_at = 3;
+   */
+  reviewedAt?: Timestamp;
+
+  /**
+   * quality_score is a reviewer-assigned [0, 1] quality rating.
+   *
+   * @generated from field: double quality_score = 4;
+   */
+  qualityScore: number;
+
+  /**
+   * review_comments are free-text annotations from the reviewer.
+   *
+   * @generated from field: repeated string review_comments = 5;
+   */
+  reviewComments: string[];
+
+  /**
+   * blockers are unresolved reasons preventing approval. Empty when approved.
+   *
+   * @generated from field: repeated string blockers = 6;
+   */
+  blockers: string[];
+
+  /**
+   * approval_timestamp_unix_secs records the ISO-8601 approval time for the audit trail.
+   *
+   * @generated from field: string approval_timestamp_unix_secs = 7;
+   */
+  approvalTimestampUnixSecs: string;
+};
+
+/**
+ * Describes the message layout.v1.ReviewMetadata.
+ * Use `create(ReviewMetadataSchema)` to create a new message.
+ */
+export const ReviewMetadataSchema: GenMessage<ReviewMetadata> = /*@__PURE__*/
+  messageDesc(file_layout_v1_layout, 0);
 
 /**
  * @generated from message layout.v1.Layout
@@ -57,6 +123,18 @@ export type Layout = Message<"layout.v1.Layout"> & {
    * @generated from field: google.protobuf.Timestamp updated_at = 8;
    */
   updatedAt?: Timestamp;
+
+  /**
+   * @generated from field: layout.v1.ReviewMetadata review_metadata = 9;
+   */
+  reviewMetadata?: ReviewMetadata;
+
+  /**
+   * Reference to MLCandidate if from algorithm
+   *
+   * @generated from field: string candidate_id = 10;
+   */
+  candidateId: string;
 };
 
 /**
@@ -64,7 +142,7 @@ export type Layout = Message<"layout.v1.Layout"> & {
  * Use `create(LayoutSchema)` to create a new message.
  */
 export const LayoutSchema: GenMessage<Layout> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 0);
+  messageDesc(file_layout_v1_layout, 1);
 
 /**
  * @generated from message layout.v1.Component
@@ -116,7 +194,7 @@ export type Component = Message<"layout.v1.Component"> & {
  * Use `create(ComponentSchema)` to create a new message.
  */
 export const ComponentSchema: GenMessage<Component> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 1);
+  messageDesc(file_layout_v1_layout, 2);
 
 /**
  * @generated from message layout.v1.Position
@@ -143,7 +221,7 @@ export type Position = Message<"layout.v1.Position"> & {
  * Use `create(PositionSchema)` to create a new message.
  */
 export const PositionSchema: GenMessage<Position> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 2);
+  messageDesc(file_layout_v1_layout, 3);
 
 /**
  * @generated from message layout.v1.LayoutTile
@@ -190,7 +268,7 @@ export type LayoutTile = Message<"layout.v1.LayoutTile"> & {
  * Use `create(LayoutTileSchema)` to create a new message.
  */
 export const LayoutTileSchema: GenMessage<LayoutTile> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 3);
+  messageDesc(file_layout_v1_layout, 4);
 
 /**
  * @generated from message layout.v1.Panel
@@ -244,7 +322,7 @@ export type Panel = Message<"layout.v1.Panel"> & {
  * Use `create(PanelSchema)` to create a new message.
  */
 export const PanelSchema: GenMessage<Panel> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 4);
+  messageDesc(file_layout_v1_layout, 5);
 
 /**
  * @generated from message layout.v1.BoundingBox
@@ -276,7 +354,163 @@ export type BoundingBox = Message<"layout.v1.BoundingBox"> & {
  * Use `create(BoundingBoxSchema)` to create a new message.
  */
 export const BoundingBoxSchema: GenMessage<BoundingBox> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 5);
+  messageDesc(file_layout_v1_layout, 6);
+
+/**
+ * ========== Acceptance Request/Response Messages ==========
+ *
+ * @generated from message layout.v1.SubmitLayoutForReviewRequest
+ */
+export type SubmitLayoutForReviewRequest = Message<"layout.v1.SubmitLayoutForReviewRequest"> & {
+  /**
+   * @generated from field: string layout_id = 1;
+   */
+  layoutId: string;
+
+  /**
+   * @generated from field: string submission_reason = 2;
+   */
+  submissionReason: string;
+
+  /**
+   * @generated from field: string submitted_by_actor_id = 3;
+   */
+  submittedByActorId: string;
+};
+
+/**
+ * Describes the message layout.v1.SubmitLayoutForReviewRequest.
+ * Use `create(SubmitLayoutForReviewRequestSchema)` to create a new message.
+ */
+export const SubmitLayoutForReviewRequestSchema: GenMessage<SubmitLayoutForReviewRequest> = /*@__PURE__*/
+  messageDesc(file_layout_v1_layout, 7);
+
+/**
+ * @generated from message layout.v1.SubmitLayoutForReviewResponse
+ */
+export type SubmitLayoutForReviewResponse = Message<"layout.v1.SubmitLayoutForReviewResponse"> & {
+  /**
+   * @generated from field: layout.v1.Layout layout = 1;
+   */
+  layout?: Layout;
+
+  /**
+   * @generated from field: layout.v1.ReviewMetadata review_metadata = 2;
+   */
+  reviewMetadata?: ReviewMetadata;
+};
+
+/**
+ * Describes the message layout.v1.SubmitLayoutForReviewResponse.
+ * Use `create(SubmitLayoutForReviewResponseSchema)` to create a new message.
+ */
+export const SubmitLayoutForReviewResponseSchema: GenMessage<SubmitLayoutForReviewResponse> = /*@__PURE__*/
+  messageDesc(file_layout_v1_layout, 8);
+
+/**
+ * @generated from message layout.v1.ApproveLayoutRequest
+ */
+export type ApproveLayoutRequest = Message<"layout.v1.ApproveLayoutRequest"> & {
+  /**
+   * @generated from field: string layout_id = 1;
+   */
+  layoutId: string;
+
+  /**
+   * [0, 1]
+   *
+   * @generated from field: double quality_score = 2;
+   */
+  qualityScore: number;
+
+  /**
+   * @generated from field: repeated string approval_comments = 3;
+   */
+  approvalComments: string[];
+
+  /**
+   * @generated from field: string approved_by_actor_id = 4;
+   */
+  approvedByActorId: string;
+};
+
+/**
+ * Describes the message layout.v1.ApproveLayoutRequest.
+ * Use `create(ApproveLayoutRequestSchema)` to create a new message.
+ */
+export const ApproveLayoutRequestSchema: GenMessage<ApproveLayoutRequest> = /*@__PURE__*/
+  messageDesc(file_layout_v1_layout, 9);
+
+/**
+ * @generated from message layout.v1.ApproveLayoutResponse
+ */
+export type ApproveLayoutResponse = Message<"layout.v1.ApproveLayoutResponse"> & {
+  /**
+   * @generated from field: layout.v1.Layout layout = 1;
+   */
+  layout?: Layout;
+
+  /**
+   * @generated from field: layout.v1.ReviewMetadata review_metadata = 2;
+   */
+  reviewMetadata?: ReviewMetadata;
+};
+
+/**
+ * Describes the message layout.v1.ApproveLayoutResponse.
+ * Use `create(ApproveLayoutResponseSchema)` to create a new message.
+ */
+export const ApproveLayoutResponseSchema: GenMessage<ApproveLayoutResponse> = /*@__PURE__*/
+  messageDesc(file_layout_v1_layout, 10);
+
+/**
+ * @generated from message layout.v1.RejectLayoutRequest
+ */
+export type RejectLayoutRequest = Message<"layout.v1.RejectLayoutRequest"> & {
+  /**
+   * @generated from field: string layout_id = 1;
+   */
+  layoutId: string;
+
+  /**
+   * @generated from field: repeated string rejection_reasons = 2;
+   */
+  rejectionReasons: string[];
+
+  /**
+   * @generated from field: string rejected_by_actor_id = 3;
+   */
+  rejectedByActorId: string;
+};
+
+/**
+ * Describes the message layout.v1.RejectLayoutRequest.
+ * Use `create(RejectLayoutRequestSchema)` to create a new message.
+ */
+export const RejectLayoutRequestSchema: GenMessage<RejectLayoutRequest> = /*@__PURE__*/
+  messageDesc(file_layout_v1_layout, 11);
+
+/**
+ * @generated from message layout.v1.RejectLayoutResponse
+ */
+export type RejectLayoutResponse = Message<"layout.v1.RejectLayoutResponse"> & {
+  /**
+   * @generated from field: layout.v1.Layout layout = 1;
+   */
+  layout?: Layout;
+
+  /**
+   * @generated from field: layout.v1.ReviewMetadata review_metadata = 2;
+   */
+  reviewMetadata?: ReviewMetadata;
+};
+
+/**
+ * Describes the message layout.v1.RejectLayoutResponse.
+ * Use `create(RejectLayoutResponseSchema)` to create a new message.
+ */
+export const RejectLayoutResponseSchema: GenMessage<RejectLayoutResponse> = /*@__PURE__*/
+  messageDesc(file_layout_v1_layout, 12);
 
 /**
  * @generated from message layout.v1.PanelArrayParams
@@ -334,7 +568,7 @@ export type PanelArrayParams = Message<"layout.v1.PanelArrayParams"> & {
  * Use `create(PanelArrayParamsSchema)` to create a new message.
  */
 export const PanelArrayParamsSchema: GenMessage<PanelArrayParams> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 6);
+  messageDesc(file_layout_v1_layout, 13);
 
 /**
  * @generated from message layout.v1.CreateLayoutRequest
@@ -356,7 +590,7 @@ export type CreateLayoutRequest = Message<"layout.v1.CreateLayoutRequest"> & {
  * Use `create(CreateLayoutRequestSchema)` to create a new message.
  */
 export const CreateLayoutRequestSchema: GenMessage<CreateLayoutRequest> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 7);
+  messageDesc(file_layout_v1_layout, 14);
 
 /**
  * @generated from message layout.v1.CreateLayoutResponse
@@ -373,7 +607,7 @@ export type CreateLayoutResponse = Message<"layout.v1.CreateLayoutResponse"> & {
  * Use `create(CreateLayoutResponseSchema)` to create a new message.
  */
 export const CreateLayoutResponseSchema: GenMessage<CreateLayoutResponse> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 8);
+  messageDesc(file_layout_v1_layout, 15);
 
 /**
  * @generated from message layout.v1.GetLayoutRequest
@@ -390,7 +624,7 @@ export type GetLayoutRequest = Message<"layout.v1.GetLayoutRequest"> & {
  * Use `create(GetLayoutRequestSchema)` to create a new message.
  */
 export const GetLayoutRequestSchema: GenMessage<GetLayoutRequest> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 9);
+  messageDesc(file_layout_v1_layout, 16);
 
 /**
  * @generated from message layout.v1.GetLayoutResponse
@@ -407,7 +641,7 @@ export type GetLayoutResponse = Message<"layout.v1.GetLayoutResponse"> & {
  * Use `create(GetLayoutResponseSchema)` to create a new message.
  */
 export const GetLayoutResponseSchema: GenMessage<GetLayoutResponse> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 10);
+  messageDesc(file_layout_v1_layout, 17);
 
 /**
  * @generated from message layout.v1.ListLayoutsRequest
@@ -424,7 +658,7 @@ export type ListLayoutsRequest = Message<"layout.v1.ListLayoutsRequest"> & {
  * Use `create(ListLayoutsRequestSchema)` to create a new message.
  */
 export const ListLayoutsRequestSchema: GenMessage<ListLayoutsRequest> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 11);
+  messageDesc(file_layout_v1_layout, 18);
 
 /**
  * @generated from message layout.v1.ListLayoutsResponse
@@ -441,7 +675,7 @@ export type ListLayoutsResponse = Message<"layout.v1.ListLayoutsResponse"> & {
  * Use `create(ListLayoutsResponseSchema)` to create a new message.
  */
 export const ListLayoutsResponseSchema: GenMessage<ListLayoutsResponse> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 12);
+  messageDesc(file_layout_v1_layout, 19);
 
 /**
  * @generated from message layout.v1.DeleteLayoutRequest
@@ -458,7 +692,7 @@ export type DeleteLayoutRequest = Message<"layout.v1.DeleteLayoutRequest"> & {
  * Use `create(DeleteLayoutRequestSchema)` to create a new message.
  */
 export const DeleteLayoutRequestSchema: GenMessage<DeleteLayoutRequest> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 13);
+  messageDesc(file_layout_v1_layout, 20);
 
 /**
  * @generated from message layout.v1.DeleteLayoutResponse
@@ -471,7 +705,7 @@ export type DeleteLayoutResponse = Message<"layout.v1.DeleteLayoutResponse"> & {
  * Use `create(DeleteLayoutResponseSchema)` to create a new message.
  */
 export const DeleteLayoutResponseSchema: GenMessage<DeleteLayoutResponse> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 14);
+  messageDesc(file_layout_v1_layout, 21);
 
 /**
  * @generated from message layout.v1.PlaceComponentRequest
@@ -513,7 +747,7 @@ export type PlaceComponentRequest = Message<"layout.v1.PlaceComponentRequest"> &
  * Use `create(PlaceComponentRequestSchema)` to create a new message.
  */
 export const PlaceComponentRequestSchema: GenMessage<PlaceComponentRequest> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 15);
+  messageDesc(file_layout_v1_layout, 22);
 
 /**
  * @generated from message layout.v1.PlaceComponentResponse
@@ -530,7 +764,7 @@ export type PlaceComponentResponse = Message<"layout.v1.PlaceComponentResponse">
  * Use `create(PlaceComponentResponseSchema)` to create a new message.
  */
 export const PlaceComponentResponseSchema: GenMessage<PlaceComponentResponse> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 16);
+  messageDesc(file_layout_v1_layout, 23);
 
 /**
  * @generated from message layout.v1.MoveComponentRequest
@@ -557,7 +791,7 @@ export type MoveComponentRequest = Message<"layout.v1.MoveComponentRequest"> & {
  * Use `create(MoveComponentRequestSchema)` to create a new message.
  */
 export const MoveComponentRequestSchema: GenMessage<MoveComponentRequest> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 17);
+  messageDesc(file_layout_v1_layout, 24);
 
 /**
  * @generated from message layout.v1.MoveComponentResponse
@@ -574,7 +808,7 @@ export type MoveComponentResponse = Message<"layout.v1.MoveComponentResponse"> &
  * Use `create(MoveComponentResponseSchema)` to create a new message.
  */
 export const MoveComponentResponseSchema: GenMessage<MoveComponentResponse> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 18);
+  messageDesc(file_layout_v1_layout, 25);
 
 /**
  * @generated from message layout.v1.RemoveComponentRequest
@@ -591,7 +825,7 @@ export type RemoveComponentRequest = Message<"layout.v1.RemoveComponentRequest">
  * Use `create(RemoveComponentRequestSchema)` to create a new message.
  */
 export const RemoveComponentRequestSchema: GenMessage<RemoveComponentRequest> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 19);
+  messageDesc(file_layout_v1_layout, 26);
 
 /**
  * @generated from message layout.v1.RemoveComponentResponse
@@ -604,7 +838,7 @@ export type RemoveComponentResponse = Message<"layout.v1.RemoveComponentResponse
  * Use `create(RemoveComponentResponseSchema)` to create a new message.
  */
 export const RemoveComponentResponseSchema: GenMessage<RemoveComponentResponse> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 20);
+  messageDesc(file_layout_v1_layout, 27);
 
 /**
  * @generated from message layout.v1.ListComponentsRequest
@@ -626,7 +860,7 @@ export type ListComponentsRequest = Message<"layout.v1.ListComponentsRequest"> &
  * Use `create(ListComponentsRequestSchema)` to create a new message.
  */
 export const ListComponentsRequestSchema: GenMessage<ListComponentsRequest> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 21);
+  messageDesc(file_layout_v1_layout, 28);
 
 /**
  * @generated from message layout.v1.ListComponentsResponse
@@ -643,7 +877,7 @@ export type ListComponentsResponse = Message<"layout.v1.ListComponentsResponse">
  * Use `create(ListComponentsResponseSchema)` to create a new message.
  */
 export const ListComponentsResponseSchema: GenMessage<ListComponentsResponse> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 22);
+  messageDesc(file_layout_v1_layout, 29);
 
 /**
  * @generated from message layout.v1.GeneratePanelArrayRequest
@@ -665,7 +899,7 @@ export type GeneratePanelArrayRequest = Message<"layout.v1.GeneratePanelArrayReq
  * Use `create(GeneratePanelArrayRequestSchema)` to create a new message.
  */
 export const GeneratePanelArrayRequestSchema: GenMessage<GeneratePanelArrayRequest> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 23);
+  messageDesc(file_layout_v1_layout, 30);
 
 /**
  * @generated from message layout.v1.GeneratePanelArrayResponse
@@ -692,7 +926,7 @@ export type GeneratePanelArrayResponse = Message<"layout.v1.GeneratePanelArrayRe
  * Use `create(GeneratePanelArrayResponseSchema)` to create a new message.
  */
 export const GeneratePanelArrayResponseSchema: GenMessage<GeneratePanelArrayResponse> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 24);
+  messageDesc(file_layout_v1_layout, 31);
 
 /**
  * @generated from message layout.v1.GetTilesRequest
@@ -719,7 +953,7 @@ export type GetTilesRequest = Message<"layout.v1.GetTilesRequest"> & {
  * Use `create(GetTilesRequestSchema)` to create a new message.
  */
 export const GetTilesRequestSchema: GenMessage<GetTilesRequest> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 25);
+  messageDesc(file_layout_v1_layout, 32);
 
 /**
  * @generated from message layout.v1.GetTilesResponse
@@ -736,7 +970,7 @@ export type GetTilesResponse = Message<"layout.v1.GetTilesResponse"> & {
  * Use `create(GetTilesResponseSchema)` to create a new message.
  */
 export const GetTilesResponseSchema: GenMessage<GetTilesResponse> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 26);
+  messageDesc(file_layout_v1_layout, 33);
 
 /**
  * @generated from message layout.v1.GetTilePanelsRequest
@@ -753,7 +987,7 @@ export type GetTilePanelsRequest = Message<"layout.v1.GetTilePanelsRequest"> & {
  * Use `create(GetTilePanelsRequestSchema)` to create a new message.
  */
 export const GetTilePanelsRequestSchema: GenMessage<GetTilePanelsRequest> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 27);
+  messageDesc(file_layout_v1_layout, 34);
 
 /**
  * @generated from message layout.v1.GetTilePanelsResponse
@@ -770,7 +1004,57 @@ export type GetTilePanelsResponse = Message<"layout.v1.GetTilePanelsResponse"> &
  * Use `create(GetTilePanelsResponseSchema)` to create a new message.
  */
 export const GetTilePanelsResponseSchema: GenMessage<GetTilePanelsResponse> = /*@__PURE__*/
-  messageDesc(file_layout_v1_layout, 28);
+  messageDesc(file_layout_v1_layout, 35);
+
+/**
+ * ========== Acceptance Status Enum ==========
+ * AcceptanceStatus is the workflow gate state for a layout artefact.
+ * Determines whether this layout satisfies the LayoutReady gate for phase progression.
+ *
+ * @generated from enum layout.v1.AcceptanceStatus
+ */
+export enum AcceptanceStatus {
+  /**
+   * ACCEPTANCE_STATUS_UNSPECIFIED is the default zero value; treat as DRAFT.
+   *
+   * @generated from enum value: ACCEPTANCE_STATUS_UNSPECIFIED = 0;
+   */
+  UNSPECIFIED = 0,
+
+  /**
+   * ACCEPTANCE_STATUS_DRAFT indicates no review has been requested yet.
+   *
+   * @generated from enum value: ACCEPTANCE_STATUS_DRAFT = 1;
+   */
+  DRAFT = 1,
+
+  /**
+   * ACCEPTANCE_STATUS_REVIEW_PENDING indicates a review has been submitted and is awaiting decision.
+   *
+   * @generated from enum value: ACCEPTANCE_STATUS_REVIEW_PENDING = 2;
+   */
+  REVIEW_PENDING = 2,
+
+  /**
+   * ACCEPTANCE_STATUS_APPROVED indicates the layout passed acceptance and may proceed.
+   *
+   * @generated from enum value: ACCEPTANCE_STATUS_APPROVED = 3;
+   */
+  APPROVED = 3,
+
+  /**
+   * ACCEPTANCE_STATUS_REJECTED indicates the layout failed acceptance; blockers must be resolved.
+   *
+   * @generated from enum value: ACCEPTANCE_STATUS_REJECTED = 4;
+   */
+  REJECTED = 4,
+}
+
+/**
+ * Describes the enum layout.v1.AcceptanceStatus.
+ */
+export const AcceptanceStatusSchema: GenEnum<AcceptanceStatus> = /*@__PURE__*/
+  enumDesc(file_layout_v1_layout, 0);
 
 /**
  * @generated from enum layout.v1.ComponentType
@@ -821,14 +1105,18 @@ export enum ComponentType {
  * Describes the enum layout.v1.ComponentType.
  */
 export const ComponentTypeSchema: GenEnum<ComponentType> = /*@__PURE__*/
-  enumDesc(file_layout_v1_layout, 0);
+  enumDesc(file_layout_v1_layout, 1);
 
 /**
+ * LayoutService manages solar farm layout entities including panel arrays,
+ * components (inverters, transformers, trackers), tile-based spatial queries,
+ * and the acceptance workflow gate required for ElectricalReady phase progression.
+ *
  * @generated from service layout.v1.LayoutService
  */
 export const LayoutService: GenService<{
   /**
-   * Layout management
+   * CreateLayout creates a new empty layout for a project.
    *
    * @generated from rpc layout.v1.LayoutService.CreateLayout
    */
@@ -838,6 +1126,8 @@ export const LayoutService: GenService<{
     output: typeof CreateLayoutResponseSchema;
   },
   /**
+   * GetLayout retrieves a layout by ID including its current review metadata.
+   *
    * @generated from rpc layout.v1.LayoutService.GetLayout
    */
   getLayout: {
@@ -846,6 +1136,8 @@ export const LayoutService: GenService<{
     output: typeof GetLayoutResponseSchema;
   },
   /**
+   * ListLayouts returns all layouts for a project ordered by creation time.
+   *
    * @generated from rpc layout.v1.LayoutService.ListLayouts
    */
   listLayouts: {
@@ -854,6 +1146,8 @@ export const LayoutService: GenService<{
     output: typeof ListLayoutsResponseSchema;
   },
   /**
+   * DeleteLayout permanently removes a layout and all its components and tiles.
+   *
    * @generated from rpc layout.v1.LayoutService.DeleteLayout
    */
   deleteLayout: {
@@ -872,6 +1166,8 @@ export const LayoutService: GenService<{
     output: typeof PlaceComponentResponseSchema;
   },
   /**
+   * MoveComponent updates the position of an existing placed component.
+   *
    * @generated from rpc layout.v1.LayoutService.MoveComponent
    */
   moveComponent: {
@@ -880,6 +1176,8 @@ export const LayoutService: GenService<{
     output: typeof MoveComponentResponseSchema;
   },
   /**
+   * RemoveComponent removes a placed component from the layout.
+   *
    * @generated from rpc layout.v1.LayoutService.RemoveComponent
    */
   removeComponent: {
@@ -888,6 +1186,8 @@ export const LayoutService: GenService<{
     output: typeof RemoveComponentResponseSchema;
   },
   /**
+   * ListComponents returns all placed components for a layout.
+   *
    * @generated from rpc layout.v1.LayoutService.ListComponents
    */
   listComponents: {
@@ -916,12 +1216,45 @@ export const LayoutService: GenService<{
     output: typeof GetTilesResponseSchema;
   },
   /**
+   * GetTilePanels returns individual panel geometries within a specific tile for viewport rendering.
+   *
    * @generated from rpc layout.v1.LayoutService.GetTilePanels
    */
   getTilePanels: {
     methodKind: "unary";
     input: typeof GetTilePanelsRequestSchema;
     output: typeof GetTilePanelsResponseSchema;
+  },
+  /**
+   * Acceptance workflow — gates the LayoutReady -> ElectricalReady phase transition.
+   * SubmitLayoutForReview transitions review_metadata.status to REVIEW_PENDING.
+   *
+   * @generated from rpc layout.v1.LayoutService.SubmitLayoutForReview
+   */
+  submitLayoutForReview: {
+    methodKind: "unary";
+    input: typeof SubmitLayoutForReviewRequestSchema;
+    output: typeof SubmitLayoutForReviewResponseSchema;
+  },
+  /**
+   * ApproveLayout sets review_metadata.status to APPROVED, enabling ElectricalReady transition.
+   *
+   * @generated from rpc layout.v1.LayoutService.ApproveLayout
+   */
+  approveLayout: {
+    methodKind: "unary";
+    input: typeof ApproveLayoutRequestSchema;
+    output: typeof ApproveLayoutResponseSchema;
+  },
+  /**
+   * RejectLayout sets review_metadata.status to REJECTED and records blockers preventing approval.
+   *
+   * @generated from rpc layout.v1.LayoutService.RejectLayout
+   */
+  rejectLayout: {
+    methodKind: "unary";
+    input: typeof RejectLayoutRequestSchema;
+    output: typeof RejectLayoutResponseSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_layout_v1_layout, 0);

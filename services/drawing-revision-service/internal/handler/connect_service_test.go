@@ -6,7 +6,7 @@ import (
 
 	connect "connectrpc.com/connect"
 
-	"solar3d/drawing-revision-service/internal/service"
+	"p9e.in/samavaya/solar3d/drawing-revision-service/internal/service"
 )
 
 func TestToConnectError_TypedStaleConflictHeaders(t *testing.T) {

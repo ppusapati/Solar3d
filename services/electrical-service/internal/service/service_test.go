@@ -6,7 +6,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"solar3d/electrical-service/internal/domain"
+	"p9e.in/samavaya/solar3d/electrical-service/internal/domain"
 )
 
 type stubElectricalRepository struct {

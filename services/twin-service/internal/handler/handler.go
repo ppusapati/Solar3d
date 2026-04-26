@@ -11,9 +11,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 
-	"solar3d/twin-service/internal/domain"
-	"solar3d/twin-service/internal/repository"
-	"solar3d/twin-service/internal/service"
+	"p9e.in/samavaya/solar3d/twin-service/internal/domain"
+	"p9e.in/samavaya/solar3d/twin-service/internal/repository"
+	"p9e.in/samavaya/solar3d/twin-service/internal/service"
 )
 
 // TwinHandler exposes the twin service over HTTP/JSON.
@@ -32,11 +32,19 @@ func NewTwinHandler(svc *service.TwinService, logger zerolog.Logger) *TwinHandle
 
 // Register mounts all twin-service REST routes onto the provided mux.
 func (h *TwinHandler) Register(mux *http.ServeMux) {
+	// REST routes (deprecated — kept as aliases for one minor version).
 	mux.HandleFunc("POST /api/v1/twins", h.ProvisionTwin)
 	mux.HandleFunc("GET /api/v1/twins/{twinId}", h.GetTwinState)
 	mux.HandleFunc("POST /api/v1/twins/{twinId}/telemetry", h.IngestTelemetry)
 	mux.HandleFunc("POST /api/v1/twins/{twinId}/asset-identities", h.LinkAssetIdentity)
 	mux.HandleFunc("GET /api/v1/twins/{twinId}/telemetry", h.GetLatestTelemetry)
+
+	// ConnectRPC-style routes.
+	mux.HandleFunc("POST /twin.v1.DigitalTwinService/ProvisionTwin", h.ProvisionTwinRPC)
+	mux.HandleFunc("POST /twin.v1.DigitalTwinService/GetTwinState", h.GetTwinStateRPC)
+	mux.HandleFunc("POST /twin.v1.DigitalTwinService/IngestTelemetry", h.IngestTelemetryRPC)
+	mux.HandleFunc("POST /twin.v1.DigitalTwinService/LinkAssetIdentity", h.LinkAssetIdentityRPC)
+	mux.HandleFunc("POST /twin.v1.DigitalTwinService/GetLatestTelemetry", h.GetLatestTelemetryRPC)
 }
 
 // --- Request / Response DTOs ---
@@ -195,10 +203,18 @@ func (h *TwinHandler) GetLatestTelemetry(w http.ResponseWriter, r *http.Request)
 		limit = n
 	}
 
-	// Surface is direct to repository — future: promote to service method if business logic is needed.
-	_ = twinID
-	_ = limit
-	writeError(w, http.StatusNotImplemented, "not implemented — use IngestTelemetry")
+	readings, err := h.svc.LatestReadings(r.Context(), twinID, limit)
+	if err != nil {
+		h.logger.Error().Err(err).Str("twin_id", twinID.String()).Msg("latest telemetry fetch failed")
+		writeError(w, http.StatusInternalServerError, "failed to fetch telemetry")
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]any{
+		"twin_id":  twinID,
+		"limit":    limit,
+		"count":    len(readings),
+		"readings": readings,
+	})
 }
 
 // LinkAssetIdentity handles POST /api/v1/twins/{twinId}/asset-identities

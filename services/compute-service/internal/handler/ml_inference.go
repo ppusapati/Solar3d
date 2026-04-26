@@ -4,13 +4,13 @@ import (
 	"context"
 	"errors"
 
-	"solar3d/compute-service/internal/mappers"
-	"solar3d/compute-service/internal/models"
-	"solar3d/compute-service/internal/service"
+	"p9e.in/samavaya/solar3d/compute-service/internal/mappers"
+	"p9e.in/samavaya/solar3d/compute-service/internal/models"
+	"p9e.in/samavaya/solar3d/compute-service/internal/service"
 
 	"connectrpc.com/connect"
-	ml_inferencev1 "github.com/solar3d/solar3d/gen/ml_inference/v1"
-	ml_inferencev1connect "github.com/solar3d/solar3d/gen/ml_inference/v1/ml_inferencev1connect"
+	ml_inferencev1 "p9e.in/samavaya/solar3d/gen/ml_inference/v1"
+	ml_inferencev1connect "p9e.in/samavaya/solar3d/gen/ml_inference/v1/ml_inferencev1connect"
 )
 
 // MLInferenceServiceHandler implements the connectRPC ML inference service

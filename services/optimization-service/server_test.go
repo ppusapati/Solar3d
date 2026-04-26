@@ -4,9 +4,9 @@ import (
 	"context"
 	"testing"
 
-	"solar3d/optimization-service/internal/client"
-	"solar3d/optimization-service/internal/handler"
-	"solar3d/optimization-service/internal/service"
+	"p9e.in/samavaya/solar3d/optimization-service/internal/client"
+	"p9e.in/samavaya/solar3d/optimization-service/internal/handler"
+	"p9e.in/samavaya/solar3d/optimization-service/internal/service"
 )
 
 // MockOptimizationClient is a mock implementation

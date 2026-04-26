@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import { camera } from '$lib/core/stores';
+	import { toast } from '$lib/core/stores/toast';
+	import { structuredLog } from '$lib/core/error-handling';
 
 	const dispatch = createEventDispatcher<{
 		irradianceData: { ghi: number; dni: number; dhi: number; temperature: number };
@@ -34,7 +36,8 @@
 				estimateFromLocation(lat, lon);
 			}
 		} catch (err) {
-			console.error('Weather fetch failed:', err);
+			structuredLog('warn', 'weather.fetch_failed', { error: String(err), lat, lon, source: dataSource });
+			toast.warning('Weather data unavailable — using location estimate');
 			estimateFromLocation(lat, lon);
 		} finally {
 			isLoading = false;

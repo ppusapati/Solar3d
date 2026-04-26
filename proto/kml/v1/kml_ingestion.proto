@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package kml.v1;
 
-option go_package = "github.com/solar3d/solar3d/gen/kml/v1;kmlv1";
+option go_package = "p9e.in/samavaya/solar3d/gen/kml/v1;kmlv1";
 
 import "google/protobuf/timestamp.proto";
 import "common/v1/primitives.proto";

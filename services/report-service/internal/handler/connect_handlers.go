@@ -8,8 +8,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 
-	"solar3d/report-service/internal/domain"
-	"solar3d/report-service/internal/service"
+	"p9e.in/samavaya/solar3d/report-service/internal/domain"
+	"p9e.in/samavaya/solar3d/report-service/internal/service"
 )
 
 type ReportHandler struct {

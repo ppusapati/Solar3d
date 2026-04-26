@@ -6,11 +6,11 @@ import (
 	"time"
 
 	"github.com/rs/zerolog"
-	drawingv1connect "github.com/solar3d/solar3d/gen/drawing/v1/drawingv1connect"
-	projectv1connect "github.com/solar3d/solar3d/gen/project/v1/projectv1connect"
+	drawingv1connect "p9e.in/samavaya/solar3d/gen/drawing/v1/drawingv1connect"
+	projectv1connect "p9e.in/samavaya/solar3d/gen/project/v1/projectv1connect"
 
-	"solar3d/api-gateway-service/internal/handler"
-	"solar3d/api-gateway-service/internal/service"
+	"p9e.in/samavaya/solar3d/api-gateway-service/internal/handler"
+	"p9e.in/samavaya/solar3d/api-gateway-service/internal/service"
 )
 
 // Register wires API Gateway workspace routes onto the shared mux.

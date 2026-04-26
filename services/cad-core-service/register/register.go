@@ -6,10 +6,10 @@ import (
 	"time"
 
 	"github.com/rs/zerolog"
-	drawingv1connect "github.com/solar3d/solar3d/gen/drawing/v1/drawingv1connect"
+	drawingv1connect "p9e.in/samavaya/solar3d/gen/drawing/v1/drawingv1connect"
 
-	"solar3d/cad-core-service/internal/handler"
-	"solar3d/cad-core-service/internal/service"
+	"p9e.in/samavaya/solar3d/cad-core-service/internal/handler"
+	"p9e.in/samavaya/solar3d/cad-core-service/internal/service"
 )
 
 // Register wires the cad-core-service handlers onto mux.

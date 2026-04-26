@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"solar3d/compute-service/internal/models"
+	"p9e.in/samavaya/solar3d/compute-service/internal/models"
 )
 
 func TestChaos_DeployFailsWhenArtifactRegistryUnavailable(t *testing.T) {

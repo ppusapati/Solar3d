@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"solar3d/structural-service/internal/domain"
+	"p9e.in/samavaya/solar3d/structural-service/internal/domain"
 )
 
 type Repository struct {

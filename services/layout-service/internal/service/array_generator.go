@@ -9,7 +9,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 
-	"solar3d/layout-service/internal/domain"
+	"p9e.in/samavaya/solar3d/layout-service/internal/domain"
 )
 
 // ArrayGenerator produces panel arrays that fill a polygon with optimally

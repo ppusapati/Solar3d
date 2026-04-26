@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"time"
 
-	"solar3d/compute-service/internal/service"
+	"p9e.in/samavaya/solar3d/compute-service/internal/service"
 
 	"connectrpc.com/connect"
-	commonv1 "github.com/solar3d/solar3d/gen/common/v1"
-	kmlv1 "github.com/solar3d/solar3d/gen/kml/v1"
-	kmlv1connect "github.com/solar3d/solar3d/gen/kml/v1/kmlv1connect"
+	commonv1 "p9e.in/samavaya/solar3d/gen/common/v1"
+	kmlv1 "p9e.in/samavaya/solar3d/gen/kml/v1"
+	kmlv1connect "p9e.in/samavaya/solar3d/gen/kml/v1/kmlv1connect"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 

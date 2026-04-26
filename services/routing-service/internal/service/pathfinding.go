@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"math"
 
-	"solar3d/routing-service/internal/domain"
+	"p9e.in/samavaya/solar3d/routing-service/internal/domain"
 )
 
 // GridNode represents a position on the terrain grid.

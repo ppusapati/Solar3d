@@ -9,12 +9,12 @@ import (
 	connect "connectrpc.com/connect"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
-	layoutv1 "github.com/solar3d/solar3d/gen/layout/v1"
-	layoutv1connect "github.com/solar3d/solar3d/gen/layout/v1/layoutv1connect"
+	layoutv1 "p9e.in/samavaya/solar3d/gen/layout/v1"
+	layoutv1connect "p9e.in/samavaya/solar3d/gen/layout/v1/layoutv1connect"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"solar3d/layout-service/internal/domain"
-	"solar3d/layout-service/internal/service"
+	"p9e.in/samavaya/solar3d/layout-service/internal/domain"
+	"p9e.in/samavaya/solar3d/layout-service/internal/service"
 )
 
 type ConnectLayoutService struct {

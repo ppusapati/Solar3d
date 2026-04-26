@@ -3,17 +3,37 @@ managed:
   enabled: true
   override:
     - file_option: go_package_prefix
-      value: github.com/solar3d/solar3d/gen
+      value: p9e.in/samavaya/solar3d/gen
+    # packages/pagination.proto mirrors the Samavāya packages pagination module;
+    # keep its generated Go package at p9e.in/samavaya/packages/api/v1/pagination
+    # so proto types (e.g. assetv1.ListAssetsResponse.Pagination) reference the
+    # same Go type services already import.
+    - file_option: go_package
+      path: packages/pagination.proto
+      value: p9e.in/samavaya/packages/api/v1/pagination;pagination
 plugins:
-  - remote: buf.build/protocolbuffers/go
+  # Go messages
+  - local: protoc-gen-go
     out: gen/go
     opt: paths=source_relative
-  - remote: buf.build/connectrpc/go
+  # Go ConnectRPC handlers + clients
+  - local: protoc-gen-connect-go
     out: gen/go
     opt: paths=source_relative
-  - remote: buf.build/bufbuild/es
+  # TS messages (bufbuild/es)
+  - local: protoc-gen-es
     out: ../frontend/src/lib/gen
     opt: target=ts,import_extension=.js
-  - remote: buf.build/connectrpc/es
+  # TS ConnectRPC clients
+  - local: protoc-gen-connect-es
     out: ../frontend/src/lib/gen
     opt: target=ts,import_extension=.js
+  # Dart messages (dart pub global activate protoc_plugin)
+  - local: protoc-gen-dart
+    out: ../mobile/lib/gen
+  # Dart ConnectRPC clients (dart pub global activate connectrpc)
+  - local: protoc-gen-connect-dart
+    out: ../mobile/lib/gen
+  # OpenAPI v3 spec generated from ConnectRPC services (paths follow /pkg.Service/Method).
+  - local: protoc-gen-connect-openapi
+    out: ../docs/openapi

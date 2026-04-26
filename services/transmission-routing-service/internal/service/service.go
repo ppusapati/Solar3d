@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"math"
 	"net/http"
 	"sort"
@@ -14,8 +15,8 @@ import (
 
 	"github.com/google/uuid"
 
-	"solar3d/transmission-routing-service/internal/domain"
-	"solar3d/transmission-routing-service/internal/repository"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/domain"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/repository"
 )
 
 var ErrInvalidInput = errors.New("invalid transmission route input")
@@ -29,6 +30,7 @@ type transmissionRepository interface {
 	Delete(ctx context.Context, id uuid.UUID) error
 	SubmitForReview(ctx context.Context, route *domain.TransmissionRoute) (*domain.TransmissionRoute, error)
 	Approve(ctx context.Context, route *domain.TransmissionRoute) (*domain.TransmissionRoute, error)
+	Reject(ctx context.Context, route *domain.TransmissionRoute) (*domain.TransmissionRoute, error)
 }
 
 type TransmissionService struct {
@@ -706,11 +708,20 @@ func flattenCostGrid(grid [][]float64) []float64 {
 	return flat
 }
 
+// sendProgress emits a streaming progress update. Failures are logged but
+// not returned: the routing job itself must not abort because the client's
+// progress stream closed early (a normal pattern when the user navigates
+// away from the streaming UI). Critical state lives in the persisted
+// route record, not in the progress channel.
 func sendProgress(emit func(domain.ProgressUpdate) error, update domain.ProgressUpdate) error {
 	if emit == nil {
 		return nil
 	}
-	return emit(update)
+	if err := emit(update); err != nil {
+		log.Printf("event=transmission.progress_emit_failed phase=%s pct=%d err=%v", update.Phase, update.PercentComplete, err)
+		return err
+	}
+	return nil
 }
 
 func placeTowers(waypoints []domain.Waypoint, constraints domain.TransmissionConstraints, voltageClass domain.VoltageClass, raster domain.ElevationRaster, vectorFeatures []domain.VectorFeature) []domain.TowerPosition {

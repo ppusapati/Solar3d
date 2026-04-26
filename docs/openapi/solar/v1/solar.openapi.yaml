@@ -1,0 +1,710 @@
+openapi: 3.1.0
+info:
+  title: solar.v1
+paths:
+  /solar.v1.SolarService/BulkSolarPosition:
+    post:
+      tags:
+        - solar.v1.SolarService
+      summary: BulkSolarPosition
+      description: BulkSolarPosition computes positions for multiple timestamps (optimized).
+      operationId: solar.v1.SolarService.BulkSolarPosition
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/solar.v1.BulkSolarPositionRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/solar.v1.BulkSolarPositionResponse'
+  /solar.v1.SolarService/CalculateDHI:
+    post:
+      tags:
+        - solar.v1.SolarService
+      summary: CalculateDHI
+      description: CalculateDHI computes diffuse horizontal irradiance.
+      operationId: solar.v1.SolarService.CalculateDHI
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/solar.v1.DHIRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/solar.v1.DHIResponse'
+  /solar.v1.SolarService/CalculateDNI:
+    post:
+      tags:
+        - solar.v1.SolarService
+      summary: CalculateDNI
+      description: CalculateDNI computes direct normal irradiance.
+      operationId: solar.v1.SolarService.CalculateDNI
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/solar.v1.DNIRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/solar.v1.DNIResponse'
+  /solar.v1.SolarService/CalculateSolarPosition:
+    post:
+      tags:
+        - solar.v1.SolarService
+      summary: CalculateSolarPosition
+      description: CalculateSolarPosition computes elevation and azimuth angles.
+      operationId: solar.v1.SolarService.CalculateSolarPosition
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/solar.v1.SolarPositionRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/solar.v1.SolarPositionResponse'
+  /solar.v1.SolarService/CastShadows:
+    post:
+      tags:
+        - solar.v1.SolarService
+      summary: CastShadows
+      description: CastShadows projects shadows from obstacles given sun position.
+      operationId: solar.v1.SolarService.CastShadows
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/solar.v1.CastShadowsRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/solar.v1.CastShadowsResponse'
+components:
+  schemas:
+    common.v1.ApiVersion:
+      type: object
+      properties:
+        major:
+          type: integer
+          title: major
+        minor:
+          type: integer
+          title: minor
+        patch:
+          type: integer
+          title: patch
+      title: ApiVersion
+      additionalProperties: false
+      description: Semantic version carried in API payloads for compatibility checks.
+    common.v1.ContractMetadata:
+      type: object
+      properties:
+        schemaVersion:
+          title: schema_version
+          $ref: '#/components/schemas/common.v1.ApiVersion'
+        schemaId:
+          type: string
+          title: schema_id
+        schemaHash:
+          type: string
+          title: schema_hash
+        producer:
+          type: string
+          title: producer
+        correlationId:
+          type: string
+          title: correlation_id
+        createdAt:
+          title: created_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: ContractMetadata
+      additionalProperties: false
+      description: Metadata shared across contracts to support tracing and lineage.
+    common.v1.Point2D:
+      type: object
+      properties:
+        x:
+          type: number
+          title: x
+          format: double
+        y:
+          type: number
+          title: y
+          format: double
+      title: Point2D
+      additionalProperties: false
+    common.v1.Point3D:
+      type: object
+      properties:
+        x:
+          type: number
+          title: x
+          format: double
+        y:
+          type: number
+          title: y
+          format: double
+        z:
+          type: number
+          title: z
+          format: double
+      title: Point3D
+      additionalProperties: false
+    connect-protocol-version:
+      type: number
+      title: Connect-Protocol-Version
+      enum:
+        - 1
+      description: Define the version of the Connect protocol
+      const: 1
+    connect-timeout-header:
+      type: number
+      title: Connect-Timeout-Ms
+      description: Define the timeout, in ms
+    connect.error:
+      type: object
+      properties:
+        code:
+          type: string
+          examples:
+            - not_found
+          enum:
+            - canceled
+            - unknown
+            - invalid_argument
+            - deadline_exceeded
+            - not_found
+            - already_exists
+            - permission_denied
+            - resource_exhausted
+            - failed_precondition
+            - aborted
+            - out_of_range
+            - unimplemented
+            - internal
+            - unavailable
+            - data_loss
+            - unauthenticated
+          description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+        message:
+          type: string
+          description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/connect.error_details.Any'
+          description: A list of messages that carry the error details. There is no limit on the number of messages.
+      title: Connect Error
+      additionalProperties: true
+      description: 'Error type returned by Connect: https://connectrpc.com/docs/go/errors/#http-representation'
+    connect.error_details.Any:
+      type: object
+      properties:
+        type:
+          type: string
+          description: 'A URL that acts as a globally unique identifier for the type of the serialized message. For example: `type.googleapis.com/google.rpc.ErrorInfo`. This is used to determine the schema of the data in the `value` field and is the discriminator for the `debug` field.'
+        value:
+          type: string
+          format: binary
+          description: The Protobuf message, serialized as bytes and base64-encoded. The specific message type is identified by the `type` field.
+        debug:
+          oneOf:
+            - type: object
+              title: Any
+              additionalProperties: true
+              description: Detailed error information.
+          discriminator:
+            propertyName: type
+          title: Debug
+          description: Deserialized error detail payload. The 'type' field indicates the schema. This field is for easier debugging and should not be relied upon for application logic.
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message, with an additional debug field for ConnectRPC error details.
+    google.protobuf.Timestamp:
+      type: string
+      examples:
+        - "2023-01-15T01:30:15.01Z"
+        - "2024-12-25T12:00:00Z"
+      format: date-time
+      description: |-
+        A Timestamp represents a point in time independent of any time zone or local
+         calendar, encoded as a count of seconds and fractions of seconds at
+         nanosecond resolution. The count is relative to an epoch at UTC midnight on
+         January 1, 1970, in the proleptic Gregorian calendar which extends the
+         Gregorian calendar backwards to year one.
+
+         All minutes are 60 seconds long. Leap seconds are "smeared" so that no leap
+         second table is needed for interpretation, using a [24-hour linear
+         smear](https://developers.google.com/time/smear).
+
+         The range is from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59.999999999Z. By
+         restricting to that range, we ensure that we can convert to and from [RFC
+         3339](https://www.ietf.org/rfc/rfc3339.txt) date strings.
+
+         # Examples
+
+         Example 1: Compute Timestamp from POSIX `time()`.
+
+             Timestamp timestamp;
+             timestamp.set_seconds(time(NULL));
+             timestamp.set_nanos(0);
+
+         Example 2: Compute Timestamp from POSIX `gettimeofday()`.
+
+             struct timeval tv;
+             gettimeofday(&tv, NULL);
+
+             Timestamp timestamp;
+             timestamp.set_seconds(tv.tv_sec);
+             timestamp.set_nanos(tv.tv_usec * 1000);
+
+         Example 3: Compute Timestamp from Win32 `GetSystemTimeAsFileTime()`.
+
+             FILETIME ft;
+             GetSystemTimeAsFileTime(&ft);
+             UINT64 ticks = (((UINT64)ft.dwHighDateTime) << 32) | ft.dwLowDateTime;
+
+             // A Windows tick is 100 nanoseconds. Windows epoch 1601-01-01T00:00:00Z
+             // is 11644473600 seconds before Unix epoch 1970-01-01T00:00:00Z.
+             Timestamp timestamp;
+             timestamp.set_seconds((INT64) ((ticks / 10000000) - 11644473600LL));
+             timestamp.set_nanos((INT32) ((ticks % 10000000) * 100));
+
+         Example 4: Compute Timestamp from Java `System.currentTimeMillis()`.
+
+             long millis = System.currentTimeMillis();
+
+             Timestamp timestamp = Timestamp.newBuilder().setSeconds(millis / 1000)
+                 .setNanos((int) ((millis % 1000) * 1000000)).build();
+
+         Example 5: Compute Timestamp from Java `Instant.now()`.
+
+             Instant now = Instant.now();
+
+             Timestamp timestamp =
+                 Timestamp.newBuilder().setSeconds(now.getEpochSecond())
+                     .setNanos(now.getNano()).build();
+
+         Example 6: Compute Timestamp from current time in Python.
+
+             timestamp = Timestamp()
+             timestamp.GetCurrentTime()
+
+         # JSON Mapping
+
+         In JSON format, the Timestamp type is encoded as a string in the
+         [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format. That is, the
+         format is "{year}-{month}-{day}T{hour}:{min}:{sec}[.{frac_sec}]Z"
+         where {year} is always expressed using four digits while {month}, {day},
+         {hour}, {min}, and {sec} are zero-padded to two digits each. The fractional
+         seconds, which can go up to 9 digits (i.e. up to 1 nanosecond resolution),
+         are optional. The "Z" suffix indicates the timezone ("UTC"); the timezone
+         is required. A proto3 JSON serializer should always use UTC (as indicated by
+         "Z") when printing the Timestamp type and a proto3 JSON parser should be
+         able to accept both UTC and other timezones (as indicated by an offset).
+
+         For example, "2017-01-15T01:30:15.01Z" encodes 15.01 seconds past
+         01:30 UTC on January 15, 2017.
+
+         In JavaScript, one can convert a Date object to this format using the
+         standard
+         [toISOString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString)
+         method. In Python, a standard `datetime.datetime` object can be converted
+         to this format using
+         [`strftime`](https://docs.python.org/2/library/time.html#time.strftime) with
+         the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one can use
+         the Joda Time's [`ISODateTimeFormat.dateTime()`](
+         http://joda-time.sourceforge.net/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime()
+         ) to obtain a formatter capable of generating timestamps in this format.
+    solar.v1.BulkSolarPositionRequest:
+      type: object
+      properties:
+        timestampSeconds:
+          type: array
+          items:
+            type: number
+            format: double
+          title: timestamp_seconds
+          description: Timestamps to compute (must be sorted).
+        latitudeDeg:
+          type: number
+          title: latitude_deg
+          format: double
+          description: Observer latitude (degrees).
+        longitudeDeg:
+          type: number
+          title: longitude_deg
+          format: double
+          description: Observer longitude (degrees).
+        utcOffsetHours:
+          type: number
+          title: utc_offset_hours
+          format: double
+          description: UTC offset hours.
+      title: BulkSolarPositionRequest
+      additionalProperties: false
+    solar.v1.BulkSolarPositionResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/solar.v1.TimestampPosition'
+          title: results
+          description: Positions in same order as request timestamps.
+        nightCount:
+          type: integer
+          title: night_count
+          format: int32
+          description: Count of night timestamps (sun below horizon).
+        contract:
+          title: contract
+          description: Contract metadata.
+          $ref: '#/components/schemas/common.v1.ContractMetadata'
+      title: BulkSolarPositionResponse
+      additionalProperties: false
+    solar.v1.CastShadowsRequest:
+      type: object
+      properties:
+        obstacles:
+          type: array
+          items:
+            $ref: '#/components/schemas/solar.v1.Obstacle'
+          title: obstacles
+          description: List of obstacles in scene.
+        sunElevationDeg:
+          type: number
+          title: sun_elevation_deg
+          format: double
+          description: Current sun elevation (degrees).
+        sunAzimuthDeg:
+          type: number
+          title: sun_azimuth_deg
+          format: double
+          description: Current sun azimuth (degrees from North).
+        exaggeration:
+          type: number
+          title: exaggeration
+          format: double
+          description: Vertical exaggeration for visualization (default 1.0).
+      title: CastShadowsRequest
+      additionalProperties: false
+    solar.v1.CastShadowsResponse:
+      type: object
+      properties:
+        shadows:
+          type: array
+          items:
+            $ref: '#/components/schemas/solar.v1.ShadowPolygon'
+          title: shadows
+          description: Shadow polygons one per obstacle.
+        shadowCount:
+          type: integer
+          title: shadow_count
+          format: int32
+          description: Number of shadows cast (> 0 only if sun above horizon).
+        contract:
+          title: contract
+          description: Tracing/versioning.
+          $ref: '#/components/schemas/common.v1.ContractMetadata'
+      title: CastShadowsResponse
+      additionalProperties: false
+    solar.v1.DHIRequest:
+      type: object
+      properties:
+        zenithAngleDeg:
+          type: number
+          title: zenith_angle_deg
+          format: double
+          description: Sun zenith angle (0-90 degrees).
+        clearnessIndex:
+          type: number
+          title: clearness_index
+          format: double
+          description: Clearness index empirical factor (0-1).
+      title: DHIRequest
+      additionalProperties: false
+    solar.v1.DHIResponse:
+      type: object
+      properties:
+        dhiWM2:
+          type: number
+          title: dhi_w_m2
+          format: double
+          description: Diffuse horizontal irradiance (W/m²).
+        valid:
+          type: boolean
+          title: valid
+          description: True if calculation succeeded.
+      title: DHIResponse
+      additionalProperties: false
+    solar.v1.DNIRequest:
+      type: object
+      properties:
+        airMass:
+          type: number
+          title: air_mass
+          format: double
+          description: Air mass factor (typically 1.0 - 6.0).
+        zenithAngleDeg:
+          type: number
+          title: zenith_angle_deg
+          format: double
+          description: Sun zenith angle (0-90 degrees).
+        turbidity:
+          type: number
+          title: turbidity
+          format: double
+          description: Atmospheric turbidity factor (optional, default 2.0).
+      title: DNIRequest
+      additionalProperties: false
+    solar.v1.DNIResponse:
+      type: object
+      properties:
+        dniWM2:
+          type: number
+          title: dni_w_m2
+          format: double
+          description: Direct normal irradiance (W/m²).
+        valid:
+          type: boolean
+          title: valid
+          description: True if calculation succeeded.
+      title: DNIResponse
+      additionalProperties: false
+    solar.v1.Obstacle:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+          description: Obstacle identifier.
+        base:
+          title: base
+          description: Base position (x, y, elevation_m).
+          $ref: '#/components/schemas/common.v1.Point3D'
+        heightM:
+          type: number
+          title: height_m
+          format: double
+          description: Height above base (meters).
+        extentM:
+          type: number
+          title: extent_m
+          format: double
+          description: Optional max extent radius for culling (meters).
+      title: Obstacle
+      additionalProperties: false
+      description: Obstacle geometry in site coordinates.
+    solar.v1.ShadowPolygon:
+      type: object
+      properties:
+        obstacleId:
+          type: string
+          title: obstacle_id
+          description: Obstacle receiving shadow.
+        shadowVertices:
+          type: array
+          items:
+            $ref: '#/components/schemas/common.v1.Point2D'
+          title: shadow_vertices
+          description: Ground projection of shadow (2D polygon).
+        shadowLengthM:
+          type: number
+          title: shadow_length_m
+          format: double
+          description: Shadow length from obstacle base (meters).
+        sunElevationDeg:
+          type: number
+          title: sun_elevation_deg
+          format: double
+          description: Sun elevation when cast (degrees).
+      title: ShadowPolygon
+      additionalProperties: false
+    solar.v1.SolarPosition:
+      type: object
+      properties:
+        elevationAngleDeg:
+          type: number
+          title: elevation_angle_deg
+          format: double
+          description: Elevation angle above horizon (degrees, 0-90).
+        azimuthAngleDeg:
+          type: number
+          title: azimuth_angle_deg
+          format: double
+          description: Azimuth angle measured from North clockwise (degrees, 0-360).
+        airMass:
+          type: number
+          title: air_mass
+          format: double
+          description: Air mass index (> 1.0 when sun below overhead).
+        zenithAngleDeg:
+          type: number
+          title: zenith_angle_deg
+          format: double
+          description: Zenith angle from observer vertical (degrees, 0-90).
+      title: SolarPosition
+      additionalProperties: false
+      description: Describes sun position in sky (equatorial coordinates).
+    solar.v1.SolarPositionRequest:
+      type: object
+      properties:
+        timestampSeconds:
+          type: number
+          title: timestamp_seconds
+          format: double
+          description: Unix timestamp (seconds since epoch).
+        latitudeDeg:
+          type: number
+          title: latitude_deg
+          format: double
+          description: Observer latitude (degrees, -90 to 90).
+        longitudeDeg:
+          type: number
+          title: longitude_deg
+          format: double
+          description: Observer longitude (degrees, -180 to 180).
+        utcOffsetHours:
+          type: number
+          title: utc_offset_hours
+          format: double
+          description: UTC offset in hours for local time.
+      title: SolarPositionRequest
+      additionalProperties: false
+    solar.v1.SolarPositionResponse:
+      type: object
+      properties:
+        position:
+          title: position
+          $ref: '#/components/schemas/solar.v1.SolarPosition'
+        isNight:
+          type: boolean
+          title: is_night
+          description: True if sun is below horizon (night time).
+        contract:
+          title: contract
+          description: Correlation ID for tracing.
+          $ref: '#/components/schemas/common.v1.ContractMetadata'
+      title: SolarPositionResponse
+      additionalProperties: false
+    solar.v1.TimestampPosition:
+      type: object
+      properties:
+        timestampSeconds:
+          type: number
+          title: timestamp_seconds
+          format: double
+          description: Input timestamp.
+        position:
+          title: position
+          description: Computed solar position.
+          $ref: '#/components/schemas/solar.v1.SolarPosition'
+      title: TimestampPosition
+      additionalProperties: false
+security: []
+tags:
+  - name: solar.v1.SolarService
+    description: SolarService exposes solar position, irradiance, and shadow algorithms.

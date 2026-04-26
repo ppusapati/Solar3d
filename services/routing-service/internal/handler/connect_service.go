@@ -8,11 +8,13 @@ import (
 	connect "connectrpc.com/connect"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
-	routingv1 "github.com/solar3d/solar3d/gen/routing/v1"
-	routingv1connect "github.com/solar3d/solar3d/gen/routing/v1/routingv1connect"
+	routingv1 "p9e.in/samavaya/solar3d/gen/routing/v1"
+	routingv1connect "p9e.in/samavaya/solar3d/gen/routing/v1/routingv1connect"
+	paginationv1 "p9e.in/samavaya/packages/api/v1/pagination"
+	pkgErrors "p9e.in/samavaya/packages/errors"
 
-	"solar3d/routing-service/internal/domain"
-	"solar3d/routing-service/internal/service"
+	"p9e.in/samavaya/solar3d/routing-service/internal/domain"
+	"p9e.in/samavaya/solar3d/routing-service/internal/service"
 )
 
 type ConnectRoutingService struct {
@@ -31,7 +33,7 @@ func (h *ConnectRoutingService) CreateRoute(
 ) (*connect.Response[routingv1.CreateRouteResponse], error) {
 	projectID, err := uuid.Parse(req.Msg.GetProjectId())
 	if err != nil {
-		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("invalid project_id"))
+		return nil, pkgErrors.InvalidArgumentf("invalid project_id: %v", err).ToConnectError()
 	}
 
 	route, err := h.svc.CreateRoute(ctx, domain.CreateRouteRequest{
@@ -58,7 +60,7 @@ func (h *ConnectRoutingService) GetRoute(
 ) (*connect.Response[routingv1.GetRouteResponse], error) {
 	routeID, err := uuid.Parse(req.Msg.GetId())
 	if err != nil {
-		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("invalid route id"))
+		return nil, pkgErrors.InvalidArgumentf("invalid route id: %v", err).ToConnectError()
 	}
 
 	route, err := h.svc.GetRoute(ctx, routeID)
@@ -77,10 +79,10 @@ func (h *ConnectRoutingService) CalculateRoute(
 ) (*connect.Response[routingv1.CalculateRouteResponse], error) {
 	projectID, err := uuid.Parse(req.Msg.GetProjectId())
 	if err != nil {
-		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("invalid project_id"))
+		return nil, pkgErrors.InvalidArgumentf("invalid project_id: %v", err).ToConnectError()
 	}
 	if req.Msg.GetSource() == nil || req.Msg.GetDestination() == nil {
-		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("source and destination are required"))
+		return nil, pkgErrors.InvalidArgumentf("source and destination are required").ToConnectError()
 	}
 
 	route, err := h.svc.CalculateRoute(ctx, domain.CalculateRouteRequest{
@@ -114,10 +116,10 @@ func (h *ConnectRoutingService) CreateCableRoute(
 ) (*connect.Response[routingv1.CreateCableRouteResponse], error) {
 	projectID, err := uuid.Parse(req.Msg.GetProjectId())
 	if err != nil {
-		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("invalid project_id"))
+		return nil, pkgErrors.InvalidArgumentf("invalid project_id: %v", err).ToConnectError()
 	}
 	if req.Msg.GetSource() == nil || req.Msg.GetDestination() == nil {
-		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("source and destination are required"))
+		return nil, pkgErrors.InvalidArgumentf("source and destination are required").ToConnectError()
 	}
 
 	route, err := h.svc.CreateCableRoute(ctx, domain.CalculateRouteRequest{
@@ -143,10 +145,10 @@ func (h *ConnectRoutingService) CreateRoadRoute(
 ) (*connect.Response[routingv1.CreateRoadRouteResponse], error) {
 	projectID, err := uuid.Parse(req.Msg.GetProjectId())
 	if err != nil {
-		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("invalid project_id"))
+		return nil, pkgErrors.InvalidArgumentf("invalid project_id: %v", err).ToConnectError()
 	}
 	if req.Msg.GetSource() == nil || req.Msg.GetDestination() == nil {
-		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("source and destination are required"))
+		return nil, pkgErrors.InvalidArgumentf("source and destination are required").ToConnectError()
 	}
 
 	route, err := h.svc.CreateRoadRoute(ctx, domain.CalculateRouteRequest{
@@ -172,7 +174,7 @@ func (h *ConnectRoutingService) ListRoutes(
 ) (*connect.Response[routingv1.ListRoutesResponse], error) {
 	projectID, err := uuid.Parse(req.Msg.GetProjectId())
 	if err != nil {
-		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("invalid project_id"))
+		return nil, pkgErrors.InvalidArgumentf("invalid project_id: %v", err).ToConnectError()
 	}
 
 	routes, err := h.svc.ListRoutes(ctx, projectID)
@@ -181,18 +183,46 @@ func (h *ConnectRoutingService) ListRoutes(
 	}
 
 	filter := req.Msg.GetTypeFilter()
-	result := make([]*routingv1.Route, 0, len(routes))
+	filtered := make([]*routingv1.Route, 0, len(routes))
 	for i := range routes {
 		route := routes[i]
 		protoRoute := routeToProto(&route)
 		if filter != routingv1.RouteType_ROUTE_TYPE_UNSPECIFIED && protoRoute.GetRouteType() != filter {
 			continue
 		}
-		result = append(result, protoRoute)
+		filtered = append(filtered, protoRoute)
 	}
+
+	pagination := req.Msg.GetPagination()
+	offset := pagination.GetPageOffset()
+	size := pagination.GetPageSize()
+	if size <= 0 {
+		size = 20
+	}
+	if size > 100 {
+		size = 100
+	}
+
+	totalCount := int32(len(filtered))
+	start := int(offset)
+	if start > len(filtered) {
+		start = len(filtered)
+	}
+	end := start + int(size)
+	if end > len(filtered) {
+		end = len(filtered)
+	}
+
+	result := filtered[start:end]
 
 	return connect.NewResponse(&routingv1.ListRoutesResponse{
 		Routes: result,
+		Pagination: &paginationv1.PaginationResponse{
+			TotalCount: totalCount,
+			PageOffset: int32(start),
+			PageSize:   size,
+			HasNext:    end < len(filtered),
+		},
 	}), nil
 }
 
@@ -202,7 +232,7 @@ func (h *ConnectRoutingService) DeleteRoute(
 ) (*connect.Response[routingv1.DeleteRouteResponse], error) {
 	routeID, err := uuid.Parse(req.Msg.GetId())
 	if err != nil {
-		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("invalid route id"))
+		return nil, pkgErrors.InvalidArgumentf("invalid route id: %v", err).ToConnectError()
 	}
 
 	if err := h.svc.DeleteRoute(ctx, routeID); err != nil {
@@ -218,7 +248,7 @@ func (h *ConnectRoutingService) OptimizeRoutes(
 ) (*connect.Response[routingv1.OptimizeRoutesResponse], error) {
 	projectID, err := uuid.Parse(req.Msg.GetProjectId())
 	if err != nil {
-		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("invalid project_id"))
+		return nil, pkgErrors.InvalidArgumentf("invalid project_id: %v", err).ToConnectError()
 	}
 
 	routes, err := h.svc.OptimizeRoutes(ctx, projectID)
@@ -378,9 +408,11 @@ func domainRouteTypeToProto(routeType domain.RouteType) routingv1.RouteType {
 func routingConnectError(err error) error {
 	switch {
 	case errors.Is(err, pgx.ErrNoRows):
-		return connect.NewError(connect.CodeNotFound, err)
+		return pkgErrors.NotFound("route", "").ToConnectError()
 	default:
-		return connect.NewError(connect.CodeInternal, err)
+		if pkgErr, ok := err.(*pkgErrors.Error); ok {
+			return pkgErr.ToConnectError()
+		}
+		return pkgErrors.Internal("routing operation failed", err.Error()).ToConnectError()
 	}
 }
-

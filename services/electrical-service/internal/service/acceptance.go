@@ -15,7 +15,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"solar3d/electrical-service/internal/domain"
+	"p9e.in/samavaya/solar3d/electrical-service/internal/domain"
 )
 
 // SubmitNetworkForReviewRequest carries the inputs for submitting an

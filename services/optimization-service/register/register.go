@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"os"
 
-	"solar3d/optimization-service/internal/client"
-	"solar3d/optimization-service/internal/handler"
-	"solar3d/optimization-service/internal/service"
+	"p9e.in/samavaya/solar3d/optimization-service/internal/client"
+	"p9e.in/samavaya/solar3d/optimization-service/internal/handler"
+	"p9e.in/samavaya/solar3d/optimization-service/internal/service"
 )
 
 // Register wires optimization-service HTTP routes onto mux.

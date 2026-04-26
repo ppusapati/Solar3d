@@ -1,0 +1,1372 @@
+openapi: 3.1.0
+info:
+  title: commissioning.v1
+paths:
+  /commissioning.v1.CommissioningService/AddChecklistItem:
+    post:
+      tags:
+        - commissioning.v1.CommissioningService
+      summary: AddChecklistItem
+      description: Checklist item management
+      operationId: commissioning.v1.CommissioningService.AddChecklistItem
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/commissioning.v1.AddChecklistItemRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/commissioning.v1.AddChecklistItemResponse'
+  /commissioning.v1.CommissioningService/CreateChecklist:
+    post:
+      tags:
+        - commissioning.v1.CommissioningService
+      summary: CreateChecklist
+      description: Checklist lifecycle
+      operationId: commissioning.v1.CommissioningService.CreateChecklist
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/commissioning.v1.CreateChecklistRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/commissioning.v1.CreateChecklistResponse'
+  /commissioning.v1.CommissioningService/CreateHandover:
+    post:
+      tags:
+        - commissioning.v1.CommissioningService
+      summary: CreateHandover
+      description: Formal project handover
+      operationId: commissioning.v1.CommissioningService.CreateHandover
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/commissioning.v1.CreateHandoverRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/commissioning.v1.CreateHandoverResponse'
+  /commissioning.v1.CommissioningService/GenerateCommissioningReport:
+    post:
+      tags:
+        - commissioning.v1.CommissioningService
+      summary: GenerateCommissioningReport
+      description: Plain-text commissioning report covering all checklist items and signoffs
+      operationId: commissioning.v1.CommissioningService.GenerateCommissioningReport
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/commissioning.v1.GenerateCommissioningReportRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/commissioning.v1.GenerateCommissioningReportResponse'
+  /commissioning.v1.CommissioningService/GetChecklist:
+    post:
+      tags:
+        - commissioning.v1.CommissioningService
+      summary: GetChecklist
+      operationId: commissioning.v1.CommissioningService.GetChecklist
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/commissioning.v1.GetChecklistRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/commissioning.v1.GetChecklistResponse'
+  /commissioning.v1.CommissioningService/GetHandover:
+    post:
+      tags:
+        - commissioning.v1.CommissioningService
+      summary: GetHandover
+      operationId: commissioning.v1.CommissioningService.GetHandover
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/commissioning.v1.GetHandoverRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/commissioning.v1.GetHandoverResponse'
+  /commissioning.v1.CommissioningService/ListAsBuiltArtifacts:
+    post:
+      tags:
+        - commissioning.v1.CommissioningService
+      summary: ListAsBuiltArtifacts
+      operationId: commissioning.v1.CommissioningService.ListAsBuiltArtifacts
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/commissioning.v1.ListAsBuiltArtifactsRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/commissioning.v1.ListAsBuiltArtifactsResponse'
+  /commissioning.v1.CommissioningService/ListChecklists:
+    post:
+      tags:
+        - commissioning.v1.CommissioningService
+      summary: ListChecklists
+      operationId: commissioning.v1.CommissioningService.ListChecklists
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/commissioning.v1.ListChecklistsRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/commissioning.v1.ListChecklistsResponse'
+  /commissioning.v1.CommissioningService/ListSignoffs:
+    post:
+      tags:
+        - commissioning.v1.CommissioningService
+      summary: ListSignoffs
+      operationId: commissioning.v1.CommissioningService.ListSignoffs
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/commissioning.v1.ListSignoffsRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/commissioning.v1.ListSignoffsResponse'
+  /commissioning.v1.CommissioningService/RecordAsBuilt:
+    post:
+      tags:
+        - commissioning.v1.CommissioningService
+      summary: RecordAsBuilt
+      description: As-built artifact registry (URL-based; binary upload is a separate storage concern)
+      operationId: commissioning.v1.CommissioningService.RecordAsBuilt
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/commissioning.v1.RecordAsBuiltRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/commissioning.v1.RecordAsBuiltResponse'
+  /commissioning.v1.CommissioningService/SignOffChecklist:
+    post:
+      tags:
+        - commissioning.v1.CommissioningService
+      summary: SignOffChecklist
+      description: Engineer / contractor signoff
+      operationId: commissioning.v1.CommissioningService.SignOffChecklist
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/commissioning.v1.SignOffChecklistRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/commissioning.v1.SignOffChecklistResponse'
+  /commissioning.v1.CommissioningService/UpdateChecklistItem:
+    post:
+      tags:
+        - commissioning.v1.CommissioningService
+      summary: UpdateChecklistItem
+      operationId: commissioning.v1.CommissioningService.UpdateChecklistItem
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/commissioning.v1.UpdateChecklistItemRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/commissioning.v1.UpdateChecklistItemResponse'
+components:
+  schemas:
+    commissioning.v1.AddChecklistItemRequest:
+      type: object
+      properties:
+        checklistId:
+          type: string
+          title: checklist_id
+        description:
+          type: string
+          title: description
+        section:
+          title: section
+          $ref: '#/components/schemas/commissioning.v1.ChecklistSection'
+        required:
+          type: boolean
+          title: required
+        sequence:
+          type: integer
+          title: sequence
+          format: int32
+      title: AddChecklistItemRequest
+      additionalProperties: false
+    commissioning.v1.AddChecklistItemResponse:
+      type: object
+      properties:
+        item:
+          title: item
+          $ref: '#/components/schemas/commissioning.v1.ChecklistItem'
+      title: AddChecklistItemResponse
+      additionalProperties: false
+    commissioning.v1.AsBuiltArtifact:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        projectId:
+          type: string
+          title: project_id
+        name:
+          type: string
+          title: name
+        artifactType:
+          title: artifact_type
+          $ref: '#/components/schemas/commissioning.v1.AsBuiltArtifactType'
+        storageUrl:
+          type: string
+          title: storage_url
+        uploadedBy:
+          type: string
+          title: uploaded_by
+        uploadedAt:
+          title: uploaded_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        description:
+          type: string
+          title: description
+        fileSizeBytes:
+          type:
+            - integer
+            - string
+          title: file_size_bytes
+          format: int64
+        revision:
+          type: string
+          title: revision
+      title: AsBuiltArtifact
+      additionalProperties: false
+    commissioning.v1.AsBuiltArtifactType:
+      type: string
+      title: AsBuiltArtifactType
+      enum:
+        - AS_BUILT_ARTIFACT_TYPE_UNSPECIFIED
+        - AS_BUILT_ARTIFACT_TYPE_DRAWING
+        - AS_BUILT_ARTIFACT_TYPE_REPORT
+        - AS_BUILT_ARTIFACT_TYPE_SPECIFICATION
+        - AS_BUILT_ARTIFACT_TYPE_PHOTO
+        - AS_BUILT_ARTIFACT_TYPE_TEST_RECORD
+        - AS_BUILT_ARTIFACT_TYPE_CERTIFICATE
+    commissioning.v1.ChecklistItem:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        checklistId:
+          type: string
+          title: checklist_id
+        description:
+          type: string
+          title: description
+        section:
+          title: section
+          $ref: '#/components/schemas/commissioning.v1.ChecklistSection'
+        status:
+          title: status
+          $ref: '#/components/schemas/commissioning.v1.ChecklistItemStatus'
+        required:
+          type: boolean
+          title: required
+        completedBy:
+          type: string
+          title: completed_by
+        completedAt:
+          title: completed_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        notes:
+          type: string
+          title: notes
+        sequence:
+          type: integer
+          title: sequence
+          format: int32
+          description: display sort order
+      title: ChecklistItem
+      additionalProperties: false
+    commissioning.v1.ChecklistItemStatus:
+      type: string
+      title: ChecklistItemStatus
+      enum:
+        - CHECKLIST_ITEM_STATUS_UNSPECIFIED
+        - CHECKLIST_ITEM_STATUS_PENDING
+        - CHECKLIST_ITEM_STATUS_PASS
+        - CHECKLIST_ITEM_STATUS_FAIL
+        - CHECKLIST_ITEM_STATUS_NOT_APPLICABLE
+    commissioning.v1.ChecklistSection:
+      type: string
+      title: ChecklistSection
+      enum:
+        - CHECKLIST_SECTION_UNSPECIFIED
+        - CHECKLIST_SECTION_CIVIL
+        - CHECKLIST_SECTION_MECHANICAL
+        - CHECKLIST_SECTION_ELECTRICAL
+        - CHECKLIST_SECTION_PROTECTION
+        - CHECKLIST_SECTION_SCADA
+        - CHECKLIST_SECTION_SAFETY
+        - CHECKLIST_SECTION_DOCUMENTATION
+    commissioning.v1.CommissioningChecklist:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        projectId:
+          type: string
+          title: project_id
+        name:
+          type: string
+          title: name
+        status:
+          title: status
+          $ref: '#/components/schemas/commissioning.v1.CommissioningStatus'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/commissioning.v1.ChecklistItem'
+          title: items
+        signoffs:
+          type: array
+          items:
+            $ref: '#/components/schemas/commissioning.v1.CommissioningSignoff'
+          title: signoffs
+        createdAt:
+          title: created_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        updatedAt:
+          title: updated_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        createdBy:
+          type: string
+          title: created_by
+        totalItems:
+          type: integer
+          title: total_items
+          format: int32
+          description: Derived counts (read-only)
+        completedItems:
+          type: integer
+          title: completed_items
+          format: int32
+        failedItems:
+          type: integer
+          title: failed_items
+          format: int32
+      title: CommissioningChecklist
+      additionalProperties: false
+    commissioning.v1.CommissioningSignoff:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        checklistId:
+          type: string
+          title: checklist_id
+        signedBy:
+          type: string
+          title: signed_by
+        role:
+          type: string
+          title: role
+          description: e.g. "EPC_ENGINEER", "CLIENT_REPRESENTATIVE", "ELECTRICAL_INSPECTOR"
+        comments:
+          type: string
+          title: comments
+        signedAt:
+          title: signed_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: CommissioningSignoff
+      additionalProperties: false
+    commissioning.v1.CommissioningStatus:
+      type: string
+      title: CommissioningStatus
+      enum:
+        - COMMISSIONING_STATUS_UNSPECIFIED
+        - COMMISSIONING_STATUS_PENDING
+        - COMMISSIONING_STATUS_IN_PROGRESS
+        - COMMISSIONING_STATUS_COMPLETED
+        - COMMISSIONING_STATUS_SIGNED_OFF
+        - COMMISSIONING_STATUS_HANDED_OVER
+    commissioning.v1.CreateChecklistRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        name:
+          type: string
+          title: name
+        createdBy:
+          type: string
+          title: created_by
+      title: CreateChecklistRequest
+      additionalProperties: false
+    commissioning.v1.CreateChecklistResponse:
+      type: object
+      properties:
+        checklist:
+          title: checklist
+          $ref: '#/components/schemas/commissioning.v1.CommissioningChecklist'
+      title: CreateChecklistResponse
+      additionalProperties: false
+    commissioning.v1.CreateHandoverRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        checklistId:
+          type: string
+          title: checklist_id
+        handedOverBy:
+          type: string
+          title: handed_over_by
+        receivedBy:
+          type: string
+          title: received_by
+        notes:
+          type: string
+          title: notes
+        artifactIds:
+          type: array
+          items:
+            type: string
+          title: artifact_ids
+      title: CreateHandoverRequest
+      additionalProperties: false
+    commissioning.v1.CreateHandoverResponse:
+      type: object
+      properties:
+        handover:
+          title: handover
+          $ref: '#/components/schemas/commissioning.v1.HandoverRecord'
+      title: CreateHandoverResponse
+      additionalProperties: false
+    commissioning.v1.GenerateCommissioningReportRequest:
+      type: object
+      properties:
+        checklistId:
+          type: string
+          title: checklist_id
+      title: GenerateCommissioningReportRequest
+      additionalProperties: false
+    commissioning.v1.GenerateCommissioningReportResponse:
+      type: object
+      properties:
+        reportText:
+          type: string
+          title: report_text
+        generatedAt:
+          title: generated_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: GenerateCommissioningReportResponse
+      additionalProperties: false
+    commissioning.v1.GetChecklistRequest:
+      type: object
+      properties:
+        checklistId:
+          type: string
+          title: checklist_id
+      title: GetChecklistRequest
+      additionalProperties: false
+    commissioning.v1.GetChecklistResponse:
+      type: object
+      properties:
+        checklist:
+          title: checklist
+          $ref: '#/components/schemas/commissioning.v1.CommissioningChecklist'
+      title: GetChecklistResponse
+      additionalProperties: false
+    commissioning.v1.GetHandoverRequest:
+      type: object
+      properties:
+        handoverId:
+          type: string
+          title: handover_id
+      title: GetHandoverRequest
+      additionalProperties: false
+    commissioning.v1.GetHandoverResponse:
+      type: object
+      properties:
+        handover:
+          title: handover
+          $ref: '#/components/schemas/commissioning.v1.HandoverRecord'
+      title: GetHandoverResponse
+      additionalProperties: false
+    commissioning.v1.HandoverRecord:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        projectId:
+          type: string
+          title: project_id
+        checklistId:
+          type: string
+          title: checklist_id
+        handedOverBy:
+          type: string
+          title: handed_over_by
+        receivedBy:
+          type: string
+          title: received_by
+        notes:
+          type: string
+          title: notes
+        artifactIds:
+          type: array
+          items:
+            type: string
+          title: artifact_ids
+        handoverDate:
+          title: handover_date
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        createdAt:
+          title: created_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: HandoverRecord
+      additionalProperties: false
+    commissioning.v1.ListAsBuiltArtifactsRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        pagination:
+          title: pagination
+          $ref: '#/components/schemas/packages.api.v1.pagination.PaginationRequest'
+      title: ListAsBuiltArtifactsRequest
+      additionalProperties: false
+    commissioning.v1.ListAsBuiltArtifactsResponse:
+      type: object
+      properties:
+        artifacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/commissioning.v1.AsBuiltArtifact'
+          title: artifacts
+        pagination:
+          title: pagination
+          $ref: '#/components/schemas/packages.api.v1.pagination.PaginationResponse'
+      title: ListAsBuiltArtifactsResponse
+      additionalProperties: false
+    commissioning.v1.ListChecklistsRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        pagination:
+          title: pagination
+          $ref: '#/components/schemas/packages.api.v1.pagination.PaginationRequest'
+      title: ListChecklistsRequest
+      additionalProperties: false
+    commissioning.v1.ListChecklistsResponse:
+      type: object
+      properties:
+        checklists:
+          type: array
+          items:
+            $ref: '#/components/schemas/commissioning.v1.CommissioningChecklist'
+          title: checklists
+        pagination:
+          title: pagination
+          $ref: '#/components/schemas/packages.api.v1.pagination.PaginationResponse'
+      title: ListChecklistsResponse
+      additionalProperties: false
+    commissioning.v1.ListSignoffsRequest:
+      type: object
+      properties:
+        checklistId:
+          type: string
+          title: checklist_id
+        pagination:
+          title: pagination
+          $ref: '#/components/schemas/packages.api.v1.pagination.PaginationRequest'
+      title: ListSignoffsRequest
+      additionalProperties: false
+    commissioning.v1.ListSignoffsResponse:
+      type: object
+      properties:
+        signoffs:
+          type: array
+          items:
+            $ref: '#/components/schemas/commissioning.v1.CommissioningSignoff'
+          title: signoffs
+        pagination:
+          title: pagination
+          $ref: '#/components/schemas/packages.api.v1.pagination.PaginationResponse'
+      title: ListSignoffsResponse
+      additionalProperties: false
+    commissioning.v1.RecordAsBuiltRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        name:
+          type: string
+          title: name
+        artifactType:
+          title: artifact_type
+          $ref: '#/components/schemas/commissioning.v1.AsBuiltArtifactType'
+        storageUrl:
+          type: string
+          title: storage_url
+        uploadedBy:
+          type: string
+          title: uploaded_by
+        description:
+          type: string
+          title: description
+        fileSizeBytes:
+          type:
+            - integer
+            - string
+          title: file_size_bytes
+          format: int64
+        revision:
+          type: string
+          title: revision
+      title: RecordAsBuiltRequest
+      additionalProperties: false
+    commissioning.v1.RecordAsBuiltResponse:
+      type: object
+      properties:
+        artifact:
+          title: artifact
+          $ref: '#/components/schemas/commissioning.v1.AsBuiltArtifact'
+      title: RecordAsBuiltResponse
+      additionalProperties: false
+    commissioning.v1.SignOffChecklistRequest:
+      type: object
+      properties:
+        checklistId:
+          type: string
+          title: checklist_id
+        signedBy:
+          type: string
+          title: signed_by
+        role:
+          type: string
+          title: role
+        comments:
+          type: string
+          title: comments
+      title: SignOffChecklistRequest
+      additionalProperties: false
+    commissioning.v1.SignOffChecklistResponse:
+      type: object
+      properties:
+        signoff:
+          title: signoff
+          $ref: '#/components/schemas/commissioning.v1.CommissioningSignoff'
+        updatedChecklist:
+          title: updated_checklist
+          $ref: '#/components/schemas/commissioning.v1.CommissioningChecklist'
+      title: SignOffChecklistResponse
+      additionalProperties: false
+    commissioning.v1.UpdateChecklistItemRequest:
+      type: object
+      properties:
+        itemId:
+          type: string
+          title: item_id
+        status:
+          title: status
+          $ref: '#/components/schemas/commissioning.v1.ChecklistItemStatus'
+        completedBy:
+          type: string
+          title: completed_by
+        notes:
+          type: string
+          title: notes
+      title: UpdateChecklistItemRequest
+      additionalProperties: false
+    commissioning.v1.UpdateChecklistItemResponse:
+      type: object
+      properties:
+        item:
+          title: item
+          $ref: '#/components/schemas/commissioning.v1.ChecklistItem'
+      title: UpdateChecklistItemResponse
+      additionalProperties: false
+    connect-protocol-version:
+      type: number
+      title: Connect-Protocol-Version
+      enum:
+        - 1
+      description: Define the version of the Connect protocol
+      const: 1
+    connect-timeout-header:
+      type: number
+      title: Connect-Timeout-Ms
+      description: Define the timeout, in ms
+    connect.error:
+      type: object
+      properties:
+        code:
+          type: string
+          examples:
+            - not_found
+          enum:
+            - canceled
+            - unknown
+            - invalid_argument
+            - deadline_exceeded
+            - not_found
+            - already_exists
+            - permission_denied
+            - resource_exhausted
+            - failed_precondition
+            - aborted
+            - out_of_range
+            - unimplemented
+            - internal
+            - unavailable
+            - data_loss
+            - unauthenticated
+          description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+        message:
+          type: string
+          description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/connect.error_details.Any'
+          description: A list of messages that carry the error details. There is no limit on the number of messages.
+      title: Connect Error
+      additionalProperties: true
+      description: 'Error type returned by Connect: https://connectrpc.com/docs/go/errors/#http-representation'
+    connect.error_details.Any:
+      type: object
+      properties:
+        type:
+          type: string
+          description: 'A URL that acts as a globally unique identifier for the type of the serialized message. For example: `type.googleapis.com/google.rpc.ErrorInfo`. This is used to determine the schema of the data in the `value` field and is the discriminator for the `debug` field.'
+        value:
+          type: string
+          format: binary
+          description: The Protobuf message, serialized as bytes and base64-encoded. The specific message type is identified by the `type` field.
+        debug:
+          oneOf:
+            - type: object
+              title: Any
+              additionalProperties: true
+              description: Detailed error information.
+          discriminator:
+            propertyName: type
+          title: Debug
+          description: Deserialized error detail payload. The 'type' field indicates the schema. This field is for easier debugging and should not be relied upon for application logic.
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message, with an additional debug field for ConnectRPC error details.
+    google.protobuf.FieldMask:
+      type: string
+      description: |-
+        `FieldMask` represents a set of symbolic field paths, for example:
+
+             paths: "f.a"
+             paths: "f.b.d"
+
+         Here `f` represents a field in some root message, `a` and `b`
+         fields in the message found in `f`, and `d` a field found in the
+         message in `f.b`.
+
+         Field masks are used to specify a subset of fields that should be
+         returned by a get operation or modified by an update operation.
+         Field masks also have a custom JSON encoding (see below).
+
+         # Field Masks in Projections
+
+         When used in the context of a projection, a response message or
+         sub-message is filtered by the API to only contain those fields as
+         specified in the mask. For example, if the mask in the previous
+         example is applied to a response message as follows:
+
+             f {
+               a : 22
+               b {
+                 d : 1
+                 x : 2
+               }
+               y : 13
+             }
+             z: 8
+
+         The result will not contain specific values for fields x,y and z
+         (their value will be set to the default, and omitted in proto text
+         output):
+
+
+             f {
+               a : 22
+               b {
+                 d : 1
+               }
+             }
+
+         A repeated field is not allowed except at the last position of a
+         paths string.
+
+         If a FieldMask object is not present in a get operation, the
+         operation applies to all fields (as if a FieldMask of all fields
+         had been specified).
+
+         Note that a field mask does not necessarily apply to the
+         top-level response message. In case of a REST get operation, the
+         field mask applies directly to the response, but in case of a REST
+         list operation, the mask instead applies to each individual message
+         in the returned resource list. In case of a REST custom method,
+         other definitions may be used. Where the mask applies will be
+         clearly documented together with its declaration in the API.  In
+         any case, the effect on the returned resource/resources is required
+         behavior for APIs.
+
+         # Field Masks in Update Operations
+
+         A field mask in update operations specifies which fields of the
+         targeted resource are going to be updated. The API is required
+         to only change the values of the fields as specified in the mask
+         and leave the others untouched. If a resource is passed in to
+         describe the updated values, the API ignores the values of all
+         fields not covered by the mask.
+
+         If a repeated field is specified for an update operation, new values will
+         be appended to the existing repeated field in the target resource. Note that
+         a repeated field is only allowed in the last position of a `paths` string.
+
+         If a sub-message is specified in the last position of the field mask for an
+         update operation, then new value will be merged into the existing sub-message
+         in the target resource.
+
+         For example, given the target message:
+
+             f {
+               b {
+                 d: 1
+                 x: 2
+               }
+               c: [1]
+             }
+
+         And an update message:
+
+             f {
+               b {
+                 d: 10
+               }
+               c: [2]
+             }
+
+         then if the field mask is:
+
+          paths: ["f.b", "f.c"]
+
+         then the result will be:
+
+             f {
+               b {
+                 d: 10
+                 x: 2
+               }
+               c: [1, 2]
+             }
+
+         An implementation may provide options to override this default behavior for
+         repeated and message fields.
+
+         In order to reset a field's value to the default, the field must
+         be in the mask and set to the default value in the provided resource.
+         Hence, in order to reset all fields of a resource, provide a default
+         instance of the resource and set all fields in the mask, or do
+         not provide a mask as described below.
+
+         If a field mask is not present on update, the operation applies to
+         all fields (as if a field mask of all fields has been specified).
+         Note that in the presence of schema evolution, this may mean that
+         fields the client does not know and has therefore not filled into
+         the request will be reset to their default. If this is unwanted
+         behavior, a specific service may require a client to always specify
+         a field mask, producing an error if not.
+
+         As with get operations, the location of the resource which
+         describes the updated values in the request message depends on the
+         operation kind. In any case, the effect of the field mask is
+         required to be honored by the API.
+
+         ## Considerations for HTTP REST
+
+         The HTTP kind of an update operation which uses a field mask must
+         be set to PATCH instead of PUT in order to satisfy HTTP semantics
+         (PUT must only be used for full updates).
+
+         # JSON Encoding of Field Masks
+
+         In JSON, a field mask is encoded as a single string where paths are
+         separated by a comma. Fields name in each path are converted
+         to/from lower-camel naming conventions.
+
+         As an example, consider the following message declarations:
+
+             message Profile {
+               User user = 1;
+               Photo photo = 2;
+             }
+             message User {
+               string display_name = 1;
+               string address = 2;
+             }
+
+         In proto a field mask for `Profile` may look as such:
+
+             mask {
+               paths: "user.display_name"
+               paths: "photo"
+             }
+
+         In JSON, the same mask is represented as below:
+
+             {
+               mask: "user.displayName,photo"
+             }
+
+         # Field Masks and Oneof Fields
+
+         Field masks treat fields in oneofs just as regular fields. Consider the
+         following message:
+
+             message SampleMessage {
+               oneof test_oneof {
+                 string name = 4;
+                 SubMessage sub_message = 9;
+               }
+             }
+
+         The field mask can be:
+
+             mask {
+               paths: "name"
+             }
+
+         Or:
+
+             mask {
+               paths: "sub_message"
+             }
+
+         Note that oneof type names ("test_oneof" in this case) cannot be used in
+         paths.
+
+         ## Field Mask Verification
+
+         The implementation of any API method which has a FieldMask type field in the
+         request should verify the included field paths, and return an
+         `INVALID_ARGUMENT` error if any path is unmappable.
+    google.protobuf.Timestamp:
+      type: string
+      examples:
+        - "2023-01-15T01:30:15.01Z"
+        - "2024-12-25T12:00:00Z"
+      format: date-time
+      description: |-
+        A Timestamp represents a point in time independent of any time zone or local
+         calendar, encoded as a count of seconds and fractions of seconds at
+         nanosecond resolution. The count is relative to an epoch at UTC midnight on
+         January 1, 1970, in the proleptic Gregorian calendar which extends the
+         Gregorian calendar backwards to year one.
+
+         All minutes are 60 seconds long. Leap seconds are "smeared" so that no leap
+         second table is needed for interpretation, using a [24-hour linear
+         smear](https://developers.google.com/time/smear).
+
+         The range is from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59.999999999Z. By
+         restricting to that range, we ensure that we can convert to and from [RFC
+         3339](https://www.ietf.org/rfc/rfc3339.txt) date strings.
+
+         # Examples
+
+         Example 1: Compute Timestamp from POSIX `time()`.
+
+             Timestamp timestamp;
+             timestamp.set_seconds(time(NULL));
+             timestamp.set_nanos(0);
+
+         Example 2: Compute Timestamp from POSIX `gettimeofday()`.
+
+             struct timeval tv;
+             gettimeofday(&tv, NULL);
+
+             Timestamp timestamp;
+             timestamp.set_seconds(tv.tv_sec);
+             timestamp.set_nanos(tv.tv_usec * 1000);
+
+         Example 3: Compute Timestamp from Win32 `GetSystemTimeAsFileTime()`.
+
+             FILETIME ft;
+             GetSystemTimeAsFileTime(&ft);
+             UINT64 ticks = (((UINT64)ft.dwHighDateTime) << 32) | ft.dwLowDateTime;
+
+             // A Windows tick is 100 nanoseconds. Windows epoch 1601-01-01T00:00:00Z
+             // is 11644473600 seconds before Unix epoch 1970-01-01T00:00:00Z.
+             Timestamp timestamp;
+             timestamp.set_seconds((INT64) ((ticks / 10000000) - 11644473600LL));
+             timestamp.set_nanos((INT32) ((ticks % 10000000) * 100));
+
+         Example 4: Compute Timestamp from Java `System.currentTimeMillis()`.
+
+             long millis = System.currentTimeMillis();
+
+             Timestamp timestamp = Timestamp.newBuilder().setSeconds(millis / 1000)
+                 .setNanos((int) ((millis % 1000) * 1000000)).build();
+
+         Example 5: Compute Timestamp from Java `Instant.now()`.
+
+             Instant now = Instant.now();
+
+             Timestamp timestamp =
+                 Timestamp.newBuilder().setSeconds(now.getEpochSecond())
+                     .setNanos(now.getNano()).build();
+
+         Example 6: Compute Timestamp from current time in Python.
+
+             timestamp = Timestamp()
+             timestamp.GetCurrentTime()
+
+         # JSON Mapping
+
+         In JSON format, the Timestamp type is encoded as a string in the
+         [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format. That is, the
+         format is "{year}-{month}-{day}T{hour}:{min}:{sec}[.{frac_sec}]Z"
+         where {year} is always expressed using four digits while {month}, {day},
+         {hour}, {min}, and {sec} are zero-padded to two digits each. The fractional
+         seconds, which can go up to 9 digits (i.e. up to 1 nanosecond resolution),
+         are optional. The "Z" suffix indicates the timezone ("UTC"); the timezone
+         is required. A proto3 JSON serializer should always use UTC (as indicated by
+         "Z") when printing the Timestamp type and a proto3 JSON parser should be
+         able to accept both UTC and other timezones (as indicated by an offset).
+
+         For example, "2017-01-15T01:30:15.01Z" encodes 15.01 seconds past
+         01:30 UTC on January 15, 2017.
+
+         In JavaScript, one can convert a Date object to this format using the
+         standard
+         [toISOString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString)
+         method. In Python, a standard `datetime.datetime` object can be converted
+         to this format using
+         [`strftime`](https://docs.python.org/2/library/time.html#time.strftime) with
+         the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one can use
+         the Joda Time's [`ISODateTimeFormat.dateTime()`](
+         http://joda-time.sourceforge.net/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime()
+         ) to obtain a formatter capable of generating timestamps in this format.
+    packages.api.v1.pagination.PaginationRequest:
+      type: object
+      properties:
+        pageOffset:
+          type: integer
+          title: page_offset
+          format: int32
+        pageSize:
+          type: integer
+          title: page_size
+          format: int32
+        sort:
+          type: array
+          items:
+            type: string
+          title: sort
+        fields:
+          title: fields
+          $ref: '#/components/schemas/google.protobuf.FieldMask'
+      title: PaginationRequest
+      additionalProperties: false
+      description: Alias for extension/land modules that reference PaginationRequest
+    packages.api.v1.pagination.PaginationResponse:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+          title: total_count
+          format: int32
+        pageOffset:
+          type: integer
+          title: page_offset
+          format: int32
+        pageSize:
+          type: integer
+          title: page_size
+          format: int32
+        hasNext:
+          type: boolean
+          title: has_next
+      title: PaginationResponse
+      additionalProperties: false
+      description: Paginated list response wrapper
+security: []
+tags:
+  - name: commissioning.v1.CommissioningService
+    description: |-
+      CommissioningService manages commissioning checklists, signoff workflows,
+       formal handover records, and as-built artifact registration for solar projects.

@@ -10,7 +10,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"solar3d/commissioning-service/internal/domain"
+	"p9e.in/samavaya/solar3d/commissioning-service/internal/domain"
 )
 
 type Repository struct {

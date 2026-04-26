@@ -15,11 +15,11 @@ import (
 	"github.com/go-pdf/fpdf"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
-	commonv1 "github.com/solar3d/solar3d/gen/common/v1"
-	drawingv1 "github.com/solar3d/solar3d/gen/drawing/v1"
-	drawingv1connect "github.com/solar3d/solar3d/gen/drawing/v1/drawingv1connect"
+	commonv1 "p9e.in/samavaya/solar3d/gen/common/v1"
+	drawingv1 "p9e.in/samavaya/solar3d/gen/drawing/v1"
+	drawingv1connect "p9e.in/samavaya/solar3d/gen/drawing/v1/drawingv1connect"
 
-	sharedcad "solar3d/shared/cad"
+	sharedcad "p9e.in/samavaya/packages/cad"
 )
 
 var (

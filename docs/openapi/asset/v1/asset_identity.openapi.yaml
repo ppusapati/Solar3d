@@ -1,0 +1,660 @@
+openapi: 3.1.0
+info:
+  title: asset.v1
+paths:
+  /asset.v1.AssetIdentityService/GetAssetIdentity:
+    post:
+      tags:
+        - asset.v1.AssetIdentityService
+      summary: GetAssetIdentity
+      description: GetAssetIdentity returns a single identity link by its unique ID.
+      operationId: asset.v1.AssetIdentityService.GetAssetIdentity
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/asset.v1.GetAssetIdentityRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/asset.v1.GetAssetIdentityResponse'
+  /asset.v1.AssetIdentityService/LinkAssetIdentity:
+    post:
+      tags:
+        - asset.v1.AssetIdentityService
+      summary: LinkAssetIdentity
+      description: |-
+        LinkAssetIdentity creates an identity link between a design asset and its
+         physical installation instance.  Requires an ACTIVE twin_id.
+         Returns ALREADY_EXISTS if a link for the same design_asset_id already exists
+         within the same twin.
+      operationId: asset.v1.AssetIdentityService.LinkAssetIdentity
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/asset.v1.LinkAssetIdentityRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/asset.v1.LinkAssetIdentityResponse'
+  /asset.v1.AssetIdentityService/ListAssetIdentitiesByProject:
+    post:
+      tags:
+        - asset.v1.AssetIdentityService
+      summary: ListAssetIdentitiesByProject
+      description: |-
+        ListAssetIdentitiesByProject returns all identity links for a project across
+         all provisioned twins, ordered by linked_at descending.
+      operationId: asset.v1.AssetIdentityService.ListAssetIdentitiesByProject
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/asset.v1.ListAssetIdentitiesByProjectRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/asset.v1.ListAssetIdentitiesByProjectResponse'
+  /asset.v1.AssetIdentityService/ListAssetIdentitiesByTwin:
+    post:
+      tags:
+        - asset.v1.AssetIdentityService
+      summary: ListAssetIdentitiesByTwin
+      description: |-
+        ListAssetIdentitiesByTwin returns all identity links for a specific twin,
+         optionally filtered by design asset type.
+      operationId: asset.v1.AssetIdentityService.ListAssetIdentitiesByTwin
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/asset.v1.ListAssetIdentitiesByTwinRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/asset.v1.ListAssetIdentitiesByTwinResponse'
+  /asset.v1.AssetIdentityService/UnlinkAssetIdentity:
+    post:
+      tags:
+        - asset.v1.AssetIdentityService
+      summary: UnlinkAssetIdentity
+      description: |-
+        UnlinkAssetIdentity permanently removes an identity link.
+         Records referenced by active TelemetryService readings cannot be unlinked.
+      operationId: asset.v1.AssetIdentityService.UnlinkAssetIdentity
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/asset.v1.UnlinkAssetIdentityRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/asset.v1.UnlinkAssetIdentityResponse'
+  /asset.v1.AssetIdentityService/UpdateAssetIdentity:
+    post:
+      tags:
+        - asset.v1.AssetIdentityService
+      summary: UpdateAssetIdentity
+      description: |-
+        UpdateAssetIdentity patches the mutable physical identity fields
+         (physical_serial_number, installation_notes, commissioning_reference).
+         Design asset linkage fields (design_asset_id, design_asset_type) are immutable.
+      operationId: asset.v1.AssetIdentityService.UpdateAssetIdentity
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/asset.v1.UpdateAssetIdentityRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/asset.v1.UpdateAssetIdentityResponse'
+components:
+  schemas:
+    asset.v1.AssetIdentity:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        projectId:
+          type: string
+          title: project_id
+        twinId:
+          type: string
+          title: twin_id
+          description: 'twin_id: The provisioned DigitalTwin this identity belongs to.'
+        designAssetId:
+          type: string
+          title: design_asset_id
+          description: |-
+            design_asset_id: UUID of the asset in the originating design service
+             (e.g., layout tile ID, electrical string ID, transmission tower position ID).
+        designAssetType:
+          title: design_asset_type
+          $ref: '#/components/schemas/asset.v1.DesignAssetType'
+        physicalSerialNumber:
+          type: string
+          title: physical_serial_number
+          description: 'physical_serial_number: Manufacturer serial number of the installed unit.'
+        manufacturer:
+          type: string
+          title: manufacturer
+        model:
+          type: string
+          title: model
+        installationDate:
+          title: installation_date
+          description: 'installation_date: Date the physical asset was installed on-site.'
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        commissioningReference:
+          type: string
+          title: commissioning_reference
+          description: 'commissioning_reference: IEC 62446-1 commissioning record reference for the asset.'
+        installationNotes:
+          type: string
+          title: installation_notes
+          description: 'installation_notes: Free-form field for installer notes, tag numbers, bay identifiers.'
+        linkedByActorId:
+          type: string
+          title: linked_by_actor_id
+        linkedAt:
+          title: linked_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        updatedAt:
+          title: updated_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: AssetIdentity
+      additionalProperties: false
+      description: |-
+        AssetIdentity is an immutable linkage record connecting a design-time asset ID
+         to a physical installation instance.  The linked_at, design_asset_id, and
+         design_asset_type fields are immutable after creation.
+    asset.v1.DesignAssetType:
+      type: string
+      title: DesignAssetType
+      enum:
+        - DESIGN_ASSET_TYPE_UNSPECIFIED
+        - DESIGN_ASSET_TYPE_SOLAR_PANEL
+        - DESIGN_ASSET_TYPE_INVERTER
+        - DESIGN_ASSET_TYPE_STRING
+        - DESIGN_ASSET_TYPE_TRANSFORMER
+        - DESIGN_ASSET_TYPE_CABLE_RUN
+        - DESIGN_ASSET_TYPE_COMBINER_BOX
+        - DESIGN_ASSET_TYPE_PROTECTION_RELAY
+        - DESIGN_ASSET_TYPE_TRANSMISSION_TOWER
+        - DESIGN_ASSET_TYPE_OTHER
+      description: |-
+        DesignAssetType identifies the class of design artifact that an AssetIdentity
+         record links to a physical installation instance.
+    asset.v1.GetAssetIdentityRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+      title: GetAssetIdentityRequest
+      additionalProperties: false
+    asset.v1.GetAssetIdentityResponse:
+      type: object
+      properties:
+        assetIdentity:
+          title: asset_identity
+          $ref: '#/components/schemas/asset.v1.AssetIdentity'
+      title: GetAssetIdentityResponse
+      additionalProperties: false
+    asset.v1.LinkAssetIdentityRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        twinId:
+          type: string
+          title: twin_id
+        designAssetId:
+          type: string
+          title: design_asset_id
+        designAssetType:
+          title: design_asset_type
+          $ref: '#/components/schemas/asset.v1.DesignAssetType'
+        physicalSerialNumber:
+          type: string
+          title: physical_serial_number
+        manufacturer:
+          type: string
+          title: manufacturer
+        model:
+          type: string
+          title: model
+        installationDate:
+          title: installation_date
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        commissioningReference:
+          type: string
+          title: commissioning_reference
+        installationNotes:
+          type: string
+          title: installation_notes
+        linkedByActorId:
+          type: string
+          title: linked_by_actor_id
+      title: LinkAssetIdentityRequest
+      additionalProperties: false
+    asset.v1.LinkAssetIdentityResponse:
+      type: object
+      properties:
+        assetIdentity:
+          title: asset_identity
+          $ref: '#/components/schemas/asset.v1.AssetIdentity'
+      title: LinkAssetIdentityResponse
+      additionalProperties: false
+    asset.v1.ListAssetIdentitiesByProjectRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        pageSize:
+          type: integer
+          title: page_size
+          format: int32
+        pageToken:
+          type: string
+          title: page_token
+      title: ListAssetIdentitiesByProjectRequest
+      additionalProperties: false
+    asset.v1.ListAssetIdentitiesByProjectResponse:
+      type: object
+      properties:
+        assetIdentities:
+          type: array
+          items:
+            $ref: '#/components/schemas/asset.v1.AssetIdentity'
+          title: asset_identities
+        nextPageToken:
+          type: string
+          title: next_page_token
+        totalCount:
+          type: integer
+          title: total_count
+          format: int32
+      title: ListAssetIdentitiesByProjectResponse
+      additionalProperties: false
+    asset.v1.ListAssetIdentitiesByTwinRequest:
+      type: object
+      properties:
+        twinId:
+          type: string
+          title: twin_id
+        typeFilter:
+          title: type_filter
+          description: 'type_filter: If UNSPECIFIED, returns all asset types.'
+          $ref: '#/components/schemas/asset.v1.DesignAssetType'
+        pageSize:
+          type: integer
+          title: page_size
+          format: int32
+        pageToken:
+          type: string
+          title: page_token
+      title: ListAssetIdentitiesByTwinRequest
+      additionalProperties: false
+    asset.v1.ListAssetIdentitiesByTwinResponse:
+      type: object
+      properties:
+        assetIdentities:
+          type: array
+          items:
+            $ref: '#/components/schemas/asset.v1.AssetIdentity'
+          title: asset_identities
+        nextPageToken:
+          type: string
+          title: next_page_token
+        totalCount:
+          type: integer
+          title: total_count
+          format: int32
+      title: ListAssetIdentitiesByTwinResponse
+      additionalProperties: false
+    asset.v1.UnlinkAssetIdentityRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        actorId:
+          type: string
+          title: actor_id
+      title: UnlinkAssetIdentityRequest
+      additionalProperties: false
+    asset.v1.UnlinkAssetIdentityResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+          description: 'id: The ID of the unlinked record, confirming deletion.'
+      title: UnlinkAssetIdentityResponse
+      additionalProperties: false
+    asset.v1.UpdateAssetIdentityRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        physicalSerialNumber:
+          type: string
+          title: physical_serial_number
+        commissioningReference:
+          type: string
+          title: commissioning_reference
+        installationNotes:
+          type: string
+          title: installation_notes
+      title: UpdateAssetIdentityRequest
+      additionalProperties: false
+    asset.v1.UpdateAssetIdentityResponse:
+      type: object
+      properties:
+        assetIdentity:
+          title: asset_identity
+          $ref: '#/components/schemas/asset.v1.AssetIdentity'
+      title: UpdateAssetIdentityResponse
+      additionalProperties: false
+    connect-protocol-version:
+      type: number
+      title: Connect-Protocol-Version
+      enum:
+        - 1
+      description: Define the version of the Connect protocol
+      const: 1
+    connect-timeout-header:
+      type: number
+      title: Connect-Timeout-Ms
+      description: Define the timeout, in ms
+    connect.error:
+      type: object
+      properties:
+        code:
+          type: string
+          examples:
+            - not_found
+          enum:
+            - canceled
+            - unknown
+            - invalid_argument
+            - deadline_exceeded
+            - not_found
+            - already_exists
+            - permission_denied
+            - resource_exhausted
+            - failed_precondition
+            - aborted
+            - out_of_range
+            - unimplemented
+            - internal
+            - unavailable
+            - data_loss
+            - unauthenticated
+          description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+        message:
+          type: string
+          description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/connect.error_details.Any'
+          description: A list of messages that carry the error details. There is no limit on the number of messages.
+      title: Connect Error
+      additionalProperties: true
+      description: 'Error type returned by Connect: https://connectrpc.com/docs/go/errors/#http-representation'
+    connect.error_details.Any:
+      type: object
+      properties:
+        type:
+          type: string
+          description: 'A URL that acts as a globally unique identifier for the type of the serialized message. For example: `type.googleapis.com/google.rpc.ErrorInfo`. This is used to determine the schema of the data in the `value` field and is the discriminator for the `debug` field.'
+        value:
+          type: string
+          format: binary
+          description: The Protobuf message, serialized as bytes and base64-encoded. The specific message type is identified by the `type` field.
+        debug:
+          oneOf:
+            - type: object
+              title: Any
+              additionalProperties: true
+              description: Detailed error information.
+          discriminator:
+            propertyName: type
+          title: Debug
+          description: Deserialized error detail payload. The 'type' field indicates the schema. This field is for easier debugging and should not be relied upon for application logic.
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message, with an additional debug field for ConnectRPC error details.
+    google.protobuf.Timestamp:
+      type: string
+      examples:
+        - "2023-01-15T01:30:15.01Z"
+        - "2024-12-25T12:00:00Z"
+      format: date-time
+      description: |-
+        A Timestamp represents a point in time independent of any time zone or local
+         calendar, encoded as a count of seconds and fractions of seconds at
+         nanosecond resolution. The count is relative to an epoch at UTC midnight on
+         January 1, 1970, in the proleptic Gregorian calendar which extends the
+         Gregorian calendar backwards to year one.
+
+         All minutes are 60 seconds long. Leap seconds are "smeared" so that no leap
+         second table is needed for interpretation, using a [24-hour linear
+         smear](https://developers.google.com/time/smear).
+
+         The range is from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59.999999999Z. By
+         restricting to that range, we ensure that we can convert to and from [RFC
+         3339](https://www.ietf.org/rfc/rfc3339.txt) date strings.
+
+         # Examples
+
+         Example 1: Compute Timestamp from POSIX `time()`.
+
+             Timestamp timestamp;
+             timestamp.set_seconds(time(NULL));
+             timestamp.set_nanos(0);
+
+         Example 2: Compute Timestamp from POSIX `gettimeofday()`.
+
+             struct timeval tv;
+             gettimeofday(&tv, NULL);
+
+             Timestamp timestamp;
+             timestamp.set_seconds(tv.tv_sec);
+             timestamp.set_nanos(tv.tv_usec * 1000);
+
+         Example 3: Compute Timestamp from Win32 `GetSystemTimeAsFileTime()`.
+
+             FILETIME ft;
+             GetSystemTimeAsFileTime(&ft);
+             UINT64 ticks = (((UINT64)ft.dwHighDateTime) << 32) | ft.dwLowDateTime;
+
+             // A Windows tick is 100 nanoseconds. Windows epoch 1601-01-01T00:00:00Z
+             // is 11644473600 seconds before Unix epoch 1970-01-01T00:00:00Z.
+             Timestamp timestamp;
+             timestamp.set_seconds((INT64) ((ticks / 10000000) - 11644473600LL));
+             timestamp.set_nanos((INT32) ((ticks % 10000000) * 100));
+
+         Example 4: Compute Timestamp from Java `System.currentTimeMillis()`.
+
+             long millis = System.currentTimeMillis();
+
+             Timestamp timestamp = Timestamp.newBuilder().setSeconds(millis / 1000)
+                 .setNanos((int) ((millis % 1000) * 1000000)).build();
+
+         Example 5: Compute Timestamp from Java `Instant.now()`.
+
+             Instant now = Instant.now();
+
+             Timestamp timestamp =
+                 Timestamp.newBuilder().setSeconds(now.getEpochSecond())
+                     .setNanos(now.getNano()).build();
+
+         Example 6: Compute Timestamp from current time in Python.
+
+             timestamp = Timestamp()
+             timestamp.GetCurrentTime()
+
+         # JSON Mapping
+
+         In JSON format, the Timestamp type is encoded as a string in the
+         [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format. That is, the
+         format is "{year}-{month}-{day}T{hour}:{min}:{sec}[.{frac_sec}]Z"
+         where {year} is always expressed using four digits while {month}, {day},
+         {hour}, {min}, and {sec} are zero-padded to two digits each. The fractional
+         seconds, which can go up to 9 digits (i.e. up to 1 nanosecond resolution),
+         are optional. The "Z" suffix indicates the timezone ("UTC"); the timezone
+         is required. A proto3 JSON serializer should always use UTC (as indicated by
+         "Z") when printing the Timestamp type and a proto3 JSON parser should be
+         able to accept both UTC and other timezones (as indicated by an offset).
+
+         For example, "2017-01-15T01:30:15.01Z" encodes 15.01 seconds past
+         01:30 UTC on January 15, 2017.
+
+         In JavaScript, one can convert a Date object to this format using the
+         standard
+         [toISOString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString)
+         method. In Python, a standard `datetime.datetime` object can be converted
+         to this format using
+         [`strftime`](https://docs.python.org/2/library/time.html#time.strftime) with
+         the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one can use
+         the Joda Time's [`ISODateTimeFormat.dateTime()`](
+         http://joda-time.sourceforge.net/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime()
+         ) to obtain a formatter capable of generating timestamps in this format.
+security: []
+tags:
+  - name: asset.v1.AssetIdentityService
+    description: |-
+      AssetIdentityService manages the linkage of design-time asset IDs (from
+       layout, electrical, and transmission services) to physical/operational asset
+       identities (manufacturer serial numbers, SCADA tags, IEC 62446-1 commissioning
+       references).  Identity records are created during the commissioning handover
+       step and consumed by TelemetryService and FaultService for event correlation.

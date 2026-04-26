@@ -10,14 +10,14 @@ import (
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	reportv1connect "github.com/solar3d/solar3d/gen/report/v1/reportv1connect"
+	reportv1connect "p9e.in/samavaya/solar3d/gen/report/v1/reportv1connect"
 
-	"solar3d/report-service/internal/config"
-	"solar3d/report-service/internal/db"
-	"solar3d/report-service/internal/handler"
-	"solar3d/report-service/internal/repository"
-	"solar3d/report-service/internal/service"
-	mw "solar3d/shared/middleware"
+	"p9e.in/samavaya/solar3d/report-service/internal/config"
+	"p9e.in/samavaya/solar3d/report-service/internal/db"
+	"p9e.in/samavaya/solar3d/report-service/internal/handler"
+	"p9e.in/samavaya/solar3d/report-service/internal/repository"
+	"p9e.in/samavaya/solar3d/report-service/internal/service"
+	mw "p9e.in/samavaya/packages/httpmiddleware"
 )
 
 func main() {
@@ -62,16 +62,12 @@ func main() {
 	connectPath, connectHandler := reportv1connect.NewReportServiceHandler(handler.NewConnectReportService(svc))
 	mux.Handle(connectPath, connectHandler)
 
-	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"status":"ok"}`))
-	})
+	mux.HandleFunc("GET /healthz", mw.HealthzHandler(pool))
 
 	// Apply middleware chain: Recovery → RequestID → CORS → Logging → RateLimit
 	limiter := mw.NewRateLimiter(100, 200)
 	chain := mw.Chain(
-		mw.Recovery(logger),
+		mw.Recovery(logger), mw.DeprecateRESTAliases(logger),
 		mw.IDempotencyKeyMiddleware,
 		mw.CORS,
 		mw.Logging(logger),

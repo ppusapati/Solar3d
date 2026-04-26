@@ -10,9 +10,9 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
 
-	"solar3d/transmission-routing-service/internal/db"
-	"solar3d/transmission-routing-service/internal/domain"
-	"solar3d/transmission-routing-service/internal/mappers"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/db"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/domain"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/mappers"
 )
 
 var ErrNotFound = errors.New("transmission route not found")
@@ -102,6 +102,24 @@ func (r *Repository) Approve(ctx context.Context, route *domain.TransmissionRout
 		return nil, fmt.Errorf("approve transmission route: %w", err)
 	}
 	return mappers.ApproveTransmissionRouteRowToDomain(row)
+}
+
+func (r *Repository) Reject(ctx context.Context, route *domain.TransmissionRoute) (*domain.TransmissionRoute, error) {
+	governanceEvents, err := route.MarshalGovernanceEvents()
+	if err != nil {
+		return nil, err
+	}
+	metadata := route.MarshalMetadata()
+	row, err := r.q.RejectTransmissionRoute(ctx, db.RejectTransmissionRouteParams{
+		GovernanceEvents: governanceEvents,
+		Metadata:         metadata,
+		RouteSummary:     route.RouteSummary,
+		ID:               pgtype.UUID{Bytes: route.ID, Valid: true},
+	})
+	if err != nil {
+		return nil, fmt.Errorf("reject transmission route: %w", err)
+	}
+	return mappers.RejectTransmissionRouteRowToDomain(row)
 }
 
 func (r *Repository) Delete(ctx context.Context, id uuid.UUID) error {

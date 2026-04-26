@@ -1,0 +1,1346 @@
+openapi: 3.1.0
+info:
+  title: terrain.v1
+paths:
+  /terrain.v1.TerrainComputeService/ComputeAspect:
+    post:
+      tags:
+        - terrain.v1.TerrainComputeService
+      summary: ComputeAspect
+      description: ComputeAspect computes aspect values from terrain data.
+      operationId: terrain.v1.TerrainComputeService.ComputeAspect
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/terrain.v1.ComputeAspectRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/terrain.v1.ComputeAspectResponse'
+  /terrain.v1.TerrainComputeService/ComputeSlope:
+    post:
+      tags:
+        - terrain.v1.TerrainComputeService
+      summary: ComputeSlope
+      description: ComputeSlope computes slope values from terrain data.
+      operationId: terrain.v1.TerrainComputeService.ComputeSlope
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/terrain.v1.ComputeSlopeRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/terrain.v1.ComputeSlopeResponse'
+  /terrain.v1.TerrainComputeService/GetElevation:
+    post:
+      tags:
+        - terrain.v1.TerrainComputeService
+      summary: GetElevation
+      description: GetElevation returns elevation at a single coordinate.
+      operationId: terrain.v1.TerrainComputeService.GetElevation
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/terrain.v1.GetElevationRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/terrain.v1.GetElevationResponse'
+  /terrain.v1.TerrainComputeService/GetElevationGrid:
+    post:
+      tags:
+        - terrain.v1.TerrainComputeService
+      summary: GetElevationGrid
+      description: GetElevationGrid returns elevation values for a bounding box grid.
+      operationId: terrain.v1.TerrainComputeService.GetElevationGrid
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/terrain.v1.GetElevationGridRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/terrain.v1.GetElevationGridResponse'
+  /terrain.v1.TerrainService/AnalyzeEarthwork:
+    post:
+      tags:
+        - terrain.v1.TerrainService
+      summary: AnalyzeEarthwork
+      description: AnalyzeEarthwork computes cut/fill and related earthwork metrics.
+      operationId: terrain.v1.TerrainService.AnalyzeEarthwork
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/terrain.v1.AnalyzeEarthworkRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/terrain.v1.AnalyzeEarthworkResponse'
+  /terrain.v1.TerrainService/ComputeAspect:
+    post:
+      tags:
+        - terrain.v1.TerrainService
+      summary: ComputeAspect
+      description: ComputeAspect computes aspect values from terrain data.
+      operationId: terrain.v1.TerrainService.ComputeAspect
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/terrain.v1.ComputeAspectRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/terrain.v1.ComputeAspectResponse'
+  /terrain.v1.TerrainService/ComputeSlope:
+    post:
+      tags:
+        - terrain.v1.TerrainService
+      summary: ComputeSlope
+      description: ComputeSlope computes slope values from terrain data.
+      operationId: terrain.v1.TerrainService.ComputeSlope
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/terrain.v1.ComputeSlopeRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/terrain.v1.ComputeSlopeResponse'
+  /terrain.v1.TerrainService/DeleteTerrainLayer:
+    post:
+      tags:
+        - terrain.v1.TerrainService
+      summary: DeleteTerrainLayer
+      description: DeleteTerrainLayer deletes a terrain layer by ID.
+      operationId: terrain.v1.TerrainService.DeleteTerrainLayer
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/terrain.v1.DeleteTerrainLayerRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/terrain.v1.DeleteTerrainLayerResponse'
+  /terrain.v1.TerrainService/DiffTerrainLayers:
+    post:
+      tags:
+        - terrain.v1.TerrainService
+      summary: DiffTerrainLayers
+      description: DiffTerrainLayers computes differences between two terrain layers.
+      operationId: terrain.v1.TerrainService.DiffTerrainLayers
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/terrain.v1.DiffTerrainLayersRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/terrain.v1.DiffTerrainLayersResponse'
+  /terrain.v1.TerrainService/GenerateGradingPlan:
+    post:
+      tags:
+        - terrain.v1.TerrainService
+      summary: GenerateGradingPlan
+      description: GenerateGradingPlan generates grading recommendations from terrain constraints.
+      operationId: terrain.v1.TerrainService.GenerateGradingPlan
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/terrain.v1.GenerateGradingPlanRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/terrain.v1.GenerateGradingPlanResponse'
+  /terrain.v1.TerrainService/GetElevation:
+    post:
+      tags:
+        - terrain.v1.TerrainService
+      summary: GetElevation
+      description: GetElevation returns elevation at a single coordinate.
+      operationId: terrain.v1.TerrainService.GetElevation
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/terrain.v1.GetElevationRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/terrain.v1.GetElevationResponse'
+  /terrain.v1.TerrainService/GetElevationGrid:
+    post:
+      tags:
+        - terrain.v1.TerrainService
+      summary: GetElevationGrid
+      description: GetElevationGrid returns elevation values for a bounding box grid.
+      operationId: terrain.v1.TerrainService.GetElevationGrid
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/terrain.v1.GetElevationGridRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/terrain.v1.GetElevationGridResponse'
+  /terrain.v1.TerrainService/GetTerrainLayer:
+    post:
+      tags:
+        - terrain.v1.TerrainService
+      summary: GetTerrainLayer
+      description: GetTerrainLayer returns a terrain layer by ID.
+      operationId: terrain.v1.TerrainService.GetTerrainLayer
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/terrain.v1.GetTerrainLayerRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/terrain.v1.GetTerrainLayerResponse'
+  /terrain.v1.TerrainService/ListTerrainLayers:
+    post:
+      tags:
+        - terrain.v1.TerrainService
+      summary: ListTerrainLayers
+      description: ListTerrainLayers lists terrain layers for a project.
+      operationId: terrain.v1.TerrainService.ListTerrainLayers
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/terrain.v1.ListTerrainLayersRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/terrain.v1.ListTerrainLayersResponse'
+  /terrain.v1.TerrainService/UploadTerrain:
+    post:
+      tags:
+        - terrain.v1.TerrainService
+      summary: UploadTerrain
+      description: UploadTerrain ingests a terrain file and creates a terrain layer.
+      operationId: terrain.v1.TerrainService.UploadTerrain
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/terrain.v1.UploadTerrainRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/terrain.v1.UploadTerrainResponse'
+components:
+  schemas:
+    connect-protocol-version:
+      type: number
+      title: Connect-Protocol-Version
+      enum:
+        - 1
+      description: Define the version of the Connect protocol
+      const: 1
+    connect-timeout-header:
+      type: number
+      title: Connect-Timeout-Ms
+      description: Define the timeout, in ms
+    connect.error:
+      type: object
+      properties:
+        code:
+          type: string
+          examples:
+            - not_found
+          enum:
+            - canceled
+            - unknown
+            - invalid_argument
+            - deadline_exceeded
+            - not_found
+            - already_exists
+            - permission_denied
+            - resource_exhausted
+            - failed_precondition
+            - aborted
+            - out_of_range
+            - unimplemented
+            - internal
+            - unavailable
+            - data_loss
+            - unauthenticated
+          description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+        message:
+          type: string
+          description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/connect.error_details.Any'
+          description: A list of messages that carry the error details. There is no limit on the number of messages.
+      title: Connect Error
+      additionalProperties: true
+      description: 'Error type returned by Connect: https://connectrpc.com/docs/go/errors/#http-representation'
+    connect.error_details.Any:
+      type: object
+      properties:
+        type:
+          type: string
+          description: 'A URL that acts as a globally unique identifier for the type of the serialized message. For example: `type.googleapis.com/google.rpc.ErrorInfo`. This is used to determine the schema of the data in the `value` field and is the discriminator for the `debug` field.'
+        value:
+          type: string
+          format: binary
+          description: The Protobuf message, serialized as bytes and base64-encoded. The specific message type is identified by the `type` field.
+        debug:
+          oneOf:
+            - type: object
+              title: Any
+              additionalProperties: true
+              description: Detailed error information.
+          discriminator:
+            propertyName: type
+          title: Debug
+          description: Deserialized error detail payload. The 'type' field indicates the schema. This field is for easier debugging and should not be relied upon for application logic.
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message, with an additional debug field for ConnectRPC error details.
+    google.protobuf.Timestamp:
+      type: string
+      examples:
+        - "2023-01-15T01:30:15.01Z"
+        - "2024-12-25T12:00:00Z"
+      format: date-time
+      description: |-
+        A Timestamp represents a point in time independent of any time zone or local
+         calendar, encoded as a count of seconds and fractions of seconds at
+         nanosecond resolution. The count is relative to an epoch at UTC midnight on
+         January 1, 1970, in the proleptic Gregorian calendar which extends the
+         Gregorian calendar backwards to year one.
+
+         All minutes are 60 seconds long. Leap seconds are "smeared" so that no leap
+         second table is needed for interpretation, using a [24-hour linear
+         smear](https://developers.google.com/time/smear).
+
+         The range is from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59.999999999Z. By
+         restricting to that range, we ensure that we can convert to and from [RFC
+         3339](https://www.ietf.org/rfc/rfc3339.txt) date strings.
+
+         # Examples
+
+         Example 1: Compute Timestamp from POSIX `time()`.
+
+             Timestamp timestamp;
+             timestamp.set_seconds(time(NULL));
+             timestamp.set_nanos(0);
+
+         Example 2: Compute Timestamp from POSIX `gettimeofday()`.
+
+             struct timeval tv;
+             gettimeofday(&tv, NULL);
+
+             Timestamp timestamp;
+             timestamp.set_seconds(tv.tv_sec);
+             timestamp.set_nanos(tv.tv_usec * 1000);
+
+         Example 3: Compute Timestamp from Win32 `GetSystemTimeAsFileTime()`.
+
+             FILETIME ft;
+             GetSystemTimeAsFileTime(&ft);
+             UINT64 ticks = (((UINT64)ft.dwHighDateTime) << 32) | ft.dwLowDateTime;
+
+             // A Windows tick is 100 nanoseconds. Windows epoch 1601-01-01T00:00:00Z
+             // is 11644473600 seconds before Unix epoch 1970-01-01T00:00:00Z.
+             Timestamp timestamp;
+             timestamp.set_seconds((INT64) ((ticks / 10000000) - 11644473600LL));
+             timestamp.set_nanos((INT32) ((ticks % 10000000) * 100));
+
+         Example 4: Compute Timestamp from Java `System.currentTimeMillis()`.
+
+             long millis = System.currentTimeMillis();
+
+             Timestamp timestamp = Timestamp.newBuilder().setSeconds(millis / 1000)
+                 .setNanos((int) ((millis % 1000) * 1000000)).build();
+
+         Example 5: Compute Timestamp from Java `Instant.now()`.
+
+             Instant now = Instant.now();
+
+             Timestamp timestamp =
+                 Timestamp.newBuilder().setSeconds(now.getEpochSecond())
+                     .setNanos(now.getNano()).build();
+
+         Example 6: Compute Timestamp from current time in Python.
+
+             timestamp = Timestamp()
+             timestamp.GetCurrentTime()
+
+         # JSON Mapping
+
+         In JSON format, the Timestamp type is encoded as a string in the
+         [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format. That is, the
+         format is "{year}-{month}-{day}T{hour}:{min}:{sec}[.{frac_sec}]Z"
+         where {year} is always expressed using four digits while {month}, {day},
+         {hour}, {min}, and {sec} are zero-padded to two digits each. The fractional
+         seconds, which can go up to 9 digits (i.e. up to 1 nanosecond resolution),
+         are optional. The "Z" suffix indicates the timezone ("UTC"); the timezone
+         is required. A proto3 JSON serializer should always use UTC (as indicated by
+         "Z") when printing the Timestamp type and a proto3 JSON parser should be
+         able to accept both UTC and other timezones (as indicated by an offset).
+
+         For example, "2017-01-15T01:30:15.01Z" encodes 15.01 seconds past
+         01:30 UTC on January 15, 2017.
+
+         In JavaScript, one can convert a Date object to this format using the
+         standard
+         [toISOString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString)
+         method. In Python, a standard `datetime.datetime` object can be converted
+         to this format using
+         [`strftime`](https://docs.python.org/2/library/time.html#time.strftime) with
+         the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one can use
+         the Joda Time's [`ISODateTimeFormat.dateTime()`](
+         http://joda-time.sourceforge.net/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime()
+         ) to obtain a formatter capable of generating timestamps in this format.
+    terrain.v1.AnalyzeEarthworkRequest:
+      type: object
+      properties:
+        terrainLayerId:
+          type: string
+          title: terrain_layer_id
+        targetElevationM:
+          type:
+            - number
+            - "null"
+          title: target_elevation_m
+          format: double
+        boundaryGeojson:
+          type: string
+          title: boundary_geojson
+        minDeltaM:
+          type: number
+          title: min_delta_m
+          format: double
+        haulFactor:
+          type: number
+          title: haul_factor
+          format: double
+        gridWidth:
+          type: integer
+          title: grid_width
+          format: int32
+        gridHeight:
+          type: integer
+          title: grid_height
+          format: int32
+      title: AnalyzeEarthworkRequest
+      additionalProperties: false
+    terrain.v1.AnalyzeEarthworkResponse:
+      type: object
+      properties:
+        demSourceLayerId:
+          type: string
+          title: dem_source_layer_id
+        gridWidth:
+          type: integer
+          title: grid_width
+          format: int32
+        gridHeight:
+          type: integer
+          title: grid_height
+          format: int32
+        cellAreaSqm:
+          type: number
+          title: cell_area_sqm
+          format: double
+        meanElevationM:
+          type: number
+          title: mean_elevation_m
+          format: double
+        targetElevationM:
+          type: number
+          title: target_elevation_m
+          format: double
+        cutVolumeM3:
+          type: number
+          title: cut_volume_m3
+          format: double
+        fillVolumeM3:
+          type: number
+          title: fill_volume_m3
+          format: double
+        netVolumeM3:
+          type: number
+          title: net_volume_m3
+          format: double
+        imbalanceVolumeM3:
+          type: number
+          title: imbalance_volume_m3
+          format: double
+        balancedVolumeRatio:
+          type: number
+          title: balanced_volume_ratio
+          format: double
+        affectedAreaSqm:
+          type: number
+          title: affected_area_sqm
+          format: double
+        averageAbsoluteDeltaM:
+          type: number
+          title: average_absolute_delta_m
+          format: double
+        maximumAbsoluteDeltaM:
+          type: number
+          title: maximum_absolute_delta_m
+          format: double
+        includedCellCount:
+          type: integer
+          title: included_cell_count
+          format: int32
+        clippedAreaSqm:
+          type: number
+          title: clipped_area_sqm
+          format: double
+        haulDistanceM:
+          type: number
+          title: haul_distance_m
+          format: double
+        haulEffortM3m:
+          type: number
+          title: haul_effort_m3m
+          format: double
+        recommendedTargetMinM:
+          type: number
+          title: recommended_target_min_m
+          format: double
+        recommendedTargetMaxM:
+          type: number
+          title: recommended_target_max_m
+          format: double
+      title: AnalyzeEarthworkResponse
+      additionalProperties: false
+    terrain.v1.BoundingBox:
+      type: object
+      properties:
+        minX:
+          type: number
+          title: min_x
+          format: double
+        minY:
+          type: number
+          title: min_y
+          format: double
+        maxX:
+          type: number
+          title: max_x
+          format: double
+        maxY:
+          type: number
+          title: max_y
+          format: double
+      title: BoundingBox
+      additionalProperties: false
+    terrain.v1.ComputeAspectRequest:
+      type: object
+      properties:
+        terrainLayerId:
+          type: string
+          title: terrain_layer_id
+      title: ComputeAspectRequest
+      additionalProperties: false
+    terrain.v1.ComputeAspectResponse:
+      type: object
+      properties:
+        aspectLayer:
+          title: aspect_layer
+          $ref: '#/components/schemas/terrain.v1.TerrainLayer'
+      title: ComputeAspectResponse
+      additionalProperties: false
+    terrain.v1.ComputeSlopeRequest:
+      type: object
+      properties:
+        terrainLayerId:
+          type: string
+          title: terrain_layer_id
+      title: ComputeSlopeRequest
+      additionalProperties: false
+    terrain.v1.ComputeSlopeResponse:
+      type: object
+      properties:
+        slopeLayer:
+          title: slope_layer
+          $ref: '#/components/schemas/terrain.v1.TerrainLayer'
+      title: ComputeSlopeResponse
+      additionalProperties: false
+    terrain.v1.DeleteTerrainLayerRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+      title: DeleteTerrainLayerRequest
+      additionalProperties: false
+    terrain.v1.DeleteTerrainLayerResponse:
+      type: object
+      title: DeleteTerrainLayerResponse
+      additionalProperties: false
+    terrain.v1.DiffTerrainLayersRequest:
+      type: object
+      properties:
+        baseLayerId:
+          type: string
+          title: base_layer_id
+        compareLayerId:
+          type: string
+          title: compare_layer_id
+        gridWidth:
+          type: integer
+          title: grid_width
+          format: int32
+        gridHeight:
+          type: integer
+          title: grid_height
+          format: int32
+      title: DiffTerrainLayersRequest
+      additionalProperties: false
+    terrain.v1.DiffTerrainLayersResponse:
+      type: object
+      properties:
+        baseLayerId:
+          type: string
+          title: base_layer_id
+        compareLayerId:
+          type: string
+          title: compare_layer_id
+        overlapBounds:
+          title: overlap_bounds
+          $ref: '#/components/schemas/terrain.v1.BoundingBox'
+        gridWidth:
+          type: integer
+          title: grid_width
+          format: int32
+        gridHeight:
+          type: integer
+          title: grid_height
+          format: int32
+        cellAreaSqm:
+          type: number
+          title: cell_area_sqm
+          format: double
+        deltaElevations:
+          type: array
+          items:
+            type: number
+            format: double
+          title: delta_elevations
+          description: delta_elevations[row*width+col] = compare − base (m). Row-major order.
+        meanDeltaM:
+          type: number
+          title: mean_delta_m
+          format: double
+        rmsDeltaM:
+          type: number
+          title: rms_delta_m
+          format: double
+        maxAbsDeltaM:
+          type: number
+          title: max_abs_delta_m
+          format: double
+        volumeAddedM3:
+          type: number
+          title: volume_added_m3
+          format: double
+        volumeRemovedM3:
+          type: number
+          title: volume_removed_m3
+          format: double
+        netVolumeM3:
+          type: number
+          title: net_volume_m3
+          format: double
+        validCellCount:
+          type: integer
+          title: valid_cell_count
+          format: int32
+      title: DiffTerrainLayersResponse
+      additionalProperties: false
+      description: |-
+        DiffTerrainLayersResponse carries the per-cell elevation delta between two
+         DEM layers over their overlapping extent, together with aggregate statistics.
+    terrain.v1.GenerateGradingPlanRequest:
+      type: object
+      properties:
+        terrainLayerId:
+          type: string
+          title: terrain_layer_id
+        targetElevationM:
+          type:
+            - number
+            - "null"
+          title: target_elevation_m
+          format: double
+        boundaryGeojson:
+          type: string
+          title: boundary_geojson
+        minDeltaM:
+          type: number
+          title: min_delta_m
+          format: double
+        haulFactor:
+          type: number
+          title: haul_factor
+          format: double
+        gridWidth:
+          type: integer
+          title: grid_width
+          format: int32
+        gridHeight:
+          type: integer
+          title: grid_height
+          format: int32
+        cutRatePerM3:
+          type: number
+          title: cut_rate_per_m3
+          format: double
+          description: Unit rates for cost estimation. Zero values disable that cost component.
+        fillRatePerM3:
+          type: number
+          title: fill_rate_per_m3
+          format: double
+        haulRatePerM3m:
+          type: number
+          title: haul_rate_per_m3m
+          format: double
+        importRatePerM3:
+          type: number
+          title: import_rate_per_m3
+          format: double
+        exportRatePerM3:
+          type: number
+          title: export_rate_per_m3
+          format: double
+        compactionFactor:
+          type: number
+          title: compaction_factor
+          format: double
+          description: |-
+            compaction_factor: ratio of in-situ cut volume to compacted fill volume.
+             1.0 = no shrinkage or bulking. Typical 1.1–1.3 for granular soils.
+        currencyCode:
+          type: string
+          title: currency_code
+      title: GenerateGradingPlanRequest
+      additionalProperties: false
+    terrain.v1.GenerateGradingPlanResponse:
+      type: object
+      properties:
+        demLayerId:
+          type: string
+          title: dem_layer_id
+        targetElevationM:
+          type: number
+          title: target_elevation_m
+          format: double
+        meanElevationM:
+          type: number
+          title: mean_elevation_m
+          format: double
+        affectedAreaSqm:
+          type: number
+          title: affected_area_sqm
+          format: double
+        balancedVolumeRatio:
+          type: number
+          title: balanced_volume_ratio
+          format: double
+        compactionFactor:
+          type: number
+          title: compaction_factor
+          format: double
+        cutRatePerM3:
+          type: number
+          title: cut_rate_per_m3
+          format: double
+        fillRatePerM3:
+          type: number
+          title: fill_rate_per_m3
+          format: double
+        haulRatePerM3m:
+          type: number
+          title: haul_rate_per_m3m
+          format: double
+        importRatePerM3:
+          type: number
+          title: import_rate_per_m3
+          format: double
+        exportRatePerM3:
+          type: number
+          title: export_rate_per_m3
+          format: double
+        cost:
+          title: cost
+          $ref: '#/components/schemas/terrain.v1.GradingPlanCostBreakdown'
+      title: GenerateGradingPlanResponse
+      additionalProperties: false
+    terrain.v1.GetElevationGridRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        bounds:
+          title: bounds
+          $ref: '#/components/schemas/terrain.v1.BoundingBox'
+        resolutionM:
+          type: number
+          title: resolution_m
+          format: double
+      title: GetElevationGridRequest
+      additionalProperties: false
+    terrain.v1.GetElevationGridResponse:
+      type: object
+      properties:
+        width:
+          type: integer
+          title: width
+          format: int32
+        height:
+          type: integer
+          title: height
+          format: int32
+        elevations:
+          type: array
+          items:
+            type: number
+            format: double
+          title: elevations
+        minElevation:
+          type: number
+          title: min_elevation
+          format: double
+        maxElevation:
+          type: number
+          title: max_elevation
+          format: double
+      title: GetElevationGridResponse
+      additionalProperties: false
+    terrain.v1.GetElevationRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        longitude:
+          type: number
+          title: longitude
+          format: double
+        latitude:
+          type: number
+          title: latitude
+          format: double
+      title: GetElevationRequest
+      additionalProperties: false
+    terrain.v1.GetElevationResponse:
+      type: object
+      properties:
+        elevation:
+          type: number
+          title: elevation
+          format: double
+      title: GetElevationResponse
+      additionalProperties: false
+    terrain.v1.GetTerrainLayerRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+      title: GetTerrainLayerRequest
+      additionalProperties: false
+    terrain.v1.GetTerrainLayerResponse:
+      type: object
+      properties:
+        layer:
+          title: layer
+          $ref: '#/components/schemas/terrain.v1.TerrainLayer'
+      title: GetTerrainLayerResponse
+      additionalProperties: false
+    terrain.v1.GradingPlanCostBreakdown:
+      type: object
+      properties:
+        cutVolumeM3:
+          type: number
+          title: cut_volume_m3
+          format: double
+        fillVolumeM3:
+          type: number
+          title: fill_volume_m3
+          format: double
+        fillDemandM3:
+          type: number
+          title: fill_demand_m3
+          format: double
+          description: fill_demand_m3 = fill_volume_m3 * compaction_factor (in-situ cut m3 needed)
+        exportVolumeM3:
+          type: number
+          title: export_volume_m3
+          format: double
+        importVolumeM3:
+          type: number
+          title: import_volume_m3
+          format: double
+        hauledVolumeM3:
+          type: number
+          title: hauled_volume_m3
+          format: double
+        haulDistanceM:
+          type: number
+          title: haul_distance_m
+          format: double
+        haulEffortM3m:
+          type: number
+          title: haul_effort_m3m
+          format: double
+        cutCost:
+          type: number
+          title: cut_cost
+          format: double
+        fillCost:
+          type: number
+          title: fill_cost
+          format: double
+        haulCost:
+          type: number
+          title: haul_cost
+          format: double
+        importCost:
+          type: number
+          title: import_cost
+          format: double
+        exportCost:
+          type: number
+          title: export_cost
+          format: double
+        totalCost:
+          type: number
+          title: total_cost
+          format: double
+        currencyCode:
+          type: string
+          title: currency_code
+      title: GradingPlanCostBreakdown
+      additionalProperties: false
+      description: |-
+        GradingPlanCostBreakdown contains all derived volumes and costs traceable to
+         the input unit rates and earthwork engine output.
+    terrain.v1.ListTerrainLayersRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        typeFilter:
+          title: type_filter
+          $ref: '#/components/schemas/terrain.v1.TerrainLayerType'
+      title: ListTerrainLayersRequest
+      additionalProperties: false
+    terrain.v1.ListTerrainLayersResponse:
+      type: object
+      properties:
+        layers:
+          type: array
+          items:
+            $ref: '#/components/schemas/terrain.v1.TerrainLayer'
+          title: layers
+      title: ListTerrainLayersResponse
+      additionalProperties: false
+    terrain.v1.TerrainLayer:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        projectId:
+          type: string
+          title: project_id
+        name:
+          type: string
+          title: name
+        layerType:
+          title: layer_type
+          $ref: '#/components/schemas/terrain.v1.TerrainLayerType'
+        sourceFile:
+          type: string
+          title: source_file
+        bounds:
+          title: bounds
+          $ref: '#/components/schemas/terrain.v1.BoundingBox'
+        resolutionM:
+          type: number
+          title: resolution_m
+          format: double
+        crs:
+          type: string
+          title: crs
+        minElevation:
+          type: number
+          title: min_elevation
+          format: double
+        maxElevation:
+          type: number
+          title: max_elevation
+          format: double
+        createdAt:
+          title: created_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: TerrainLayer
+      additionalProperties: false
+    terrain.v1.TerrainLayerType:
+      type: string
+      title: TerrainLayerType
+      enum:
+        - TERRAIN_LAYER_TYPE_UNSPECIFIED
+        - TERRAIN_LAYER_TYPE_DEM
+        - TERRAIN_LAYER_TYPE_SLOPE
+        - TERRAIN_LAYER_TYPE_ASPECT
+        - TERRAIN_LAYER_TYPE_HILLSHADE
+    terrain.v1.UploadTerrainRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        name:
+          type: string
+          title: name
+        filePath:
+          type: string
+          title: file_path
+        crs:
+          type: string
+          title: crs
+      title: UploadTerrainRequest
+      additionalProperties: false
+    terrain.v1.UploadTerrainResponse:
+      type: object
+      properties:
+        layer:
+          title: layer
+          $ref: '#/components/schemas/terrain.v1.TerrainLayer'
+      title: UploadTerrainResponse
+      additionalProperties: false
+security: []
+tags:
+  - name: terrain.v1.TerrainService
+    description: TerrainService manages terrain layer lifecycle and terrain analytics operations.
+  - name: terrain.v1.TerrainComputeService
+    description: |-
+      TerrainComputeService exposes only stateless compute-style terrain operations.
+       Lifecycle/storage operations remain in TerrainService.

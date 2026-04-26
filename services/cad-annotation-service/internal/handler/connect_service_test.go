@@ -7,7 +7,7 @@ import (
 
 	connect "connectrpc.com/connect"
 
-	"solar3d/cad-annotation-service/internal/service"
+	"p9e.in/samavaya/solar3d/cad-annotation-service/internal/service"
 )
 
 func TestToConnectError_ConflictMetadataHeaders(t *testing.T) {

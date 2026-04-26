@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"solar3d/compute-orchestration-service/internal/domain"
-	"solar3d/compute-orchestration-service/internal/repository"
+	"p9e.in/samavaya/solar3d/compute-orchestration-service/internal/domain"
+	"p9e.in/samavaya/solar3d/compute-orchestration-service/internal/repository"
 )
 
 func TestServiceInMemory(t *testing.T) {

@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"solar3d/compute-service/internal/models"
+	"p9e.in/samavaya/solar3d/compute-service/internal/models"
 )
 
 func TestLoad_SubmitFeedback_Concurrent(t *testing.T) {

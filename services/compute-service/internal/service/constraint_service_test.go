@@ -5,9 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"solar3d/compute-service/internal/models"
-	"solar3d/compute-service/internal/repository"
-	"solar3d/compute-service/internal/service"
+	"p9e.in/samavaya/solar3d/compute-service/internal/models"
+	"p9e.in/samavaya/solar3d/compute-service/internal/repository"
+	"p9e.in/samavaya/solar3d/compute-service/internal/service"
 )
 
 // TestConstraintService_CreateZone_Valid tests successful zone creation.

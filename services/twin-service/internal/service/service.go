@@ -8,8 +8,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 
-	"solar3d/twin-service/internal/domain"
-	"solar3d/twin-service/internal/repository"
+	"p9e.in/samavaya/solar3d/twin-service/internal/domain"
+	"p9e.in/samavaya/solar3d/twin-service/internal/repository"
 )
 
 // TwinService implements twin provisioning, state retrieval, telemetry ingestion,
@@ -113,6 +113,26 @@ func (s *TwinService) IngestReadings(ctx context.Context, in IngestReadingsInput
 		Int("count", len(in.Readings)).
 		Msg("readings ingested")
 	return len(in.Readings), nil
+}
+
+// LatestReadings returns the most recent sensor readings for a twin, sorted
+// newest-first. Limit must be positive; values above 1000 are clamped to
+// keep response sizes bounded for telemetry dashboards.
+func (s *TwinService) LatestReadings(ctx context.Context, twinID uuid.UUID, limit int) ([]*domain.SensorReading, error) {
+	if twinID == uuid.Nil {
+		return nil, fmt.Errorf("twin_id is required")
+	}
+	if limit <= 0 {
+		limit = 100
+	}
+	if limit > 1000 {
+		limit = 1000
+	}
+	readings, err := s.repo.GetLatestReadingsByTwin(ctx, twinID, limit)
+	if err != nil {
+		return nil, fmt.Errorf("fetch latest readings: %w", err)
+	}
+	return readings, nil
 }
 
 // LinkAssetIdentityInput carries the caller-supplied fields for asset linkage.

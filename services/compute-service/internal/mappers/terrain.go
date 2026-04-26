@@ -1,9 +1,9 @@
 package mappers
 
 import (
-	"solar3d/compute-service/internal/models"
+	"p9e.in/samavaya/solar3d/compute-service/internal/models"
 
-	terrainv1 "github.com/solar3d/solar3d/gen/terrain/v1"
+	terrainv1 "p9e.in/samavaya/solar3d/gen/terrain/v1"
 )
 
 func ProtoToGetElevation(req *terrainv1.GetElevationRequest) *models.GetElevationRequest {

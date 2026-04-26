@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"solar3d/ml-service/internal/client"
+	"p9e.in/samavaya/solar3d/ml-service/internal/client"
 )
 
 // MLBackend defines the contract for ML inference operations.

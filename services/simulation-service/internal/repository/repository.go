@@ -9,7 +9,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"solar3d/simulation-service/internal/domain"
+	"p9e.in/samavaya/solar3d/simulation-service/internal/domain"
 )
 
 type SimulationRepository struct {

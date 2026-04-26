@@ -74,6 +74,7 @@ type SitingConflict struct {
 	ID                    int64
 	ConflictID            string  // UUID
 	ZoneID                string  // Reference to conflicting zone
+	AnalysisID            string  // Optional link to parent SitingAnalysis (populated by repo)
 	ProposedSiteGeometry  string  // WKT of proposed site
 	ConflictSeverity      string  // INFO, WARNING, ERROR, BLOCKER
 	ConflictReason        string  // e.g., "Site inside exclusion zone"
@@ -104,6 +105,7 @@ type SitingAnalysis struct {
 	Conflicts            []SitingConflict
 	RiskScore            RiskScore
 	TotalZonesChecked    int32
+	AnalyzedBy           string // User who initiated the analysis
 	AnalyzedAt           time.Time
 }
 

@@ -2,9 +2,10 @@ syntax = "proto3";
 
 package asset.v1;
 
-option go_package = "github.com/solar3d/solar3d/gen/asset/v1;assetv1";
+option go_package = "p9e.in/samavaya/solar3d/gen/asset/v1;assetv1";
 
 import "google/protobuf/timestamp.proto";
+import "packages/pagination.proto";
 
 service AssetService {
   rpc CreateAsset(CreateAssetRequest) returns (CreateAssetResponse);
@@ -48,20 +49,47 @@ message Dimensions {
   double height_mm = 2;
   double depth_mm = 3;
   double weight_kg = 4;
+
+  // Panel-specific mechanical details used by structural + mounting calculations.
+  int32 cell_count = 5;               // e.g. 144, 132, 120
+  CellTechnology cell_technology = 6; // mono-facial mono PERC, TOPCon, HJT, etc.
+  FrameType frame_type = 7;           // anodized aluminum, black anodized, frameless
+  int32 mounting_hole_count = 8;      // typical 8 for 72-cell, 4 for smaller modules
+}
+
+// CellTechnology captures the PV cell architecture. Drives efficiency, temp
+// coefficients, and bifacial behavior in downstream modeling.
+enum CellTechnology {
+  CELL_TECHNOLOGY_UNSPECIFIED = 0;
+  CELL_TECHNOLOGY_MONO_PERC = 1;       // mono-crystalline PERC
+  CELL_TECHNOLOGY_POLY = 2;            // poly-crystalline (legacy)
+  CELL_TECHNOLOGY_TOPCON = 3;          // n-type TOPCon
+  CELL_TECHNOLOGY_HJT = 4;             // heterojunction
+  CELL_TECHNOLOGY_IBC = 5;             // interdigitated back-contact
+  CELL_TECHNOLOGY_THIN_FILM = 6;       // CIGS, CdTe, a-Si
+  CELL_TECHNOLOGY_PERC_PLUS = 7;       // enhanced PERC (TOPCon predecessors)
+}
+
+// FrameType identifies module frame material/finish; affects clamp selection.
+enum FrameType {
+  FRAME_TYPE_UNSPECIFIED = 0;
+  FRAME_TYPE_ANODIZED_ALUMINUM = 1;
+  FRAME_TYPE_BLACK_ANODIZED = 2;
+  FRAME_TYPE_FRAMELESS = 3;
 }
 
 message ElectricalParameters {
-  // Panel parameters
-  double rated_power_w = 1;
-  double voc = 2;
-  double isc = 3;
-  double vmp = 4;
-  double imp = 5;
-  double efficiency = 6;
-  double temp_coefficient_pmax = 7;
-  double temp_coefficient_voc = 8;
+  // ========== Panel parameters (STC: 1000 W/m², 25°C, AM1.5) ==========
+  double rated_power_w = 1;              // Pmax (W)
+  double voc = 2;                        // Voc (V)
+  double isc = 3;                        // Isc (A)
+  double vmp = 4;                        // Vmp (V)
+  double imp = 5;                        // Imp (A)
+  double efficiency = 6;                 // module efficiency (0-1)
+  double temp_coefficient_pmax = 7;      // γ (%/°C) — typically negative
+  double temp_coefficient_voc = 8;       // β (%/°C) — typically negative
 
-  // Inverter parameters
+  // ========== Inverter parameters ==========
   double max_dc_input_w = 9;
   double max_ac_output_w = 10;
   int32 mppt_count = 11;
@@ -69,10 +97,61 @@ message ElectricalParameters {
   double min_input_voltage = 13;
   int32 max_strings_per_mppt = 14;
 
-  // Transformer parameters
+  // ========== Transformer parameters ==========
   double kva_rating = 15;
   double primary_voltage = 16;
   double secondary_voltage = 17;
+
+  // ========== Extended panel parameters (PAN-sourced) ==========
+  double temp_coefficient_isc = 18;      // α (%/°C) — typically small positive
+  double noct_c = 19;                    // Nominal Operating Cell Temperature (°C), typically 43-48
+  double bifacial_factor = 20;           // 0 for mono-facial, 0.65-0.85 for bifacial modules
+  double max_system_voltage = 21;        // UL/IEC system voltage rating (e.g. 1500)
+  double series_fuse_rating_a = 22;      // max series fuse for string protection
+  double nominal_power_tolerance_pct = 23; // manufacturer tolerance (e.g. +3/0%)
+  // Cell-level reference for single-diode models. Populated from PAN; optional.
+  int32 cells_in_series = 24;
+  int32 cells_in_parallel = 25;
+
+  // ========== Extended inverter parameters (OND-sourced) ==========
+  double euro_efficiency = 26;           // European weighted efficiency (0-1)
+  double cec_efficiency = 27;            // CEC weighted efficiency (0-1)
+  double max_efficiency = 28;            // peak efficiency (0-1)
+  double mppt_min_voltage = 29;          // MPPT tracking range lower bound (V)
+  double mppt_max_voltage = 30;          // MPPT tracking range upper bound (V)
+  double startup_voltage = 31;           // DC voltage at which inverter begins tracking (V)
+  double max_dc_input_current_a = 32;    // total DC input current limit (A)
+  double max_output_current_a = 33;      // nominal AC output current (A)
+  double rated_ac_output_w = 34;         // continuous AC output at rated conditions (W)
+  int32 ac_phase_count = 35;             // 1 for residential, 3 for commercial/utility
+  double ac_frequency_hz = 36;           // 50 or 60
+  double nominal_ac_voltage = 37;        // nominal output voltage (V)
+  double night_consumption_w = 38;       // self-consumption at night (W)
+  double operating_temp_min_c = 39;      // °C
+  double operating_temp_max_c = 40;      // °C
+  InverterTopology topology = 41;
+  InverterGridType grid_type = 42;
+}
+
+// InverterTopology identifies the galvanic isolation architecture. Drives
+// grounding strategy, arc-fault detection requirements, and efficiency curve
+// shape. Modern utility-scale string inverters are almost universally
+// transformer-less; legacy installations use LF transformer types.
+enum InverterTopology {
+  INVERTER_TOPOLOGY_UNSPECIFIED = 0;
+  INVERTER_TOPOLOGY_TRANSFORMER_LESS = 1;   // modern standard
+  INVERTER_TOPOLOGY_HF_TRANSFORMER = 2;     // high-frequency
+  INVERTER_TOPOLOGY_LF_TRANSFORMER = 3;     // line-frequency
+}
+
+// InverterGridType describes how the inverter interacts with the utility grid
+// and local storage. Gates which downstream features (battery dispatch,
+// anti-islanding protection) are applicable.
+enum InverterGridType {
+  INVERTER_GRID_TYPE_UNSPECIFIED = 0;
+  INVERTER_GRID_TYPE_GRID_TIED = 1;
+  INVERTER_GRID_TYPE_HYBRID = 2;            // grid + battery
+  INVERTER_GRID_TYPE_OFF_GRID = 3;
 }
 
 message CreateAssetRequest {
@@ -101,14 +180,12 @@ message GetAssetResponse {
 message ListAssetsRequest {
   AssetCategory category_filter = 1;
   string manufacturer_filter = 2;
-  int32 page_size = 3;
-  string page_token = 4;
+  packages.api.v1.pagination.PaginationRequest pagination = 3;
 }
 
 message ListAssetsResponse {
   repeated Asset assets = 1;
-  string next_page_token = 2;
-  int32 total_count = 3;
+  packages.api.v1.pagination.PaginationResponse pagination = 2;
 }
 
 message UpdateAssetRequest {

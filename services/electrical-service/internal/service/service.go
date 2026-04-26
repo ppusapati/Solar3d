@@ -9,9 +9,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 
-	"solar3d/electrical-service/internal/domain"
-	"solar3d/electrical-service/internal/repository"
-	"solar3d/shared/orchestration"
+	"p9e.in/samavaya/solar3d/electrical-service/internal/domain"
+	"p9e.in/samavaya/solar3d/electrical-service/internal/repository"
+	"p9e.in/samavaya/packages/solar3dorch"
 )
 
 type electricalRepository interface {

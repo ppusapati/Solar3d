@@ -8,9 +8,9 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
 
-	"solar3d/twin-service/internal/handler"
-	"solar3d/twin-service/internal/repository"
-	"solar3d/twin-service/internal/service"
+	"p9e.in/samavaya/solar3d/twin-service/internal/handler"
+	"p9e.in/samavaya/solar3d/twin-service/internal/repository"
+	"p9e.in/samavaya/solar3d/twin-service/internal/service"
 )
 
 // Register mounts all twin-service handlers onto the provided mux using the

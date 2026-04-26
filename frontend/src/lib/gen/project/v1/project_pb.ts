@@ -6,13 +6,17 @@ import type { GenEnum, GenFile, GenMessage, GenService } from "@bufbuild/protobu
 import { enumDesc, fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
 import type { Timestamp } from "@bufbuild/protobuf/wkt";
 import { file_google_protobuf_timestamp } from "@bufbuild/protobuf/wkt";
+import type { TransitionEvidence, WorkflowPhase } from "../../planning/v1/planning_workflow_pb.js";
+import { file_planning_v1_planning_workflow } from "../../planning/v1/planning_workflow_pb.js";
+import type { PaginationRequest, PaginationResponse } from "../../packages/pagination_pb.js";
+import { file_packages_pagination } from "../../packages/pagination_pb.js";
 import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file project/v1/project.proto.
  */
 export const file_project_v1_project: GenFile = /*@__PURE__*/
-  fileDesc("Chhwcm9qZWN0L3YxL3Byb2plY3QucHJvdG8SCnByb2plY3QudjEikgIKB1Byb2plY3QSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRITCgtkZXNjcmlwdGlvbhgDIAEoCRIpCgZzdGF0dXMYBCABKA4yGS5wcm9qZWN0LnYxLlByb2plY3RTdGF0dXMSHgoEc2l0ZRgFIAEoCzIQLnByb2plY3QudjEuU2l0ZRItCghtZXRhZGF0YRgGIAEoCzIbLnByb2plY3QudjEuUHJvamVjdE1ldGFkYXRhEi4KCmNyZWF0ZWRfYXQYByABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEi4KCnVwZGF0ZWRfYXQYCCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wIscBCgRTaXRlEgoKAmlkGAEgASgJEhIKCnByb2plY3RfaWQYAiABKAkSDAoEbmFtZRgDIAEoCRIYChBib3VuZGFyeV9nZW9qc29uGAQgASgJEhAKCGFyZWFfc3FtGAUgASgBEhAKCGxhdGl0dWRlGAYgASgBEhEKCWxvbmdpdHVkZRgHIAEoARIQCgh0aW1lem9uZRgIIAEoCRIuCgpjcmVhdGVkX2F0GAkgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcCJoCg9Qcm9qZWN0TWV0YWRhdGESGgoSdGFyZ2V0X2NhcGFjaXR5X213GAEgASgBEhUKDWxvY2F0aW9uX25hbWUYAiABKAkSEwoLY2xpZW50X25hbWUYAyABKAkSDQoFbm90ZXMYBCABKAkiaAoUQ3JlYXRlUHJvamVjdFJlcXVlc3QSDAoEbmFtZRgBIAEoCRITCgtkZXNjcmlwdGlvbhgCIAEoCRItCghtZXRhZGF0YRgDIAEoCzIbLnByb2plY3QudjEuUHJvamVjdE1ldGFkYXRhIj0KFUNyZWF0ZVByb2plY3RSZXNwb25zZRIkCgdwcm9qZWN0GAEgASgLMhMucHJvamVjdC52MS5Qcm9qZWN0Ih8KEUdldFByb2plY3RSZXF1ZXN0EgoKAmlkGAEgASgJIjoKEkdldFByb2plY3RSZXNwb25zZRIkCgdwcm9qZWN0GAEgASgLMhMucHJvamVjdC52MS5Qcm9qZWN0Im4KE0xpc3RQcm9qZWN0c1JlcXVlc3QSEQoJcGFnZV9zaXplGAEgASgFEhIKCnBhZ2VfdG9rZW4YAiABKAkSMAoNc3RhdHVzX2ZpbHRlchgDIAEoDjIZLnByb2plY3QudjEuUHJvamVjdFN0YXR1cyJrChRMaXN0UHJvamVjdHNSZXNwb25zZRIlCghwcm9qZWN0cxgBIAMoCzITLnByb2plY3QudjEuUHJvamVjdBIXCg9uZXh0X3BhZ2VfdG9rZW4YAiABKAkSEwoLdG90YWxfY291bnQYAyABKAUinwEKFFVwZGF0ZVByb2plY3RSZXF1ZXN0EgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSEwoLZGVzY3JpcHRpb24YAyABKAkSKQoGc3RhdHVzGAQgASgOMhkucHJvamVjdC52MS5Qcm9qZWN0U3RhdHVzEi0KCG1ldGFkYXRhGAUgASgLMhsucHJvamVjdC52MS5Qcm9qZWN0TWV0YWRhdGEiPQoVVXBkYXRlUHJvamVjdFJlc3BvbnNlEiQKB3Byb2plY3QYASABKAsyEy5wcm9qZWN0LnYxLlByb2plY3QiIgoURGVsZXRlUHJvamVjdFJlcXVlc3QSCgoCaWQYASABKAkiFwoVRGVsZXRlUHJvamVjdFJlc3BvbnNlKtgBCg1Qcm9qZWN0U3RhdHVzEh4KGlBST0pFQ1RfU1RBVFVTX1VOU1BFQ0lGSUVEEAASGAoUUFJPSkVDVF9TVEFUVVNfRFJBRlQQARIZChVQUk9KRUNUX1NUQVRVU19ERVNJR04QAhIdChlQUk9KRUNUX1NUQVRVU19TSU1VTEFUSU9OEAMSGQoVUFJPSkVDVF9TVEFUVVNfUkVWSUVXEAQSGwoXUFJPSkVDVF9TVEFUVVNfQVBQUk9WRUQQBRIbChdQUk9KRUNUX1NUQVRVU19BUkNISVZFRBAGMrIDCg5Qcm9qZWN0U2VydmljZRJUCg1DcmVhdGVQcm9qZWN0EiAucHJvamVjdC52MS5DcmVhdGVQcm9qZWN0UmVxdWVzdBohLnByb2plY3QudjEuQ3JlYXRlUHJvamVjdFJlc3BvbnNlEksKCkdldFByb2plY3QSHS5wcm9qZWN0LnYxLkdldFByb2plY3RSZXF1ZXN0Gh4ucHJvamVjdC52MS5HZXRQcm9qZWN0UmVzcG9uc2USUQoMTGlzdFByb2plY3RzEh8ucHJvamVjdC52MS5MaXN0UHJvamVjdHNSZXF1ZXN0GiAucHJvamVjdC52MS5MaXN0UHJvamVjdHNSZXNwb25zZRJUCg1VcGRhdGVQcm9qZWN0EiAucHJvamVjdC52MS5VcGRhdGVQcm9qZWN0UmVxdWVzdBohLnByb2plY3QudjEuVXBkYXRlUHJvamVjdFJlc3BvbnNlElQKDURlbGV0ZVByb2plY3QSIC5wcm9qZWN0LnYxLkRlbGV0ZVByb2plY3RSZXF1ZXN0GiEucHJvamVjdC52MS5EZWxldGVQcm9qZWN0UmVzcG9uc2VCnAEKDmNvbS5wcm9qZWN0LnYxQgxQcm9qZWN0UHJvdG9QAVozZ2l0aHViLmNvbS9zb2xhcjNkL3NvbGFyM2QvZ2VuL3Byb2plY3QvdjE7cHJvamVjdHYxogIDUFhYqgIKUHJvamVjdC5WMcoCClByb2plY3RcVjHiAhZQcm9qZWN0XFYxXEdQQk1ldGFkYXRh6gILUHJvamVjdDo6VjFiBnByb3RvMw", [file_google_protobuf_timestamp]);
+  fileDesc("Chhwcm9qZWN0L3YxL3Byb2plY3QucHJvdG8SCnByb2plY3QudjEi2gMKB1Byb2plY3QSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRITCgtkZXNjcmlwdGlvbhgDIAEoCRIpCgZzdGF0dXMYBCABKA4yGS5wcm9qZWN0LnYxLlByb2plY3RTdGF0dXMSHgoEc2l0ZRgFIAEoCzIQLnByb2plY3QudjEuU2l0ZRItCghtZXRhZGF0YRgGIAEoCzIbLnByb2plY3QudjEuUHJvamVjdE1ldGFkYXRhEi4KCmNyZWF0ZWRfYXQYByABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEi4KCnVwZGF0ZWRfYXQYCCABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEjIKDndvcmtmbG93X3BoYXNlGAkgASgOMhoucGxhbm5pbmcudjEuV29ya2Zsb3dQaGFzZRI0ChBwaGFzZV9lbnRlcmVkX2F0GAogASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBJDChJ0cmFuc2l0aW9uX2hpc3RvcnkYCyADKAsyJy5wcm9qZWN0LnYxLlBoYXNlVHJhbnNpdGlvbkhpc3RvcnlFbnRyeRIXCg9hY3RpdmVfYmxvY2tlcnMYDCADKAkixwEKBFNpdGUSCgoCaWQYASABKAkSEgoKcHJvamVjdF9pZBgCIAEoCRIMCgRuYW1lGAMgASgJEhgKEGJvdW5kYXJ5X2dlb2pzb24YBCABKAkSEAoIYXJlYV9zcW0YBSABKAESEAoIbGF0aXR1ZGUYBiABKAESEQoJbG9uZ2l0dWRlGAcgASgBEhAKCHRpbWV6b25lGAggASgJEi4KCmNyZWF0ZWRfYXQYCSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wImgKD1Byb2plY3RNZXRhZGF0YRIaChJ0YXJnZXRfY2FwYWNpdHlfbXcYASABKAESFQoNbG9jYXRpb25fbmFtZRgCIAEoCRITCgtjbGllbnRfbmFtZRgDIAEoCRINCgVub3RlcxgEIAEoCSJoChRDcmVhdGVQcm9qZWN0UmVxdWVzdBIMCgRuYW1lGAEgASgJEhMKC2Rlc2NyaXB0aW9uGAIgASgJEi0KCG1ldGFkYXRhGAMgASgLMhsucHJvamVjdC52MS5Qcm9qZWN0TWV0YWRhdGEiPQoVQ3JlYXRlUHJvamVjdFJlc3BvbnNlEiQKB3Byb2plY3QYASABKAsyEy5wcm9qZWN0LnYxLlByb2plY3QiHwoRR2V0UHJvamVjdFJlcXVlc3QSCgoCaWQYASABKAkiOgoSR2V0UHJvamVjdFJlc3BvbnNlEiQKB3Byb2plY3QYASABKAsyEy5wcm9qZWN0LnYxLlByb2plY3QiigEKE0xpc3RQcm9qZWN0c1JlcXVlc3QSMAoNc3RhdHVzX2ZpbHRlchgBIAEoDjIZLnByb2plY3QudjEuUHJvamVjdFN0YXR1cxJBCgpwYWdpbmF0aW9uGAIgASgLMi0ucGFja2FnZXMuYXBpLnYxLnBhZ2luYXRpb24uUGFnaW5hdGlvblJlcXVlc3QigQEKFExpc3RQcm9qZWN0c1Jlc3BvbnNlEiUKCHByb2plY3RzGAEgAygLMhMucHJvamVjdC52MS5Qcm9qZWN0EkIKCnBhZ2luYXRpb24YAiABKAsyLi5wYWNrYWdlcy5hcGkudjEucGFnaW5hdGlvbi5QYWdpbmF0aW9uUmVzcG9uc2UinwEKFFVwZGF0ZVByb2plY3RSZXF1ZXN0EgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSEwoLZGVzY3JpcHRpb24YAyABKAkSKQoGc3RhdHVzGAQgASgOMhkucHJvamVjdC52MS5Qcm9qZWN0U3RhdHVzEi0KCG1ldGFkYXRhGAUgASgLMhsucHJvamVjdC52MS5Qcm9qZWN0TWV0YWRhdGEiPQoVVXBkYXRlUHJvamVjdFJlc3BvbnNlEiQKB3Byb2plY3QYASABKAsyEy5wcm9qZWN0LnYxLlByb2plY3QiIgoURGVsZXRlUHJvamVjdFJlcXVlc3QSCgoCaWQYASABKAkiFwoVRGVsZXRlUHJvamVjdFJlc3BvbnNlIogCChtQaGFzZVRyYW5zaXRpb25IaXN0b3J5RW50cnkSCgoCaWQYASABKAkSLgoKZnJvbV9waGFzZRgCIAEoDjIaLnBsYW5uaW5nLnYxLldvcmtmbG93UGhhc2USLAoIdG9fcGhhc2UYAyABKA4yGi5wbGFubmluZy52MS5Xb3JrZmxvd1BoYXNlEi8KC29jY3VycmVkX2F0GAQgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBIQCghhY3Rvcl9pZBgFIAEoCRIOCgZyZWFzb24YBiABKAkSEwoLaXNfcm9sbGJhY2sYByABKAgSFwoPcm9sbGJhY2tfcmVhc29uGAggASgJIrMBChZUcmFuc2l0aW9uUGhhc2VSZXF1ZXN0EhIKCnByb2plY3RfaWQYASABKAkSMAoMdGFyZ2V0X3BoYXNlGAIgASgOMhoucGxhbm5pbmcudjEuV29ya2Zsb3dQaGFzZRIxCghldmlkZW5jZRgDIAEoCzIfLnBsYW5uaW5nLnYxLlRyYW5zaXRpb25FdmlkZW5jZRIQCghhY3Rvcl9pZBgEIAEoCRIOCgZyZWFzb24YBSABKAki6gEKF1RyYW5zaXRpb25QaGFzZVJlc3BvbnNlEhIKCnByb2plY3RfaWQYASABKAkSMgoOcHJldmlvdXNfcGhhc2UYAiABKA4yGi5wbGFubmluZy52MS5Xb3JrZmxvd1BoYXNlEjEKDWN1cnJlbnRfcGhhc2UYAyABKA4yGi5wbGFubmluZy52MS5Xb3JrZmxvd1BoYXNlEkIKEXRyYW5zaXRpb25fcmVjb3JkGAQgASgLMicucHJvamVjdC52MS5QaGFzZVRyYW5zaXRpb25IaXN0b3J5RW50cnkSEAoId2FzX25vb3AYBSABKAgiKgoUR2V0UGhhc2VTdGF0ZVJlcXVlc3QSEgoKcHJvamVjdF9pZBgBIAEoCSLWAQoVR2V0UGhhc2VTdGF0ZVJlc3BvbnNlEhIKCnByb2plY3RfaWQYASABKAkSMQoNY3VycmVudF9waGFzZRgCIAEoDjIaLnBsYW5uaW5nLnYxLldvcmtmbG93UGhhc2USNAoQcGhhc2VfZW50ZXJlZF9hdBgDIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASQAoPbGFzdF90cmFuc2l0aW9uGAQgASgLMicucHJvamVjdC52MS5QaGFzZVRyYW5zaXRpb25IaXN0b3J5RW50cnkidAobTGlzdFBoYXNlVHJhbnNpdGlvbnNSZXF1ZXN0EhIKCnByb2plY3RfaWQYASABKAkSQQoKcGFnaW5hdGlvbhgCIAEoCzItLnBhY2thZ2VzLmFwaS52MS5wYWdpbmF0aW9uLlBhZ2luYXRpb25SZXF1ZXN0IqABChxMaXN0UGhhc2VUcmFuc2l0aW9uc1Jlc3BvbnNlEjwKC3RyYW5zaXRpb25zGAEgAygLMicucHJvamVjdC52MS5QaGFzZVRyYW5zaXRpb25IaXN0b3J5RW50cnkSQgoKcGFnaW5hdGlvbhgCIAEoCzIuLnBhY2thZ2VzLmFwaS52MS5wYWdpbmF0aW9uLlBhZ2luYXRpb25SZXNwb25zZSKYAQodVmFsaWRhdGVQaGFzZVJlYWRpbmVzc1JlcXVlc3QSEgoKcHJvamVjdF9pZBgBIAEoCRIwCgx0YXJnZXRfcGhhc2UYAiABKA4yGi5wbGFubmluZy52MS5Xb3JrZmxvd1BoYXNlEjEKCGV2aWRlbmNlGAMgASgLMh8ucGxhbm5pbmcudjEuVHJhbnNpdGlvbkV2aWRlbmNlIv4BCh5WYWxpZGF0ZVBoYXNlUmVhZGluZXNzUmVzcG9uc2USEgoKcHJvamVjdF9pZBgBIAEoCRIxCg1jdXJyZW50X3BoYXNlGAIgASgOMhoucGxhbm5pbmcudjEuV29ya2Zsb3dQaGFzZRIwCgx0YXJnZXRfcGhhc2UYAyABKA4yGi5wbGFubmluZy52MS5Xb3JrZmxvd1BoYXNlEhAKCGlzX3ZhbGlkGAQgASgIEhcKD2Jsb2NrZXJfcmVhc29ucxgFIAMoCRI4ChRjYW5fdHJhbnNpdGlvbl9hZnRlchgGIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAq2AEKDVByb2plY3RTdGF0dXMSHgoaUFJPSkVDVF9TVEFUVVNfVU5TUEVDSUZJRUQQABIYChRQUk9KRUNUX1NUQVRVU19EUkFGVBABEhkKFVBST0pFQ1RfU1RBVFVTX0RFU0lHThACEh0KGVBST0pFQ1RfU1RBVFVTX1NJTVVMQVRJT04QAxIZChVQUk9KRUNUX1NUQVRVU19SRVZJRVcQBBIbChdQUk9KRUNUX1NUQVRVU19BUFBST1ZFRBAFEhsKF1BST0pFQ1RfU1RBVFVTX0FSQ0hJVkVEEAYywAYKDlByb2plY3RTZXJ2aWNlElQKDUNyZWF0ZVByb2plY3QSIC5wcm9qZWN0LnYxLkNyZWF0ZVByb2plY3RSZXF1ZXN0GiEucHJvamVjdC52MS5DcmVhdGVQcm9qZWN0UmVzcG9uc2USSwoKR2V0UHJvamVjdBIdLnByb2plY3QudjEuR2V0UHJvamVjdFJlcXVlc3QaHi5wcm9qZWN0LnYxLkdldFByb2plY3RSZXNwb25zZRJRCgxMaXN0UHJvamVjdHMSHy5wcm9qZWN0LnYxLkxpc3RQcm9qZWN0c1JlcXVlc3QaIC5wcm9qZWN0LnYxLkxpc3RQcm9qZWN0c1Jlc3BvbnNlElQKDVVwZGF0ZVByb2plY3QSIC5wcm9qZWN0LnYxLlVwZGF0ZVByb2plY3RSZXF1ZXN0GiEucHJvamVjdC52MS5VcGRhdGVQcm9qZWN0UmVzcG9uc2USVAoNRGVsZXRlUHJvamVjdBIgLnByb2plY3QudjEuRGVsZXRlUHJvamVjdFJlcXVlc3QaIS5wcm9qZWN0LnYxLkRlbGV0ZVByb2plY3RSZXNwb25zZRJaCg9UcmFuc2l0aW9uUGhhc2USIi5wcm9qZWN0LnYxLlRyYW5zaXRpb25QaGFzZVJlcXVlc3QaIy5wcm9qZWN0LnYxLlRyYW5zaXRpb25QaGFzZVJlc3BvbnNlElQKDUdldFBoYXNlU3RhdGUSIC5wcm9qZWN0LnYxLkdldFBoYXNlU3RhdGVSZXF1ZXN0GiEucHJvamVjdC52MS5HZXRQaGFzZVN0YXRlUmVzcG9uc2USaQoUTGlzdFBoYXNlVHJhbnNpdGlvbnMSJy5wcm9qZWN0LnYxLkxpc3RQaGFzZVRyYW5zaXRpb25zUmVxdWVzdBooLnByb2plY3QudjEuTGlzdFBoYXNlVHJhbnNpdGlvbnNSZXNwb25zZRJvChZWYWxpZGF0ZVBoYXNlUmVhZGluZXNzEikucHJvamVjdC52MS5WYWxpZGF0ZVBoYXNlUmVhZGluZXNzUmVxdWVzdBoqLnByb2plY3QudjEuVmFsaWRhdGVQaGFzZVJlYWRpbmVzc1Jlc3BvbnNlQpkBCg5jb20ucHJvamVjdC52MUIMUHJvamVjdFByb3RvUAFaMHA5ZS5pbi9zYW1hdmF5YS9zb2xhcjNkL2dlbi9wcm9qZWN0L3YxO3Byb2plY3R2MaICA1BYWKoCClByb2plY3QuVjHKAgpQcm9qZWN0XFYx4gIWUHJvamVjdFxWMVxHUEJNZXRhZGF0YeoCC1Byb2plY3Q6OlYxYgZwcm90bzM", [file_google_protobuf_timestamp, file_planning_v1_planning_workflow, file_packages_pagination]);
 
 /**
  * @generated from message project.v1.Project
@@ -57,6 +61,26 @@ export type Project = Message<"project.v1.Project"> & {
    * @generated from field: google.protobuf.Timestamp updated_at = 8;
    */
   updatedAt?: Timestamp;
+
+  /**
+   * @generated from field: planning.v1.WorkflowPhase workflow_phase = 9;
+   */
+  workflowPhase: WorkflowPhase;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp phase_entered_at = 10;
+   */
+  phaseEnteredAt?: Timestamp;
+
+  /**
+   * @generated from field: repeated project.v1.PhaseTransitionHistoryEntry transition_history = 11;
+   */
+  transitionHistory: PhaseTransitionHistoryEntry[];
+
+  /**
+   * @generated from field: repeated string active_blockers = 12;
+   */
+  activeBlockers: string[];
 };
 
 /**
@@ -240,19 +264,14 @@ export const GetProjectResponseSchema: GenMessage<GetProjectResponse> = /*@__PUR
  */
 export type ListProjectsRequest = Message<"project.v1.ListProjectsRequest"> & {
   /**
-   * @generated from field: int32 page_size = 1;
-   */
-  pageSize: number;
-
-  /**
-   * @generated from field: string page_token = 2;
-   */
-  pageToken: string;
-
-  /**
-   * @generated from field: project.v1.ProjectStatus status_filter = 3;
+   * @generated from field: project.v1.ProjectStatus status_filter = 1;
    */
   statusFilter: ProjectStatus;
+
+  /**
+   * @generated from field: packages.api.v1.pagination.PaginationRequest pagination = 2;
+   */
+  pagination?: PaginationRequest;
 };
 
 /**
@@ -272,14 +291,9 @@ export type ListProjectsResponse = Message<"project.v1.ListProjectsResponse"> & 
   projects: Project[];
 
   /**
-   * @generated from field: string next_page_token = 2;
+   * @generated from field: packages.api.v1.pagination.PaginationResponse pagination = 2;
    */
-  nextPageToken: string;
-
-  /**
-   * @generated from field: int32 total_count = 3;
-   */
-  totalCount: number;
+  pagination?: PaginationResponse;
 };
 
 /**
@@ -374,6 +388,294 @@ export const DeleteProjectResponseSchema: GenMessage<DeleteProjectResponse> = /*
   messageDesc(file_project_v1_project, 12);
 
 /**
+ * @generated from message project.v1.PhaseTransitionHistoryEntry
+ */
+export type PhaseTransitionHistoryEntry = Message<"project.v1.PhaseTransitionHistoryEntry"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * @generated from field: planning.v1.WorkflowPhase from_phase = 2;
+   */
+  fromPhase: WorkflowPhase;
+
+  /**
+   * @generated from field: planning.v1.WorkflowPhase to_phase = 3;
+   */
+  toPhase: WorkflowPhase;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp occurred_at = 4;
+   */
+  occurredAt?: Timestamp;
+
+  /**
+   * @generated from field: string actor_id = 5;
+   */
+  actorId: string;
+
+  /**
+   * @generated from field: string reason = 6;
+   */
+  reason: string;
+
+  /**
+   * @generated from field: bool is_rollback = 7;
+   */
+  isRollback: boolean;
+
+  /**
+   * @generated from field: string rollback_reason = 8;
+   */
+  rollbackReason: string;
+};
+
+/**
+ * Describes the message project.v1.PhaseTransitionHistoryEntry.
+ * Use `create(PhaseTransitionHistoryEntrySchema)` to create a new message.
+ */
+export const PhaseTransitionHistoryEntrySchema: GenMessage<PhaseTransitionHistoryEntry> = /*@__PURE__*/
+  messageDesc(file_project_v1_project, 13);
+
+/**
+ * @generated from message project.v1.TransitionPhaseRequest
+ */
+export type TransitionPhaseRequest = Message<"project.v1.TransitionPhaseRequest"> & {
+  /**
+   * @generated from field: string project_id = 1;
+   */
+  projectId: string;
+
+  /**
+   * @generated from field: planning.v1.WorkflowPhase target_phase = 2;
+   */
+  targetPhase: WorkflowPhase;
+
+  /**
+   * @generated from field: planning.v1.TransitionEvidence evidence = 3;
+   */
+  evidence?: TransitionEvidence;
+
+  /**
+   * @generated from field: string actor_id = 4;
+   */
+  actorId: string;
+
+  /**
+   * @generated from field: string reason = 5;
+   */
+  reason: string;
+};
+
+/**
+ * Describes the message project.v1.TransitionPhaseRequest.
+ * Use `create(TransitionPhaseRequestSchema)` to create a new message.
+ */
+export const TransitionPhaseRequestSchema: GenMessage<TransitionPhaseRequest> = /*@__PURE__*/
+  messageDesc(file_project_v1_project, 14);
+
+/**
+ * @generated from message project.v1.TransitionPhaseResponse
+ */
+export type TransitionPhaseResponse = Message<"project.v1.TransitionPhaseResponse"> & {
+  /**
+   * @generated from field: string project_id = 1;
+   */
+  projectId: string;
+
+  /**
+   * @generated from field: planning.v1.WorkflowPhase previous_phase = 2;
+   */
+  previousPhase: WorkflowPhase;
+
+  /**
+   * @generated from field: planning.v1.WorkflowPhase current_phase = 3;
+   */
+  currentPhase: WorkflowPhase;
+
+  /**
+   * @generated from field: project.v1.PhaseTransitionHistoryEntry transition_record = 4;
+   */
+  transitionRecord?: PhaseTransitionHistoryEntry;
+
+  /**
+   * @generated from field: bool was_noop = 5;
+   */
+  wasNoop: boolean;
+};
+
+/**
+ * Describes the message project.v1.TransitionPhaseResponse.
+ * Use `create(TransitionPhaseResponseSchema)` to create a new message.
+ */
+export const TransitionPhaseResponseSchema: GenMessage<TransitionPhaseResponse> = /*@__PURE__*/
+  messageDesc(file_project_v1_project, 15);
+
+/**
+ * @generated from message project.v1.GetPhaseStateRequest
+ */
+export type GetPhaseStateRequest = Message<"project.v1.GetPhaseStateRequest"> & {
+  /**
+   * @generated from field: string project_id = 1;
+   */
+  projectId: string;
+};
+
+/**
+ * Describes the message project.v1.GetPhaseStateRequest.
+ * Use `create(GetPhaseStateRequestSchema)` to create a new message.
+ */
+export const GetPhaseStateRequestSchema: GenMessage<GetPhaseStateRequest> = /*@__PURE__*/
+  messageDesc(file_project_v1_project, 16);
+
+/**
+ * @generated from message project.v1.GetPhaseStateResponse
+ */
+export type GetPhaseStateResponse = Message<"project.v1.GetPhaseStateResponse"> & {
+  /**
+   * @generated from field: string project_id = 1;
+   */
+  projectId: string;
+
+  /**
+   * @generated from field: planning.v1.WorkflowPhase current_phase = 2;
+   */
+  currentPhase: WorkflowPhase;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp phase_entered_at = 3;
+   */
+  phaseEnteredAt?: Timestamp;
+
+  /**
+   * @generated from field: project.v1.PhaseTransitionHistoryEntry last_transition = 4;
+   */
+  lastTransition?: PhaseTransitionHistoryEntry;
+};
+
+/**
+ * Describes the message project.v1.GetPhaseStateResponse.
+ * Use `create(GetPhaseStateResponseSchema)` to create a new message.
+ */
+export const GetPhaseStateResponseSchema: GenMessage<GetPhaseStateResponse> = /*@__PURE__*/
+  messageDesc(file_project_v1_project, 17);
+
+/**
+ * @generated from message project.v1.ListPhaseTransitionsRequest
+ */
+export type ListPhaseTransitionsRequest = Message<"project.v1.ListPhaseTransitionsRequest"> & {
+  /**
+   * @generated from field: string project_id = 1;
+   */
+  projectId: string;
+
+  /**
+   * @generated from field: packages.api.v1.pagination.PaginationRequest pagination = 2;
+   */
+  pagination?: PaginationRequest;
+};
+
+/**
+ * Describes the message project.v1.ListPhaseTransitionsRequest.
+ * Use `create(ListPhaseTransitionsRequestSchema)` to create a new message.
+ */
+export const ListPhaseTransitionsRequestSchema: GenMessage<ListPhaseTransitionsRequest> = /*@__PURE__*/
+  messageDesc(file_project_v1_project, 18);
+
+/**
+ * @generated from message project.v1.ListPhaseTransitionsResponse
+ */
+export type ListPhaseTransitionsResponse = Message<"project.v1.ListPhaseTransitionsResponse"> & {
+  /**
+   * @generated from field: repeated project.v1.PhaseTransitionHistoryEntry transitions = 1;
+   */
+  transitions: PhaseTransitionHistoryEntry[];
+
+  /**
+   * @generated from field: packages.api.v1.pagination.PaginationResponse pagination = 2;
+   */
+  pagination?: PaginationResponse;
+};
+
+/**
+ * Describes the message project.v1.ListPhaseTransitionsResponse.
+ * Use `create(ListPhaseTransitionsResponseSchema)` to create a new message.
+ */
+export const ListPhaseTransitionsResponseSchema: GenMessage<ListPhaseTransitionsResponse> = /*@__PURE__*/
+  messageDesc(file_project_v1_project, 19);
+
+/**
+ * @generated from message project.v1.ValidatePhaseReadinessRequest
+ */
+export type ValidatePhaseReadinessRequest = Message<"project.v1.ValidatePhaseReadinessRequest"> & {
+  /**
+   * @generated from field: string project_id = 1;
+   */
+  projectId: string;
+
+  /**
+   * @generated from field: planning.v1.WorkflowPhase target_phase = 2;
+   */
+  targetPhase: WorkflowPhase;
+
+  /**
+   * @generated from field: planning.v1.TransitionEvidence evidence = 3;
+   */
+  evidence?: TransitionEvidence;
+};
+
+/**
+ * Describes the message project.v1.ValidatePhaseReadinessRequest.
+ * Use `create(ValidatePhaseReadinessRequestSchema)` to create a new message.
+ */
+export const ValidatePhaseReadinessRequestSchema: GenMessage<ValidatePhaseReadinessRequest> = /*@__PURE__*/
+  messageDesc(file_project_v1_project, 20);
+
+/**
+ * @generated from message project.v1.ValidatePhaseReadinessResponse
+ */
+export type ValidatePhaseReadinessResponse = Message<"project.v1.ValidatePhaseReadinessResponse"> & {
+  /**
+   * @generated from field: string project_id = 1;
+   */
+  projectId: string;
+
+  /**
+   * @generated from field: planning.v1.WorkflowPhase current_phase = 2;
+   */
+  currentPhase: WorkflowPhase;
+
+  /**
+   * @generated from field: planning.v1.WorkflowPhase target_phase = 3;
+   */
+  targetPhase: WorkflowPhase;
+
+  /**
+   * @generated from field: bool is_valid = 4;
+   */
+  isValid: boolean;
+
+  /**
+   * @generated from field: repeated string blocker_reasons = 5;
+   */
+  blockerReasons: string[];
+
+  /**
+   * @generated from field: google.protobuf.Timestamp can_transition_after = 6;
+   */
+  canTransitionAfter?: Timestamp;
+};
+
+/**
+ * Describes the message project.v1.ValidatePhaseReadinessResponse.
+ * Use `create(ValidatePhaseReadinessResponseSchema)` to create a new message.
+ */
+export const ValidatePhaseReadinessResponseSchema: GenMessage<ValidatePhaseReadinessResponse> = /*@__PURE__*/
+  messageDesc(file_project_v1_project, 21);
+
+/**
  * @generated from enum project.v1.ProjectStatus
  */
 export enum ProjectStatus {
@@ -462,6 +764,38 @@ export const ProjectService: GenService<{
     methodKind: "unary";
     input: typeof DeleteProjectRequestSchema;
     output: typeof DeleteProjectResponseSchema;
+  },
+  /**
+   * @generated from rpc project.v1.ProjectService.TransitionPhase
+   */
+  transitionPhase: {
+    methodKind: "unary";
+    input: typeof TransitionPhaseRequestSchema;
+    output: typeof TransitionPhaseResponseSchema;
+  },
+  /**
+   * @generated from rpc project.v1.ProjectService.GetPhaseState
+   */
+  getPhaseState: {
+    methodKind: "unary";
+    input: typeof GetPhaseStateRequestSchema;
+    output: typeof GetPhaseStateResponseSchema;
+  },
+  /**
+   * @generated from rpc project.v1.ProjectService.ListPhaseTransitions
+   */
+  listPhaseTransitions: {
+    methodKind: "unary";
+    input: typeof ListPhaseTransitionsRequestSchema;
+    output: typeof ListPhaseTransitionsResponseSchema;
+  },
+  /**
+   * @generated from rpc project.v1.ProjectService.ValidatePhaseReadiness
+   */
+  validatePhaseReadiness: {
+    methodKind: "unary";
+    input: typeof ValidatePhaseReadinessRequestSchema;
+    output: typeof ValidatePhaseReadinessResponseSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_project_v1_project, 0);

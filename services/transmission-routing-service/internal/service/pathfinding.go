@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"math"
 
-	"solar3d/transmission-routing-service/internal/domain"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/domain"
 )
 
 type gridNode struct {

@@ -9,12 +9,12 @@ import (
 	"time"
 
 	"github.com/rs/zerolog"
-	drawingv1connect "github.com/solar3d/solar3d/gen/drawing/v1/drawingv1connect"
+	drawingv1connect "p9e.in/samavaya/solar3d/gen/drawing/v1/drawingv1connect"
 
-	"solar3d/cad-core-service/internal/config"
-	"solar3d/cad-core-service/internal/handler"
-	"solar3d/cad-core-service/internal/service"
-	mw "solar3d/shared/middleware"
+	"p9e.in/samavaya/solar3d/cad-core-service/internal/config"
+	"p9e.in/samavaya/solar3d/cad-core-service/internal/handler"
+	"p9e.in/samavaya/solar3d/cad-core-service/internal/service"
+	mw "p9e.in/samavaya/packages/httpmiddleware"
 )
 
 func main() {
@@ -49,7 +49,7 @@ func main() {
 
 	limiter := mw.NewRateLimiter(100, 200)
 	chain := mw.Chain(
-		mw.Recovery(logger),
+		mw.Recovery(logger), mw.DeprecateRESTAliases(logger),
 		mw.IDempotencyKeyMiddleware,
 		mw.CORS,
 		mw.Logging(logger),

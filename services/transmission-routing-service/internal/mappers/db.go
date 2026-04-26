@@ -8,8 +8,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 
-	"solar3d/transmission-routing-service/internal/db"
-	"solar3d/transmission-routing-service/internal/domain"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/db"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/domain"
 )
 
 func DomainCreateParams(route *domain.TransmissionRoute) (db.CreateTransmissionRouteParams, error) {
@@ -199,6 +199,37 @@ func SubmitTransmissionRouteForReviewRowToDomain(row db.SubmitTransmissionRouteF
 }
 
 func ApproveTransmissionRouteRowToDomain(row db.ApproveTransmissionRouteRow) (*domain.TransmissionRoute, error) {
+	return rowToDomain(
+		row.ID,
+		row.ProjectID,
+		row.Name,
+		row.VoltageClass,
+		row.FarmOutputGeojson,
+		row.GridInjectionGeojson,
+		row.PathGeojson,
+		row.TowerPositionsJson,
+		row.DistanceM,
+		row.ConductorCost,
+		row.TowerCost,
+		row.RowAcquisitionCost,
+		row.CrossingPremium,
+		row.TotalCost,
+		row.CostPerKm,
+		row.SegmentExplanationsJson,
+		row.RouteScoreJson,
+		row.ApprovalStatus,
+		row.EngineeringReviewedAt,
+		row.EngineeringReviewedBy,
+		row.ApprovedAt,
+		row.ApprovedBy,
+		row.GovernanceEventsJson,
+		row.MetadataJson,
+		row.RouteSummary,
+		row.CreatedAt,
+	)
+}
+
+func RejectTransmissionRouteRowToDomain(row db.RejectTransmissionRouteRow) (*domain.TransmissionRoute, error) {
 	return rowToDomain(
 		row.ID,
 		row.ProjectID,

@@ -1,0 +1,627 @@
+openapi: 3.1.0
+info:
+  title: fault.v1
+paths:
+  /fault.v1.FaultService/AcknowledgeFault:
+    post:
+      tags:
+        - fault.v1.FaultService
+      summary: AcknowledgeFault
+      description: |-
+        AcknowledgeFault marks a fault as seen by an operator.  Only faults in
+         FAULT_STATUS_ACTIVE state may be acknowledged; others return FAILED_PRECONDITION.
+      operationId: fault.v1.FaultService.AcknowledgeFault
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/fault.v1.AcknowledgeFaultRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/fault.v1.AcknowledgeFaultResponse'
+  /fault.v1.FaultService/GetFault:
+    post:
+      tags:
+        - fault.v1.FaultService
+      summary: GetFault
+      description: GetFault retrieves a single fault event by its unique ID.
+      operationId: fault.v1.FaultService.GetFault
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/fault.v1.GetFaultRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/fault.v1.GetFaultResponse'
+  /fault.v1.FaultService/ListFaults:
+    post:
+      tags:
+        - fault.v1.FaultService
+      summary: ListFaults
+      description: |-
+        ListFaults returns fault events filtered by twin, project, severity or status.
+         Results are ordered by detected_at descending.
+      operationId: fault.v1.FaultService.ListFaults
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/fault.v1.ListFaultsRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/fault.v1.ListFaultsResponse'
+  /fault.v1.FaultService/ReportFault:
+    post:
+      tags:
+        - fault.v1.FaultService
+      summary: ReportFault
+      description: |-
+        ReportFault creates a new fault event for a digital twin asset.
+         The twin_id must correspond to an ACTIVE DigitalTwin.
+      operationId: fault.v1.FaultService.ReportFault
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/fault.v1.ReportFaultRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/fault.v1.ReportFaultResponse'
+  /fault.v1.FaultService/ResolveFault:
+    post:
+      tags:
+        - fault.v1.FaultService
+      summary: ResolveFault
+      description: |-
+        ResolveFault closes a fault with operator resolution notes.  Faults must be
+         in FAULT_STATUS_ACTIVE or FAULT_STATUS_ACKNOWLEDGED state to be resolved.
+      operationId: fault.v1.FaultService.ResolveFault
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/fault.v1.ResolveFaultRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/fault.v1.ResolveFaultResponse'
+components:
+  schemas:
+    connect-protocol-version:
+      type: number
+      title: Connect-Protocol-Version
+      enum:
+        - 1
+      description: Define the version of the Connect protocol
+      const: 1
+    connect-timeout-header:
+      type: number
+      title: Connect-Timeout-Ms
+      description: Define the timeout, in ms
+    connect.error:
+      type: object
+      properties:
+        code:
+          type: string
+          examples:
+            - not_found
+          enum:
+            - canceled
+            - unknown
+            - invalid_argument
+            - deadline_exceeded
+            - not_found
+            - already_exists
+            - permission_denied
+            - resource_exhausted
+            - failed_precondition
+            - aborted
+            - out_of_range
+            - unimplemented
+            - internal
+            - unavailable
+            - data_loss
+            - unauthenticated
+          description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+        message:
+          type: string
+          description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/connect.error_details.Any'
+          description: A list of messages that carry the error details. There is no limit on the number of messages.
+      title: Connect Error
+      additionalProperties: true
+      description: 'Error type returned by Connect: https://connectrpc.com/docs/go/errors/#http-representation'
+    connect.error_details.Any:
+      type: object
+      properties:
+        type:
+          type: string
+          description: 'A URL that acts as a globally unique identifier for the type of the serialized message. For example: `type.googleapis.com/google.rpc.ErrorInfo`. This is used to determine the schema of the data in the `value` field and is the discriminator for the `debug` field.'
+        value:
+          type: string
+          format: binary
+          description: The Protobuf message, serialized as bytes and base64-encoded. The specific message type is identified by the `type` field.
+        debug:
+          oneOf:
+            - type: object
+              title: Any
+              additionalProperties: true
+              description: Detailed error information.
+          discriminator:
+            propertyName: type
+          title: Debug
+          description: Deserialized error detail payload. The 'type' field indicates the schema. This field is for easier debugging and should not be relied upon for application logic.
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message, with an additional debug field for ConnectRPC error details.
+    fault.v1.AcknowledgeFaultRequest:
+      type: object
+      properties:
+        faultId:
+          type: string
+          title: fault_id
+        actorId:
+          type: string
+          title: actor_id
+      title: AcknowledgeFaultRequest
+      additionalProperties: false
+    fault.v1.AcknowledgeFaultResponse:
+      type: object
+      properties:
+        faultEvent:
+          title: fault_event
+          $ref: '#/components/schemas/fault.v1.FaultEvent'
+      title: AcknowledgeFaultResponse
+      additionalProperties: false
+    fault.v1.FaultEvent:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        twinId:
+          type: string
+          title: twin_id
+          description: 'twin_id: The digital twin in which the fault was detected.'
+        projectId:
+          type: string
+          title: project_id
+        assetIdentityId:
+          type: string
+          title: asset_identity_id
+          description: 'asset_identity_id: Optional — links to the physical asset that triggered the fault.'
+        faultCode:
+          type: string
+          title: fault_code
+          description: |-
+            fault_code: Vendor or standard fault code (e.g., IEC 60255 relay alarm code,
+             inverter manufacturer alarm ID, or IEC 61724-1 energy loss category code).
+        faultType:
+          title: fault_type
+          $ref: '#/components/schemas/fault.v1.FaultType'
+        severity:
+          title: severity
+          $ref: '#/components/schemas/fault.v1.FaultSeverity'
+        description:
+          type: string
+          title: description
+        status:
+          title: status
+          $ref: '#/components/schemas/fault.v1.FaultStatus'
+        sourceSystem:
+          type: string
+          title: source_system
+          description: 'source_system: Originating system (e.g., "SCADA", "protection_relay", "manual", "telemetry").'
+        detectedAt:
+          title: detected_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        acknowledgedAt:
+          title: acknowledged_at
+          description: 'acknowledged_at: Set when AcknowledgeFault is called; empty if not yet acknowledged.'
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        acknowledgedByActorId:
+          type: string
+          title: acknowledged_by_actor_id
+          description: 'acknowledged_by_actor_id: Operator who acknowledged the fault.'
+        resolvedAt:
+          title: resolved_at
+          description: 'resolved_at: Set when ResolveFault is called; empty if not yet resolved.'
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        resolvedByActorId:
+          type: string
+          title: resolved_by_actor_id
+          description: 'resolved_by_actor_id: Operator who resolved the fault.'
+        resolutionNotes:
+          type: string
+          title: resolution_notes
+          description: 'resolution_notes: Free-form description of corrective action taken.'
+        metadataJson:
+          type: string
+          title: metadata_json
+          description: 'metadata_json: Optional JSON for SCADA-specific event payload or vendor diagnostics.'
+        createdAt:
+          title: created_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        updatedAt:
+          title: updated_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: FaultEvent
+      additionalProperties: false
+      description: |-
+        FaultEvent represents a single operational fault detected in a provisioned
+         digital twin asset.  All audit fields (detected_at, acknowledged_at,
+         resolved_at) are immutable once set.
+    fault.v1.FaultSeverity:
+      type: string
+      title: FaultSeverity
+      enum:
+        - FAULT_SEVERITY_UNSPECIFIED
+        - FAULT_SEVERITY_INFO
+        - FAULT_SEVERITY_WARNING
+        - FAULT_SEVERITY_CRITICAL
+        - FAULT_SEVERITY_EMERGENCY
+      description: FaultSeverity represents the operational impact classification of the fault.
+    fault.v1.FaultStatus:
+      type: string
+      title: FaultStatus
+      enum:
+        - FAULT_STATUS_UNSPECIFIED
+        - FAULT_STATUS_ACTIVE
+        - FAULT_STATUS_ACKNOWLEDGED
+        - FAULT_STATUS_RESOLVED
+      description: FaultStatus tracks the lifecycle of a fault event from detection to resolution.
+    fault.v1.FaultType:
+      type: string
+      title: FaultType
+      enum:
+        - FAULT_TYPE_UNSPECIFIED
+        - FAULT_TYPE_OVERCURRENT
+        - FAULT_TYPE_EARTH_FAULT
+        - FAULT_TYPE_UNDERVOLTAGE
+        - FAULT_TYPE_OVERVOLTAGE
+        - FAULT_TYPE_INVERTER_TRIP
+        - FAULT_TYPE_COMMUNICATION_LOSS
+        - FAULT_TYPE_THERMAL
+        - FAULT_TYPE_MECHANICAL
+        - FAULT_TYPE_PROTECTION_TRIP
+      description: |-
+        FaultType classifies the physical or logical nature of the fault condition.
+         Electrical types align with IEC 60909 symmetrical component analysis categories.
+    fault.v1.GetFaultRequest:
+      type: object
+      properties:
+        faultId:
+          type: string
+          title: fault_id
+      title: GetFaultRequest
+      additionalProperties: false
+    fault.v1.GetFaultResponse:
+      type: object
+      properties:
+        faultEvent:
+          title: fault_event
+          $ref: '#/components/schemas/fault.v1.FaultEvent'
+      title: GetFaultResponse
+      additionalProperties: false
+    fault.v1.ListFaultsRequest:
+      type: object
+      properties:
+        twinId:
+          type: string
+          title: twin_id
+          description: 'twin_id: If set, returns faults for that twin only.'
+        projectId:
+          type: string
+          title: project_id
+          description: 'project_id: If set (and twin_id is empty), returns faults across all twins for the project.'
+        severityFilter:
+          title: severity_filter
+          description: 'severity_filter: If UNSPECIFIED, all severities are returned.'
+          $ref: '#/components/schemas/fault.v1.FaultSeverity'
+        statusFilter:
+          title: status_filter
+          description: 'status_filter: If UNSPECIFIED, all statuses are returned.'
+          $ref: '#/components/schemas/fault.v1.FaultStatus'
+        pageSize:
+          type: integer
+          title: page_size
+          format: int32
+        pageToken:
+          type: string
+          title: page_token
+      title: ListFaultsRequest
+      additionalProperties: false
+    fault.v1.ListFaultsResponse:
+      type: object
+      properties:
+        faultEvents:
+          type: array
+          items:
+            $ref: '#/components/schemas/fault.v1.FaultEvent'
+          title: fault_events
+        nextPageToken:
+          type: string
+          title: next_page_token
+        totalCount:
+          type: integer
+          title: total_count
+          format: int32
+      title: ListFaultsResponse
+      additionalProperties: false
+    fault.v1.ReportFaultRequest:
+      type: object
+      properties:
+        twinId:
+          type: string
+          title: twin_id
+        projectId:
+          type: string
+          title: project_id
+        assetIdentityId:
+          type: string
+          title: asset_identity_id
+        faultCode:
+          type: string
+          title: fault_code
+        faultType:
+          title: fault_type
+          $ref: '#/components/schemas/fault.v1.FaultType'
+        severity:
+          title: severity
+          $ref: '#/components/schemas/fault.v1.FaultSeverity'
+        description:
+          type: string
+          title: description
+        sourceSystem:
+          type: string
+          title: source_system
+        detectedAt:
+          title: detected_at
+          description: 'detected_at: Caller-supplied detection time; defaults to server time if empty.'
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        metadataJson:
+          type: string
+          title: metadata_json
+      title: ReportFaultRequest
+      additionalProperties: false
+    fault.v1.ReportFaultResponse:
+      type: object
+      properties:
+        faultEvent:
+          title: fault_event
+          $ref: '#/components/schemas/fault.v1.FaultEvent'
+      title: ReportFaultResponse
+      additionalProperties: false
+    fault.v1.ResolveFaultRequest:
+      type: object
+      properties:
+        faultId:
+          type: string
+          title: fault_id
+        actorId:
+          type: string
+          title: actor_id
+        resolutionNotes:
+          type: string
+          title: resolution_notes
+      title: ResolveFaultRequest
+      additionalProperties: false
+    fault.v1.ResolveFaultResponse:
+      type: object
+      properties:
+        faultEvent:
+          title: fault_event
+          $ref: '#/components/schemas/fault.v1.FaultEvent'
+      title: ResolveFaultResponse
+      additionalProperties: false
+    google.protobuf.Timestamp:
+      type: string
+      examples:
+        - "2023-01-15T01:30:15.01Z"
+        - "2024-12-25T12:00:00Z"
+      format: date-time
+      description: |-
+        A Timestamp represents a point in time independent of any time zone or local
+         calendar, encoded as a count of seconds and fractions of seconds at
+         nanosecond resolution. The count is relative to an epoch at UTC midnight on
+         January 1, 1970, in the proleptic Gregorian calendar which extends the
+         Gregorian calendar backwards to year one.
+
+         All minutes are 60 seconds long. Leap seconds are "smeared" so that no leap
+         second table is needed for interpretation, using a [24-hour linear
+         smear](https://developers.google.com/time/smear).
+
+         The range is from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59.999999999Z. By
+         restricting to that range, we ensure that we can convert to and from [RFC
+         3339](https://www.ietf.org/rfc/rfc3339.txt) date strings.
+
+         # Examples
+
+         Example 1: Compute Timestamp from POSIX `time()`.
+
+             Timestamp timestamp;
+             timestamp.set_seconds(time(NULL));
+             timestamp.set_nanos(0);
+
+         Example 2: Compute Timestamp from POSIX `gettimeofday()`.
+
+             struct timeval tv;
+             gettimeofday(&tv, NULL);
+
+             Timestamp timestamp;
+             timestamp.set_seconds(tv.tv_sec);
+             timestamp.set_nanos(tv.tv_usec * 1000);
+
+         Example 3: Compute Timestamp from Win32 `GetSystemTimeAsFileTime()`.
+
+             FILETIME ft;
+             GetSystemTimeAsFileTime(&ft);
+             UINT64 ticks = (((UINT64)ft.dwHighDateTime) << 32) | ft.dwLowDateTime;
+
+             // A Windows tick is 100 nanoseconds. Windows epoch 1601-01-01T00:00:00Z
+             // is 11644473600 seconds before Unix epoch 1970-01-01T00:00:00Z.
+             Timestamp timestamp;
+             timestamp.set_seconds((INT64) ((ticks / 10000000) - 11644473600LL));
+             timestamp.set_nanos((INT32) ((ticks % 10000000) * 100));
+
+         Example 4: Compute Timestamp from Java `System.currentTimeMillis()`.
+
+             long millis = System.currentTimeMillis();
+
+             Timestamp timestamp = Timestamp.newBuilder().setSeconds(millis / 1000)
+                 .setNanos((int) ((millis % 1000) * 1000000)).build();
+
+         Example 5: Compute Timestamp from Java `Instant.now()`.
+
+             Instant now = Instant.now();
+
+             Timestamp timestamp =
+                 Timestamp.newBuilder().setSeconds(now.getEpochSecond())
+                     .setNanos(now.getNano()).build();
+
+         Example 6: Compute Timestamp from current time in Python.
+
+             timestamp = Timestamp()
+             timestamp.GetCurrentTime()
+
+         # JSON Mapping
+
+         In JSON format, the Timestamp type is encoded as a string in the
+         [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format. That is, the
+         format is "{year}-{month}-{day}T{hour}:{min}:{sec}[.{frac_sec}]Z"
+         where {year} is always expressed using four digits while {month}, {day},
+         {hour}, {min}, and {sec} are zero-padded to two digits each. The fractional
+         seconds, which can go up to 9 digits (i.e. up to 1 nanosecond resolution),
+         are optional. The "Z" suffix indicates the timezone ("UTC"); the timezone
+         is required. A proto3 JSON serializer should always use UTC (as indicated by
+         "Z") when printing the Timestamp type and a proto3 JSON parser should be
+         able to accept both UTC and other timezones (as indicated by an offset).
+
+         For example, "2017-01-15T01:30:15.01Z" encodes 15.01 seconds past
+         01:30 UTC on January 15, 2017.
+
+         In JavaScript, one can convert a Date object to this format using the
+         standard
+         [toISOString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString)
+         method. In Python, a standard `datetime.datetime` object can be converted
+         to this format using
+         [`strftime`](https://docs.python.org/2/library/time.html#time.strftime) with
+         the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one can use
+         the Joda Time's [`ISODateTimeFormat.dateTime()`](
+         http://joda-time.sourceforge.net/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime()
+         ) to obtain a formatter capable of generating timestamps in this format.
+security: []
+tags:
+  - name: fault.v1.FaultService
+    description: |-
+      FaultService manages operational fault events received from digital twins,
+       SCADA systems, protection relays, and manual reports.  Fault codes align
+       with IEC 60909 (short-circuit fault calculations) and IEC 61724-1 (PV system
+       performance monitoring) where applicable.

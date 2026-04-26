@@ -7,7 +7,7 @@ import (
 
 	"github.com/rs/zerolog"
 
-	"solar3d/structural-service/internal/domain"
+	"p9e.in/samavaya/solar3d/structural-service/internal/domain"
 )
 
 func newTestService() *Service {

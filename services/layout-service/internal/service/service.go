@@ -9,9 +9,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 
-	"solar3d/layout-service/internal/config"
-	"solar3d/layout-service/internal/domain"
-	"solar3d/layout-service/internal/repository"
+	"p9e.in/samavaya/solar3d/layout-service/internal/config"
+	"p9e.in/samavaya/solar3d/layout-service/internal/domain"
+	"p9e.in/samavaya/solar3d/layout-service/internal/repository"
 )
 
 // Service contains core business logic for the layout domain.

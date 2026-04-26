@@ -1,0 +1,20 @@
+---
+# Chaos Mesh — PodChaos: kill one compute worker every 2 minutes for 30 min.
+# Expected behaviour: in-flight jobs retried or marked failed with clear reason;
+# new jobs routed to healthy workers; overall success rate stays > 99%.
+apiVersion: chaos-mesh.org/v1alpha1
+kind: PodChaos
+metadata:
+  name: kill-compute-workers
+  namespace: solar3d-staging
+spec:
+  action: pod-kill
+  mode: one
+  selector:
+    namespaces:
+      - solar3d-staging
+    labelSelectors:
+      app: compute-worker
+  scheduler:
+    cron: '*/2 * * * *'
+  duration: '30m'

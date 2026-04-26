@@ -11,8 +11,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 
-	"solar3d/terrain-service/internal/domain"
-	"solar3d/terrain-service/internal/service"
+	"p9e.in/samavaya/solar3d/terrain-service/internal/domain"
+	"p9e.in/samavaya/solar3d/terrain-service/internal/service"
 )
 
 // Handler provides HTTP handlers for the terrain service API.

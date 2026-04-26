@@ -7,12 +7,13 @@ import (
 	"fmt"
 	"math"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
 	"github.com/google/uuid"
 
-	"solar3d/transmission-routing-service/internal/domain"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/domain"
 )
 
 // DEMSource retrieves an elevation raster for a given geographic bounding box.
@@ -81,9 +82,18 @@ type terrainGridResponse struct {
 	Elevations []float64 `json:"elevations"`
 }
 
+// devDefaultTerrainURL is used only outside production. SOLAR3D_ENV=production
+// requires the caller to pass a real URL — falling back to localhost in
+// production silently routes traffic into the void.
+const devDefaultTerrainURL = "http://127.0.0.1:8081"
+
 func NewTerrainServiceDEMSource(baseURL string) *TerrainServiceDEMSource {
-	if strings.TrimSpace(baseURL) == "" {
-		baseURL = "http://127.0.0.1:8081"
+	baseURL = strings.TrimSpace(baseURL)
+	if baseURL == "" {
+		if strings.EqualFold(os.Getenv("SOLAR3D_ENV"), "production") {
+			panic("transmission-routing: TerrainServiceDEMSource requires an explicit baseURL when SOLAR3D_ENV=production")
+		}
+		baseURL = devDefaultTerrainURL
 	}
 	return &TerrainServiceDEMSource{
 		baseURL: strings.TrimRight(baseURL, "/"),

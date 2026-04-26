@@ -6,11 +6,11 @@ import (
 	"io"
 	"net/http"
 
-	drawingv1 "github.com/solar3d/solar3d/gen/drawing/v1"
+	drawingv1 "p9e.in/samavaya/solar3d/gen/drawing/v1"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 
-	"solar3d/api-gateway-service/internal/service"
+	"p9e.in/samavaya/solar3d/api-gateway-service/internal/service"
 )
 
 type Handler struct {

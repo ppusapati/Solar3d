@@ -1,0 +1,1220 @@
+openapi: 3.1.0
+info:
+  title: structural.v1
+paths:
+  /structural.v1.StructuralService/ApproveDesign:
+    post:
+      tags:
+        - structural.v1.StructuralService
+      summary: ApproveDesign
+      description: ApproveDesign marks a submitted design as approved.
+      operationId: structural.v1.StructuralService.ApproveDesign
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/structural.v1.ApproveDesignRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/structural.v1.ApproveDesignResponse'
+  /structural.v1.StructuralService/ComputeDeadLoad:
+    post:
+      tags:
+        - structural.v1.StructuralService
+      summary: ComputeDeadLoad
+      description: Load calculations — every result references the equation used.
+      operationId: structural.v1.StructuralService.ComputeDeadLoad
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/structural.v1.ComputeDeadLoadRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/structural.v1.ComputeDeadLoadResponse'
+  /structural.v1.StructuralService/ComputeFoundationRequirement:
+    post:
+      tags:
+        - structural.v1.StructuralService
+      summary: ComputeFoundationRequirement
+      description: ComputeFoundationRequirement estimates foundation requirements from loads and soil.
+      operationId: structural.v1.StructuralService.ComputeFoundationRequirement
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/structural.v1.ComputeFoundationRequirementRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/structural.v1.ComputeFoundationRequirementResponse'
+  /structural.v1.StructuralService/ComputeSeismicLoad:
+    post:
+      tags:
+        - structural.v1.StructuralService
+      summary: ComputeSeismicLoad
+      description: ComputeSeismicLoad calculates seismic load for the design inputs.
+      operationId: structural.v1.StructuralService.ComputeSeismicLoad
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/structural.v1.ComputeSeismicLoadRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/structural.v1.ComputeSeismicLoadResponse'
+  /structural.v1.StructuralService/ComputeWindLoad:
+    post:
+      tags:
+        - structural.v1.StructuralService
+      summary: ComputeWindLoad
+      description: ComputeWindLoad calculates wind load for the design inputs.
+      operationId: structural.v1.StructuralService.ComputeWindLoad
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/structural.v1.ComputeWindLoadRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/structural.v1.ComputeWindLoadResponse'
+  /structural.v1.StructuralService/CreateDesign:
+    post:
+      tags:
+        - structural.v1.StructuralService
+      summary: CreateDesign
+      description: Design lifecycle
+      operationId: structural.v1.StructuralService.CreateDesign
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/structural.v1.CreateDesignRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/structural.v1.CreateDesignResponse'
+  /structural.v1.StructuralService/DeleteDesign:
+    post:
+      tags:
+        - structural.v1.StructuralService
+      summary: DeleteDesign
+      description: DeleteDesign removes a structural design by ID.
+      operationId: structural.v1.StructuralService.DeleteDesign
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/structural.v1.DeleteDesignRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/structural.v1.DeleteDesignResponse'
+  /structural.v1.StructuralService/GenerateStructuralReport:
+    post:
+      tags:
+        - structural.v1.StructuralService
+      summary: GenerateStructuralReport
+      description: Plain-text design report with all assumptions and equations
+      operationId: structural.v1.StructuralService.GenerateStructuralReport
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/structural.v1.GenerateStructuralReportRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/structural.v1.GenerateStructuralReportResponse'
+  /structural.v1.StructuralService/GetDesign:
+    post:
+      tags:
+        - structural.v1.StructuralService
+      summary: GetDesign
+      description: GetDesign returns a structural design by ID.
+      operationId: structural.v1.StructuralService.GetDesign
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/structural.v1.GetDesignRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/structural.v1.GetDesignResponse'
+  /structural.v1.StructuralService/ListDesigns:
+    post:
+      tags:
+        - structural.v1.StructuralService
+      summary: ListDesigns
+      description: ListDesigns lists structural designs for a project.
+      operationId: structural.v1.StructuralService.ListDesigns
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/structural.v1.ListDesignsRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/structural.v1.ListDesignsResponse'
+  /structural.v1.StructuralService/RejectDesign:
+    post:
+      tags:
+        - structural.v1.StructuralService
+      summary: RejectDesign
+      description: RejectDesign marks a submitted design as rejected.
+      operationId: structural.v1.StructuralService.RejectDesign
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/structural.v1.RejectDesignRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/structural.v1.RejectDesignResponse'
+  /structural.v1.StructuralService/SubmitForReview:
+    post:
+      tags:
+        - structural.v1.StructuralService
+      summary: SubmitForReview
+      description: Engineer review workflow
+      operationId: structural.v1.StructuralService.SubmitForReview
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/structural.v1.SubmitForReviewRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/structural.v1.SubmitForReviewResponse'
+  /structural.v1.StructuralService/ValidateStructuralDesign:
+    post:
+      tags:
+        - structural.v1.StructuralService
+      summary: ValidateStructuralDesign
+      description: ValidateStructuralDesign validates design constraints and reports violations.
+      operationId: structural.v1.StructuralService.ValidateStructuralDesign
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/structural.v1.ValidateStructuralDesignRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/structural.v1.ValidateStructuralDesignResponse'
+components:
+  schemas:
+    connect-protocol-version:
+      type: number
+      title: Connect-Protocol-Version
+      enum:
+        - 1
+      description: Define the version of the Connect protocol
+      const: 1
+    connect-timeout-header:
+      type: number
+      title: Connect-Timeout-Ms
+      description: Define the timeout, in ms
+    connect.error:
+      type: object
+      properties:
+        code:
+          type: string
+          examples:
+            - not_found
+          enum:
+            - canceled
+            - unknown
+            - invalid_argument
+            - deadline_exceeded
+            - not_found
+            - already_exists
+            - permission_denied
+            - resource_exhausted
+            - failed_precondition
+            - aborted
+            - out_of_range
+            - unimplemented
+            - internal
+            - unavailable
+            - data_loss
+            - unauthenticated
+          description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+        message:
+          type: string
+          description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/connect.error_details.Any'
+          description: A list of messages that carry the error details. There is no limit on the number of messages.
+      title: Connect Error
+      additionalProperties: true
+      description: 'Error type returned by Connect: https://connectrpc.com/docs/go/errors/#http-representation'
+    connect.error_details.Any:
+      type: object
+      properties:
+        type:
+          type: string
+          description: 'A URL that acts as a globally unique identifier for the type of the serialized message. For example: `type.googleapis.com/google.rpc.ErrorInfo`. This is used to determine the schema of the data in the `value` field and is the discriminator for the `debug` field.'
+        value:
+          type: string
+          format: binary
+          description: The Protobuf message, serialized as bytes and base64-encoded. The specific message type is identified by the `type` field.
+        debug:
+          oneOf:
+            - type: object
+              title: Any
+              additionalProperties: true
+              description: Detailed error information.
+          discriminator:
+            propertyName: type
+          title: Debug
+          description: Deserialized error detail payload. The 'type' field indicates the schema. This field is for easier debugging and should not be relied upon for application logic.
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message, with an additional debug field for ConnectRPC error details.
+    google.protobuf.Timestamp:
+      type: string
+      examples:
+        - "2023-01-15T01:30:15.01Z"
+        - "2024-12-25T12:00:00Z"
+      format: date-time
+      description: |-
+        A Timestamp represents a point in time independent of any time zone or local
+         calendar, encoded as a count of seconds and fractions of seconds at
+         nanosecond resolution. The count is relative to an epoch at UTC midnight on
+         January 1, 1970, in the proleptic Gregorian calendar which extends the
+         Gregorian calendar backwards to year one.
+
+         All minutes are 60 seconds long. Leap seconds are "smeared" so that no leap
+         second table is needed for interpretation, using a [24-hour linear
+         smear](https://developers.google.com/time/smear).
+
+         The range is from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59.999999999Z. By
+         restricting to that range, we ensure that we can convert to and from [RFC
+         3339](https://www.ietf.org/rfc/rfc3339.txt) date strings.
+
+         # Examples
+
+         Example 1: Compute Timestamp from POSIX `time()`.
+
+             Timestamp timestamp;
+             timestamp.set_seconds(time(NULL));
+             timestamp.set_nanos(0);
+
+         Example 2: Compute Timestamp from POSIX `gettimeofday()`.
+
+             struct timeval tv;
+             gettimeofday(&tv, NULL);
+
+             Timestamp timestamp;
+             timestamp.set_seconds(tv.tv_sec);
+             timestamp.set_nanos(tv.tv_usec * 1000);
+
+         Example 3: Compute Timestamp from Win32 `GetSystemTimeAsFileTime()`.
+
+             FILETIME ft;
+             GetSystemTimeAsFileTime(&ft);
+             UINT64 ticks = (((UINT64)ft.dwHighDateTime) << 32) | ft.dwLowDateTime;
+
+             // A Windows tick is 100 nanoseconds. Windows epoch 1601-01-01T00:00:00Z
+             // is 11644473600 seconds before Unix epoch 1970-01-01T00:00:00Z.
+             Timestamp timestamp;
+             timestamp.set_seconds((INT64) ((ticks / 10000000) - 11644473600LL));
+             timestamp.set_nanos((INT32) ((ticks % 10000000) * 100));
+
+         Example 4: Compute Timestamp from Java `System.currentTimeMillis()`.
+
+             long millis = System.currentTimeMillis();
+
+             Timestamp timestamp = Timestamp.newBuilder().setSeconds(millis / 1000)
+                 .setNanos((int) ((millis % 1000) * 1000000)).build();
+
+         Example 5: Compute Timestamp from Java `Instant.now()`.
+
+             Instant now = Instant.now();
+
+             Timestamp timestamp =
+                 Timestamp.newBuilder().setSeconds(now.getEpochSecond())
+                     .setNanos(now.getNano()).build();
+
+         Example 6: Compute Timestamp from current time in Python.
+
+             timestamp = Timestamp()
+             timestamp.GetCurrentTime()
+
+         # JSON Mapping
+
+         In JSON format, the Timestamp type is encoded as a string in the
+         [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format. That is, the
+         format is "{year}-{month}-{day}T{hour}:{min}:{sec}[.{frac_sec}]Z"
+         where {year} is always expressed using four digits while {month}, {day},
+         {hour}, {min}, and {sec} are zero-padded to two digits each. The fractional
+         seconds, which can go up to 9 digits (i.e. up to 1 nanosecond resolution),
+         are optional. The "Z" suffix indicates the timezone ("UTC"); the timezone
+         is required. A proto3 JSON serializer should always use UTC (as indicated by
+         "Z") when printing the Timestamp type and a proto3 JSON parser should be
+         able to accept both UTC and other timezones (as indicated by an offset).
+
+         For example, "2017-01-15T01:30:15.01Z" encodes 15.01 seconds past
+         01:30 UTC on January 15, 2017.
+
+         In JavaScript, one can convert a Date object to this format using the
+         standard
+         [toISOString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString)
+         method. In Python, a standard `datetime.datetime` object can be converted
+         to this format using
+         [`strftime`](https://docs.python.org/2/library/time.html#time.strftime) with
+         the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one can use
+         the Joda Time's [`ISODateTimeFormat.dateTime()`](
+         http://joda-time.sourceforge.net/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime()
+         ) to obtain a formatter capable of generating timestamps in this format.
+    structural.v1.ApproveDesignRequest:
+      type: object
+      properties:
+        designId:
+          type: string
+          title: design_id
+        approvedBy:
+          type: string
+          title: approved_by
+        notes:
+          type: string
+          title: notes
+      title: ApproveDesignRequest
+      additionalProperties: false
+    structural.v1.ApproveDesignResponse:
+      type: object
+      properties:
+        design:
+          title: design
+          $ref: '#/components/schemas/structural.v1.StructuralDesign'
+      title: ApproveDesignResponse
+      additionalProperties: false
+    structural.v1.ComputeDeadLoadRequest:
+      type: object
+      properties:
+        designId:
+          type: string
+          title: design_id
+        panelCount:
+          type: integer
+          title: panel_count
+          format: int32
+        panelMassKg:
+          type: number
+          title: panel_mass_kg
+          format: double
+          description: mass per panel (default 25 kg)
+        mountingMassPerPanelKg:
+          type: number
+          title: mounting_mass_per_panel_kg
+          format: double
+          description: mass of rails/clamps per panel (default 15 kg)
+        cableMassKg:
+          type: number
+          title: cable_mass_kg
+          format: double
+          description: total cabling mass
+      title: ComputeDeadLoadRequest
+      additionalProperties: false
+    structural.v1.ComputeDeadLoadResponse:
+      type: object
+      properties:
+        designId:
+          type: string
+          title: design_id
+        panelMassTotalKg:
+          type: number
+          title: panel_mass_total_kg
+          format: double
+        mountingMassTotalKg:
+          type: number
+          title: mounting_mass_total_kg
+          format: double
+        cableMassKg:
+          type: number
+          title: cable_mass_kg
+          format: double
+        totalMassKg:
+          type: number
+          title: total_mass_kg
+          format: double
+        deadLoadKn:
+          type: number
+          title: dead_load_kn
+          format: double
+          description: total_mass × g / 1000
+        equation:
+          type: string
+          title: equation
+          description: human-readable equation used
+      title: ComputeDeadLoadResponse
+      additionalProperties: false
+    structural.v1.ComputeFoundationRequirementRequest:
+      type: object
+      properties:
+        designId:
+          type: string
+          title: design_id
+        deadLoadKn:
+          type: number
+          title: dead_load_kn
+          format: double
+        windLoadKn:
+          type: number
+          title: wind_load_kn
+          format: double
+        seismicLoadKn:
+          type: number
+          title: seismic_load_kn
+          format: double
+        foundationType:
+          title: foundation_type
+          $ref: '#/components/schemas/structural.v1.FoundationType'
+        pileCapacityKn:
+          type: number
+          title: pile_capacity_kn
+          format: double
+          description: allowable load per pile/anchor (default 50 kN)
+        totalAreaSqm:
+          type: number
+          title: total_area_sqm
+          format: double
+          description: footprint for spacing calculation
+      title: ComputeFoundationRequirementRequest
+      additionalProperties: false
+    structural.v1.ComputeFoundationRequirementResponse:
+      type: object
+      properties:
+        designId:
+          type: string
+          title: design_id
+        result:
+          title: result
+          $ref: '#/components/schemas/structural.v1.FoundationResult'
+        equation:
+          type: string
+          title: equation
+      title: ComputeFoundationRequirementResponse
+      additionalProperties: false
+    structural.v1.ComputeSeismicLoadRequest:
+      type: object
+      properties:
+        designId:
+          type: string
+          title: design_id
+        sds:
+          type: number
+          title: sds
+          format: double
+          description: Design spectral acceleration (g), 0.2s period
+        totalMassKg:
+          type: number
+          title: total_mass_kg
+          format: double
+          description: Seismic weight W = dead load
+        rFactor:
+          type: number
+          title: r_factor
+          format: double
+          description: Response modification factor (default 1.5 for freestanding)
+        importanceFactor:
+          type: number
+          title: importance_factor
+          format: double
+          description: I_e (default 1.0)
+        csOverride:
+          type: number
+          title: cs_override
+          format: double
+          description: leave 0 for code minimum
+      title: ComputeSeismicLoadRequest
+      additionalProperties: false
+    structural.v1.ComputeSeismicLoadResponse:
+      type: object
+      properties:
+        designId:
+          type: string
+          title: design_id
+        cs:
+          type: number
+          title: cs
+          format: double
+          description: seismic response coefficient
+        seismicWeightKn:
+          type: number
+          title: seismic_weight_kn
+          format: double
+          description: W in kN
+        baseShearKn:
+          type: number
+          title: base_shear_kn
+          format: double
+          description: V = Cs × W
+        equation:
+          type: number
+          title: equation
+          format: double
+          description: reserved – use string representation
+        equationStr:
+          type: string
+          title: equation_str
+      title: ComputeSeismicLoadResponse
+      additionalProperties: false
+    structural.v1.ComputeWindLoadRequest:
+      type: object
+      properties:
+        designId:
+          type: string
+          title: design_id
+        windSpeedMS:
+          type: number
+          title: wind_speed_m_s
+          format: double
+          description: 3-second gust design wind speed (m/s)
+        exposure:
+          title: exposure
+          $ref: '#/components/schemas/structural.v1.ExposureCategory'
+        heightM:
+          type: number
+          title: height_m
+          format: double
+          description: mean roof / mounting height above grade
+        panelTiltDeg:
+          type: number
+          title: panel_tilt_deg
+          format: double
+          description: panel tilt from horizontal (°)
+        totalPanelAreaSqm:
+          type: number
+          title: total_panel_area_sqm
+          format: double
+        kZt:
+          type: number
+          title: k_zt
+          format: double
+          description: Optional — if 0, code defaults are used topographic factor (default 1.0)
+        kD:
+          type: number
+          title: k_d
+          format: double
+          description: directionality factor (default 0.85)
+        gustFactor:
+          type: number
+          title: gust_factor
+          format: double
+          description: G (default 0.85)
+      title: ComputeWindLoadRequest
+      additionalProperties: false
+    structural.v1.ComputeWindLoadResponse:
+      type: object
+      properties:
+        designId:
+          type: string
+          title: design_id
+        kZ:
+          type: number
+          title: k_z
+          format: double
+          description: velocity pressure exposure coefficient
+        qZPa:
+          type: number
+          title: q_z_pa
+          format: double
+          description: velocity pressure (Pa)
+        cP:
+          type: number
+          title: c_p
+          format: double
+          description: net pressure coefficient (from tilt)
+        pressurePa:
+          type: number
+          title: pressure_pa
+          format: double
+          description: design wind pressure = G × Cp × q_z
+        totalWindForceKn:
+          type: number
+          title: total_wind_force_kn
+          format: double
+          description: pressure × area / 1000
+        windUpliftKn:
+          type: number
+          title: wind_uplift_kn
+          format: double
+          description: uplift component (upward thrust)
+        equation:
+          type: string
+          title: equation
+      title: ComputeWindLoadResponse
+      additionalProperties: false
+    structural.v1.CreateDesignRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        name:
+          type: string
+          title: name
+      title: CreateDesignRequest
+      additionalProperties: false
+    structural.v1.CreateDesignResponse:
+      type: object
+      properties:
+        design:
+          title: design
+          $ref: '#/components/schemas/structural.v1.StructuralDesign'
+      title: CreateDesignResponse
+      additionalProperties: false
+    structural.v1.DeleteDesignRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+      title: DeleteDesignRequest
+      additionalProperties: false
+    structural.v1.DeleteDesignResponse:
+      type: object
+      title: DeleteDesignResponse
+      additionalProperties: false
+    structural.v1.ExposureCategory:
+      type: string
+      title: ExposureCategory
+      enum:
+        - EXPOSURE_CATEGORY_UNSPECIFIED
+        - EXPOSURE_CATEGORY_B
+        - EXPOSURE_CATEGORY_C
+        - EXPOSURE_CATEGORY_D
+    structural.v1.FoundationResult:
+      type: object
+      properties:
+        pileCount:
+          type: integer
+          title: pile_count
+          format: int32
+        designLoadKn:
+          type: number
+          title: design_load_kn
+          format: double
+          description: governing factored load combination
+        pileSpacingM:
+          type: number
+          title: pile_spacing_m
+          format: double
+          description: uniform grid spacing estimate
+        foundationType:
+          title: foundation_type
+          $ref: '#/components/schemas/structural.v1.FoundationType'
+        pileCapacityKn:
+          type: number
+          title: pile_capacity_kn
+          format: double
+        loadCombination:
+          type: string
+          title: load_combination
+          description: e.g. "1.2D + 1.6W"
+      title: FoundationResult
+      additionalProperties: false
+    structural.v1.FoundationType:
+      type: string
+      title: FoundationType
+      enum:
+        - FOUNDATION_TYPE_UNSPECIFIED
+        - FOUNDATION_TYPE_DRIVEN_PILE
+        - FOUNDATION_TYPE_CONCRETE_PILE
+        - FOUNDATION_TYPE_BALLAST
+        - FOUNDATION_TYPE_SCREW_PILE
+    structural.v1.GenerateStructuralReportRequest:
+      type: object
+      properties:
+        designId:
+          type: string
+          title: design_id
+      title: GenerateStructuralReportRequest
+      additionalProperties: false
+    structural.v1.GenerateStructuralReportResponse:
+      type: object
+      properties:
+        designId:
+          type: string
+          title: design_id
+        reportText:
+          type: string
+          title: report_text
+          description: plain-text report with all equations and values
+        reviewState:
+          title: review_state
+          $ref: '#/components/schemas/structural.v1.ReviewState'
+      title: GenerateStructuralReportResponse
+      additionalProperties: false
+    structural.v1.GetDesignRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+      title: GetDesignRequest
+      additionalProperties: false
+    structural.v1.GetDesignResponse:
+      type: object
+      properties:
+        design:
+          title: design
+          $ref: '#/components/schemas/structural.v1.StructuralDesign'
+      title: GetDesignResponse
+      additionalProperties: false
+    structural.v1.ListDesignsRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+      title: ListDesignsRequest
+      additionalProperties: false
+    structural.v1.ListDesignsResponse:
+      type: object
+      properties:
+        designs:
+          type: array
+          items:
+            $ref: '#/components/schemas/structural.v1.StructuralDesign'
+          title: designs
+      title: ListDesignsResponse
+      additionalProperties: false
+    structural.v1.RejectDesignRequest:
+      type: object
+      properties:
+        designId:
+          type: string
+          title: design_id
+        rejectedBy:
+          type: string
+          title: rejected_by
+        reason:
+          type: string
+          title: reason
+      title: RejectDesignRequest
+      additionalProperties: false
+    structural.v1.RejectDesignResponse:
+      type: object
+      properties:
+        design:
+          title: design
+          $ref: '#/components/schemas/structural.v1.StructuralDesign'
+      title: RejectDesignResponse
+      additionalProperties: false
+    structural.v1.ReviewState:
+      type: string
+      title: ReviewState
+      enum:
+        - REVIEW_STATE_UNSPECIFIED
+        - REVIEW_STATE_DRAFT
+        - REVIEW_STATE_SUBMITTED
+        - REVIEW_STATE_APPROVED
+        - REVIEW_STATE_REJECTED
+    structural.v1.StructuralDesign:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        projectId:
+          type: string
+          title: project_id
+        name:
+          type: string
+          title: name
+        reviewState:
+          title: review_state
+          $ref: '#/components/schemas/structural.v1.ReviewState'
+        reviewedBy:
+          type: string
+          title: reviewed_by
+        reviewNotes:
+          type: string
+          title: review_notes
+        createdAt:
+          title: created_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        updatedAt:
+          title: updated_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        deadLoadKn:
+          type: number
+          title: dead_load_kn
+          format: double
+          description: Snapshot of the last computed loads (populated after ComputeX calls)
+        windLoadKn:
+          type: number
+          title: wind_load_kn
+          format: double
+        seismicLoadKn:
+          type: number
+          title: seismic_load_kn
+          format: double
+        governingLoadKn:
+          type: number
+          title: governing_load_kn
+          format: double
+          description: 'factored: 1.2D + 1.6W controlling combo'
+        foundation:
+          title: foundation
+          $ref: '#/components/schemas/structural.v1.FoundationResult'
+      title: StructuralDesign
+      additionalProperties: false
+    structural.v1.StructuralViolation:
+      type: object
+      properties:
+        code:
+          type: string
+          title: code
+        message:
+          type: string
+          title: message
+        limit:
+          type: number
+          title: limit
+          format: double
+        actual:
+          type: number
+          title: actual
+          format: double
+      title: StructuralViolation
+      additionalProperties: false
+    structural.v1.SubmitForReviewRequest:
+      type: object
+      properties:
+        designId:
+          type: string
+          title: design_id
+        submittedBy:
+          type: string
+          title: submitted_by
+        notes:
+          type: string
+          title: notes
+      title: SubmitForReviewRequest
+      additionalProperties: false
+    structural.v1.SubmitForReviewResponse:
+      type: object
+      properties:
+        design:
+          title: design
+          $ref: '#/components/schemas/structural.v1.StructuralDesign'
+      title: SubmitForReviewResponse
+      additionalProperties: false
+    structural.v1.ValidateStructuralDesignRequest:
+      type: object
+      properties:
+        designId:
+          type: string
+          title: design_id
+        maxDcAcRatio:
+          type: number
+          title: max_dc_ac_ratio
+          format: double
+          description: Override limits; 0 = use code defaults unused here — forward compat
+        maxWindPressurePa:
+          type: number
+          title: max_wind_pressure_pa
+          format: double
+        maxSeismicCoefficient:
+          type: number
+          title: max_seismic_coefficient
+          format: double
+      title: ValidateStructuralDesignRequest
+      additionalProperties: false
+    structural.v1.ValidateStructuralDesignResponse:
+      type: object
+      properties:
+        valid:
+          type: boolean
+          title: valid
+        violations:
+          type: array
+          items:
+            $ref: '#/components/schemas/structural.v1.StructuralViolation'
+          title: violations
+        utilizationRatio:
+          type: number
+          title: utilization_ratio
+          format: double
+          description: governing_load / pile_count × pile_capacity
+      title: ValidateStructuralDesignResponse
+      additionalProperties: false
+security: []
+tags:
+  - name: structural.v1.StructuralService
+    description: |-
+      StructuralService provides load analysis and design verification for solar
+       mounting structures.  All calculations are traceable to ASCE 7-16 / EN 1991.

@@ -4,7 +4,7 @@ import (
 	"math"
 	"strings"
 
-	"solar3d/transmission-routing-service/internal/domain"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/domain"
 )
 
 type classDefaults struct {

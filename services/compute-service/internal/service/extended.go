@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"solar3d/compute-service/internal/models"
-	"solar3d/compute-service/internal/repository"
+	"p9e.in/samavaya/solar3d/compute-service/internal/models"
+	"p9e.in/samavaya/solar3d/compute-service/internal/repository"
 )
 
 type ExtendedService struct {

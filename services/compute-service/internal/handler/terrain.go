@@ -4,12 +4,12 @@ import (
 	"context"
 	"errors"
 
-	"solar3d/compute-service/internal/mappers"
-	"solar3d/compute-service/internal/service"
+	"p9e.in/samavaya/solar3d/compute-service/internal/mappers"
+	"p9e.in/samavaya/solar3d/compute-service/internal/service"
 
 	"connectrpc.com/connect"
-	terrainv1 "github.com/solar3d/solar3d/gen/terrain/v1"
-	terrainv1connect "github.com/solar3d/solar3d/gen/terrain/v1/terrainv1connect"
+	terrainv1 "p9e.in/samavaya/solar3d/gen/terrain/v1"
+	terrainv1connect "p9e.in/samavaya/solar3d/gen/terrain/v1/terrainv1connect"
 )
 
 type TerrainServiceHandler struct {

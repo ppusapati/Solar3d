@@ -482,6 +482,105 @@ func (q *Queries) ListTransmissionRoutes(ctx context.Context, projectID pgtype.U
 	return items, nil
 }
 
+const rejectTransmissionRoute = `-- name: RejectTransmissionRoute :one
+UPDATE transmission_routes
+SET approval_status = 'rejected',
+    governance_events = $1::jsonb,
+    metadata = $2::jsonb,
+    route_summary = $3
+WHERE id = $4
+RETURNING id::text, project_id, name, voltage_class,
+    farm_output_geojson, grid_injection_geojson, path_geojson,
+    tower_positions::text AS tower_positions_json,
+    distance_m, conductor_cost, tower_cost, row_acquisition_cost,
+    crossing_premium, total_cost, cost_per_km,
+    segment_explanations::text AS segment_explanations_json,
+    route_score::text AS route_score_json,
+    approval_status, engineering_reviewed_at, engineering_reviewed_by,
+    approved_at, approved_by,
+    governance_events::text AS governance_events_json,
+    metadata::text AS metadata_json,
+    route_summary, created_at
+`
+
+type RejectTransmissionRouteParams struct {
+	GovernanceEvents []byte      `json:"governance_events"`
+	Metadata         []byte      `json:"metadata"`
+	RouteSummary     string      `json:"route_summary"`
+	ID               pgtype.UUID `json:"id"`
+}
+
+type RejectTransmissionRouteRow struct {
+	ID                      string             `json:"id"`
+	ProjectID               pgtype.UUID        `json:"project_id"`
+	Name                    string             `json:"name"`
+	VoltageClass            string             `json:"voltage_class"`
+	FarmOutputGeojson       string             `json:"farm_output_geojson"`
+	GridInjectionGeojson    string             `json:"grid_injection_geojson"`
+	PathGeojson             string             `json:"path_geojson"`
+	TowerPositionsJson      string             `json:"tower_positions_json"`
+	DistanceM               float64            `json:"distance_m"`
+	ConductorCost           float64            `json:"conductor_cost"`
+	TowerCost               float64            `json:"tower_cost"`
+	RowAcquisitionCost      float64            `json:"row_acquisition_cost"`
+	CrossingPremium         float64            `json:"crossing_premium"`
+	TotalCost               float64            `json:"total_cost"`
+	CostPerKm               float64            `json:"cost_per_km"`
+	SegmentExplanationsJson string             `json:"segment_explanations_json"`
+	RouteScoreJson          string             `json:"route_score_json"`
+	ApprovalStatus          string             `json:"approval_status"`
+	EngineeringReviewedAt   pgtype.Timestamptz `json:"engineering_reviewed_at"`
+	EngineeringReviewedBy   string             `json:"engineering_reviewed_by"`
+	ApprovedAt              pgtype.Timestamptz `json:"approved_at"`
+	ApprovedBy              string             `json:"approved_by"`
+	GovernanceEventsJson    string             `json:"governance_events_json"`
+	MetadataJson            string             `json:"metadata_json"`
+	RouteSummary            string             `json:"route_summary"`
+	CreatedAt               pgtype.Timestamptz `json:"created_at"`
+}
+
+// Rejection audit is captured in governance_events; dedicated rejected_at /
+// rejected_by columns are intentionally omitted so the event stream remains
+// the single source of truth.
+func (q *Queries) RejectTransmissionRoute(ctx context.Context, arg RejectTransmissionRouteParams) (RejectTransmissionRouteRow, error) {
+	row := q.db.QueryRow(ctx, rejectTransmissionRoute,
+		arg.GovernanceEvents,
+		arg.Metadata,
+		arg.RouteSummary,
+		arg.ID,
+	)
+	var i RejectTransmissionRouteRow
+	err := row.Scan(
+		&i.ID,
+		&i.ProjectID,
+		&i.Name,
+		&i.VoltageClass,
+		&i.FarmOutputGeojson,
+		&i.GridInjectionGeojson,
+		&i.PathGeojson,
+		&i.TowerPositionsJson,
+		&i.DistanceM,
+		&i.ConductorCost,
+		&i.TowerCost,
+		&i.RowAcquisitionCost,
+		&i.CrossingPremium,
+		&i.TotalCost,
+		&i.CostPerKm,
+		&i.SegmentExplanationsJson,
+		&i.RouteScoreJson,
+		&i.ApprovalStatus,
+		&i.EngineeringReviewedAt,
+		&i.EngineeringReviewedBy,
+		&i.ApprovedAt,
+		&i.ApprovedBy,
+		&i.GovernanceEventsJson,
+		&i.MetadataJson,
+		&i.RouteSummary,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
 const submitTransmissionRouteForReview = `-- name: SubmitTransmissionRouteForReview :one
 UPDATE transmission_routes
 SET approval_status = 'engineering_review',
@@ -583,4 +682,3 @@ func (q *Queries) SubmitTransmissionRouteForReview(ctx context.Context, arg Subm
 	)
 	return i, err
 }
-

@@ -4,6 +4,8 @@
 	import { simulationApi, type Simulation, type SimulationResult } from '$lib/core/api';
 	import SunTrackingOverlay from './SunTrackingOverlay.svelte';
 	import ShadingAnalysisPanel from './ShadingAnalysisPanel.svelte';
+	import { toast } from '$lib/core/stores/toast';
+	import { structuredLog } from '$lib/core/error-handling';
 
 	const dispatch = createEventDispatcher<{
 		timeChange: string;
@@ -66,7 +68,8 @@
 			const runRes = await simulationApi.run(createRes.simulation.id);
 			result = runRes.simulation.result;
 		} catch (err) {
-			console.error('Simulation failed:', err);
+			structuredLog('error', 'simulation.run_failed', { error: String(err), layoutId: $activeLayout?.id });
+			toast.error(`Simulation failed: ${err instanceof Error ? err.message : 'unknown error'}`);
 		} finally {
 			isRunning = false;
 		}

@@ -10,14 +10,14 @@ import (
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	transmissionv1connect "github.com/solar3d/solar3d/gen/transmission/v1/transmissionv1connect"
+	transmissionv1connect "p9e.in/samavaya/solar3d/gen/transmission/v1/transmissionv1connect"
 
-	mw "solar3d/shared/middleware"
-	"solar3d/transmission-routing-service/internal/config"
-	"solar3d/transmission-routing-service/internal/db"
-	"solar3d/transmission-routing-service/internal/handler"
-	"solar3d/transmission-routing-service/internal/repository"
-	"solar3d/transmission-routing-service/internal/service"
+	mw "p9e.in/samavaya/packages/httpmiddleware"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/config"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/db"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/handler"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/repository"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/service"
 )
 
 func main() {
@@ -57,15 +57,11 @@ func main() {
 	mux := http.NewServeMux()
 	connectPath, connectSvcHandler := transmissionv1connect.NewTransmissionRoutingServiceHandler(connectHandler)
 	mux.Handle(connectPath, connectSvcHandler)
-	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte(`{"status":"ok"}`))
-	})
+	mux.HandleFunc("GET /healthz", mw.HealthzHandler(pool))
 
 	limiter := mw.NewRateLimiter(100, 200)
 	chain := mw.Chain(
-		mw.Recovery(logger),
+		mw.Recovery(logger), mw.DeprecateRESTAliases(logger),
 		mw.IDempotencyKeyMiddleware,
 		mw.CORS,
 		mw.Logging(logger),

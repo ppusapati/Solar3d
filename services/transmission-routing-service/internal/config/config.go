@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"os"
+	"strings"
 )
 
 type Config struct {
@@ -12,6 +13,16 @@ type Config struct {
 	TerrainServiceURL string
 	ProjectServiceURL string
 	LogLevel          string
+}
+
+// requiredInProduction enumerates env vars that must be set explicitly when
+// SOLAR3D_ENV=production. The localhost defaults below are only acceptable
+// for local development and CI.
+var requiredInProduction = []string{
+	"DATABASE_URL",
+	"TERRAIN_BRIDGE_URL",
+	"TERRAIN_SERVICE_URL",
+	"PROJECT_SERVICE_URL",
 }
 
 func Load() (*Config, error) {
@@ -26,6 +37,18 @@ func Load() (*Config, error) {
 
 	if cfg.DatabaseURL == "" {
 		return nil, fmt.Errorf("DATABASE_URL environment variable is required")
+	}
+
+	if strings.EqualFold(os.Getenv("SOLAR3D_ENV"), "production") {
+		var missing []string
+		for _, name := range requiredInProduction {
+			if v, ok := os.LookupEnv(name); !ok || v == "" {
+				missing = append(missing, name)
+			}
+		}
+		if len(missing) > 0 {
+			return nil, fmt.Errorf("SOLAR3D_ENV=production but required env vars unset: %s", strings.Join(missing, ", "))
+		}
 	}
 
 	return cfg, nil

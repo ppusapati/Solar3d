@@ -10,7 +10,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"solar3d/twin-service/internal/domain"
+	"p9e.in/samavaya/solar3d/twin-service/internal/domain"
 )
 
 // ErrNotFound is returned when the requested entity does not exist.

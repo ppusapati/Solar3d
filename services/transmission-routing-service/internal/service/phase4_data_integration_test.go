@@ -8,7 +8,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"solar3d/transmission-routing-service/internal/domain"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/domain"
 )
 
 // ─────────────────────────────────────────────────────────────────────────────

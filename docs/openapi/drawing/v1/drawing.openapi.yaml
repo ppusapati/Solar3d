@@ -1,0 +1,2455 @@
+openapi: 3.1.0
+info:
+  title: drawing.v1
+paths:
+  /drawing.v1.CadAnnotationService/CreateAnnotation:
+    post:
+      tags:
+        - drawing.v1.CadAnnotationService
+      summary: CreateAnnotation
+      description: CreateAnnotation creates a text, dimension, or leader annotation entity on a drawing revision.
+      operationId: drawing.v1.CadAnnotationService.CreateAnnotation
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/drawing.v1.CreateAnnotationRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/drawing.v1.CreateAnnotationResponse'
+  /drawing.v1.CadAnnotationService/RegenerateAssociativeAnnotations:
+    post:
+      tags:
+        - drawing.v1.CadAnnotationService
+      summary: RegenerateAssociativeAnnotations
+      description: RegenerateAssociativeAnnotations recalculates associative annotations from their referenced source geometry.
+      operationId: drawing.v1.CadAnnotationService.RegenerateAssociativeAnnotations
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/drawing.v1.RegenerateAssociativeAnnotationsRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/drawing.v1.RegenerateAssociativeAnnotationsResponse'
+  /drawing.v1.CadCoreService/CommitDrawingCommand:
+    post:
+      tags:
+        - drawing.v1.CadCoreService
+      summary: CommitDrawingCommand
+      description: CommitDrawingCommand validates and persists a command as a new drawing revision.
+      operationId: drawing.v1.CadCoreService.CommitDrawingCommand
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/drawing.v1.CommitDrawingCommandRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/drawing.v1.CommitDrawingCommandResponse'
+  /drawing.v1.CadCoreService/RevertDrawingRevision:
+    post:
+      tags:
+        - drawing.v1.CadCoreService
+      summary: RevertDrawingRevision
+      description: RevertDrawingRevision promotes a previous revision snapshot as the new drawing head.
+      operationId: drawing.v1.CadCoreService.RevertDrawingRevision
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/drawing.v1.RevertDrawingRevisionRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/drawing.v1.RevertDrawingRevisionResponse'
+  /drawing.v1.CadCoreService/ValidateDrawingCommand:
+    post:
+      tags:
+        - drawing.v1.CadCoreService
+      summary: ValidateDrawingCommand
+      description: ValidateDrawingCommand validates a command against a drawing revision without persisting it.
+      operationId: drawing.v1.CadCoreService.ValidateDrawingCommand
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/drawing.v1.ValidateDrawingCommandRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/drawing.v1.ValidateDrawingCommandResponse'
+  /drawing.v1.CadLayerBlockService/CreateBlockDefinition:
+    post:
+      tags:
+        - drawing.v1.CadLayerBlockService
+      summary: CreateBlockDefinition
+      description: CreateBlockDefinition stores a reusable block definition with embedded drafting geometry.
+      operationId: drawing.v1.CadLayerBlockService.CreateBlockDefinition
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/drawing.v1.CreateBlockDefinitionRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/drawing.v1.CreateBlockDefinitionResponse'
+  /drawing.v1.CadLayerBlockService/InsertBlockReference:
+    post:
+      tags:
+        - drawing.v1.CadLayerBlockService
+      summary: InsertBlockReference
+      description: InsertBlockReference places a block reference instance for an existing block definition.
+      operationId: drawing.v1.CadLayerBlockService.InsertBlockReference
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/drawing.v1.InsertBlockReferenceRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/drawing.v1.InsertBlockReferenceResponse'
+  /drawing.v1.CadLayerBlockService/UpsertLayer:
+    post:
+      tags:
+        - drawing.v1.CadLayerBlockService
+      summary: UpsertLayer
+      description: UpsertLayer creates or updates a managed layer definition entity in the drawing model.
+      operationId: drawing.v1.CadLayerBlockService.UpsertLayer
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/drawing.v1.UpsertLayerRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/drawing.v1.UpsertLayerResponse'
+  /drawing.v1.DrawingRevisionService/CreateDrawing:
+    post:
+      tags:
+        - drawing.v1.DrawingRevisionService
+      summary: CreateDrawing
+      description: CreateDrawing creates a new drawing and its initial empty revision.
+      operationId: drawing.v1.DrawingRevisionService.CreateDrawing
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/drawing.v1.CreateDrawingRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/drawing.v1.CreateDrawingResponse'
+  /drawing.v1.DrawingRevisionService/GetDrawing:
+    post:
+      tags:
+        - drawing.v1.DrawingRevisionService
+      summary: GetDrawing
+      description: GetDrawing returns drawing metadata without materializing entity state.
+      operationId: drawing.v1.DrawingRevisionService.GetDrawing
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/drawing.v1.GetDrawingRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/drawing.v1.GetDrawingResponse'
+  /drawing.v1.DrawingRevisionService/GetDrawingRevision:
+    post:
+      tags:
+        - drawing.v1.DrawingRevisionService
+      summary: GetDrawingRevision
+      description: GetDrawingRevision returns a specific immutable drawing revision snapshot.
+      operationId: drawing.v1.DrawingRevisionService.GetDrawingRevision
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/drawing.v1.GetDrawingRevisionRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/drawing.v1.GetDrawingRevisionResponse'
+  /drawing.v1.DrawingRevisionService/GetDrawingState:
+    post:
+      tags:
+        - drawing.v1.DrawingRevisionService
+      summary: GetDrawingState
+      description: GetDrawingState returns a materialized snapshot for the requested revision or current head.
+      operationId: drawing.v1.DrawingRevisionService.GetDrawingState
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/drawing.v1.GetDrawingStateRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/drawing.v1.GetDrawingStateResponse'
+  /drawing.v1.DrawingRevisionService/ListDrawingRevisions:
+    post:
+      tags:
+        - drawing.v1.DrawingRevisionService
+      summary: ListDrawingRevisions
+      description: ListDrawingRevisions returns revision pointers for a drawing head history.
+      operationId: drawing.v1.DrawingRevisionService.ListDrawingRevisions
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/drawing.v1.ListDrawingRevisionsRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/drawing.v1.ListDrawingRevisionsResponse'
+  /drawing.v1.DrawingRevisionService/ListDrawings:
+    post:
+      tags:
+        - drawing.v1.DrawingRevisionService
+      summary: ListDrawings
+      description: ListDrawings returns drawings for a project in descending update order.
+      operationId: drawing.v1.DrawingRevisionService.ListDrawings
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/drawing.v1.ListDrawingsRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/drawing.v1.ListDrawingsResponse'
+  /drawing.v1.DrawingRevisionService/StoreDrawingRevision:
+    post:
+      tags:
+        - drawing.v1.DrawingRevisionService
+      summary: StoreDrawingRevision
+      description: StoreDrawingRevision persists a new immutable snapshot and advances the drawing head.
+      operationId: drawing.v1.DrawingRevisionService.StoreDrawingRevision
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/drawing.v1.StoreDrawingRevisionRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/drawing.v1.StoreDrawingRevisionResponse'
+  /drawing.v1.DrawingRevisionService/UpdateDrawing:
+    post:
+      tags:
+        - drawing.v1.DrawingRevisionService
+      summary: UpdateDrawing
+      description: UpdateDrawing updates mutable drawing metadata and archive status.
+      operationId: drawing.v1.DrawingRevisionService.UpdateDrawing
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/drawing.v1.UpdateDrawingRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/drawing.v1.UpdateDrawingResponse'
+  /drawing.v1.InteropService/ExportDrawing:
+    post:
+      tags:
+        - drawing.v1.InteropService
+      summary: ExportDrawing
+      description: ExportDrawing serializes a drawing revision into a supported exchange format.
+      operationId: drawing.v1.InteropService.ExportDrawing
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/drawing.v1.ExportDrawingRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/drawing.v1.ExportDrawingResponse'
+  /drawing.v1.InteropService/ImportDrawing:
+    post:
+      tags:
+        - drawing.v1.InteropService
+      summary: ImportDrawing
+      description: ImportDrawing materializes exchange-format payloads into drawing entities and commits them.
+      operationId: drawing.v1.InteropService.ImportDrawing
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/drawing.v1.ImportDrawingRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/drawing.v1.ImportDrawingResponse'
+  /drawing.v1.InteropService/ValidateDrawingRoundTrip:
+    post:
+      tags:
+        - drawing.v1.InteropService
+      summary: ValidateDrawingRoundTrip
+      description: ValidateDrawingRoundTrip exports and reimports a drawing revision to measure fidelity.
+      operationId: drawing.v1.InteropService.ValidateDrawingRoundTrip
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/drawing.v1.ValidateDrawingRoundTripRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/drawing.v1.ValidateDrawingRoundTripResponse'
+  /drawing.v1.PlotSheetService/CreateSheet:
+    post:
+      tags:
+        - drawing.v1.PlotSheetService
+      summary: CreateSheet
+      description: CreateSheet persists a sheet definition entity for later publishing.
+      operationId: drawing.v1.PlotSheetService.CreateSheet
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/drawing.v1.CreateSheetRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/drawing.v1.CreateSheetResponse'
+  /drawing.v1.PlotSheetService/PublishDrawing:
+    post:
+      tags:
+        - drawing.v1.PlotSheetService
+      summary: PublishDrawing
+      description: PublishDrawing renders selected sheets as SVG or PDF publish artifacts.
+      operationId: drawing.v1.PlotSheetService.PublishDrawing
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/drawing.v1.PublishDrawingRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/drawing.v1.PublishDrawingResponse'
+components:
+  schemas:
+    common.v1.ApiVersion:
+      type: object
+      properties:
+        major:
+          type: integer
+          title: major
+        minor:
+          type: integer
+          title: minor
+        patch:
+          type: integer
+          title: patch
+      title: ApiVersion
+      additionalProperties: false
+      description: Semantic version carried in API payloads for compatibility checks.
+    common.v1.ContractMetadata:
+      type: object
+      properties:
+        schemaVersion:
+          title: schema_version
+          $ref: '#/components/schemas/common.v1.ApiVersion'
+        schemaId:
+          type: string
+          title: schema_id
+        schemaHash:
+          type: string
+          title: schema_hash
+        producer:
+          type: string
+          title: producer
+        correlationId:
+          type: string
+          title: correlation_id
+        createdAt:
+          title: created_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: ContractMetadata
+      additionalProperties: false
+      description: Metadata shared across contracts to support tracing and lineage.
+    common.v1.LineString2D:
+      type: object
+      properties:
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/common.v1.Point2D'
+          title: points
+      title: LineString2D
+      additionalProperties: false
+    common.v1.Point2D:
+      type: object
+      properties:
+        x:
+          type: number
+          title: x
+          format: double
+        y:
+          type: number
+          title: y
+          format: double
+      title: Point2D
+      additionalProperties: false
+    common.v1.Polygon2D:
+      type: object
+      properties:
+        rings:
+          type: array
+          items:
+            $ref: '#/components/schemas/common.v1.LineString2D'
+          title: rings
+          description: First ring is outer shell, remaining rings are holes.
+      title: Polygon2D
+      additionalProperties: false
+    connect-protocol-version:
+      type: number
+      title: Connect-Protocol-Version
+      enum:
+        - 1
+      description: Define the version of the Connect protocol
+      const: 1
+    connect-timeout-header:
+      type: number
+      title: Connect-Timeout-Ms
+      description: Define the timeout, in ms
+    connect.error:
+      type: object
+      properties:
+        code:
+          type: string
+          examples:
+            - not_found
+          enum:
+            - canceled
+            - unknown
+            - invalid_argument
+            - deadline_exceeded
+            - not_found
+            - already_exists
+            - permission_denied
+            - resource_exhausted
+            - failed_precondition
+            - aborted
+            - out_of_range
+            - unimplemented
+            - internal
+            - unavailable
+            - data_loss
+            - unauthenticated
+          description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+        message:
+          type: string
+          description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/connect.error_details.Any'
+          description: A list of messages that carry the error details. There is no limit on the number of messages.
+      title: Connect Error
+      additionalProperties: true
+      description: 'Error type returned by Connect: https://connectrpc.com/docs/go/errors/#http-representation'
+    connect.error_details.Any:
+      type: object
+      properties:
+        type:
+          type: string
+          description: 'A URL that acts as a globally unique identifier for the type of the serialized message. For example: `type.googleapis.com/google.rpc.ErrorInfo`. This is used to determine the schema of the data in the `value` field and is the discriminator for the `debug` field.'
+        value:
+          type: string
+          format: binary
+          description: The Protobuf message, serialized as bytes and base64-encoded. The specific message type is identified by the `type` field.
+        debug:
+          oneOf:
+            - type: object
+              title: Any
+              additionalProperties: true
+              description: Detailed error information.
+          discriminator:
+            propertyName: type
+          title: Debug
+          description: Deserialized error detail payload. The 'type' field indicates the schema. This field is for easier debugging and should not be relied upon for application logic.
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message, with an additional debug field for ConnectRPC error details.
+    drawing.v1.AnnotationDimensionSpec:
+      type: object
+      properties:
+        start:
+          title: start
+          $ref: '#/components/schemas/common.v1.Point2D'
+        end:
+          title: end
+          $ref: '#/components/schemas/common.v1.Point2D'
+        textAnchor:
+          title: text_anchor
+          $ref: '#/components/schemas/common.v1.Point2D'
+        unit:
+          type: string
+          title: unit
+        precision:
+          type: number
+          title: precision
+          format: double
+        associations:
+          type: array
+          items:
+            $ref: '#/components/schemas/drawing.v1.AnnotationReference'
+          title: associations
+      title: AnnotationDimensionSpec
+      additionalProperties: false
+    drawing.v1.AnnotationLeaderSpec:
+      type: object
+      properties:
+        vertices:
+          type: array
+          items:
+            $ref: '#/components/schemas/common.v1.Point2D'
+          title: vertices
+        text:
+          type: string
+          title: text
+        textHeight:
+          type: number
+          title: text_height
+          format: double
+        arrowHead:
+          type: string
+          title: arrow_head
+        associations:
+          type: array
+          items:
+            $ref: '#/components/schemas/drawing.v1.AnnotationReference'
+          title: associations
+      title: AnnotationLeaderSpec
+      additionalProperties: false
+    drawing.v1.AnnotationReference:
+      type: object
+      properties:
+        entityId:
+          type: string
+          title: entity_id
+        entityType:
+          title: entity_type
+          $ref: '#/components/schemas/drawing.v1.DrawingEntityType'
+      title: AnnotationReference
+      additionalProperties: false
+    drawing.v1.AnnotationSpec:
+      type: object
+      oneOf:
+        - type: object
+          properties:
+            dimension:
+              title: dimension
+              $ref: '#/components/schemas/drawing.v1.AnnotationDimensionSpec'
+          title: dimension
+          required:
+            - dimension
+        - type: object
+          properties:
+            leader:
+              title: leader
+              $ref: '#/components/schemas/drawing.v1.AnnotationLeaderSpec'
+          title: leader
+          required:
+            - leader
+        - type: object
+          properties:
+            text:
+              title: text
+              $ref: '#/components/schemas/drawing.v1.AnnotationTextSpec'
+          title: text
+          required:
+            - text
+      title: AnnotationSpec
+      additionalProperties: false
+    drawing.v1.AnnotationTextSpec:
+      type: object
+      properties:
+        anchor:
+          title: anchor
+          $ref: '#/components/schemas/common.v1.Point2D'
+        text:
+          type: string
+          title: text
+        rotationDeg:
+          type: number
+          title: rotation_deg
+          format: double
+        height:
+          type: number
+          title: height
+          format: double
+        fontFamily:
+          type: string
+          title: font_family
+      title: AnnotationTextSpec
+      additionalProperties: false
+    drawing.v1.BlockDefinitionEntity:
+      type: object
+      properties:
+        blockDefinitionId:
+          type: string
+          title: block_definition_id
+        name:
+          type: string
+          title: name
+        basePoint:
+          title: base_point
+          $ref: '#/components/schemas/common.v1.Point2D'
+        entities:
+          type: array
+          items:
+            $ref: '#/components/schemas/drawing.v1.DrawingEntity'
+          title: entities
+        defaultAttributes:
+          type: object
+          title: default_attributes
+          additionalProperties:
+            type: string
+            title: value
+      title: BlockDefinitionEntity
+      additionalProperties: false
+    drawing.v1.BlockDefinitionEntity.DefaultAttributesEntry:
+      type: object
+      properties:
+        key:
+          type: string
+          title: key
+        value:
+          type: string
+          title: value
+      title: DefaultAttributesEntry
+      additionalProperties: false
+    drawing.v1.BlockReferenceEntity:
+      type: object
+      properties:
+        blockDefinitionId:
+          type: string
+          title: block_definition_id
+        insertionPoint:
+          title: insertion_point
+          $ref: '#/components/schemas/common.v1.Point2D'
+        rotationDeg:
+          type: number
+          title: rotation_deg
+          format: double
+        scaleX:
+          type: number
+          title: scale_x
+          format: double
+        scaleY:
+          type: number
+          title: scale_y
+          format: double
+        attributes:
+          type: object
+          title: attributes
+          additionalProperties:
+            type: string
+            title: value
+      title: BlockReferenceEntity
+      additionalProperties: false
+    drawing.v1.BlockReferenceEntity.AttributesEntry:
+      type: object
+      properties:
+        key:
+          type: string
+          title: key
+        value:
+          type: string
+          title: value
+      title: AttributesEntry
+      additionalProperties: false
+    drawing.v1.CommitDrawingCommandRequest:
+      type: object
+      properties:
+        command:
+          title: command
+          $ref: '#/components/schemas/drawing.v1.DrawingCommand'
+        baseRevisionId:
+          type: string
+          title: base_revision_id
+        summary:
+          type: string
+          title: summary
+      title: CommitDrawingCommandRequest
+      additionalProperties: false
+    drawing.v1.CommitDrawingCommandResponse:
+      type: object
+      properties:
+        drawing:
+          title: drawing
+          $ref: '#/components/schemas/drawing.v1.Drawing'
+        revision:
+          title: revision
+          $ref: '#/components/schemas/drawing.v1.DrawingRevision'
+      title: CommitDrawingCommandResponse
+      additionalProperties: false
+    drawing.v1.CreateAnnotationRequest:
+      type: object
+      properties:
+        drawingId:
+          type: string
+          title: drawing_id
+        baseRevisionId:
+          type: string
+          title: base_revision_id
+        author:
+          type: string
+          title: author
+        summary:
+          type: string
+          title: summary
+        layerId:
+          type: string
+          title: layer_id
+        layerName:
+          type: string
+          title: layer_name
+        styleId:
+          type: string
+          title: style_id
+        styleName:
+          type: string
+          title: style_name
+        metadataJson:
+          type: string
+          title: metadata_json
+        annotation:
+          title: annotation
+          $ref: '#/components/schemas/drawing.v1.AnnotationSpec'
+        contract:
+          title: contract
+          $ref: '#/components/schemas/common.v1.ContractMetadata'
+      title: CreateAnnotationRequest
+      additionalProperties: false
+    drawing.v1.CreateAnnotationResponse:
+      type: object
+      properties:
+        drawing:
+          title: drawing
+          $ref: '#/components/schemas/drawing.v1.Drawing'
+        revision:
+          title: revision
+          $ref: '#/components/schemas/drawing.v1.DrawingRevision'
+        annotationEntity:
+          title: annotation_entity
+          $ref: '#/components/schemas/drawing.v1.DrawingEntity'
+      title: CreateAnnotationResponse
+      additionalProperties: false
+    drawing.v1.CreateBlockDefinitionRequest:
+      type: object
+      properties:
+        drawingId:
+          type: string
+          title: drawing_id
+        baseRevisionId:
+          type: string
+          title: base_revision_id
+        author:
+          type: string
+          title: author
+        summary:
+          type: string
+          title: summary
+        layerId:
+          type: string
+          title: layer_id
+        layerName:
+          type: string
+          title: layer_name
+        styleId:
+          type: string
+          title: style_id
+        styleName:
+          type: string
+          title: style_name
+        metadataJson:
+          type: string
+          title: metadata_json
+        block:
+          title: block
+          $ref: '#/components/schemas/drawing.v1.BlockDefinitionEntity'
+        contract:
+          title: contract
+          $ref: '#/components/schemas/common.v1.ContractMetadata'
+      title: CreateBlockDefinitionRequest
+      additionalProperties: false
+    drawing.v1.CreateBlockDefinitionResponse:
+      type: object
+      properties:
+        drawing:
+          title: drawing
+          $ref: '#/components/schemas/drawing.v1.Drawing'
+        revision:
+          title: revision
+          $ref: '#/components/schemas/drawing.v1.DrawingRevision'
+        blockEntity:
+          title: block_entity
+          $ref: '#/components/schemas/drawing.v1.DrawingEntity'
+      title: CreateBlockDefinitionResponse
+      additionalProperties: false
+    drawing.v1.CreateDrawingRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        name:
+          type: string
+          title: name
+        description:
+          type: string
+          title: description
+        metadataJson:
+          type: string
+          title: metadata_json
+        author:
+          type: string
+          title: author
+        contract:
+          title: contract
+          $ref: '#/components/schemas/common.v1.ContractMetadata'
+      title: CreateDrawingRequest
+      additionalProperties: false
+    drawing.v1.CreateDrawingResponse:
+      type: object
+      properties:
+        drawing:
+          title: drawing
+          $ref: '#/components/schemas/drawing.v1.Drawing'
+        revision:
+          title: revision
+          $ref: '#/components/schemas/drawing.v1.DrawingRevision'
+      title: CreateDrawingResponse
+      additionalProperties: false
+    drawing.v1.CreateSheetRequest:
+      type: object
+      properties:
+        drawingId:
+          type: string
+          title: drawing_id
+        baseRevisionId:
+          type: string
+          title: base_revision_id
+        author:
+          type: string
+          title: author
+        summary:
+          type: string
+          title: summary
+        layerId:
+          type: string
+          title: layer_id
+        layerName:
+          type: string
+          title: layer_name
+        styleId:
+          type: string
+          title: style_id
+        styleName:
+          type: string
+          title: style_name
+        metadataJson:
+          type: string
+          title: metadata_json
+        sheet:
+          title: sheet
+          $ref: '#/components/schemas/drawing.v1.SheetEntity'
+        contract:
+          title: contract
+          $ref: '#/components/schemas/common.v1.ContractMetadata'
+      title: CreateSheetRequest
+      additionalProperties: false
+    drawing.v1.CreateSheetResponse:
+      type: object
+      properties:
+        drawing:
+          title: drawing
+          $ref: '#/components/schemas/drawing.v1.Drawing'
+        revision:
+          title: revision
+          $ref: '#/components/schemas/drawing.v1.DrawingRevision'
+        sheetEntity:
+          title: sheet_entity
+          $ref: '#/components/schemas/drawing.v1.DrawingEntity'
+      title: CreateSheetResponse
+      additionalProperties: false
+    drawing.v1.DimensionEntity:
+      type: object
+      properties:
+        start:
+          title: start
+          $ref: '#/components/schemas/common.v1.Point2D'
+        end:
+          title: end
+          $ref: '#/components/schemas/common.v1.Point2D'
+        textAnchor:
+          title: text_anchor
+          $ref: '#/components/schemas/common.v1.Point2D'
+        unit:
+          type: string
+          title: unit
+        precision:
+          type: number
+          title: precision
+          format: double
+      title: DimensionEntity
+      additionalProperties: false
+    drawing.v1.Drawing:
+      type: object
+      properties:
+        drawingId:
+          type: string
+          title: drawing_id
+        projectId:
+          type: string
+          title: project_id
+        name:
+          type: string
+          title: name
+        description:
+          type: string
+          title: description
+        metadataJson:
+          type: string
+          title: metadata_json
+        status:
+          title: status
+          $ref: '#/components/schemas/drawing.v1.DrawingStatus'
+        currentRevisionId:
+          type: string
+          title: current_revision_id
+        revisionCount:
+          type: integer
+          title: revision_count
+        entityCount:
+          type: integer
+          title: entity_count
+        createdAt:
+          title: created_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        updatedAt:
+          title: updated_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        contract:
+          title: contract
+          $ref: '#/components/schemas/common.v1.ContractMetadata'
+      title: Drawing
+      additionalProperties: false
+    drawing.v1.DrawingCommand:
+      type: object
+      properties:
+        commandId:
+          type: string
+          title: command_id
+        drawingId:
+          type: string
+          title: drawing_id
+        actor:
+          type: string
+          title: actor
+        mutations:
+          type: array
+          items:
+            $ref: '#/components/schemas/drawing.v1.DrawingMutation'
+          title: mutations
+        issuedAt:
+          title: issued_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        contract:
+          title: contract
+          $ref: '#/components/schemas/common.v1.ContractMetadata'
+      title: DrawingCommand
+      additionalProperties: false
+    drawing.v1.DrawingEntity:
+      type: object
+      allOf:
+        - properties:
+            header:
+              title: header
+              $ref: '#/components/schemas/drawing.v1.EntityHeader'
+        - oneOf:
+            - type: object
+              properties:
+                blockDefinition:
+                  title: block_definition
+                  $ref: '#/components/schemas/drawing.v1.BlockDefinitionEntity'
+              title: block_definition
+              required:
+                - blockDefinition
+            - type: object
+              properties:
+                blockReference:
+                  title: block_reference
+                  $ref: '#/components/schemas/drawing.v1.BlockReferenceEntity'
+              title: block_reference
+              required:
+                - blockReference
+            - type: object
+              properties:
+                dimension:
+                  title: dimension
+                  $ref: '#/components/schemas/drawing.v1.DimensionEntity'
+              title: dimension
+              required:
+                - dimension
+            - type: object
+              properties:
+                layerDefinition:
+                  title: layer_definition
+                  $ref: '#/components/schemas/drawing.v1.LayerDefinitionEntity'
+              title: layer_definition
+              required:
+                - layerDefinition
+            - type: object
+              properties:
+                leader:
+                  title: leader
+                  $ref: '#/components/schemas/drawing.v1.LeaderEntity'
+              title: leader
+              required:
+                - leader
+            - type: object
+              properties:
+                polygon:
+                  title: polygon
+                  $ref: '#/components/schemas/drawing.v1.PolygonEntity'
+              title: polygon
+              required:
+                - polygon
+            - type: object
+              properties:
+                polyline:
+                  title: polyline
+                  $ref: '#/components/schemas/drawing.v1.PolylineEntity'
+              title: polyline
+              required:
+                - polyline
+            - type: object
+              properties:
+                sheet:
+                  title: sheet
+                  $ref: '#/components/schemas/drawing.v1.SheetEntity'
+              title: sheet
+              required:
+                - sheet
+            - type: object
+              properties:
+                text:
+                  title: text
+                  $ref: '#/components/schemas/drawing.v1.TextEntity'
+              title: text
+              required:
+                - text
+      title: DrawingEntity
+      additionalProperties: false
+    drawing.v1.DrawingEntityType:
+      type: string
+      title: DrawingEntityType
+      enum:
+        - DRAWING_ENTITY_TYPE_UNSPECIFIED
+        - DRAWING_ENTITY_TYPE_POLYLINE
+        - DRAWING_ENTITY_TYPE_POLYGON
+        - DRAWING_ENTITY_TYPE_TEXT
+        - DRAWING_ENTITY_TYPE_DIMENSION
+        - DRAWING_ENTITY_TYPE_BLOCK_REFERENCE
+        - DRAWING_ENTITY_TYPE_LAYER_DEFINITION
+        - DRAWING_ENTITY_TYPE_BLOCK_DEFINITION
+        - DRAWING_ENTITY_TYPE_LEADER
+        - DRAWING_ENTITY_TYPE_SHEET
+    drawing.v1.DrawingMutation:
+      type: object
+      properties:
+        action:
+          title: action
+          $ref: '#/components/schemas/drawing.v1.RevisionAction'
+        entityId:
+          type: string
+          title: entity_id
+        before:
+          title: before
+          $ref: '#/components/schemas/drawing.v1.DrawingEntity'
+        after:
+          title: after
+          $ref: '#/components/schemas/drawing.v1.DrawingEntity'
+      title: DrawingMutation
+      additionalProperties: false
+    drawing.v1.DrawingRevision:
+      type: object
+      properties:
+        pointer:
+          title: pointer
+          $ref: '#/components/schemas/drawing.v1.RevisionPointer'
+        drawingId:
+          type: string
+          title: drawing_id
+        commandId:
+          type: string
+          title: command_id
+        entities:
+          type: array
+          items:
+            $ref: '#/components/schemas/drawing.v1.DrawingEntity'
+          title: entities
+      title: DrawingRevision
+      additionalProperties: false
+    drawing.v1.DrawingStatus:
+      type: string
+      title: DrawingStatus
+      enum:
+        - DRAWING_STATUS_UNSPECIFIED
+        - DRAWING_STATUS_ACTIVE
+        - DRAWING_STATUS_ARCHIVED
+    drawing.v1.EntityHeader:
+      type: object
+      properties:
+        entityId:
+          type: string
+          title: entity_id
+        drawingId:
+          type: string
+          title: drawing_id
+        entityType:
+          title: entity_type
+          $ref: '#/components/schemas/drawing.v1.DrawingEntityType'
+        layer:
+          title: layer
+          $ref: '#/components/schemas/drawing.v1.LayerRef'
+        style:
+          title: style
+          $ref: '#/components/schemas/drawing.v1.StyleRef'
+        metadataJson:
+          type: string
+          title: metadata_json
+        createdAt:
+          title: created_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        updatedAt:
+          title: updated_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        contract:
+          title: contract
+          $ref: '#/components/schemas/common.v1.ContractMetadata'
+      title: EntityHeader
+      additionalProperties: false
+    drawing.v1.ExportDrawingRequest:
+      type: object
+      properties:
+        drawingId:
+          type: string
+          title: drawing_id
+        revisionId:
+          type: string
+          title: revision_id
+        format:
+          title: format
+          $ref: '#/components/schemas/drawing.v1.FileFormat'
+      title: ExportDrawingRequest
+      additionalProperties: false
+    drawing.v1.ExportDrawingResponse:
+      type: object
+      properties:
+        drawing:
+          title: drawing
+          $ref: '#/components/schemas/drawing.v1.Drawing'
+        revision:
+          title: revision
+          $ref: '#/components/schemas/drawing.v1.DrawingRevision'
+        format:
+          title: format
+          $ref: '#/components/schemas/drawing.v1.FileFormat'
+        fileName:
+          type: string
+          title: file_name
+        contentType:
+          type: string
+          title: content_type
+        payload:
+          type: string
+          title: payload
+          format: byte
+        report:
+          title: report
+          $ref: '#/components/schemas/drawing.v1.FidelityReport'
+      title: ExportDrawingResponse
+      additionalProperties: false
+    drawing.v1.FidelityReport:
+      type: object
+      properties:
+        sourceEntityCount:
+          type: integer
+          title: source_entity_count
+        outputEntityCount:
+          type: integer
+          title: output_entity_count
+        matchedEntityCount:
+          type: integer
+          title: matched_entity_count
+        warnings:
+          type: array
+          items:
+            type: string
+          title: warnings
+      title: FidelityReport
+      additionalProperties: false
+    drawing.v1.FileFormat:
+      type: string
+      title: FileFormat
+      enum:
+        - FILE_FORMAT_UNSPECIFIED
+        - FILE_FORMAT_SOLAR3D_JSON
+        - FILE_FORMAT_DXF_ASCII
+    drawing.v1.GetDrawingRequest:
+      type: object
+      properties:
+        drawingId:
+          type: string
+          title: drawing_id
+      title: GetDrawingRequest
+      additionalProperties: false
+    drawing.v1.GetDrawingResponse:
+      type: object
+      properties:
+        drawing:
+          title: drawing
+          $ref: '#/components/schemas/drawing.v1.Drawing'
+      title: GetDrawingResponse
+      additionalProperties: false
+    drawing.v1.GetDrawingRevisionRequest:
+      type: object
+      properties:
+        drawingId:
+          type: string
+          title: drawing_id
+        revisionId:
+          type: string
+          title: revision_id
+      title: GetDrawingRevisionRequest
+      additionalProperties: false
+    drawing.v1.GetDrawingRevisionResponse:
+      type: object
+      properties:
+        drawing:
+          title: drawing
+          $ref: '#/components/schemas/drawing.v1.Drawing'
+        revision:
+          title: revision
+          $ref: '#/components/schemas/drawing.v1.DrawingRevision'
+      title: GetDrawingRevisionResponse
+      additionalProperties: false
+    drawing.v1.GetDrawingStateRequest:
+      type: object
+      properties:
+        drawingId:
+          type: string
+          title: drawing_id
+        revisionId:
+          type: string
+          title: revision_id
+      title: GetDrawingStateRequest
+      additionalProperties: false
+    drawing.v1.GetDrawingStateResponse:
+      type: object
+      properties:
+        drawing:
+          title: drawing
+          $ref: '#/components/schemas/drawing.v1.Drawing'
+        revision:
+          title: revision
+          $ref: '#/components/schemas/drawing.v1.DrawingRevision'
+      title: GetDrawingStateResponse
+      additionalProperties: false
+    drawing.v1.ImportDrawingRequest:
+      type: object
+      properties:
+        drawingId:
+          type: string
+          title: drawing_id
+        baseRevisionId:
+          type: string
+          title: base_revision_id
+        author:
+          type: string
+          title: author
+        summary:
+          type: string
+          title: summary
+        format:
+          title: format
+          $ref: '#/components/schemas/drawing.v1.FileFormat'
+        payload:
+          type: string
+          title: payload
+          format: byte
+        mergeStrategy:
+          title: merge_strategy
+          $ref: '#/components/schemas/drawing.v1.InteropMergeStrategy'
+        contract:
+          title: contract
+          $ref: '#/components/schemas/common.v1.ContractMetadata'
+      title: ImportDrawingRequest
+      additionalProperties: false
+    drawing.v1.ImportDrawingResponse:
+      type: object
+      properties:
+        drawing:
+          title: drawing
+          $ref: '#/components/schemas/drawing.v1.Drawing'
+        revision:
+          title: revision
+          $ref: '#/components/schemas/drawing.v1.DrawingRevision'
+        report:
+          title: report
+          $ref: '#/components/schemas/drawing.v1.FidelityReport'
+      title: ImportDrawingResponse
+      additionalProperties: false
+    drawing.v1.InsertBlockReferenceRequest:
+      type: object
+      properties:
+        drawingId:
+          type: string
+          title: drawing_id
+        baseRevisionId:
+          type: string
+          title: base_revision_id
+        author:
+          type: string
+          title: author
+        summary:
+          type: string
+          title: summary
+        layerId:
+          type: string
+          title: layer_id
+        layerName:
+          type: string
+          title: layer_name
+        styleId:
+          type: string
+          title: style_id
+        styleName:
+          type: string
+          title: style_name
+        metadataJson:
+          type: string
+          title: metadata_json
+        blockReference:
+          title: block_reference
+          $ref: '#/components/schemas/drawing.v1.BlockReferenceEntity'
+        contract:
+          title: contract
+          $ref: '#/components/schemas/common.v1.ContractMetadata'
+      title: InsertBlockReferenceRequest
+      additionalProperties: false
+    drawing.v1.InsertBlockReferenceResponse:
+      type: object
+      properties:
+        drawing:
+          title: drawing
+          $ref: '#/components/schemas/drawing.v1.Drawing'
+        revision:
+          title: revision
+          $ref: '#/components/schemas/drawing.v1.DrawingRevision'
+        blockReferenceEntity:
+          title: block_reference_entity
+          $ref: '#/components/schemas/drawing.v1.DrawingEntity'
+      title: InsertBlockReferenceResponse
+      additionalProperties: false
+    drawing.v1.InteropMergeStrategy:
+      type: string
+      title: InteropMergeStrategy
+      enum:
+        - INTEROP_MERGE_STRATEGY_UNSPECIFIED
+        - INTEROP_MERGE_STRATEGY_REPLACE
+        - INTEROP_MERGE_STRATEGY_APPEND
+        - INTEROP_MERGE_STRATEGY_UPSERT
+    drawing.v1.LayerDefinitionEntity:
+      type: object
+      properties:
+        layerId:
+          type: string
+          title: layer_id
+        name:
+          type: string
+          title: name
+        colorHex:
+          type: string
+          title: color_hex
+        lineType:
+          type: string
+          title: line_type
+        lineWeightMm:
+          type: number
+          title: line_weight_mm
+          format: double
+        visible:
+          type: boolean
+          title: visible
+        locked:
+          type: boolean
+          title: locked
+        plottable:
+          type: boolean
+          title: plottable
+      title: LayerDefinitionEntity
+      additionalProperties: false
+    drawing.v1.LayerRef:
+      type: object
+      properties:
+        layerId:
+          type: string
+          title: layer_id
+        layerName:
+          type: string
+          title: layer_name
+      title: LayerRef
+      additionalProperties: false
+    drawing.v1.LeaderEntity:
+      type: object
+      properties:
+        vertices:
+          type: array
+          items:
+            $ref: '#/components/schemas/common.v1.Point2D'
+          title: vertices
+        text:
+          type: string
+          title: text
+        textHeight:
+          type: number
+          title: text_height
+          format: double
+        arrowHead:
+          type: string
+          title: arrow_head
+      title: LeaderEntity
+      additionalProperties: false
+    drawing.v1.ListDrawingRevisionsRequest:
+      type: object
+      properties:
+        drawingId:
+          type: string
+          title: drawing_id
+        pageSize:
+          type: integer
+          title: page_size
+        pageToken:
+          type: string
+          title: page_token
+      title: ListDrawingRevisionsRequest
+      additionalProperties: false
+    drawing.v1.ListDrawingRevisionsResponse:
+      type: object
+      properties:
+        revisions:
+          type: array
+          items:
+            $ref: '#/components/schemas/drawing.v1.RevisionPointer'
+          title: revisions
+        nextPageToken:
+          type: string
+          title: next_page_token
+        totalCount:
+          type: integer
+          title: total_count
+      title: ListDrawingRevisionsResponse
+      additionalProperties: false
+    drawing.v1.ListDrawingsRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        pageSize:
+          type: integer
+          title: page_size
+        pageToken:
+          type: string
+          title: page_token
+        includeArchived:
+          type: boolean
+          title: include_archived
+      title: ListDrawingsRequest
+      additionalProperties: false
+    drawing.v1.ListDrawingsResponse:
+      type: object
+      properties:
+        drawings:
+          type: array
+          items:
+            $ref: '#/components/schemas/drawing.v1.Drawing'
+          title: drawings
+        nextPageToken:
+          type: string
+          title: next_page_token
+        totalCount:
+          type: integer
+          title: total_count
+      title: ListDrawingsResponse
+      additionalProperties: false
+    drawing.v1.PlotOptions:
+      type: object
+      properties:
+        monochrome:
+          type: boolean
+          title: monochrome
+        includeMetadata:
+          type: boolean
+          title: include_metadata
+        strokeWidthMm:
+          type: number
+          title: stroke_width_mm
+          format: double
+      title: PlotOptions
+      additionalProperties: false
+    drawing.v1.PlotOutputFormat:
+      type: string
+      title: PlotOutputFormat
+      enum:
+        - PLOT_OUTPUT_FORMAT_UNSPECIFIED
+        - PLOT_OUTPUT_FORMAT_SVG
+        - PLOT_OUTPUT_FORMAT_PDF
+    drawing.v1.PolygonEntity:
+      type: object
+      properties:
+        geometry:
+          title: geometry
+          $ref: '#/components/schemas/common.v1.Polygon2D'
+      title: PolygonEntity
+      additionalProperties: false
+    drawing.v1.PolylineEntity:
+      type: object
+      properties:
+        vertices:
+          type: array
+          items:
+            $ref: '#/components/schemas/common.v1.Point2D'
+          title: vertices
+        closed:
+          type: boolean
+          title: closed
+      title: PolylineEntity
+      additionalProperties: false
+    drawing.v1.PublishDrawingRequest:
+      type: object
+      properties:
+        drawingId:
+          type: string
+          title: drawing_id
+        revisionId:
+          type: string
+          title: revision_id
+        sheetIds:
+          type: array
+          items:
+            type: string
+          title: sheet_ids
+        format:
+          title: format
+          $ref: '#/components/schemas/drawing.v1.PlotOutputFormat'
+        options:
+          title: options
+          $ref: '#/components/schemas/drawing.v1.PlotOptions'
+      title: PublishDrawingRequest
+      additionalProperties: false
+    drawing.v1.PublishDrawingResponse:
+      type: object
+      properties:
+        artifacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/drawing.v1.PublishedSheetArtifact'
+          title: artifacts
+        manifestJson:
+          type: string
+          title: manifest_json
+      title: PublishDrawingResponse
+      additionalProperties: false
+    drawing.v1.PublishedSheetArtifact:
+      type: object
+      properties:
+        sheetId:
+          type: string
+          title: sheet_id
+        title:
+          type: string
+          title: title
+        format:
+          title: format
+          $ref: '#/components/schemas/drawing.v1.PlotOutputFormat'
+        fileName:
+          type: string
+          title: file_name
+        contentType:
+          type: string
+          title: content_type
+        payload:
+          type: string
+          title: payload
+          format: byte
+      title: PublishedSheetArtifact
+      additionalProperties: false
+    drawing.v1.RegenerateAssociativeAnnotationsRequest:
+      type: object
+      properties:
+        drawingId:
+          type: string
+          title: drawing_id
+        baseRevisionId:
+          type: string
+          title: base_revision_id
+        author:
+          type: string
+          title: author
+        summary:
+          type: string
+          title: summary
+        contract:
+          title: contract
+          $ref: '#/components/schemas/common.v1.ContractMetadata'
+      title: RegenerateAssociativeAnnotationsRequest
+      additionalProperties: false
+    drawing.v1.RegenerateAssociativeAnnotationsResponse:
+      type: object
+      properties:
+        drawing:
+          title: drawing
+          $ref: '#/components/schemas/drawing.v1.Drawing'
+        revision:
+          title: revision
+          $ref: '#/components/schemas/drawing.v1.DrawingRevision'
+        updatedAnnotations:
+          type: array
+          items:
+            $ref: '#/components/schemas/drawing.v1.DrawingEntity'
+          title: updated_annotations
+        violations:
+          type: array
+          items:
+            type: string
+          title: violations
+      title: RegenerateAssociativeAnnotationsResponse
+      additionalProperties: false
+    drawing.v1.RevertDrawingRevisionRequest:
+      type: object
+      properties:
+        drawingId:
+          type: string
+          title: drawing_id
+        targetRevisionId:
+          type: string
+          title: target_revision_id
+        author:
+          type: string
+          title: author
+        summary:
+          type: string
+          title: summary
+      title: RevertDrawingRevisionRequest
+      additionalProperties: false
+    drawing.v1.RevertDrawingRevisionResponse:
+      type: object
+      properties:
+        drawing:
+          title: drawing
+          $ref: '#/components/schemas/drawing.v1.Drawing'
+        revision:
+          title: revision
+          $ref: '#/components/schemas/drawing.v1.DrawingRevision'
+      title: RevertDrawingRevisionResponse
+      additionalProperties: false
+    drawing.v1.RevisionAction:
+      type: string
+      title: RevisionAction
+      enum:
+        - REVISION_ACTION_UNSPECIFIED
+        - REVISION_ACTION_CREATE
+        - REVISION_ACTION_UPDATE
+        - REVISION_ACTION_DELETE
+    drawing.v1.RevisionPointer:
+      type: object
+      properties:
+        revisionId:
+          type: string
+          title: revision_id
+        parentRevisionId:
+          type: string
+          title: parent_revision_id
+        author:
+          type: string
+          title: author
+        summary:
+          type: string
+          title: summary
+        committedAt:
+          title: committed_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        contract:
+          title: contract
+          $ref: '#/components/schemas/common.v1.ContractMetadata'
+      title: RevisionPointer
+      additionalProperties: false
+    drawing.v1.SheetEntity:
+      type: object
+      properties:
+        sheetId:
+          type: string
+          title: sheet_id
+        title:
+          type: string
+          title: title
+        pageWidthMm:
+          type: number
+          title: page_width_mm
+          format: double
+        pageHeightMm:
+          type: number
+          title: page_height_mm
+          format: double
+        viewScale:
+          type: number
+          title: view_scale
+          format: double
+        viewportEntityIds:
+          type: array
+          items:
+            type: string
+          title: viewport_entity_ids
+        titleBlockName:
+          type: string
+          title: title_block_name
+        metadataJson:
+          type: string
+          title: metadata_json
+      title: SheetEntity
+      additionalProperties: false
+    drawing.v1.StoreDrawingRevisionRequest:
+      type: object
+      properties:
+        drawingId:
+          type: string
+          title: drawing_id
+        author:
+          type: string
+          title: author
+        summary:
+          type: string
+          title: summary
+        commandId:
+          type: string
+          title: command_id
+        entities:
+          type: array
+          items:
+            $ref: '#/components/schemas/drawing.v1.DrawingEntity'
+          title: entities
+        contract:
+          title: contract
+          $ref: '#/components/schemas/common.v1.ContractMetadata'
+      title: StoreDrawingRevisionRequest
+      additionalProperties: false
+    drawing.v1.StoreDrawingRevisionResponse:
+      type: object
+      properties:
+        drawing:
+          title: drawing
+          $ref: '#/components/schemas/drawing.v1.Drawing'
+        revision:
+          title: revision
+          $ref: '#/components/schemas/drawing.v1.DrawingRevision'
+      title: StoreDrawingRevisionResponse
+      additionalProperties: false
+    drawing.v1.StyleRef:
+      type: object
+      properties:
+        styleId:
+          type: string
+          title: style_id
+        styleName:
+          type: string
+          title: style_name
+      title: StyleRef
+      additionalProperties: false
+    drawing.v1.TextEntity:
+      type: object
+      properties:
+        anchor:
+          title: anchor
+          $ref: '#/components/schemas/common.v1.Point2D'
+        text:
+          type: string
+          title: text
+        rotationDeg:
+          type: number
+          title: rotation_deg
+          format: double
+        height:
+          type: number
+          title: height
+          format: double
+        fontFamily:
+          type: string
+          title: font_family
+      title: TextEntity
+      additionalProperties: false
+    drawing.v1.UpdateDrawingRequest:
+      type: object
+      properties:
+        drawingId:
+          type: string
+          title: drawing_id
+        name:
+          type: string
+          title: name
+        description:
+          type: string
+          title: description
+        metadataJson:
+          type: string
+          title: metadata_json
+        status:
+          title: status
+          $ref: '#/components/schemas/drawing.v1.DrawingStatus'
+      title: UpdateDrawingRequest
+      additionalProperties: false
+    drawing.v1.UpdateDrawingResponse:
+      type: object
+      properties:
+        drawing:
+          title: drawing
+          $ref: '#/components/schemas/drawing.v1.Drawing'
+      title: UpdateDrawingResponse
+      additionalProperties: false
+    drawing.v1.UpsertLayerRequest:
+      type: object
+      properties:
+        drawingId:
+          type: string
+          title: drawing_id
+        baseRevisionId:
+          type: string
+          title: base_revision_id
+        author:
+          type: string
+          title: author
+        summary:
+          type: string
+          title: summary
+        metadataJson:
+          type: string
+          title: metadata_json
+        layer:
+          title: layer
+          $ref: '#/components/schemas/drawing.v1.LayerDefinitionEntity'
+        contract:
+          title: contract
+          $ref: '#/components/schemas/common.v1.ContractMetadata'
+      title: UpsertLayerRequest
+      additionalProperties: false
+    drawing.v1.UpsertLayerResponse:
+      type: object
+      properties:
+        drawing:
+          title: drawing
+          $ref: '#/components/schemas/drawing.v1.Drawing'
+        revision:
+          title: revision
+          $ref: '#/components/schemas/drawing.v1.DrawingRevision'
+        layerEntity:
+          title: layer_entity
+          $ref: '#/components/schemas/drawing.v1.DrawingEntity'
+      title: UpsertLayerResponse
+      additionalProperties: false
+    drawing.v1.ValidateDrawingCommandRequest:
+      type: object
+      properties:
+        command:
+          title: command
+          $ref: '#/components/schemas/drawing.v1.DrawingCommand'
+        baseRevisionId:
+          type: string
+          title: base_revision_id
+      title: ValidateDrawingCommandRequest
+      additionalProperties: false
+    drawing.v1.ValidateDrawingCommandResponse:
+      type: object
+      properties:
+        valid:
+          type: boolean
+          title: valid
+        violations:
+          type: array
+          items:
+            type: string
+          title: violations
+        resultingEntities:
+          type: array
+          items:
+            $ref: '#/components/schemas/drawing.v1.DrawingEntity'
+          title: resulting_entities
+      title: ValidateDrawingCommandResponse
+      additionalProperties: false
+    drawing.v1.ValidateDrawingRoundTripRequest:
+      type: object
+      properties:
+        drawingId:
+          type: string
+          title: drawing_id
+        revisionId:
+          type: string
+          title: revision_id
+        format:
+          title: format
+          $ref: '#/components/schemas/drawing.v1.FileFormat'
+      title: ValidateDrawingRoundTripRequest
+      additionalProperties: false
+    drawing.v1.ValidateDrawingRoundTripResponse:
+      type: object
+      properties:
+        report:
+          title: report
+          $ref: '#/components/schemas/drawing.v1.FidelityReport'
+      title: ValidateDrawingRoundTripResponse
+      additionalProperties: false
+    google.protobuf.Timestamp:
+      type: string
+      examples:
+        - "2023-01-15T01:30:15.01Z"
+        - "2024-12-25T12:00:00Z"
+      format: date-time
+      description: |-
+        A Timestamp represents a point in time independent of any time zone or local
+         calendar, encoded as a count of seconds and fractions of seconds at
+         nanosecond resolution. The count is relative to an epoch at UTC midnight on
+         January 1, 1970, in the proleptic Gregorian calendar which extends the
+         Gregorian calendar backwards to year one.
+
+         All minutes are 60 seconds long. Leap seconds are "smeared" so that no leap
+         second table is needed for interpretation, using a [24-hour linear
+         smear](https://developers.google.com/time/smear).
+
+         The range is from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59.999999999Z. By
+         restricting to that range, we ensure that we can convert to and from [RFC
+         3339](https://www.ietf.org/rfc/rfc3339.txt) date strings.
+
+         # Examples
+
+         Example 1: Compute Timestamp from POSIX `time()`.
+
+             Timestamp timestamp;
+             timestamp.set_seconds(time(NULL));
+             timestamp.set_nanos(0);
+
+         Example 2: Compute Timestamp from POSIX `gettimeofday()`.
+
+             struct timeval tv;
+             gettimeofday(&tv, NULL);
+
+             Timestamp timestamp;
+             timestamp.set_seconds(tv.tv_sec);
+             timestamp.set_nanos(tv.tv_usec * 1000);
+
+         Example 3: Compute Timestamp from Win32 `GetSystemTimeAsFileTime()`.
+
+             FILETIME ft;
+             GetSystemTimeAsFileTime(&ft);
+             UINT64 ticks = (((UINT64)ft.dwHighDateTime) << 32) | ft.dwLowDateTime;
+
+             // A Windows tick is 100 nanoseconds. Windows epoch 1601-01-01T00:00:00Z
+             // is 11644473600 seconds before Unix epoch 1970-01-01T00:00:00Z.
+             Timestamp timestamp;
+             timestamp.set_seconds((INT64) ((ticks / 10000000) - 11644473600LL));
+             timestamp.set_nanos((INT32) ((ticks % 10000000) * 100));
+
+         Example 4: Compute Timestamp from Java `System.currentTimeMillis()`.
+
+             long millis = System.currentTimeMillis();
+
+             Timestamp timestamp = Timestamp.newBuilder().setSeconds(millis / 1000)
+                 .setNanos((int) ((millis % 1000) * 1000000)).build();
+
+         Example 5: Compute Timestamp from Java `Instant.now()`.
+
+             Instant now = Instant.now();
+
+             Timestamp timestamp =
+                 Timestamp.newBuilder().setSeconds(now.getEpochSecond())
+                     .setNanos(now.getNano()).build();
+
+         Example 6: Compute Timestamp from current time in Python.
+
+             timestamp = Timestamp()
+             timestamp.GetCurrentTime()
+
+         # JSON Mapping
+
+         In JSON format, the Timestamp type is encoded as a string in the
+         [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format. That is, the
+         format is "{year}-{month}-{day}T{hour}:{min}:{sec}[.{frac_sec}]Z"
+         where {year} is always expressed using four digits while {month}, {day},
+         {hour}, {min}, and {sec} are zero-padded to two digits each. The fractional
+         seconds, which can go up to 9 digits (i.e. up to 1 nanosecond resolution),
+         are optional. The "Z" suffix indicates the timezone ("UTC"); the timezone
+         is required. A proto3 JSON serializer should always use UTC (as indicated by
+         "Z") when printing the Timestamp type and a proto3 JSON parser should be
+         able to accept both UTC and other timezones (as indicated by an offset).
+
+         For example, "2017-01-15T01:30:15.01Z" encodes 15.01 seconds past
+         01:30 UTC on January 15, 2017.
+
+         In JavaScript, one can convert a Date object to this format using the
+         standard
+         [toISOString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString)
+         method. In Python, a standard `datetime.datetime` object can be converted
+         to this format using
+         [`strftime`](https://docs.python.org/2/library/time.html#time.strftime) with
+         the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one can use
+         the Joda Time's [`ISODateTimeFormat.dateTime()`](
+         http://joda-time.sourceforge.net/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime()
+         ) to obtain a formatter capable of generating timestamps in this format.
+security: []
+tags:
+  - name: drawing.v1.DrawingRevisionService
+    description: DrawingRevisionService manages drawing metadata and immutable revision snapshots.
+  - name: drawing.v1.CadCoreService
+    description: CadCoreService validates and applies drawing commands on top of revision storage.
+  - name: drawing.v1.CadAnnotationService
+    description: CadAnnotationService manages associative drafting annotations layered on CadCoreService.
+  - name: drawing.v1.CadLayerBlockService
+    description: CadLayerBlockService manages layer standards, block definitions, and block inserts.
+  - name: drawing.v1.InteropService
+    description: InteropService imports, exports, and validates round-trips for supported CAD exchange formats.
+  - name: drawing.v1.PlotSheetService
+    description: PlotSheetService manages sheet definitions and publish artifacts.

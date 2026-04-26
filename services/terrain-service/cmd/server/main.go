@@ -9,16 +9,16 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
-	terrainv1connect "github.com/solar3d/solar3d/gen/terrain/v1/terrainv1connect"
+	terrainv1connect "p9e.in/samavaya/solar3d/gen/terrain/v1/terrainv1connect"
 
-	mw "solar3d/shared/middleware"
-	"solar3d/terrain-service/internal/config"
-	"solar3d/terrain-service/internal/handler"
-	"solar3d/terrain-service/internal/repository"
-	"solar3d/terrain-service/internal/service"
-	"solar3d/terrain-service/internal/worker"
+	"p9e.in/samavaya/packages/database/pgxpostgres"
+	mw "p9e.in/samavaya/packages/httpmiddleware"
+	"p9e.in/samavaya/solar3d/terrain-service/internal/config"
+	"p9e.in/samavaya/solar3d/terrain-service/internal/handler"
+	"p9e.in/samavaya/solar3d/terrain-service/internal/repository"
+	"p9e.in/samavaya/solar3d/terrain-service/internal/service"
+	"p9e.in/samavaya/solar3d/terrain-service/internal/worker"
 )
 
 func main() {
@@ -55,23 +55,11 @@ func run() error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	poolConfig, err := pgxpool.ParseConfig(cfg.DatabaseURL)
+	pool, closePool, err := pgxpostgres.NewPgxFromDSN(ctx, cfg.DatabaseURL, pgxpostgres.DefaultPoolOptions())
 	if err != nil {
-		return fmt.Errorf("parse database url: %w", err)
+		return fmt.Errorf("init database pool: %w", err)
 	}
-	poolConfig.MaxConns = 20
-	poolConfig.MinConns = 2
-
-	pool, err := pgxpool.NewWithConfig(ctx, poolConfig)
-	if err != nil {
-		return fmt.Errorf("create connection pool: %w", err)
-	}
-	defer pool.Close()
-
-	// Verify database connectivity.
-	if err := pool.Ping(ctx); err != nil {
-		return fmt.Errorf("ping database: %w", err)
-	}
+	defer closePool()
 	logger.Info().Msg("database connection established")
 
 	// ── Application layers ────────────────────────────────────────────────
@@ -95,11 +83,7 @@ func run() error {
 	mux := http.NewServeMux()
 
 	// Health check endpoint.
-	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte(`{"status":"ok"}`))
-	})
+	mux.HandleFunc("GET /healthz", mw.HealthzHandler(pool))
 
 	// Register terrain API routes.
 	h.RegisterRoutes(mux)
@@ -109,7 +93,7 @@ func run() error {
 	// Apply middleware chain: Recovery → RequestID → CORS → Logging → RateLimit
 	limiter := mw.NewRateLimiter(100, 200)
 	chain := mw.Chain(
-		mw.Recovery(logger),
+		mw.Recovery(logger), mw.DeprecateRESTAliases(logger),
 		mw.IDempotencyKeyMiddleware,
 		mw.CORS,
 		mw.Logging(logger),

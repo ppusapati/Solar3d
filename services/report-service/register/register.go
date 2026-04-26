@@ -5,11 +5,11 @@ import (
 	"net/http"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	reportv1connect "github.com/solar3d/solar3d/gen/report/v1/reportv1connect"
+	reportv1connect "p9e.in/samavaya/solar3d/gen/report/v1/reportv1connect"
 
-	"solar3d/report-service/internal/handler"
-	"solar3d/report-service/internal/repository"
-	"solar3d/report-service/internal/service"
+	"p9e.in/samavaya/solar3d/report-service/internal/handler"
+	"p9e.in/samavaya/solar3d/report-service/internal/repository"
+	"p9e.in/samavaya/solar3d/report-service/internal/service"
 )
 
 // Register wires the report-service handlers onto mux.

@@ -7,8 +7,8 @@ import (
 
 	"github.com/google/uuid"
 
-	"solar3d/layout-service/internal/domain"
-	"solar3d/layout-service/internal/repository"
+	"p9e.in/samavaya/solar3d/layout-service/internal/domain"
+	"p9e.in/samavaya/solar3d/layout-service/internal/repository"
 )
 
 func TestNormalizeCandidatePanelGeometry_DirectPolygon(t *testing.T) {

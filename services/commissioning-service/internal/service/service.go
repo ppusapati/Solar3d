@@ -9,7 +9,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 
-	"solar3d/commissioning-service/internal/domain"
+	"p9e.in/samavaya/solar3d/commissioning-service/internal/domain"
 )
 
 // standardItems returns a baseline set of commissioning checklist items

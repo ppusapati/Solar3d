@@ -1,0 +1,1583 @@
+openapi: 3.1.0
+info:
+  title: ml_inference.v1
+paths:
+  /ml_inference.v1.MLInferenceService/DeployModelVersion:
+    post:
+      tags:
+        - ml_inference.v1.MLInferenceService
+      summary: DeployModelVersion
+      operationId: ml_inference.v1.MLInferenceService.DeployModelVersion
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ml_inference.v1.DeployModelVersionRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ml_inference.v1.DeployModelVersionResponse'
+  /ml_inference.v1.MLInferenceService/DetectAnomaly:
+    post:
+      tags:
+        - ml_inference.v1.MLInferenceService
+      summary: DetectAnomaly
+      operationId: ml_inference.v1.MLInferenceService.DetectAnomaly
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ml_inference.v1.AnomalyDetectionRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ml_inference.v1.AnomalyDetectionResponse'
+  /ml_inference.v1.MLInferenceService/EvaluateModel:
+    post:
+      tags:
+        - ml_inference.v1.MLInferenceService
+      summary: EvaluateModel
+      operationId: ml_inference.v1.MLInferenceService.EvaluateModel
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ml_inference.v1.EvaluateModelRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ml_inference.v1.EvaluateModelResponse'
+  /ml_inference.v1.MLInferenceService/ExtractFeatures:
+    post:
+      tags:
+        - ml_inference.v1.MLInferenceService
+      summary: ExtractFeatures
+      operationId: ml_inference.v1.MLInferenceService.ExtractFeatures
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ml_inference.v1.FeatureExtractionRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ml_inference.v1.FeatureExtractionResponse'
+  /ml_inference.v1.MLInferenceService/ForecastDegradation:
+    post:
+      tags:
+        - ml_inference.v1.MLInferenceService
+      summary: ForecastDegradation
+      operationId: ml_inference.v1.MLInferenceService.ForecastDegradation
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ml_inference.v1.DegradationRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ml_inference.v1.DegradationResponse'
+  /ml_inference.v1.MLInferenceService/GetActiveModelVersion:
+    post:
+      tags:
+        - ml_inference.v1.MLInferenceService
+      summary: GetActiveModelVersion
+      operationId: ml_inference.v1.MLInferenceService.GetActiveModelVersion
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ml_inference.v1.GetActiveModelVersionRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ml_inference.v1.GetActiveModelVersionResponse'
+  /ml_inference.v1.MLInferenceService/GetModelVersions:
+    post:
+      tags:
+        - ml_inference.v1.MLInferenceService
+      summary: GetModelVersions
+      operationId: ml_inference.v1.MLInferenceService.GetModelVersions
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ml_inference.v1.GetModelVersionsRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ml_inference.v1.GetModelVersionsResponse'
+  /ml_inference.v1.MLInferenceService/GetTrainingStatus:
+    post:
+      tags:
+        - ml_inference.v1.MLInferenceService
+      summary: GetTrainingStatus
+      operationId: ml_inference.v1.MLInferenceService.GetTrainingStatus
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ml_inference.v1.GetTrainingStatusRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ml_inference.v1.GetTrainingStatusResponse'
+  /ml_inference.v1.MLInferenceService/PredictYield:
+    post:
+      tags:
+        - ml_inference.v1.MLInferenceService
+      summary: PredictYield
+      description: Inference RPCs
+      operationId: ml_inference.v1.MLInferenceService.PredictYield
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ml_inference.v1.YieldPredictionRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ml_inference.v1.YieldPredictionResponse'
+  /ml_inference.v1.MLInferenceService/RollbackModelVersion:
+    post:
+      tags:
+        - ml_inference.v1.MLInferenceService
+      summary: RollbackModelVersion
+      operationId: ml_inference.v1.MLInferenceService.RollbackModelVersion
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ml_inference.v1.RollbackModelVersionRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ml_inference.v1.RollbackModelVersionResponse'
+  /ml_inference.v1.MLInferenceService/StartTraining:
+    post:
+      tags:
+        - ml_inference.v1.MLInferenceService
+      summary: StartTraining
+      operationId: ml_inference.v1.MLInferenceService.StartTraining
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ml_inference.v1.StartTrainingRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ml_inference.v1.StartTrainingResponse'
+  /ml_inference.v1.MLInferenceService/SubmitFeedback:
+    post:
+      tags:
+        - ml_inference.v1.MLInferenceService
+      summary: SubmitFeedback
+      description: Training & Management RPCs
+      operationId: ml_inference.v1.MLInferenceService.SubmitFeedback
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ml_inference.v1.SubmitFeedbackRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ml_inference.v1.SubmitFeedbackResponse'
+components:
+  schemas:
+    common.v1.ApiVersion:
+      type: object
+      properties:
+        major:
+          type: integer
+          title: major
+        minor:
+          type: integer
+          title: minor
+        patch:
+          type: integer
+          title: patch
+      title: ApiVersion
+      additionalProperties: false
+      description: Semantic version carried in API payloads for compatibility checks.
+    common.v1.ContractMetadata:
+      type: object
+      properties:
+        schemaVersion:
+          title: schema_version
+          $ref: '#/components/schemas/common.v1.ApiVersion'
+        schemaId:
+          type: string
+          title: schema_id
+        schemaHash:
+          type: string
+          title: schema_hash
+        producer:
+          type: string
+          title: producer
+        correlationId:
+          type: string
+          title: correlation_id
+        createdAt:
+          title: created_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: ContractMetadata
+      additionalProperties: false
+      description: Metadata shared across contracts to support tracing and lineage.
+    common.v1.NumericRange:
+      type: object
+      properties:
+        min:
+          type: number
+          title: min
+          format: double
+        max:
+          type: number
+          title: max
+          format: double
+      title: NumericRange
+      additionalProperties: false
+    connect-protocol-version:
+      type: number
+      title: Connect-Protocol-Version
+      enum:
+        - 1
+      description: Define the version of the Connect protocol
+      const: 1
+    connect-timeout-header:
+      type: number
+      title: Connect-Timeout-Ms
+      description: Define the timeout, in ms
+    connect.error:
+      type: object
+      properties:
+        code:
+          type: string
+          examples:
+            - not_found
+          enum:
+            - canceled
+            - unknown
+            - invalid_argument
+            - deadline_exceeded
+            - not_found
+            - already_exists
+            - permission_denied
+            - resource_exhausted
+            - failed_precondition
+            - aborted
+            - out_of_range
+            - unimplemented
+            - internal
+            - unavailable
+            - data_loss
+            - unauthenticated
+          description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+        message:
+          type: string
+          description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/connect.error_details.Any'
+          description: A list of messages that carry the error details. There is no limit on the number of messages.
+      title: Connect Error
+      additionalProperties: true
+      description: 'Error type returned by Connect: https://connectrpc.com/docs/go/errors/#http-representation'
+    connect.error_details.Any:
+      type: object
+      properties:
+        type:
+          type: string
+          description: 'A URL that acts as a globally unique identifier for the type of the serialized message. For example: `type.googleapis.com/google.rpc.ErrorInfo`. This is used to determine the schema of the data in the `value` field and is the discriminator for the `debug` field.'
+        value:
+          type: string
+          format: binary
+          description: The Protobuf message, serialized as bytes and base64-encoded. The specific message type is identified by the `type` field.
+        debug:
+          oneOf:
+            - type: object
+              title: Any
+              additionalProperties: true
+              description: Detailed error information.
+          discriminator:
+            propertyName: type
+          title: Debug
+          description: Deserialized error detail payload. The 'type' field indicates the schema. This field is for easier debugging and should not be relied upon for application logic.
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message, with an additional debug field for ConnectRPC error details.
+    google.protobuf.Timestamp:
+      type: string
+      examples:
+        - "2023-01-15T01:30:15.01Z"
+        - "2024-12-25T12:00:00Z"
+      format: date-time
+      description: |-
+        A Timestamp represents a point in time independent of any time zone or local
+         calendar, encoded as a count of seconds and fractions of seconds at
+         nanosecond resolution. The count is relative to an epoch at UTC midnight on
+         January 1, 1970, in the proleptic Gregorian calendar which extends the
+         Gregorian calendar backwards to year one.
+
+         All minutes are 60 seconds long. Leap seconds are "smeared" so that no leap
+         second table is needed for interpretation, using a [24-hour linear
+         smear](https://developers.google.com/time/smear).
+
+         The range is from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59.999999999Z. By
+         restricting to that range, we ensure that we can convert to and from [RFC
+         3339](https://www.ietf.org/rfc/rfc3339.txt) date strings.
+
+         # Examples
+
+         Example 1: Compute Timestamp from POSIX `time()`.
+
+             Timestamp timestamp;
+             timestamp.set_seconds(time(NULL));
+             timestamp.set_nanos(0);
+
+         Example 2: Compute Timestamp from POSIX `gettimeofday()`.
+
+             struct timeval tv;
+             gettimeofday(&tv, NULL);
+
+             Timestamp timestamp;
+             timestamp.set_seconds(tv.tv_sec);
+             timestamp.set_nanos(tv.tv_usec * 1000);
+
+         Example 3: Compute Timestamp from Win32 `GetSystemTimeAsFileTime()`.
+
+             FILETIME ft;
+             GetSystemTimeAsFileTime(&ft);
+             UINT64 ticks = (((UINT64)ft.dwHighDateTime) << 32) | ft.dwLowDateTime;
+
+             // A Windows tick is 100 nanoseconds. Windows epoch 1601-01-01T00:00:00Z
+             // is 11644473600 seconds before Unix epoch 1970-01-01T00:00:00Z.
+             Timestamp timestamp;
+             timestamp.set_seconds((INT64) ((ticks / 10000000) - 11644473600LL));
+             timestamp.set_nanos((INT32) ((ticks % 10000000) * 100));
+
+         Example 4: Compute Timestamp from Java `System.currentTimeMillis()`.
+
+             long millis = System.currentTimeMillis();
+
+             Timestamp timestamp = Timestamp.newBuilder().setSeconds(millis / 1000)
+                 .setNanos((int) ((millis % 1000) * 1000000)).build();
+
+         Example 5: Compute Timestamp from Java `Instant.now()`.
+
+             Instant now = Instant.now();
+
+             Timestamp timestamp =
+                 Timestamp.newBuilder().setSeconds(now.getEpochSecond())
+                     .setNanos(now.getNano()).build();
+
+         Example 6: Compute Timestamp from current time in Python.
+
+             timestamp = Timestamp()
+             timestamp.GetCurrentTime()
+
+         # JSON Mapping
+
+         In JSON format, the Timestamp type is encoded as a string in the
+         [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format. That is, the
+         format is "{year}-{month}-{day}T{hour}:{min}:{sec}[.{frac_sec}]Z"
+         where {year} is always expressed using four digits while {month}, {day},
+         {hour}, {min}, and {sec} are zero-padded to two digits each. The fractional
+         seconds, which can go up to 9 digits (i.e. up to 1 nanosecond resolution),
+         are optional. The "Z" suffix indicates the timezone ("UTC"); the timezone
+         is required. A proto3 JSON serializer should always use UTC (as indicated by
+         "Z") when printing the Timestamp type and a proto3 JSON parser should be
+         able to accept both UTC and other timezones (as indicated by an offset).
+
+         For example, "2017-01-15T01:30:15.01Z" encodes 15.01 seconds past
+         01:30 UTC on January 15, 2017.
+
+         In JavaScript, one can convert a Date object to this format using the
+         standard
+         [toISOString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString)
+         method. In Python, a standard `datetime.datetime` object can be converted
+         to this format using
+         [`strftime`](https://docs.python.org/2/library/time.html#time.strftime) with
+         the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one can use
+         the Joda Time's [`ISODateTimeFormat.dateTime()`](
+         http://joda-time.sourceforge.net/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime()
+         ) to obtain a formatter capable of generating timestamps in this format.
+    ml_inference.v1.AnomalyDetectionRequest:
+      type: object
+      properties:
+        expectedYield:
+          type: number
+          title: expected_yield
+          format: double
+        actualYield:
+          type: number
+          title: actual_yield
+          format: double
+        modelPrediction:
+          type: number
+          title: model_prediction
+          format: double
+        sensorVariance:
+          type: number
+          title: sensor_variance
+          format: double
+      title: AnomalyDetectionRequest
+      additionalProperties: false
+    ml_inference.v1.AnomalyDetectionResponse:
+      type: object
+      properties:
+        score:
+          title: score
+          $ref: '#/components/schemas/ml_inference.v1.AnomalyScore'
+        isAnomalous:
+          type: boolean
+          title: is_anomalous
+        recommendation:
+          type: string
+          title: recommendation
+      title: AnomalyDetectionResponse
+      additionalProperties: false
+    ml_inference.v1.AnomalyScore:
+      type: object
+      properties:
+        score:
+          type: number
+          title: score
+          format: double
+        anomalyType:
+          title: anomaly_type
+          $ref: '#/components/schemas/ml_inference.v1.AnomalyType'
+        confidence:
+          type: number
+          title: confidence
+          format: double
+      title: AnomalyScore
+      additionalProperties: false
+    ml_inference.v1.AnomalyType:
+      type: string
+      title: AnomalyType
+      enum:
+        - NORMAL
+        - SENSOR_FAULT
+        - PERFORMANCE_DEGRADATION
+        - INVERTER_ISSUE
+        - STRING_MALFUNCTION
+        - WEATHER_EVENT
+    ml_inference.v1.DegradationForecast:
+      type: object
+      properties:
+        currentDegradationPercent:
+          type: number
+          title: current_degradation_percent
+          format: double
+        annualDegradationRate:
+          type: number
+          title: annual_degradation_rate
+          format: double
+        projectedDegradation5yr:
+          type: number
+          title: projected_degradation_5yr
+          format: double
+        projectedDegradation10yr:
+          type: number
+          title: projected_degradation_10yr
+          format: double
+        confidenceInterval:
+          type: number
+          title: confidence_interval
+          format: double
+      title: DegradationForecast
+      additionalProperties: false
+    ml_inference.v1.DegradationRequest:
+      type: object
+      properties:
+        currentDegradation:
+          type: number
+          title: current_degradation
+          format: double
+        annualRate:
+          type: number
+          title: annual_rate
+          format: double
+        years:
+          type: integer
+          title: years
+          format: int32
+      title: DegradationRequest
+      additionalProperties: false
+    ml_inference.v1.DegradationResponse:
+      type: object
+      properties:
+        forecast:
+          title: forecast
+          $ref: '#/components/schemas/ml_inference.v1.DegradationForecast'
+        remainingUsefulLifeYears:
+          type: number
+          title: remaining_useful_life_years
+          format: double
+      title: DegradationResponse
+      additionalProperties: false
+    ml_inference.v1.DeployModelVersionRequest:
+      type: object
+      properties:
+        modelVersionId:
+          type: string
+          title: model_version_id
+        policy:
+          title: policy
+          $ref: '#/components/schemas/ml_inference.v1.DeploymentPolicy'
+        deployedBy:
+          type: string
+          title: deployed_by
+        approvalId:
+          type: string
+          title: approval_id
+          description: For auditing
+        notes:
+          type: string
+          title: notes
+      title: DeployModelVersionRequest
+      additionalProperties: false
+    ml_inference.v1.DeployModelVersionResponse:
+      type: object
+      properties:
+        deploymentId:
+          type: string
+          title: deployment_id
+        status:
+          type: string
+          title: status
+          description: '"deploying", "canary", "active", "failed"'
+        deployedAtMs:
+          type:
+            - integer
+            - string
+          title: deployed_at_ms
+          format: int64
+        message:
+          type: string
+          title: message
+      title: DeployModelVersionResponse
+      additionalProperties: false
+    ml_inference.v1.DeploymentPolicy:
+      type: object
+      properties:
+        minImprovementPercent:
+          type: number
+          title: min_improvement_percent
+          format: double
+        requireManualApproval:
+          type: boolean
+          title: require_manual_approval
+        canaryTrafficPercent:
+          type: number
+          title: canary_traffic_percent
+          format: double
+        rollbackThresholdMinutes:
+          type: integer
+          title: rollback_threshold_minutes
+          format: int32
+        alertThresholds:
+          type: array
+          items:
+            type: string
+          title: alert_thresholds
+          description: e.g., "mae>50", "rmse>30"
+      title: DeploymentPolicy
+      additionalProperties: false
+    ml_inference.v1.EvaluateModelRequest:
+      type: object
+      properties:
+        modelVersionId:
+          type: string
+          title: model_version_id
+        dataset:
+          type: string
+          title: dataset
+          description: '"test", "validation"'
+        versusModelId:
+          type: string
+          title: versus_model_id
+          description: For comparison
+      title: EvaluateModelRequest
+      additionalProperties: false
+    ml_inference.v1.EvaluateModelResponse:
+      type: object
+      properties:
+        evaluations:
+          type: array
+          items:
+            $ref: '#/components/schemas/ml_inference.v1.ModelEvaluation'
+          title: evaluations
+        candidateWins:
+          type: boolean
+          title: candidate_wins
+        recommendation:
+          type: string
+          title: recommendation
+      title: EvaluateModelResponse
+      additionalProperties: false
+    ml_inference.v1.FeatureDataType:
+      type: string
+      title: FeatureDataType
+      enum:
+        - FEATURE_DATA_TYPE_UNSPECIFIED
+        - FEATURE_DATA_TYPE_FLOAT64
+        - FEATURE_DATA_TYPE_INT64
+        - FEATURE_DATA_TYPE_BOOL
+        - FEATURE_DATA_TYPE_STRING
+    ml_inference.v1.FeatureExtractionRequest:
+      type: object
+      properties:
+        weather:
+          title: weather
+          $ref: '#/components/schemas/ml_inference.v1.WeatherFeatures'
+        solar:
+          title: solar
+          $ref: '#/components/schemas/ml_inference.v1.SolarFeatures'
+        time:
+          title: time
+          $ref: '#/components/schemas/ml_inference.v1.TimeFeatures'
+      title: FeatureExtractionRequest
+      additionalProperties: false
+    ml_inference.v1.FeatureExtractionResponse:
+      type: object
+      properties:
+        features:
+          title: features
+          $ref: '#/components/schemas/ml_inference.v1.FeatureVector'
+        featureCount:
+          type: integer
+          title: feature_count
+          format: int32
+        payload:
+          title: payload
+          $ref: '#/components/schemas/ml_inference.v1.FeaturePayload'
+      title: FeatureExtractionResponse
+      additionalProperties: false
+    ml_inference.v1.FeaturePayload:
+      type: object
+      properties:
+        payloadId:
+          type: string
+          title: payload_id
+        taskType:
+          type: string
+          title: task_type
+        schema:
+          title: schema
+          $ref: '#/components/schemas/ml_inference.v1.FeatureSchema'
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/ml_inference.v1.FeatureValue'
+          title: values
+        observedAt:
+          title: observed_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        siteId:
+          type: string
+          title: site_id
+      title: FeaturePayload
+      additionalProperties: false
+    ml_inference.v1.FeatureSchema:
+      type: object
+      properties:
+        schemaId:
+          type: string
+          title: schema_id
+        schemaHash:
+          type: string
+          title: schema_hash
+        taskType:
+          type: string
+          title: task_type
+        features:
+          type: array
+          items:
+            $ref: '#/components/schemas/ml_inference.v1.FeatureSpec'
+          title: features
+        createdAt:
+          title: created_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        contract:
+          title: contract
+          $ref: '#/components/schemas/common.v1.ContractMetadata'
+      title: FeatureSchema
+      additionalProperties: false
+    ml_inference.v1.FeatureSpec:
+      type: object
+      properties:
+        name:
+          type: string
+          title: name
+        dataType:
+          title: data_type
+          $ref: '#/components/schemas/ml_inference.v1.FeatureDataType'
+        required:
+          type: boolean
+          title: required
+        unit:
+          type: string
+          title: unit
+        expectedRange:
+          title: expected_range
+          $ref: '#/components/schemas/common.v1.NumericRange'
+      title: FeatureSpec
+      additionalProperties: false
+    ml_inference.v1.FeatureValue:
+      type: object
+      allOf:
+        - properties:
+            name:
+              type: string
+              title: name
+        - oneOf:
+            - type: object
+              properties:
+                boolValue:
+                  type: boolean
+                  title: bool_value
+              title: bool_value
+              required:
+                - boolValue
+            - type: object
+              properties:
+                doubleValue:
+                  type: number
+                  title: double_value
+                  format: double
+              title: double_value
+              required:
+                - doubleValue
+            - type: object
+              properties:
+                int64Value:
+                  type:
+                    - integer
+                    - string
+                  title: int64_value
+                  format: int64
+              title: int64_value
+              required:
+                - int64Value
+            - type: object
+              properties:
+                stringValue:
+                  type: string
+                  title: string_value
+              title: string_value
+              required:
+                - stringValue
+      title: FeatureValue
+      additionalProperties: false
+    ml_inference.v1.FeatureVector:
+      type: object
+      properties:
+        features:
+          type: array
+          items:
+            type: number
+            format: double
+          title: features
+        featureNames:
+          type: array
+          items:
+            type: string
+          title: feature_names
+      title: FeatureVector
+      additionalProperties: false
+    ml_inference.v1.GetActiveModelVersionRequest:
+      type: object
+      properties:
+        taskType:
+          type: string
+          title: task_type
+      title: GetActiveModelVersionRequest
+      additionalProperties: false
+    ml_inference.v1.GetActiveModelVersionResponse:
+      type: object
+      properties:
+        activeVersion:
+          title: active_version
+          $ref: '#/components/schemas/ml_inference.v1.ModelVersionInfo'
+        previousVersion:
+          title: previous_version
+          description: For quick rollback
+          $ref: '#/components/schemas/ml_inference.v1.ModelVersionInfo'
+      title: GetActiveModelVersionResponse
+      additionalProperties: false
+    ml_inference.v1.GetModelVersionsRequest:
+      type: object
+      properties:
+        taskType:
+          type: string
+          title: task_type
+        limit:
+          type: integer
+          title: limit
+          format: int32
+        statusFilter:
+          type: string
+          title: status_filter
+          description: optional
+      title: GetModelVersionsRequest
+      additionalProperties: false
+    ml_inference.v1.GetModelVersionsResponse:
+      type: object
+      properties:
+        versions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ml_inference.v1.ModelVersionInfo'
+          title: versions
+      title: GetModelVersionsResponse
+      additionalProperties: false
+    ml_inference.v1.GetTrainingStatusRequest:
+      type: object
+      properties:
+        trainingRunId:
+          type: string
+          title: training_run_id
+      title: GetTrainingStatusRequest
+      additionalProperties: false
+    ml_inference.v1.GetTrainingStatusResponse:
+      type: object
+      properties:
+        trainingRunId:
+          type: string
+          title: training_run_id
+        status:
+          type: string
+          title: status
+          description: '"queued", "running", "completed", "failed"'
+        metrics:
+          title: metrics
+          $ref: '#/components/schemas/ml_inference.v1.TrainingMetrics'
+        errorMessage:
+          type: string
+          title: error_message
+        startedAtMs:
+          type:
+            - integer
+            - string
+          title: started_at_ms
+          format: int64
+        completedAtMs:
+          type:
+            - integer
+            - string
+          title: completed_at_ms
+          format: int64
+        modelVersionId:
+          type: string
+          title: model_version_id
+          description: Available once training completes
+        completionProgress:
+          type: number
+          title: completion_progress
+          format: double
+          description: 0.0 - 1.0 for running jobs
+      title: GetTrainingStatusResponse
+      additionalProperties: false
+    ml_inference.v1.LabeledFeatureSample:
+      type: object
+      properties:
+        sampleId:
+          type: string
+          title: sample_id
+        payload:
+          title: payload
+          $ref: '#/components/schemas/ml_inference.v1.FeaturePayload'
+        label:
+          type: number
+          title: label
+          format: double
+        labelSource:
+          type: string
+          title: label_source
+        labeledAt:
+          title: labeled_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: LabeledFeatureSample
+      additionalProperties: false
+    ml_inference.v1.ModelEvaluation:
+      type: object
+      properties:
+        modelVersionId:
+          type: string
+          title: model_version_id
+        versusModelId:
+          type: string
+          title: versus_model_id
+        metricName:
+          type: string
+          title: metric_name
+        baselineValue:
+          type: number
+          title: baseline_value
+          format: double
+        candidateValue:
+          type: number
+          title: candidate_value
+          format: double
+        improvementPercent:
+          type: number
+          title: improvement_percent
+          format: double
+        meetsThreshold:
+          type: boolean
+          title: meets_threshold
+      title: ModelEvaluation
+      additionalProperties: false
+    ml_inference.v1.ModelVersionInfo:
+      type: object
+      properties:
+        versionId:
+          type: string
+          title: version_id
+        taskType:
+          type: string
+          title: task_type
+        status:
+          type: string
+          title: status
+          description: '"candidate", "champion", "archived", "failed"'
+        createdAtMs:
+          type:
+            - integer
+            - string
+          title: created_at_ms
+          format: int64
+        deployedAtMs:
+          type:
+            - integer
+            - string
+          title: deployed_at_ms
+          format: int64
+        metrics:
+          title: metrics
+          $ref: '#/components/schemas/ml_inference.v1.TrainingMetrics'
+        artifactPath:
+          type: string
+          title: artifact_path
+        artifactHash:
+          type: string
+          title: artifact_hash
+        schemaHash:
+          type: string
+          title: schema_hash
+        trainingRunId:
+          type: string
+          title: training_run_id
+        commitHash:
+          type: string
+          title: commit_hash
+        metadata:
+          type: object
+          title: metadata
+          additionalProperties:
+            type: string
+            title: value
+      title: ModelVersionInfo
+      additionalProperties: false
+    ml_inference.v1.ModelVersionInfo.MetadataEntry:
+      type: object
+      properties:
+        key:
+          type: string
+          title: key
+        value:
+          type: string
+          title: value
+      title: MetadataEntry
+      additionalProperties: false
+    ml_inference.v1.RollbackModelVersionRequest:
+      type: object
+      properties:
+        taskType:
+          type: string
+          title: task_type
+        reason:
+          type: string
+          title: reason
+        rolledBackBy:
+          type: string
+          title: rolled_back_by
+      title: RollbackModelVersionRequest
+      additionalProperties: false
+    ml_inference.v1.RollbackModelVersionResponse:
+      type: object
+      properties:
+        activeVersionId:
+          type: string
+          title: active_version_id
+        rolledBackAtMs:
+          type:
+            - integer
+            - string
+          title: rolled_back_at_ms
+          format: int64
+        message:
+          type: string
+          title: message
+      title: RollbackModelVersionResponse
+      additionalProperties: false
+    ml_inference.v1.SolarFeatures:
+      type: object
+      properties:
+        solarAltitudeDeg:
+          type: number
+          title: solar_altitude_deg
+          format: double
+        solarAzimuthDeg:
+          type: number
+          title: solar_azimuth_deg
+          format: double
+        airMass:
+          type: number
+          title: air_mass
+          format: double
+        clearnessIndex:
+          type: number
+          title: clearness_index
+          format: double
+      title: SolarFeatures
+      additionalProperties: false
+    ml_inference.v1.StartTrainingRequest:
+      type: object
+      properties:
+        taskType:
+          type: string
+          title: task_type
+          description: '"yield", "anomaly", "degradation"'
+        config:
+          title: config
+          $ref: '#/components/schemas/ml_inference.v1.TrainingDataConfig'
+        hyperparams:
+          type: object
+          title: hyperparams
+          additionalProperties:
+            type: string
+            title: value
+        triggeredBy:
+          type: string
+          title: triggered_by
+        commitHash:
+          type: string
+          title: commit_hash
+          description: Source code commit
+        expectedSchema:
+          title: expected_schema
+          $ref: '#/components/schemas/ml_inference.v1.FeatureSchema'
+      title: StartTrainingRequest
+      additionalProperties: false
+    ml_inference.v1.StartTrainingRequest.HyperparamsEntry:
+      type: object
+      properties:
+        key:
+          type: string
+          title: key
+        value:
+          type: string
+          title: value
+      title: HyperparamsEntry
+      additionalProperties: false
+    ml_inference.v1.StartTrainingResponse:
+      type: object
+      properties:
+        trainingRunId:
+          type: string
+          title: training_run_id
+        status:
+          type: string
+          title: status
+          description: '"queued", "running", "pending"'
+        queuedAtMs:
+          type:
+            - integer
+            - string
+          title: queued_at_ms
+          format: int64
+      title: StartTrainingResponse
+      additionalProperties: false
+    ml_inference.v1.SubmitFeedbackRequest:
+      type: object
+      properties:
+        predictionId:
+          type: string
+          title: prediction_id
+          description: Reference to original prediction
+        siteId:
+          type: string
+          title: site_id
+        taskType:
+          type: string
+          title: task_type
+          description: '"yield", "anomaly", "degradation"'
+        actualLabel:
+          type: number
+          title: actual_label
+          format: double
+          description: Actual observed value
+        notes:
+          type: string
+          title: notes
+        submittedBy:
+          type: string
+          title: submitted_by
+        sample:
+          title: sample
+          $ref: '#/components/schemas/ml_inference.v1.LabeledFeatureSample'
+      title: SubmitFeedbackRequest
+      additionalProperties: false
+    ml_inference.v1.SubmitFeedbackResponse:
+      type: object
+      properties:
+        feedbackId:
+          type: string
+          title: feedback_id
+        accepted:
+          type: boolean
+          title: accepted
+        message:
+          type: string
+          title: message
+      title: SubmitFeedbackResponse
+      additionalProperties: false
+    ml_inference.v1.TimeFeatures:
+      type: object
+      properties:
+        hourOfDay:
+          type: integer
+          title: hour_of_day
+          format: int32
+        dayOfYear:
+          type: integer
+          title: day_of_year
+          format: int32
+        month:
+          type: integer
+          title: month
+          format: int32
+        isWeekend:
+          type: boolean
+          title: is_weekend
+      title: TimeFeatures
+      additionalProperties: false
+    ml_inference.v1.TrainingDataConfig:
+      type: object
+      properties:
+        version:
+          type: string
+          title: version
+        lookbackDays:
+          type: integer
+          title: lookback_days
+          format: int32
+        minSamplesPerSite:
+          type: integer
+          title: min_samples_per_site
+          format: int32
+        trainSplitRatio:
+          type: number
+          title: train_split_ratio
+          format: double
+        validationSplitRatio:
+          type: number
+          title: validation_split_ratio
+          format: double
+        testSplitRatio:
+          type: number
+          title: test_split_ratio
+          format: double
+        timeAwareSplit:
+          type: boolean
+          title: time_aware_split
+        featureSchemaHash:
+          type: string
+          title: feature_schema_hash
+        featureSchema:
+          title: feature_schema
+          $ref: '#/components/schemas/ml_inference.v1.FeatureSchema'
+      title: TrainingDataConfig
+      additionalProperties: false
+    ml_inference.v1.TrainingMetrics:
+      type: object
+      properties:
+        trainLoss:
+          type: number
+          title: train_loss
+          format: double
+        validationLoss:
+          type: number
+          title: validation_loss
+          format: double
+        testLoss:
+          type: number
+          title: test_loss
+          format: double
+        testMae:
+          type: number
+          title: test_mae
+          format: double
+        testRmse:
+          type: number
+          title: test_rmse
+          format: double
+        testCoverageLower:
+          type: number
+          title: test_coverage_lower
+          format: double
+          description: Interval coverage metrics
+        testCoverageUpper:
+          type: number
+          title: test_coverage_upper
+          format: double
+        customMetrics:
+          type: object
+          title: custom_metrics
+          additionalProperties:
+            type: number
+            title: value
+            format: double
+      title: TrainingMetrics
+      additionalProperties: false
+    ml_inference.v1.TrainingMetrics.CustomMetricsEntry:
+      type: object
+      properties:
+        key:
+          type: string
+          title: key
+        value:
+          type: number
+          title: value
+          format: double
+      title: CustomMetricsEntry
+      additionalProperties: false
+    ml_inference.v1.WeatherFeatures:
+      type: object
+      properties:
+        temperatureC:
+          type: number
+          title: temperature_c
+          format: double
+        irradianceWM2:
+          type: number
+          title: irradiance_w_m2
+          format: double
+        humidityPercent:
+          type: number
+          title: humidity_percent
+          format: double
+        pressureMb:
+          type: number
+          title: pressure_mb
+          format: double
+        windSpeedMS:
+          type: number
+          title: wind_speed_m_s
+          format: double
+      title: WeatherFeatures
+      additionalProperties: false
+    ml_inference.v1.YieldForecast:
+      type: object
+      properties:
+        predictedYieldKwh:
+          type: number
+          title: predicted_yield_kwh
+          format: double
+        confidenceLower:
+          type: number
+          title: confidence_lower
+          format: double
+        confidenceUpper:
+          type: number
+          title: confidence_upper
+          format: double
+        expectedValue:
+          type: number
+          title: expected_value
+          format: double
+        variance:
+          type: number
+          title: variance
+          format: double
+      title: YieldForecast
+      additionalProperties: false
+    ml_inference.v1.YieldPredictionRequest:
+      type: object
+      properties:
+        features:
+          title: features
+          $ref: '#/components/schemas/ml_inference.v1.FeatureVector'
+        modelOutput:
+          type: number
+          title: model_output
+          format: double
+        uncertaintyEstimate:
+          type: number
+          title: uncertainty_estimate
+          format: double
+        featurePayload:
+          title: feature_payload
+          $ref: '#/components/schemas/ml_inference.v1.FeaturePayload'
+      title: YieldPredictionRequest
+      additionalProperties: false
+    ml_inference.v1.YieldPredictionResponse:
+      type: object
+      properties:
+        forecast:
+          title: forecast
+          $ref: '#/components/schemas/ml_inference.v1.YieldForecast'
+        ensembleForecasts:
+          type: array
+          items:
+            $ref: '#/components/schemas/ml_inference.v1.YieldForecast'
+          title: ensemble_forecasts
+      title: YieldPredictionResponse
+      additionalProperties: false
+security: []
+tags:
+  - name: ml_inference.v1.MLInferenceService

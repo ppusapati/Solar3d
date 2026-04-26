@@ -12,7 +12,7 @@ import (
 	"sync"
 	"time"
 
-	"solar3d/compute-service/internal/models"
+	"p9e.in/samavaya/solar3d/compute-service/internal/models"
 )
 
 // storedScenarioRecord is the on-disk format for a scenario set, including history.

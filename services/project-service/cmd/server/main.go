@@ -9,16 +9,16 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
 
-	projectv1connect "github.com/solar3d/solar3d/gen/project/v1/projectv1connect"
+	projectv1connect "p9e.in/samavaya/solar3d/gen/project/v1/projectv1connect"
 
-	"solar3d/project-service/internal/config"
-	"solar3d/project-service/internal/handler"
-	"solar3d/project-service/internal/repository"
-	"solar3d/project-service/internal/service"
-	mw "solar3d/shared/middleware"
+	"p9e.in/samavaya/packages/database/pgxpostgres"
+	mw "p9e.in/samavaya/packages/httpmiddleware"
+	"p9e.in/samavaya/solar3d/project-service/internal/config"
+	"p9e.in/samavaya/solar3d/project-service/internal/handler"
+	"p9e.in/samavaya/solar3d/project-service/internal/repository"
+	"p9e.in/samavaya/solar3d/project-service/internal/service"
 )
 
 func main() {
@@ -48,24 +48,11 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	poolCfg, err := pgxpool.ParseConfig(cfg.DatabaseURL)
+	pool, closePool, err := pgxpostgres.NewPgxFromDSN(ctx, cfg.DatabaseURL, pgxpostgres.DefaultPoolOptions())
 	if err != nil {
-		logger.Fatal().Err(err).Msg("invalid DATABASE_URL")
+		logger.Fatal().Err(err).Msg("failed to initialise database pool")
 	}
-	poolCfg.MaxConns = 20
-	poolCfg.MinConns = 2
-	poolCfg.MaxConnLifetime = 30 * time.Minute
-	poolCfg.MaxConnIdleTime = 5 * time.Minute
-
-	pool, err := pgxpool.NewWithConfig(ctx, poolCfg)
-	if err != nil {
-		logger.Fatal().Err(err).Msg("failed to create connection pool")
-	}
-	defer pool.Close()
-
-	if err := pool.Ping(ctx); err != nil {
-		logger.Fatal().Err(err).Msg("failed to ping database")
-	}
+	defer closePool()
 	logger.Info().Msg("database connection established")
 
 	// ── Application layers ────────────────────────────────────────────────
@@ -77,11 +64,7 @@ func main() {
 	mux := http.NewServeMux()
 
 	// Health check endpoint.
-	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, _ *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte(`{"status":"ok"}`))
-	})
+	mux.HandleFunc("GET /healthz", mw.HealthzHandler(pool))
 
 	// Register ConnectRPC-style routes.
 	h.Register(mux)
@@ -91,7 +74,7 @@ func main() {
 	// Apply middleware chain: Recovery → RequestID → CORS → Logging → RateLimit
 	limiter := mw.NewRateLimiter(100, 200)
 	chain := mw.Chain(
-		mw.Recovery(logger),
+		mw.Recovery(logger), mw.DeprecateRESTAliases(logger),
 		mw.IDempotencyKeyMiddleware,
 		mw.CORS,
 		mw.Logging(logger),

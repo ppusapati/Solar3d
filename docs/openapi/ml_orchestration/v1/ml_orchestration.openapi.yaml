@@ -1,0 +1,706 @@
+openapi: 3.1.0
+info:
+  title: ml_orchestration.v1
+paths:
+  /ml_orchestration.v1.MLOrchestrationService/CancelJob:
+    post:
+      tags:
+        - ml_orchestration.v1.MLOrchestrationService
+      summary: CancelJob
+      operationId: ml_orchestration.v1.MLOrchestrationService.CancelJob
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ml_orchestration.v1.CancelJobRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ml_orchestration.v1.CancelJobResponse'
+  /ml_orchestration.v1.MLOrchestrationService/GetJobHistory:
+    post:
+      tags:
+        - ml_orchestration.v1.MLOrchestrationService
+      summary: GetJobHistory
+      operationId: ml_orchestration.v1.MLOrchestrationService.GetJobHistory
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ml_orchestration.v1.GetJobHistoryRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ml_orchestration.v1.GetJobHistoryResponse'
+  /ml_orchestration.v1.MLOrchestrationService/GetJobStatus:
+    post:
+      tags:
+        - ml_orchestration.v1.MLOrchestrationService
+      summary: GetJobStatus
+      operationId: ml_orchestration.v1.MLOrchestrationService.GetJobStatus
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ml_orchestration.v1.GetJobStatusRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ml_orchestration.v1.GetJobStatusResponse'
+  /ml_orchestration.v1.MLOrchestrationService/SubmitTrainingJob:
+    post:
+      tags:
+        - ml_orchestration.v1.MLOrchestrationService
+      summary: SubmitTrainingJob
+      operationId: ml_orchestration.v1.MLOrchestrationService.SubmitTrainingJob
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ml_orchestration.v1.SubmitTrainingJobRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ml_orchestration.v1.SubmitTrainingJobResponse'
+components:
+  schemas:
+    connect-protocol-version:
+      type: number
+      title: Connect-Protocol-Version
+      enum:
+        - 1
+      description: Define the version of the Connect protocol
+      const: 1
+    connect-timeout-header:
+      type: number
+      title: Connect-Timeout-Ms
+      description: Define the timeout, in ms
+    connect.error:
+      type: object
+      properties:
+        code:
+          type: string
+          examples:
+            - not_found
+          enum:
+            - canceled
+            - unknown
+            - invalid_argument
+            - deadline_exceeded
+            - not_found
+            - already_exists
+            - permission_denied
+            - resource_exhausted
+            - failed_precondition
+            - aborted
+            - out_of_range
+            - unimplemented
+            - internal
+            - unavailable
+            - data_loss
+            - unauthenticated
+          description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+        message:
+          type: string
+          description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/connect.error_details.Any'
+          description: A list of messages that carry the error details. There is no limit on the number of messages.
+      title: Connect Error
+      additionalProperties: true
+      description: 'Error type returned by Connect: https://connectrpc.com/docs/go/errors/#http-representation'
+    connect.error_details.Any:
+      type: object
+      properties:
+        type:
+          type: string
+          description: 'A URL that acts as a globally unique identifier for the type of the serialized message. For example: `type.googleapis.com/google.rpc.ErrorInfo`. This is used to determine the schema of the data in the `value` field and is the discriminator for the `debug` field.'
+        value:
+          type: string
+          format: binary
+          description: The Protobuf message, serialized as bytes and base64-encoded. The specific message type is identified by the `type` field.
+        debug:
+          oneOf:
+            - type: object
+              title: Any
+              additionalProperties: true
+              description: Detailed error information.
+          discriminator:
+            propertyName: type
+          title: Debug
+          description: Deserialized error detail payload. The 'type' field indicates the schema. This field is for easier debugging and should not be relied upon for application logic.
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message, with an additional debug field for ConnectRPC error details.
+    ml_orchestration.v1.CancelJobRequest:
+      type: object
+      properties:
+        jobId:
+          type: string
+          title: job_id
+        reason:
+          type: string
+          title: reason
+        cancelledBy:
+          type: string
+          title: cancelled_by
+      title: CancelJobRequest
+      additionalProperties: false
+    ml_orchestration.v1.CancelJobResponse:
+      type: object
+      properties:
+        jobId:
+          type: string
+          title: job_id
+        cancelled:
+          type: boolean
+          title: cancelled
+        message:
+          type: string
+          title: message
+      title: CancelJobResponse
+      additionalProperties: false
+    ml_orchestration.v1.DatasetConfig:
+      type: object
+      properties:
+        version:
+          type: string
+          title: version
+        window:
+          title: window
+          $ref: '#/components/schemas/ml_orchestration.v1.DatasetWindow'
+        split:
+          title: split
+          $ref: '#/components/schemas/ml_orchestration.v1.DatasetSplit'
+        features:
+          title: features
+          $ref: '#/components/schemas/ml_orchestration.v1.FeatureExtraction'
+        feedbackSource:
+          type: string
+          title: feedback_source
+          description: '"manual", "system_inferred", "all"'
+      title: DatasetConfig
+      additionalProperties: false
+    ml_orchestration.v1.DatasetSplit:
+      type: object
+      properties:
+        trainRatio:
+          type: number
+          title: train_ratio
+          format: double
+          description: "0.6"
+        validationRatio:
+          type: number
+          title: validation_ratio
+          format: double
+          description: "0.2"
+        testRatio:
+          type: number
+          title: test_ratio
+          format: double
+          description: "0.2"
+        timeAware:
+          type: boolean
+          title: time_aware
+          description: Use temporal ordering for splits
+      title: DatasetSplit
+      additionalProperties: false
+    ml_orchestration.v1.DatasetWindow:
+      type: object
+      properties:
+        lookbackDays:
+          type: integer
+          title: lookback_days
+          format: int32
+        minSamplesPerSite:
+          type: integer
+          title: min_samples_per_site
+          format: int32
+        includeSynthetic:
+          type: boolean
+          title: include_synthetic
+      title: DatasetWindow
+      additionalProperties: false
+    ml_orchestration.v1.EarlyStoppingPolicy:
+      type: object
+      properties:
+        patienceEpochs:
+          type: integer
+          title: patience_epochs
+          format: int32
+        minDelta:
+          type: number
+          title: min_delta
+          format: double
+        monitorValidation:
+          type: boolean
+          title: monitor_validation
+      title: EarlyStoppingPolicy
+      additionalProperties: false
+    ml_orchestration.v1.FeatureExtraction:
+      type: object
+      properties:
+        selectedFeatures:
+          type: array
+          items:
+            type: string
+          title: selected_features
+        normalize:
+          type: boolean
+          title: normalize
+        outlierPercentile:
+          type: number
+          title: outlier_percentile
+          format: double
+      title: FeatureExtraction
+      additionalProperties: false
+    ml_orchestration.v1.GetJobHistoryRequest:
+      type: object
+      properties:
+        filter:
+          title: filter
+          $ref: '#/components/schemas/ml_orchestration.v1.JobHistoryFilter'
+      title: GetJobHistoryRequest
+      additionalProperties: false
+    ml_orchestration.v1.GetJobHistoryResponse:
+      type: object
+      properties:
+        jobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ml_orchestration.v1.JobHistoryEntry'
+          title: jobs
+        totalCount:
+          type: integer
+          title: total_count
+          format: int32
+      title: GetJobHistoryResponse
+      additionalProperties: false
+    ml_orchestration.v1.GetJobStatusRequest:
+      type: object
+      properties:
+        jobId:
+          type: string
+          title: job_id
+      title: GetJobStatusRequest
+      additionalProperties: false
+    ml_orchestration.v1.GetJobStatusResponse:
+      type: object
+      properties:
+        jobId:
+          type: string
+          title: job_id
+        status:
+          type: string
+          title: status
+          description: '"queued", "running", "completed", "failed", "cancelled"'
+        progress:
+          title: progress
+          $ref: '#/components/schemas/ml_orchestration.v1.TrainingProgress'
+        metrics:
+          title: metrics
+          $ref: '#/components/schemas/ml_orchestration.v1.TrainingMetrics'
+        artifact:
+          title: artifact
+          $ref: '#/components/schemas/ml_orchestration.v1.ModelArtifactInfo'
+        modelVersionId:
+          type: string
+          title: model_version_id
+        errorMessage:
+          type: string
+          title: error_message
+        startedAtMs:
+          type:
+            - integer
+            - string
+          title: started_at_ms
+          format: int64
+        completedAtMs:
+          type:
+            - integer
+            - string
+          title: completed_at_ms
+          format: int64
+        logs:
+          type: object
+          title: logs
+          additionalProperties:
+            type: string
+            title: value
+          description: Log aggregates if available
+      title: GetJobStatusResponse
+      additionalProperties: false
+    ml_orchestration.v1.GetJobStatusResponse.LogsEntry:
+      type: object
+      properties:
+        key:
+          type: string
+          title: key
+        value:
+          type: string
+          title: value
+      title: LogsEntry
+      additionalProperties: false
+    ml_orchestration.v1.JobHistoryEntry:
+      type: object
+      properties:
+        jobId:
+          type: string
+          title: job_id
+        taskType:
+          type: string
+          title: task_type
+        status:
+          type: string
+          title: status
+        triggeredBy:
+          type: string
+          title: triggered_by
+        createdAtMs:
+          type:
+            - integer
+            - string
+          title: created_at_ms
+          format: int64
+        completedAtMs:
+          type:
+            - integer
+            - string
+          title: completed_at_ms
+          format: int64
+        modelVersionId:
+          type: string
+          title: model_version_id
+      title: JobHistoryEntry
+      additionalProperties: false
+    ml_orchestration.v1.JobHistoryFilter:
+      type: object
+      properties:
+        taskType:
+          type: string
+          title: task_type
+        status:
+          type: string
+          title: status
+        limit:
+          type: integer
+          title: limit
+          format: int32
+        offset:
+          type: integer
+          title: offset
+          format: int32
+      title: JobHistoryFilter
+      additionalProperties: false
+    ml_orchestration.v1.ModelArtifactInfo:
+      type: object
+      properties:
+        path:
+          type: string
+          title: path
+        hash:
+          type: string
+          title: hash
+        sizeBytes:
+          type:
+            - integer
+            - string
+          title: size_bytes
+          format: int64
+        format:
+          type: string
+          title: format
+          description: '"onnx", "pytorch", "tensorflow"'
+      title: ModelArtifactInfo
+      additionalProperties: false
+    ml_orchestration.v1.SubmitTrainingJobRequest:
+      type: object
+      properties:
+        jobId:
+          type: string
+          title: job_id
+          description: Optional; auto-generated if empty
+        taskType:
+          type: string
+          title: task_type
+          description: '"yield", "anomaly", "degradation"'
+        datasetConfig:
+          title: dataset_config
+          $ref: '#/components/schemas/ml_orchestration.v1.DatasetConfig'
+        hyperparams:
+          title: hyperparams
+          $ref: '#/components/schemas/ml_orchestration.v1.TrainingHyperparams'
+        stoppingPolicy:
+          title: stopping_policy
+          $ref: '#/components/schemas/ml_orchestration.v1.EarlyStoppingPolicy'
+        triggeredBy:
+          type: string
+          title: triggered_by
+        commitHash:
+          type: string
+          title: commit_hash
+        labels:
+          type: object
+          title: labels
+          additionalProperties:
+            type: string
+            title: value
+          description: For job tracking/filtering
+        timeoutMinutes:
+          type: integer
+          title: timeout_minutes
+          format: int32
+          description: Default 120
+      title: SubmitTrainingJobRequest
+      additionalProperties: false
+    ml_orchestration.v1.SubmitTrainingJobRequest.LabelsEntry:
+      type: object
+      properties:
+        key:
+          type: string
+          title: key
+        value:
+          type: string
+          title: value
+      title: LabelsEntry
+      additionalProperties: false
+    ml_orchestration.v1.SubmitTrainingJobResponse:
+      type: object
+      properties:
+        jobId:
+          type: string
+          title: job_id
+        status:
+          type: string
+          title: status
+          description: '"accepted", "queued", "rejected"'
+        message:
+          type: string
+          title: message
+        queuedAtMs:
+          type:
+            - integer
+            - string
+          title: queued_at_ms
+          format: int64
+      title: SubmitTrainingJobResponse
+      additionalProperties: false
+    ml_orchestration.v1.TrainingHyperparams:
+      type: object
+      properties:
+        algorithm:
+          type: string
+          title: algorithm
+          description: '"gradient_boosting", "neural_net", "ensemble"'
+        epochs:
+          type: integer
+          title: epochs
+          format: int32
+        batchSize:
+          type: integer
+          title: batch_size
+          format: int32
+        learningRate:
+          type: number
+          title: learning_rate
+          format: double
+        regularizationL1:
+          type: number
+          title: regularization_l1
+          format: double
+        regularizationL2:
+          type: number
+          title: regularization_l2
+          format: double
+        dropoutRate:
+          type: number
+          title: dropout_rate
+          format: double
+        extraParams:
+          type: object
+          title: extra_params
+          additionalProperties:
+            type: string
+            title: value
+      title: TrainingHyperparams
+      additionalProperties: false
+    ml_orchestration.v1.TrainingHyperparams.ExtraParamsEntry:
+      type: object
+      properties:
+        key:
+          type: string
+          title: key
+        value:
+          type: string
+          title: value
+      title: ExtraParamsEntry
+      additionalProperties: false
+    ml_orchestration.v1.TrainingMetrics:
+      type: object
+      properties:
+        trainLoss:
+          type: number
+          title: train_loss
+          format: double
+        validationLoss:
+          type: number
+          title: validation_loss
+          format: double
+        testLoss:
+          type: number
+          title: test_loss
+          format: double
+        testMae:
+          type: number
+          title: test_mae
+          format: double
+        testRmse:
+          type: number
+          title: test_rmse
+          format: double
+        testR2Score:
+          type: number
+          title: test_r2_score
+          format: double
+        testCoverageLower:
+          type: number
+          title: test_coverage_lower
+          format: double
+        testCoverageUpper:
+          type: number
+          title: test_coverage_upper
+          format: double
+        customMetrics:
+          type: object
+          title: custom_metrics
+          additionalProperties:
+            type: number
+            title: value
+            format: double
+      title: TrainingMetrics
+      additionalProperties: false
+    ml_orchestration.v1.TrainingMetrics.CustomMetricsEntry:
+      type: object
+      properties:
+        key:
+          type: string
+          title: key
+        value:
+          type: number
+          title: value
+          format: double
+      title: CustomMetricsEntry
+      additionalProperties: false
+    ml_orchestration.v1.TrainingProgress:
+      type: object
+      properties:
+        currentEpoch:
+          type: integer
+          title: current_epoch
+          format: int32
+        totalEpochs:
+          type: integer
+          title: total_epochs
+          format: int32
+        completionPercent:
+          type: number
+          title: completion_percent
+          format: double
+        elapsedSeconds:
+          type:
+            - integer
+            - string
+          title: elapsed_seconds
+          format: int64
+        estimatedRemainingSeconds:
+          type:
+            - integer
+            - string
+          title: estimated_remaining_seconds
+          format: int64
+      title: TrainingProgress
+      additionalProperties: false
+security: []
+tags:
+  - name: ml_orchestration.v1.MLOrchestrationService

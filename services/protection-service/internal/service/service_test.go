@@ -7,7 +7,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"solar3d/protection-service/internal/domain"
+	"p9e.in/samavaya/solar3d/protection-service/internal/domain"
 )
 
 func newSvc() *Service {

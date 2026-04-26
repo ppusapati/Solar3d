@@ -1,0 +1,783 @@
+openapi: 3.1.0
+info:
+  title: simulation.v1
+paths:
+  /simulation.v1.SimulationComputeService/GetShadowMap:
+    post:
+      tags:
+        - simulation.v1.SimulationComputeService
+      summary: GetShadowMap
+      operationId: simulation.v1.SimulationComputeService.GetShadowMap
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/simulation.v1.GetShadowMapRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/simulation.v1.GetShadowMapResponse'
+  /simulation.v1.SimulationComputeService/GetSunPosition:
+    post:
+      tags:
+        - simulation.v1.SimulationComputeService
+      summary: GetSunPosition
+      operationId: simulation.v1.SimulationComputeService.GetSunPosition
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/simulation.v1.GetSunPositionRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/simulation.v1.GetSunPositionResponse'
+  /simulation.v1.SimulationService/CreateSimulation:
+    post:
+      tags:
+        - simulation.v1.SimulationService
+      summary: CreateSimulation
+      operationId: simulation.v1.SimulationService.CreateSimulation
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/simulation.v1.CreateSimulationRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/simulation.v1.CreateSimulationResponse'
+  /simulation.v1.SimulationService/DeleteSimulation:
+    post:
+      tags:
+        - simulation.v1.SimulationService
+      summary: DeleteSimulation
+      operationId: simulation.v1.SimulationService.DeleteSimulation
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/simulation.v1.DeleteSimulationRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/simulation.v1.DeleteSimulationResponse'
+  /simulation.v1.SimulationService/GetShadowMap:
+    post:
+      tags:
+        - simulation.v1.SimulationService
+      summary: GetShadowMap
+      operationId: simulation.v1.SimulationService.GetShadowMap
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/simulation.v1.GetShadowMapRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/simulation.v1.GetShadowMapResponse'
+  /simulation.v1.SimulationService/GetSimulation:
+    post:
+      tags:
+        - simulation.v1.SimulationService
+      summary: GetSimulation
+      operationId: simulation.v1.SimulationService.GetSimulation
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/simulation.v1.GetSimulationRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/simulation.v1.GetSimulationResponse'
+  /simulation.v1.SimulationService/GetSunPosition:
+    post:
+      tags:
+        - simulation.v1.SimulationService
+      summary: GetSunPosition
+      operationId: simulation.v1.SimulationService.GetSunPosition
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/simulation.v1.GetSunPositionRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/simulation.v1.GetSunPositionResponse'
+  /simulation.v1.SimulationService/ListSimulations:
+    post:
+      tags:
+        - simulation.v1.SimulationService
+      summary: ListSimulations
+      operationId: simulation.v1.SimulationService.ListSimulations
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/simulation.v1.ListSimulationsRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/simulation.v1.ListSimulationsResponse'
+  /simulation.v1.SimulationService/RunSimulation:
+    post:
+      tags:
+        - simulation.v1.SimulationService
+      summary: RunSimulation
+      operationId: simulation.v1.SimulationService.RunSimulation
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/simulation.v1.RunSimulationRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/simulation.v1.RunSimulationResponse'
+components:
+  schemas:
+    connect-protocol-version:
+      type: number
+      title: Connect-Protocol-Version
+      enum:
+        - 1
+      description: Define the version of the Connect protocol
+      const: 1
+    connect-timeout-header:
+      type: number
+      title: Connect-Timeout-Ms
+      description: Define the timeout, in ms
+    connect.error:
+      type: object
+      properties:
+        code:
+          type: string
+          examples:
+            - not_found
+          enum:
+            - canceled
+            - unknown
+            - invalid_argument
+            - deadline_exceeded
+            - not_found
+            - already_exists
+            - permission_denied
+            - resource_exhausted
+            - failed_precondition
+            - aborted
+            - out_of_range
+            - unimplemented
+            - internal
+            - unavailable
+            - data_loss
+            - unauthenticated
+          description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+        message:
+          type: string
+          description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/connect.error_details.Any'
+          description: A list of messages that carry the error details. There is no limit on the number of messages.
+      title: Connect Error
+      additionalProperties: true
+      description: 'Error type returned by Connect: https://connectrpc.com/docs/go/errors/#http-representation'
+    connect.error_details.Any:
+      type: object
+      properties:
+        type:
+          type: string
+          description: 'A URL that acts as a globally unique identifier for the type of the serialized message. For example: `type.googleapis.com/google.rpc.ErrorInfo`. This is used to determine the schema of the data in the `value` field and is the discriminator for the `debug` field.'
+        value:
+          type: string
+          format: binary
+          description: The Protobuf message, serialized as bytes and base64-encoded. The specific message type is identified by the `type` field.
+        debug:
+          oneOf:
+            - type: object
+              title: Any
+              additionalProperties: true
+              description: Detailed error information.
+          discriminator:
+            propertyName: type
+          title: Debug
+          description: Deserialized error detail payload. The 'type' field indicates the schema. This field is for easier debugging and should not be relied upon for application logic.
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message, with an additional debug field for ConnectRPC error details.
+    google.protobuf.Timestamp:
+      type: string
+      examples:
+        - "2023-01-15T01:30:15.01Z"
+        - "2024-12-25T12:00:00Z"
+      format: date-time
+      description: |-
+        A Timestamp represents a point in time independent of any time zone or local
+         calendar, encoded as a count of seconds and fractions of seconds at
+         nanosecond resolution. The count is relative to an epoch at UTC midnight on
+         January 1, 1970, in the proleptic Gregorian calendar which extends the
+         Gregorian calendar backwards to year one.
+
+         All minutes are 60 seconds long. Leap seconds are "smeared" so that no leap
+         second table is needed for interpretation, using a [24-hour linear
+         smear](https://developers.google.com/time/smear).
+
+         The range is from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59.999999999Z. By
+         restricting to that range, we ensure that we can convert to and from [RFC
+         3339](https://www.ietf.org/rfc/rfc3339.txt) date strings.
+
+         # Examples
+
+         Example 1: Compute Timestamp from POSIX `time()`.
+
+             Timestamp timestamp;
+             timestamp.set_seconds(time(NULL));
+             timestamp.set_nanos(0);
+
+         Example 2: Compute Timestamp from POSIX `gettimeofday()`.
+
+             struct timeval tv;
+             gettimeofday(&tv, NULL);
+
+             Timestamp timestamp;
+             timestamp.set_seconds(tv.tv_sec);
+             timestamp.set_nanos(tv.tv_usec * 1000);
+
+         Example 3: Compute Timestamp from Win32 `GetSystemTimeAsFileTime()`.
+
+             FILETIME ft;
+             GetSystemTimeAsFileTime(&ft);
+             UINT64 ticks = (((UINT64)ft.dwHighDateTime) << 32) | ft.dwLowDateTime;
+
+             // A Windows tick is 100 nanoseconds. Windows epoch 1601-01-01T00:00:00Z
+             // is 11644473600 seconds before Unix epoch 1970-01-01T00:00:00Z.
+             Timestamp timestamp;
+             timestamp.set_seconds((INT64) ((ticks / 10000000) - 11644473600LL));
+             timestamp.set_nanos((INT32) ((ticks % 10000000) * 100));
+
+         Example 4: Compute Timestamp from Java `System.currentTimeMillis()`.
+
+             long millis = System.currentTimeMillis();
+
+             Timestamp timestamp = Timestamp.newBuilder().setSeconds(millis / 1000)
+                 .setNanos((int) ((millis % 1000) * 1000000)).build();
+
+         Example 5: Compute Timestamp from Java `Instant.now()`.
+
+             Instant now = Instant.now();
+
+             Timestamp timestamp =
+                 Timestamp.newBuilder().setSeconds(now.getEpochSecond())
+                     .setNanos(now.getNano()).build();
+
+         Example 6: Compute Timestamp from current time in Python.
+
+             timestamp = Timestamp()
+             timestamp.GetCurrentTime()
+
+         # JSON Mapping
+
+         In JSON format, the Timestamp type is encoded as a string in the
+         [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format. That is, the
+         format is "{year}-{month}-{day}T{hour}:{min}:{sec}[.{frac_sec}]Z"
+         where {year} is always expressed using four digits while {month}, {day},
+         {hour}, {min}, and {sec} are zero-padded to two digits each. The fractional
+         seconds, which can go up to 9 digits (i.e. up to 1 nanosecond resolution),
+         are optional. The "Z" suffix indicates the timezone ("UTC"); the timezone
+         is required. A proto3 JSON serializer should always use UTC (as indicated by
+         "Z") when printing the Timestamp type and a proto3 JSON parser should be
+         able to accept both UTC and other timezones (as indicated by an offset).
+
+         For example, "2017-01-15T01:30:15.01Z" encodes 15.01 seconds past
+         01:30 UTC on January 15, 2017.
+
+         In JavaScript, one can convert a Date object to this format using the
+         standard
+         [toISOString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString)
+         method. In Python, a standard `datetime.datetime` object can be converted
+         to this format using
+         [`strftime`](https://docs.python.org/2/library/time.html#time.strftime) with
+         the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one can use
+         the Joda Time's [`ISODateTimeFormat.dateTime()`](
+         http://joda-time.sourceforge.net/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime()
+         ) to obtain a formatter capable of generating timestamps in this format.
+    simulation.v1.CreateSimulationRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        layoutId:
+          type: string
+          title: layout_id
+        name:
+          type: string
+          title: name
+        simulationType:
+          title: simulation_type
+          $ref: '#/components/schemas/simulation.v1.SimulationType'
+        params:
+          title: params
+          $ref: '#/components/schemas/simulation.v1.SimulationParams'
+      title: CreateSimulationRequest
+      additionalProperties: false
+    simulation.v1.CreateSimulationResponse:
+      type: object
+      properties:
+        simulation:
+          title: simulation
+          $ref: '#/components/schemas/simulation.v1.Simulation'
+      title: CreateSimulationResponse
+      additionalProperties: false
+    simulation.v1.DeleteSimulationRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+      title: DeleteSimulationRequest
+      additionalProperties: false
+    simulation.v1.DeleteSimulationResponse:
+      type: object
+      title: DeleteSimulationResponse
+      additionalProperties: false
+    simulation.v1.GetShadowMapRequest:
+      type: object
+      properties:
+        layoutId:
+          type: string
+          title: layout_id
+        timestamp:
+          title: timestamp
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        latitude:
+          type: number
+          title: latitude
+          format: double
+        longitude:
+          type: number
+          title: longitude
+          format: double
+      title: GetShadowMapRequest
+      additionalProperties: false
+    simulation.v1.GetShadowMapResponse:
+      type: object
+      properties:
+        shadows:
+          type: array
+          items:
+            $ref: '#/components/schemas/simulation.v1.ShadowPolygon'
+          title: shadows
+        sunPosition:
+          title: sun_position
+          $ref: '#/components/schemas/simulation.v1.SunPosition'
+      title: GetShadowMapResponse
+      additionalProperties: false
+    simulation.v1.GetSimulationRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+      title: GetSimulationRequest
+      additionalProperties: false
+    simulation.v1.GetSimulationResponse:
+      type: object
+      properties:
+        simulation:
+          title: simulation
+          $ref: '#/components/schemas/simulation.v1.Simulation'
+      title: GetSimulationResponse
+      additionalProperties: false
+    simulation.v1.GetSunPositionRequest:
+      type: object
+      properties:
+        latitude:
+          type: number
+          title: latitude
+          format: double
+        longitude:
+          type: number
+          title: longitude
+          format: double
+        timestamp:
+          title: timestamp
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: GetSunPositionRequest
+      additionalProperties: false
+    simulation.v1.GetSunPositionResponse:
+      type: object
+      properties:
+        position:
+          title: position
+          $ref: '#/components/schemas/simulation.v1.SunPosition'
+      title: GetSunPositionResponse
+      additionalProperties: false
+    simulation.v1.ListSimulationsRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+      title: ListSimulationsRequest
+      additionalProperties: false
+    simulation.v1.ListSimulationsResponse:
+      type: object
+      properties:
+        simulations:
+          type: array
+          items:
+            $ref: '#/components/schemas/simulation.v1.Simulation'
+          title: simulations
+      title: ListSimulationsResponse
+      additionalProperties: false
+    simulation.v1.RunSimulationRequest:
+      type: object
+      properties:
+        simulationId:
+          type: string
+          title: simulation_id
+      title: RunSimulationRequest
+      additionalProperties: false
+    simulation.v1.RunSimulationResponse:
+      type: object
+      properties:
+        simulation:
+          title: simulation
+          $ref: '#/components/schemas/simulation.v1.Simulation'
+      title: RunSimulationResponse
+      additionalProperties: false
+    simulation.v1.ShadowPolygon:
+      type: object
+      properties:
+        sourcePanelId:
+          type: string
+          title: source_panel_id
+        shadowGeojson:
+          type: string
+          title: shadow_geojson
+        shadowIntensity:
+          type: number
+          title: shadow_intensity
+          format: double
+      title: ShadowPolygon
+      additionalProperties: false
+    simulation.v1.Simulation:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        projectId:
+          type: string
+          title: project_id
+        layoutId:
+          type: string
+          title: layout_id
+        name:
+          type: string
+          title: name
+        simulationType:
+          title: simulation_type
+          $ref: '#/components/schemas/simulation.v1.SimulationType'
+        status:
+          title: status
+          $ref: '#/components/schemas/simulation.v1.SimulationStatus'
+        params:
+          title: params
+          $ref: '#/components/schemas/simulation.v1.SimulationParams'
+        result:
+          title: result
+          $ref: '#/components/schemas/simulation.v1.SimulationResult'
+        createdAt:
+          title: created_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        completedAt:
+          title: completed_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: Simulation
+      additionalProperties: false
+    simulation.v1.SimulationParams:
+      type: object
+      properties:
+        startTime:
+          title: start_time
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        endTime:
+          title: end_time
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        timeStepMinutes:
+          type: integer
+          title: time_step_minutes
+          format: int32
+        latitude:
+          type: number
+          title: latitude
+          format: double
+        longitude:
+          type: number
+          title: longitude
+          format: double
+        includeTerrainShading:
+          type: boolean
+          title: include_terrain_shading
+        includePanelShading:
+          type: boolean
+          title: include_panel_shading
+      title: SimulationParams
+      additionalProperties: false
+    simulation.v1.SimulationResult:
+      type: object
+      properties:
+        totalIrradianceKwhM2:
+          type: number
+          title: total_irradiance_kwh_m2
+          format: double
+        annualYieldKwh:
+          type: number
+          title: annual_yield_kwh
+          format: double
+        performanceRatio:
+          type: number
+          title: performance_ratio
+          format: double
+        shadingLossPercent:
+          type: number
+          title: shading_loss_percent
+          format: double
+        resultFilePath:
+          type: string
+          title: result_file_path
+      title: SimulationResult
+      additionalProperties: false
+    simulation.v1.SimulationStatus:
+      type: string
+      title: SimulationStatus
+      enum:
+        - SIMULATION_STATUS_UNSPECIFIED
+        - SIMULATION_STATUS_PENDING
+        - SIMULATION_STATUS_RUNNING
+        - SIMULATION_STATUS_COMPLETED
+        - SIMULATION_STATUS_FAILED
+    simulation.v1.SimulationType:
+      type: string
+      title: SimulationType
+      enum:
+        - SIMULATION_TYPE_UNSPECIFIED
+        - SIMULATION_TYPE_SHADOW
+        - SIMULATION_TYPE_IRRADIANCE
+        - SIMULATION_TYPE_ANNUAL_YIELD
+    simulation.v1.SunPosition:
+      type: object
+      properties:
+        azimuth:
+          type: number
+          title: azimuth
+          format: double
+        elevation:
+          type: number
+          title: elevation
+          format: double
+        zenith:
+          type: number
+          title: zenith
+          format: double
+        hourAngle:
+          type: number
+          title: hour_angle
+          format: double
+        timestamp:
+          title: timestamp
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: SunPosition
+      additionalProperties: false
+security: []
+tags:
+  - name: simulation.v1.SimulationService
+  - name: simulation.v1.SimulationComputeService
+    description: |-
+      SimulationComputeService exposes only stateless compute-style simulation operations.
+       Lifecycle/storage operations remain in SimulationService.

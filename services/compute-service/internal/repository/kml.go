@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"solar3d/compute-service/internal/models"
+	"p9e.in/samavaya/solar3d/compute-service/internal/models"
 )
 
 // KMLRepository defines the interface for KML ingestion and geometry storage operations.

@@ -11,8 +11,8 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	computeDb "solar3d/compute-service/internal/db"
-	"solar3d/compute-service/internal/models"
+	computeDb "p9e.in/samavaya/solar3d/compute-service/internal/db"
+	"p9e.in/samavaya/solar3d/compute-service/internal/models"
 )
 
 type SQLCMLTrainingRepository struct {

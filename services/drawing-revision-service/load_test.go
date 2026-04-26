@@ -7,11 +7,11 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
-	commonv1 "github.com/solar3d/solar3d/gen/common/v1"
-	drawingv1 "github.com/solar3d/solar3d/gen/drawing/v1"
+	commonv1 "p9e.in/samavaya/solar3d/gen/common/v1"
+	drawingv1 "p9e.in/samavaya/solar3d/gen/drawing/v1"
 
-	"solar3d/drawing-revision-service/internal/repository"
-	"solar3d/drawing-revision-service/internal/service"
+	"p9e.in/samavaya/solar3d/drawing-revision-service/internal/repository"
+	"p9e.in/samavaya/solar3d/drawing-revision-service/internal/service"
 )
 
 // ─── minimal in-process mock repo for benchmarks ─────────────────────────────

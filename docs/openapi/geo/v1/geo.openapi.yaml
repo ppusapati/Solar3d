@@ -1,0 +1,326 @@
+openapi: 3.1.0
+info:
+  title: geo.v1
+paths:
+  /geo.v1.GeoService/BufferPoint:
+    post:
+      tags:
+        - geo.v1.GeoService
+      summary: BufferPoint
+      description: BufferPoint generates a polygonal buffer around a point.
+      operationId: geo.v1.GeoService.BufferPoint
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/geo.v1.BufferPointRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/geo.v1.BufferPointResponse'
+  /geo.v1.GeoService/GenerateContours:
+    post:
+      tags:
+        - geo.v1.GeoService
+      summary: GenerateContours
+      description: GenerateContours derives contour lines from an input raster grid.
+      operationId: geo.v1.GeoService.GenerateContours
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/geo.v1.GenerateContoursRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/geo.v1.GenerateContoursResponse'
+  /geo.v1.GeoService/NearestPoint:
+    post:
+      tags:
+        - geo.v1.GeoService
+      summary: NearestPoint
+      description: NearestPoint returns the closest candidate point to the query point.
+      operationId: geo.v1.GeoService.NearestPoint
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/geo.v1.NearestPointRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/geo.v1.NearestPointResponse'
+components:
+  schemas:
+    connect-protocol-version:
+      type: number
+      title: Connect-Protocol-Version
+      enum:
+        - 1
+      description: Define the version of the Connect protocol
+      const: 1
+    connect-timeout-header:
+      type: number
+      title: Connect-Timeout-Ms
+      description: Define the timeout, in ms
+    connect.error:
+      type: object
+      properties:
+        code:
+          type: string
+          examples:
+            - not_found
+          enum:
+            - canceled
+            - unknown
+            - invalid_argument
+            - deadline_exceeded
+            - not_found
+            - already_exists
+            - permission_denied
+            - resource_exhausted
+            - failed_precondition
+            - aborted
+            - out_of_range
+            - unimplemented
+            - internal
+            - unavailable
+            - data_loss
+            - unauthenticated
+          description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+        message:
+          type: string
+          description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/connect.error_details.Any'
+          description: A list of messages that carry the error details. There is no limit on the number of messages.
+      title: Connect Error
+      additionalProperties: true
+      description: 'Error type returned by Connect: https://connectrpc.com/docs/go/errors/#http-representation'
+    connect.error_details.Any:
+      type: object
+      properties:
+        type:
+          type: string
+          description: 'A URL that acts as a globally unique identifier for the type of the serialized message. For example: `type.googleapis.com/google.rpc.ErrorInfo`. This is used to determine the schema of the data in the `value` field and is the discriminator for the `debug` field.'
+        value:
+          type: string
+          format: binary
+          description: The Protobuf message, serialized as bytes and base64-encoded. The specific message type is identified by the `type` field.
+        debug:
+          oneOf:
+            - type: object
+              title: Any
+              additionalProperties: true
+              description: Detailed error information.
+          discriminator:
+            propertyName: type
+          title: Debug
+          description: Deserialized error detail payload. The 'type' field indicates the schema. This field is for easier debugging and should not be relied upon for application logic.
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message, with an additional debug field for ConnectRPC error details.
+    geo.v1.BufferPointRequest:
+      type: object
+      properties:
+        center:
+          title: center
+          $ref: '#/components/schemas/geo.v1.Point2D'
+        radius:
+          type: number
+          title: radius
+          format: double
+        segments:
+          type: integer
+          title: segments
+          format: int32
+      title: BufferPointRequest
+      additionalProperties: false
+    geo.v1.BufferPointResponse:
+      type: object
+      properties:
+        polygon:
+          title: polygon
+          $ref: '#/components/schemas/geo.v1.Polygon'
+      title: BufferPointResponse
+      additionalProperties: false
+    geo.v1.ContourLine:
+      type: object
+      properties:
+        elevation:
+          type: number
+          title: elevation
+          format: double
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/geo.v1.Point2D'
+          title: points
+      title: ContourLine
+      additionalProperties: false
+    geo.v1.GenerateContoursRequest:
+      type: object
+      properties:
+        width:
+          type: integer
+          title: width
+          format: int32
+        height:
+          type: integer
+          title: height
+          format: int32
+        resolution:
+          type: number
+          title: resolution
+          format: double
+        originX:
+          type: number
+          title: origin_x
+          format: double
+        originY:
+          type: number
+          title: origin_y
+          format: double
+        noData:
+          type: number
+          title: no_data
+          format: double
+        data:
+          type: array
+          items:
+            type: number
+            format: double
+          title: data
+        interval:
+          type: number
+          title: interval
+          format: double
+      title: GenerateContoursRequest
+      additionalProperties: false
+    geo.v1.GenerateContoursResponse:
+      type: object
+      properties:
+        contours:
+          type: array
+          items:
+            $ref: '#/components/schemas/geo.v1.ContourLine'
+          title: contours
+      title: GenerateContoursResponse
+      additionalProperties: false
+    geo.v1.NearestPointRequest:
+      type: object
+      properties:
+        query:
+          title: query
+          $ref: '#/components/schemas/geo.v1.Point2D'
+        candidates:
+          type: array
+          items:
+            $ref: '#/components/schemas/geo.v1.Point2D'
+          title: candidates
+      title: NearestPointRequest
+      additionalProperties: false
+    geo.v1.NearestPointResponse:
+      type: object
+      properties:
+        index:
+          type: integer
+          title: index
+          format: int32
+        distance:
+          type: number
+          title: distance
+          format: double
+        point:
+          title: point
+          $ref: '#/components/schemas/geo.v1.Point2D'
+      title: NearestPointResponse
+      additionalProperties: false
+    geo.v1.Point2D:
+      type: object
+      properties:
+        x:
+          type: number
+          title: x
+          format: double
+        y:
+          type: number
+          title: y
+          format: double
+      title: Point2D
+      additionalProperties: false
+    geo.v1.Polygon:
+      type: object
+      properties:
+        ring:
+          type: array
+          items:
+            $ref: '#/components/schemas/geo.v1.Point2D'
+          title: ring
+      title: Polygon
+      additionalProperties: false
+security: []
+tags:
+  - name: geo.v1.GeoService
+    description: GeoService exposes geometry and raster algorithms built on geo-compute.

@@ -3,9 +3,9 @@ package mappers
 import (
 	"time"
 
-	"solar3d/compute-service/internal/models"
+	"p9e.in/samavaya/solar3d/compute-service/internal/models"
 
-	extendedv1 "github.com/solar3d/solar3d/gen/extended/v1"
+	extendedv1 "p9e.in/samavaya/solar3d/gen/extended/v1"
 )
 
 func ProtoToSolarTransposition(req *extendedv1.SolarTranspositionRequest) *models.SolarTranspositionRequest {

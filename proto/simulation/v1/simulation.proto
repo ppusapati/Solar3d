@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package simulation.v1;
 
-option go_package = "github.com/solar3d/solar3d/gen/simulation/v1;simulationv1";
+option go_package = "p9e.in/samavaya/solar3d/gen/simulation/v1;simulationv1";
 
 import "google/protobuf/timestamp.proto";
 

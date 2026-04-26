@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"os"
 
-	"solar3d/geo-analytics-service/internal/client"
-	"solar3d/geo-analytics-service/internal/handler"
-	"solar3d/geo-analytics-service/internal/service"
+	"p9e.in/samavaya/solar3d/geo-analytics-service/internal/client"
+	"p9e.in/samavaya/solar3d/geo-analytics-service/internal/handler"
+	"p9e.in/samavaya/solar3d/geo-analytics-service/internal/service"
 )
 
 // Register wires geo-analytics HTTP routes onto mux.

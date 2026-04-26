@@ -1,0 +1,989 @@
+openapi: 3.1.0
+info:
+  title: protection.v1
+paths:
+  /protection.v1.ProtectionService/ComputeEarthFault:
+    post:
+      tags:
+        - protection.v1.ProtectionService
+      summary: ComputeEarthFault
+      operationId: protection.v1.ProtectionService.ComputeEarthFault
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/protection.v1.ComputeEarthFaultRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/protection.v1.ComputeEarthFaultResponse'
+  /protection.v1.ProtectionService/ComputeRelaySettings:
+    post:
+      tags:
+        - protection.v1.ProtectionService
+      summary: ComputeRelaySettings
+      operationId: protection.v1.ProtectionService.ComputeRelaySettings
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/protection.v1.ComputeRelaySettingsRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/protection.v1.ComputeRelaySettingsResponse'
+  /protection.v1.ProtectionService/ComputeShortCircuit:
+    post:
+      tags:
+        - protection.v1.ProtectionService
+      summary: ComputeShortCircuit
+      description: Fault calculations
+      operationId: protection.v1.ProtectionService.ComputeShortCircuit
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/protection.v1.ComputeShortCircuitRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/protection.v1.ComputeShortCircuitResponse'
+  /protection.v1.ProtectionService/CreateStudy:
+    post:
+      tags:
+        - protection.v1.ProtectionService
+      summary: CreateStudy
+      description: Study management
+      operationId: protection.v1.ProtectionService.CreateStudy
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/protection.v1.CreateStudyRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/protection.v1.CreateStudyResponse'
+  /protection.v1.ProtectionService/DeleteStudy:
+    post:
+      tags:
+        - protection.v1.ProtectionService
+      summary: DeleteStudy
+      operationId: protection.v1.ProtectionService.DeleteStudy
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/protection.v1.DeleteStudyRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/protection.v1.DeleteStudyResponse'
+  /protection.v1.ProtectionService/GenerateProtectionReport:
+    post:
+      tags:
+        - protection.v1.ProtectionService
+      summary: GenerateProtectionReport
+      description: Plain-text protection study report
+      operationId: protection.v1.ProtectionService.GenerateProtectionReport
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/protection.v1.GenerateProtectionReportRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/protection.v1.GenerateProtectionReportResponse'
+  /protection.v1.ProtectionService/GetStudy:
+    post:
+      tags:
+        - protection.v1.ProtectionService
+      summary: GetStudy
+      operationId: protection.v1.ProtectionService.GetStudy
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/protection.v1.GetStudyRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/protection.v1.GetStudyResponse'
+  /protection.v1.ProtectionService/ListStudies:
+    post:
+      tags:
+        - protection.v1.ProtectionService
+      summary: ListStudies
+      operationId: protection.v1.ProtectionService.ListStudies
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/protection.v1.ListStudiesRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/protection.v1.ListStudiesResponse'
+  /protection.v1.ProtectionService/SelectRelay:
+    post:
+      tags:
+        - protection.v1.ProtectionService
+      summary: SelectRelay
+      description: Relay selection and settings
+      operationId: protection.v1.ProtectionService.SelectRelay
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/protection.v1.SelectRelayRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/protection.v1.SelectRelayResponse'
+  /protection.v1.ProtectionService/ValidateCoordination:
+    post:
+      tags:
+        - protection.v1.ProtectionService
+      summary: ValidateCoordination
+      description: Coordination check across upstream/downstream hierarchy
+      operationId: protection.v1.ProtectionService.ValidateCoordination
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/protection.v1.ValidateCoordinationRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/protection.v1.ValidateCoordinationResponse'
+components:
+  schemas:
+    connect-protocol-version:
+      type: number
+      title: Connect-Protocol-Version
+      enum:
+        - 1
+      description: Define the version of the Connect protocol
+      const: 1
+    connect-timeout-header:
+      type: number
+      title: Connect-Timeout-Ms
+      description: Define the timeout, in ms
+    connect.error:
+      type: object
+      properties:
+        code:
+          type: string
+          examples:
+            - not_found
+          enum:
+            - canceled
+            - unknown
+            - invalid_argument
+            - deadline_exceeded
+            - not_found
+            - already_exists
+            - permission_denied
+            - resource_exhausted
+            - failed_precondition
+            - aborted
+            - out_of_range
+            - unimplemented
+            - internal
+            - unavailable
+            - data_loss
+            - unauthenticated
+          description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+        message:
+          type: string
+          description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/connect.error_details.Any'
+          description: A list of messages that carry the error details. There is no limit on the number of messages.
+      title: Connect Error
+      additionalProperties: true
+      description: 'Error type returned by Connect: https://connectrpc.com/docs/go/errors/#http-representation'
+    connect.error_details.Any:
+      type: object
+      properties:
+        type:
+          type: string
+          description: 'A URL that acts as a globally unique identifier for the type of the serialized message. For example: `type.googleapis.com/google.rpc.ErrorInfo`. This is used to determine the schema of the data in the `value` field and is the discriminator for the `debug` field.'
+        value:
+          type: string
+          format: binary
+          description: The Protobuf message, serialized as bytes and base64-encoded. The specific message type is identified by the `type` field.
+        debug:
+          oneOf:
+            - type: object
+              title: Any
+              additionalProperties: true
+              description: Detailed error information.
+          discriminator:
+            propertyName: type
+          title: Debug
+          description: Deserialized error detail payload. The 'type' field indicates the schema. This field is for easier debugging and should not be relied upon for application logic.
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message, with an additional debug field for ConnectRPC error details.
+    google.protobuf.Timestamp:
+      type: string
+      examples:
+        - "2023-01-15T01:30:15.01Z"
+        - "2024-12-25T12:00:00Z"
+      format: date-time
+      description: |-
+        A Timestamp represents a point in time independent of any time zone or local
+         calendar, encoded as a count of seconds and fractions of seconds at
+         nanosecond resolution. The count is relative to an epoch at UTC midnight on
+         January 1, 1970, in the proleptic Gregorian calendar which extends the
+         Gregorian calendar backwards to year one.
+
+         All minutes are 60 seconds long. Leap seconds are "smeared" so that no leap
+         second table is needed for interpretation, using a [24-hour linear
+         smear](https://developers.google.com/time/smear).
+
+         The range is from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59.999999999Z. By
+         restricting to that range, we ensure that we can convert to and from [RFC
+         3339](https://www.ietf.org/rfc/rfc3339.txt) date strings.
+
+         # Examples
+
+         Example 1: Compute Timestamp from POSIX `time()`.
+
+             Timestamp timestamp;
+             timestamp.set_seconds(time(NULL));
+             timestamp.set_nanos(0);
+
+         Example 2: Compute Timestamp from POSIX `gettimeofday()`.
+
+             struct timeval tv;
+             gettimeofday(&tv, NULL);
+
+             Timestamp timestamp;
+             timestamp.set_seconds(tv.tv_sec);
+             timestamp.set_nanos(tv.tv_usec * 1000);
+
+         Example 3: Compute Timestamp from Win32 `GetSystemTimeAsFileTime()`.
+
+             FILETIME ft;
+             GetSystemTimeAsFileTime(&ft);
+             UINT64 ticks = (((UINT64)ft.dwHighDateTime) << 32) | ft.dwLowDateTime;
+
+             // A Windows tick is 100 nanoseconds. Windows epoch 1601-01-01T00:00:00Z
+             // is 11644473600 seconds before Unix epoch 1970-01-01T00:00:00Z.
+             Timestamp timestamp;
+             timestamp.set_seconds((INT64) ((ticks / 10000000) - 11644473600LL));
+             timestamp.set_nanos((INT32) ((ticks % 10000000) * 100));
+
+         Example 4: Compute Timestamp from Java `System.currentTimeMillis()`.
+
+             long millis = System.currentTimeMillis();
+
+             Timestamp timestamp = Timestamp.newBuilder().setSeconds(millis / 1000)
+                 .setNanos((int) ((millis % 1000) * 1000000)).build();
+
+         Example 5: Compute Timestamp from Java `Instant.now()`.
+
+             Instant now = Instant.now();
+
+             Timestamp timestamp =
+                 Timestamp.newBuilder().setSeconds(now.getEpochSecond())
+                     .setNanos(now.getNano()).build();
+
+         Example 6: Compute Timestamp from current time in Python.
+
+             timestamp = Timestamp()
+             timestamp.GetCurrentTime()
+
+         # JSON Mapping
+
+         In JSON format, the Timestamp type is encoded as a string in the
+         [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format. That is, the
+         format is "{year}-{month}-{day}T{hour}:{min}:{sec}[.{frac_sec}]Z"
+         where {year} is always expressed using four digits while {month}, {day},
+         {hour}, {min}, and {sec} are zero-padded to two digits each. The fractional
+         seconds, which can go up to 9 digits (i.e. up to 1 nanosecond resolution),
+         are optional. The "Z" suffix indicates the timezone ("UTC"); the timezone
+         is required. A proto3 JSON serializer should always use UTC (as indicated by
+         "Z") when printing the Timestamp type and a proto3 JSON parser should be
+         able to accept both UTC and other timezones (as indicated by an offset).
+
+         For example, "2017-01-15T01:30:15.01Z" encodes 15.01 seconds past
+         01:30 UTC on January 15, 2017.
+
+         In JavaScript, one can convert a Date object to this format using the
+         standard
+         [toISOString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString)
+         method. In Python, a standard `datetime.datetime` object can be converted
+         to this format using
+         [`strftime`](https://docs.python.org/2/library/time.html#time.strftime) with
+         the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one can use
+         the Joda Time's [`ISODateTimeFormat.dateTime()`](
+         http://joda-time.sourceforge.net/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime()
+         ) to obtain a formatter capable of generating timestamps in this format.
+    protection.v1.ComputeEarthFaultRequest:
+      type: object
+      properties:
+        studyId:
+          type: string
+          title: study_id
+        voltageKv:
+          type: number
+          title: voltage_kv
+          format: double
+        earthingMethod:
+          title: earthing_method
+          $ref: '#/components/schemas/protection.v1.NeutralEarthing'
+        ngrResistanceOhm:
+          type: number
+          title: ngr_resistance_ohm
+          format: double
+          description: only for RESISTANCE earthing
+        cableResistanceOhm:
+          type: number
+          title: cable_resistance_ohm
+          format: double
+      title: ComputeEarthFaultRequest
+      additionalProperties: false
+    protection.v1.ComputeEarthFaultResponse:
+      type: object
+      properties:
+        studyId:
+          type: string
+          title: study_id
+        earthingMethod:
+          title: earthing_method
+          $ref: '#/components/schemas/protection.v1.NeutralEarthing'
+        earthFaultCurrentKa:
+          type: number
+          title: earth_fault_current_ka
+          format: double
+        touchVoltageV:
+          type: number
+          title: touch_voltage_v
+          format: double
+          description: I_ef × R_earth_grid (estimated 1 Ω)
+        equation:
+          type: string
+          title: equation
+      title: ComputeEarthFaultResponse
+      additionalProperties: false
+    protection.v1.ComputeRelaySettingsRequest:
+      type: object
+      properties:
+        studyId:
+          type: string
+          title: study_id
+        characteristic:
+          title: characteristic
+          $ref: '#/components/schemas/protection.v1.RelayCharacteristic'
+        pickupCurrentA:
+          type: number
+          title: pickup_current_a
+          format: double
+        timeDialSetting:
+          type: number
+          title: time_dial_setting
+          format: double
+        faultCurrentA:
+          type: number
+          title: fault_current_a
+          format: double
+          description: evaluate operating time at this current
+      title: ComputeRelaySettingsRequest
+      additionalProperties: false
+    protection.v1.ComputeRelaySettingsResponse:
+      type: object
+      properties:
+        studyId:
+          type: string
+          title: study_id
+        multiplier:
+          type: number
+          title: multiplier
+          format: double
+          description: M = I_fault / I_pickup
+        operatingTimeS:
+          type: number
+          title: operating_time_s
+          format: double
+          description: time for relay to trip
+        characteristic:
+          title: characteristic
+          $ref: '#/components/schemas/protection.v1.RelayCharacteristic'
+        equation:
+          type: string
+          title: equation
+      title: ComputeRelaySettingsResponse
+      additionalProperties: false
+    protection.v1.ComputeShortCircuitRequest:
+      type: object
+      properties:
+        studyId:
+          type: string
+          title: study_id
+        voltageKv:
+          type: number
+          title: voltage_kv
+          format: double
+          description: nominal line voltage
+        sourceImpedanceOhm:
+          type: number
+          title: source_impedance_ohm
+          format: double
+          description: positive-sequence source (Thevenin) impedance
+        cableResistanceOhm:
+          type: number
+          title: cable_resistance_ohm
+          format: double
+          description: cable positive-sequence resistance
+        cableReactanceOhm:
+          type: number
+          title: cable_reactance_ohm
+          format: double
+          description: cable positive-sequence reactance
+        zeroSeqImpedanceOhm:
+          type: number
+          title: zero_seq_impedance_ohm
+          format: double
+          description: zero-sequence impedance (for SLG)
+        includeSingleLineToGround:
+          type: boolean
+          title: include_single_line_to_ground
+      title: ComputeShortCircuitRequest
+      additionalProperties: false
+    protection.v1.ComputeShortCircuitResponse:
+      type: object
+      properties:
+        studyId:
+          type: string
+          title: study_id
+        vLnKv:
+          type: number
+          title: v_ln_kv
+          format: double
+          description: line-to-neutral voltage (kV)
+        zTotalPosSeqOhm:
+          type: number
+          title: z_total_pos_seq_ohm
+          format: double
+          description: Z1 = Z_source + Z_cable
+        iFault3phKa:
+          type: number
+          title: i_fault_3ph_ka
+          format: double
+          description: three-phase symmetrical fault (kA)
+        slgComputed:
+          type: boolean
+          title: slg_computed
+          description: Single-line-to-ground (if requested)
+        zTotalZeroSeqOhm:
+          type: number
+          title: z_total_zero_seq_ohm
+          format: double
+          description: Z0
+        iFaultSlgKa:
+          type: number
+          title: i_fault_slg_ka
+          format: double
+          description: I_f1φ = 3V_LN / (Z1 + Z2 + Z0), Z2=Z1
+        governingFaultKa:
+          type: number
+          title: governing_fault_ka
+          format: double
+          description: max(I_3ph, I_slg)
+        equation:
+          type: string
+          title: equation
+      title: ComputeShortCircuitResponse
+      additionalProperties: false
+    protection.v1.CoordinationPair:
+      type: object
+      properties:
+        upstreamRelayId:
+          type: string
+          title: upstream_relay_id
+        downstreamRelayId:
+          type: string
+          title: downstream_relay_id
+        upstreamTimeS:
+          type: number
+          title: upstream_time_s
+          format: double
+        downstreamTimeS:
+          type: number
+          title: downstream_time_s
+          format: double
+        marginS:
+          type: number
+          title: margin_s
+          format: double
+          description: upstream − downstream
+      title: CoordinationPair
+      additionalProperties: false
+    protection.v1.CoordinationViolation:
+      type: object
+      properties:
+        upstreamRelayId:
+          type: string
+          title: upstream_relay_id
+        downstreamRelayId:
+          type: string
+          title: downstream_relay_id
+        marginS:
+          type: number
+          title: margin_s
+          format: double
+        minimumRequiredS:
+          type: number
+          title: minimum_required_s
+          format: double
+      title: CoordinationViolation
+      additionalProperties: false
+    protection.v1.CreateStudyRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+        name:
+          type: string
+          title: name
+        systemVoltageKv:
+          type: number
+          title: system_voltage_kv
+          format: double
+        sourceImpedancePu:
+          type: number
+          title: source_impedance_pu
+          format: double
+        mvaBase:
+          type: number
+          title: mva_base
+          format: double
+      title: CreateStudyRequest
+      additionalProperties: false
+    protection.v1.CreateStudyResponse:
+      type: object
+      properties:
+        study:
+          title: study
+          $ref: '#/components/schemas/protection.v1.ProtectionStudy'
+      title: CreateStudyResponse
+      additionalProperties: false
+    protection.v1.DeleteStudyRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+      title: DeleteStudyRequest
+      additionalProperties: false
+    protection.v1.DeleteStudyResponse:
+      type: object
+      title: DeleteStudyResponse
+      additionalProperties: false
+    protection.v1.GenerateProtectionReportRequest:
+      type: object
+      properties:
+        studyId:
+          type: string
+          title: study_id
+      title: GenerateProtectionReportRequest
+      additionalProperties: false
+    protection.v1.GenerateProtectionReportResponse:
+      type: object
+      properties:
+        studyId:
+          type: string
+          title: study_id
+        reportText:
+          type: string
+          title: report_text
+      title: GenerateProtectionReportResponse
+      additionalProperties: false
+    protection.v1.GetStudyRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+      title: GetStudyRequest
+      additionalProperties: false
+    protection.v1.GetStudyResponse:
+      type: object
+      properties:
+        study:
+          title: study
+          $ref: '#/components/schemas/protection.v1.ProtectionStudy'
+      title: GetStudyResponse
+      additionalProperties: false
+    protection.v1.ListStudiesRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+          title: project_id
+      title: ListStudiesRequest
+      additionalProperties: false
+    protection.v1.ListStudiesResponse:
+      type: object
+      properties:
+        studies:
+          type: array
+          items:
+            $ref: '#/components/schemas/protection.v1.ProtectionStudy'
+          title: studies
+      title: ListStudiesResponse
+      additionalProperties: false
+    protection.v1.NeutralEarthing:
+      type: string
+      title: NeutralEarthing
+      enum:
+        - NEUTRAL_EARTHING_UNSPECIFIED
+        - NEUTRAL_EARTHING_SOLID
+        - NEUTRAL_EARTHING_RESISTANCE
+        - NEUTRAL_EARTHING_PETERSEN_COIL
+        - NEUTRAL_EARTHING_ISOLATED
+    protection.v1.ProtectionStudy:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        projectId:
+          type: string
+          title: project_id
+        name:
+          type: string
+          title: name
+        systemVoltageKv:
+          type: number
+          title: system_voltage_kv
+          format: double
+        sourceImpedancePu:
+          type: number
+          title: source_impedance_pu
+          format: double
+          description: positive-sequence source impedance in p.u. on 100MVA base
+        mvaBase:
+          type: number
+          title: mva_base
+          format: double
+          description: MVA base for per-unit calculations
+        createdAt:
+          title: created_at
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: ProtectionStudy
+      additionalProperties: false
+    protection.v1.RelayCharacteristic:
+      type: string
+      title: RelayCharacteristic
+      enum:
+        - RELAY_CHARACTERISTIC_UNSPECIFIED
+        - RELAY_CHARACTERISTIC_STANDARD_INVERSE
+        - RELAY_CHARACTERISTIC_VERY_INVERSE
+        - RELAY_CHARACTERISTIC_EXTREMELY_INVERSE
+        - RELAY_CHARACTERISTIC_DEFINITE_TIME
+    protection.v1.RelaySelection:
+      type: object
+      properties:
+        relayId:
+          type: string
+          title: relay_id
+          description: deterministically generated reference
+        makeModel:
+          type: string
+          title: make_model
+          description: e.g. "IEC 60255-151 compliant OCDT relay"
+        characteristic:
+          title: characteristic
+          $ref: '#/components/schemas/protection.v1.RelayCharacteristic'
+        pickupCurrentA:
+          type: number
+          title: pickup_current_a
+          format: double
+          description: I_pickup = 1.2 × I_load
+        timeDialSetting:
+          type: number
+          title: time_dial_setting
+          format: double
+          description: TDS (starting point)
+        rationale:
+          type: string
+          title: rationale
+      title: RelaySelection
+      additionalProperties: false
+    protection.v1.SelectRelayRequest:
+      type: object
+      properties:
+        studyId:
+          type: string
+          title: study_id
+        faultCurrentKa:
+          type: number
+          title: fault_current_ka
+          format: double
+          description: maximum fault current at location
+        loadCurrentA:
+          type: number
+          title: load_current_a
+          format: double
+          description: normal load current (for pickup setting)
+        preferredCharacteristic:
+          title: preferred_characteristic
+          description: preference
+          $ref: '#/components/schemas/protection.v1.RelayCharacteristic'
+      title: SelectRelayRequest
+      additionalProperties: false
+    protection.v1.SelectRelayResponse:
+      type: object
+      properties:
+        studyId:
+          type: string
+          title: study_id
+        relay:
+          title: relay
+          $ref: '#/components/schemas/protection.v1.RelaySelection'
+      title: SelectRelayResponse
+      additionalProperties: false
+    protection.v1.ValidateCoordinationRequest:
+      type: object
+      properties:
+        studyId:
+          type: string
+          title: study_id
+        pairs:
+          type: array
+          items:
+            $ref: '#/components/schemas/protection.v1.CoordinationPair'
+          title: pairs
+        minimumMarginS:
+          type: number
+          title: minimum_margin_s
+          format: double
+          description: IEC default 0.3 s
+      title: ValidateCoordinationRequest
+      additionalProperties: false
+    protection.v1.ValidateCoordinationResponse:
+      type: object
+      properties:
+        valid:
+          type: boolean
+          title: valid
+        violations:
+          type: array
+          items:
+            $ref: '#/components/schemas/protection.v1.CoordinationViolation'
+          title: violations
+      title: ValidateCoordinationResponse
+      additionalProperties: false
+security: []
+tags:
+  - name: protection.v1.ProtectionService
+    description: |-
+      ProtectionService implements IEC 60909 short-circuit and IEC 60255 protective
+       relay studies for solar plant HV/MV networks.

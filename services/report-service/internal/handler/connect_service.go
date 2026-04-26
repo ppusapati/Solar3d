@@ -7,12 +7,12 @@ import (
 	"connectrpc.com/connect"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
-	reportv1 "github.com/solar3d/solar3d/gen/report/v1"
-	reportv1connect "github.com/solar3d/solar3d/gen/report/v1/reportv1connect"
+	reportv1 "p9e.in/samavaya/solar3d/gen/report/v1"
+	reportv1connect "p9e.in/samavaya/solar3d/gen/report/v1/reportv1connect"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"solar3d/report-service/internal/domain"
-	"solar3d/report-service/internal/service"
+	"p9e.in/samavaya/solar3d/report-service/internal/domain"
+	"p9e.in/samavaya/solar3d/report-service/internal/service"
 )
 
 type ConnectReportService struct {

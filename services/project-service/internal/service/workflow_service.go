@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"solar3d/compute/planning"
-	"solar3d/project-service/internal/domain"
+	"p9e.in/samavaya/solar3d/project-service/internal/domain"
 
 	"github.com/google/uuid"
 )

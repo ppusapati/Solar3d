@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"solar3d/transmission-routing-service/internal/domain"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/domain"
 )
 
 func buildRouteSummary(route *domain.TransmissionRoute) string {

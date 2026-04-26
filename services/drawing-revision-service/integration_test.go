@@ -12,15 +12,15 @@ import (
 
 	connect "connectrpc.com/connect"
 	"github.com/google/uuid"
-	commonv1 "github.com/solar3d/solar3d/gen/common/v1"
-	drawingv1 "github.com/solar3d/solar3d/gen/drawing/v1"
-	drawingv1connect "github.com/solar3d/solar3d/gen/drawing/v1/drawingv1connect"
+	commonv1 "p9e.in/samavaya/solar3d/gen/common/v1"
+	drawingv1 "p9e.in/samavaya/solar3d/gen/drawing/v1"
+	drawingv1connect "p9e.in/samavaya/solar3d/gen/drawing/v1/drawingv1connect"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"solar3d/drawing-revision-service/internal/handler"
-	"solar3d/drawing-revision-service/internal/repository"
-	"solar3d/drawing-revision-service/internal/service"
+	"p9e.in/samavaya/solar3d/drawing-revision-service/internal/handler"
+	"p9e.in/samavaya/solar3d/drawing-revision-service/internal/repository"
+	"p9e.in/samavaya/solar3d/drawing-revision-service/internal/service"
 
 	"io"
 	"net/http"

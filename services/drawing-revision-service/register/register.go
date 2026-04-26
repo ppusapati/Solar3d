@@ -6,11 +6,11 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
-	drawingv1connect "github.com/solar3d/solar3d/gen/drawing/v1/drawingv1connect"
+	drawingv1connect "p9e.in/samavaya/solar3d/gen/drawing/v1/drawingv1connect"
 
-	"solar3d/drawing-revision-service/internal/handler"
-	"solar3d/drawing-revision-service/internal/repository"
-	"solar3d/drawing-revision-service/internal/service"
+	"p9e.in/samavaya/solar3d/drawing-revision-service/internal/handler"
+	"p9e.in/samavaya/solar3d/drawing-revision-service/internal/repository"
+	"p9e.in/samavaya/solar3d/drawing-revision-service/internal/service"
 )
 
 // Register wires the drawing-revision-service handlers onto mux.

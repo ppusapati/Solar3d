@@ -9,14 +9,14 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
 
-	mw "solar3d/shared/middleware"
-	"solar3d/twin-service/internal/config"
-	"solar3d/twin-service/internal/handler"
-	"solar3d/twin-service/internal/repository"
-	"solar3d/twin-service/internal/service"
+	"p9e.in/samavaya/packages/database/pgxpostgres"
+	mw "p9e.in/samavaya/packages/httpmiddleware"
+	"p9e.in/samavaya/solar3d/twin-service/internal/config"
+	"p9e.in/samavaya/solar3d/twin-service/internal/handler"
+	"p9e.in/samavaya/solar3d/twin-service/internal/repository"
+	"p9e.in/samavaya/solar3d/twin-service/internal/service"
 )
 
 func main() {
@@ -46,24 +46,11 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	poolCfg, err := pgxpool.ParseConfig(cfg.DatabaseURL)
+	pool, closePool, err := pgxpostgres.NewPgxFromDSN(ctx, cfg.DatabaseURL, pgxpostgres.DefaultPoolOptions())
 	if err != nil {
-		logger.Fatal().Err(err).Msg("invalid DATABASE_URL")
+		logger.Fatal().Err(err).Msg("failed to initialise database pool")
 	}
-	poolCfg.MaxConns = 20
-	poolCfg.MinConns = 2
-	poolCfg.MaxConnLifetime = 30 * time.Minute
-	poolCfg.MaxConnIdleTime = 5 * time.Minute
-
-	pool, err := pgxpool.NewWithConfig(ctx, poolCfg)
-	if err != nil {
-		logger.Fatal().Err(err).Msg("failed to create connection pool")
-	}
-	defer pool.Close()
-
-	if err := pool.Ping(ctx); err != nil {
-		logger.Fatal().Err(err).Msg("failed to ping database")
-	}
+	defer closePool()
 	logger.Info().Msg("database connection established")
 
 	// ── Application layers ────────────────────────────────────────────────
@@ -74,17 +61,13 @@ func main() {
 	// ── HTTP Server ───────────────────────────────────────────────────────
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, _ *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		_, _ = w.Write([]byte(`{"status":"ok"}`))
-	})
+	mux.HandleFunc("GET /healthz", mw.HealthzHandler(pool))
 
 	h.Register(mux)
 
 	limiter := mw.NewRateLimiter(200, 400)
 	chain := mw.Chain(
-		mw.Recovery(logger),
+		mw.Recovery(logger), mw.DeprecateRESTAliases(logger),
 		mw.IDempotencyKeyMiddleware,
 		mw.CORS,
 		mw.Logging(logger),

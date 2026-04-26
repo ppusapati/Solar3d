@@ -3,6 +3,29 @@ use serde::Serialize;
 
 pub use tiny_http::{Method, Request, Response, Server, StatusCode};
 
+/// Bind an HTTP server, exiting the process with a clear log message and
+/// non-zero status if bind fails. Bridges call this from `main` instead of
+/// `.expect()` so that a port collision in production is reported as an
+/// operational failure rather than a Rust panic with backtrace noise.
+///
+/// `bridge_name` is used in log output; `addr` is the bind address (e.g.
+/// "127.0.0.1:8083").
+pub fn bind_or_exit(bridge_name: &str, addr: &str) -> Server {
+    match Server::http(addr) {
+        Ok(server) => {
+            eprintln!("[{}] listening on http://{}", bridge_name, addr);
+            server
+        }
+        Err(err) => {
+            eprintln!(
+                "[{}] FATAL: failed to bind on {}: {}. Check that the port is free and the process has permission to listen.",
+                bridge_name, addr, err
+            );
+            std::process::exit(1);
+        }
+    }
+}
+
 #[derive(Debug, Serialize)]
 struct ErrorResponse {
     error: String,
@@ -30,13 +53,17 @@ pub fn respond_json<T: Serialize>(request: Request, status: StatusCode, body: &T
         }
     };
 
+    // Header literal is a constant, so from_bytes cannot fail. unwrap()
+    // here is the canonical pattern for "infallible by construction".
+    let header = tiny_http::Header::from_bytes(b"Content-Type", b"application/json")
+        .expect("constant content-type header");
     let response = Response::from_string(json)
         .with_status_code(status)
-        .with_header(
-            tiny_http::Header::from_bytes(b"Content-Type", b"application/json")
-                .expect("valid content-type header"),
-        );
+        .with_header(header);
 
+    // Client may have disconnected before we wrote the response — there is
+    // nothing useful to do at this layer; downstream connection metrics will
+    // surface chronic write failures.
     let _ = request.respond(response);
 }
 

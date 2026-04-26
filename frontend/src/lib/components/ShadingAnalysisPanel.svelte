@@ -13,6 +13,7 @@
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
 	import { terrainApi } from '$lib/core/api/terrain';
+	import { structuredLog } from '$lib/core/error-handling';
 	import { activeLayout, activeProject, boundaryEntities } from '$lib/core/stores';
 
 	export let latitude: number = 0;
@@ -70,7 +71,12 @@
 				: 0;
 			terrainObstructionRisk = calculateTerrainObstruction(slopeInfluencePct, summary.elevation_range_m);
 		} catch (err) {
-			console.error('Failed terrain obstruction analysis:', err);
+			structuredLog('warn', 'shading.terrain_analysis_failed', { error: String(err), projectId: project.id });
+			// Recoverable — fall back to a neutral risk estimate so the
+			// rest of the shading view stays usable. We do not surface a
+			// toast because this runs as a background analysis and the
+			// fallback is non-disruptive; a noisy toast on every project
+			// open would erode trust in user-visible alerts.
 			terrainObstructionRisk = 'Moderate';
 		}
 	}

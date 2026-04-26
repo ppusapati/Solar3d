@@ -6,12 +6,12 @@ import (
 	"net/http"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	transmissionv1connect "github.com/solar3d/solar3d/gen/transmission/v1/transmissionv1connect"
+	transmissionv1connect "p9e.in/samavaya/solar3d/gen/transmission/v1/transmissionv1connect"
 
-	"solar3d/transmission-routing-service/internal/db"
-	"solar3d/transmission-routing-service/internal/handler"
-	"solar3d/transmission-routing-service/internal/repository"
-	"solar3d/transmission-routing-service/internal/service"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/db"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/handler"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/repository"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/service"
 )
 
 func Register(mux *http.ServeMux, pool *pgxpool.Pool, terrainBridgeURL, terrainServiceURL, projectServiceURL string) error {

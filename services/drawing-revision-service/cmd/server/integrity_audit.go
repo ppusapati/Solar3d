@@ -6,8 +6,8 @@ import (
 
 	"github.com/rs/zerolog"
 
-	"solar3d/drawing-revision-service/internal/config"
-	"solar3d/drawing-revision-service/internal/repository"
+	"p9e.in/samavaya/solar3d/drawing-revision-service/internal/config"
+	"p9e.in/samavaya/solar3d/drawing-revision-service/internal/repository"
 )
 
 func startIntegrityAuditLoop(ctx context.Context, logger zerolog.Logger, cfg *config.Config, repo *repository.PgRepository) {

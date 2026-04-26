@@ -10,8 +10,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 
-	"solar3d/structural-service/internal/domain"
-	"solar3d/structural-service/internal/repository"
+	"p9e.in/samavaya/solar3d/structural-service/internal/domain"
+	"p9e.in/samavaya/solar3d/structural-service/internal/repository"
 )
 
 const g = 9.81 // gravitational acceleration m/s²

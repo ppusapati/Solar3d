@@ -7,7 +7,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"solar3d/layout-service/internal/domain"
+	"p9e.in/samavaya/solar3d/layout-service/internal/domain"
 )
 
 // SubmitForReviewRequest is the input for submitting a layout for acceptance review.

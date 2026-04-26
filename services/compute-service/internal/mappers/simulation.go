@@ -1,9 +1,9 @@
 package mappers
 
 import (
-	"solar3d/compute-service/internal/models"
+	"p9e.in/samavaya/solar3d/compute-service/internal/models"
 
-	simulationv1 "github.com/solar3d/solar3d/gen/simulation/v1"
+	simulationv1 "p9e.in/samavaya/solar3d/gen/simulation/v1"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 

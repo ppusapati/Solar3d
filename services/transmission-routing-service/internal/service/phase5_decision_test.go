@@ -3,7 +3,7 @@ package service
 import (
 	"testing"
 
-	"solar3d/transmission-routing-service/internal/domain"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/domain"
 )
 
 func makeScoredTestRoute(name string, totalCost, costPerKm, crossingPremium, distanceM float64, towers []domain.TowerPosition, segments []domain.SegmentExplanation) domain.TransmissionRoute {

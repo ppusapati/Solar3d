@@ -10,14 +10,14 @@ import (
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	simulationv1connect "github.com/solar3d/solar3d/gen/simulation/v1/simulationv1connect"
+	simulationv1connect "p9e.in/samavaya/solar3d/gen/simulation/v1/simulationv1connect"
 
-	mw "solar3d/shared/middleware"
-	"solar3d/simulation-service/internal/config"
-	"solar3d/simulation-service/internal/db"
-	"solar3d/simulation-service/internal/handler"
-	"solar3d/simulation-service/internal/repository"
-	"solar3d/simulation-service/internal/service"
+	mw "p9e.in/samavaya/packages/httpmiddleware"
+	"p9e.in/samavaya/solar3d/simulation-service/internal/config"
+	"p9e.in/samavaya/solar3d/simulation-service/internal/db"
+	"p9e.in/samavaya/solar3d/simulation-service/internal/handler"
+	"p9e.in/samavaya/solar3d/simulation-service/internal/repository"
+	"p9e.in/samavaya/solar3d/simulation-service/internal/service"
 )
 
 func main() {
@@ -62,16 +62,12 @@ func main() {
 	connectPath, connectHandler := simulationv1connect.NewSimulationServiceHandler(handler.NewConnectSimulationService(svc))
 	mux.Handle(connectPath, connectHandler)
 
-	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`{"status":"ok"}`))
-	})
+	mux.HandleFunc("GET /healthz", mw.HealthzHandler(pool))
 
 	// Apply middleware chain: Recovery → RequestID → CORS → Logging → RateLimit
 	limiter := mw.NewRateLimiter(100, 200)
 	chain := mw.Chain(
-		mw.Recovery(logger),
+		mw.Recovery(logger), mw.DeprecateRESTAliases(logger),
 		mw.IDempotencyKeyMiddleware,
 		mw.CORS,
 		mw.Logging(logger),

@@ -9,8 +9,8 @@ import (
 
 	"github.com/google/uuid"
 
-	"solar3d/transmission-routing-service/internal/domain"
-	"solar3d/transmission-routing-service/internal/repository"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/domain"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/repository"
 )
 
 func (s *TransmissionService) ExportTransmissionRoutePack(ctx context.Context, id uuid.UUID, generatedBy string) (*domain.TransmissionRouteExportPack, error) {

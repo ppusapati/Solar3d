@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package telemetry.v1;
 
-option go_package = "github.com/solar3d/solar3d/gen/telemetry/v1;telemetryv1";
+option go_package = "p9e.in/samavaya/solar3d/gen/telemetry/v1;telemetryv1";
 
 import "google/protobuf/timestamp.proto";
 

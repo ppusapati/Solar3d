@@ -10,10 +10,10 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 
-	"solar3d/shared/orchestration"
-	"solar3d/terrain-service/internal/domain"
-	"solar3d/terrain-service/internal/repository"
-	"solar3d/terrain-service/internal/worker"
+	"p9e.in/samavaya/packages/solar3dorch"
+	"p9e.in/samavaya/solar3d/terrain-service/internal/domain"
+	"p9e.in/samavaya/solar3d/terrain-service/internal/repository"
+	"p9e.in/samavaya/solar3d/terrain-service/internal/worker"
 )
 
 // Service implements the terrain business logic, coordinating between the

@@ -9,8 +9,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 
-	"solar3d/structural-service/internal/domain"
-	"solar3d/structural-service/internal/service"
+	"p9e.in/samavaya/solar3d/structural-service/internal/domain"
+	"p9e.in/samavaya/solar3d/structural-service/internal/service"
 )
 
 type Handler struct {

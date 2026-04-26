@@ -16,10 +16,10 @@ import (
 	"google.golang.org/grpc/health"
 	grpchealth "google.golang.org/grpc/health/grpc_health_v1"
 
-	"solar3d/ml-service/internal/client"
-	"solar3d/ml-service/internal/handler"
-	"solar3d/ml-service/internal/service"
-	"solar3d/shared/middleware"
+	"p9e.in/samavaya/solar3d/ml-service/internal/client"
+	"p9e.in/samavaya/solar3d/ml-service/internal/handler"
+	"p9e.in/samavaya/solar3d/ml-service/internal/service"
+	"p9e.in/samavaya/packages/httpmiddleware"
 )
 
 const (

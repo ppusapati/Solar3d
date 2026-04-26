@@ -4,7 +4,7 @@ import (
 	"math"
 	"testing"
 
-	"solar3d/terrain-service/internal/domain"
+	"p9e.in/samavaya/solar3d/terrain-service/internal/domain"
 )
 
 func TestComputeEarthworkVolumesBalanced(t *testing.T) {

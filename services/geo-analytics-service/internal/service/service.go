@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"sync"
 
-	"solar3d/geo-analytics-service/internal/client"
+	"p9e.in/samavaya/solar3d/geo-analytics-service/internal/client"
 )
 
 // GeoCompute defines the interface for geo-compute operations

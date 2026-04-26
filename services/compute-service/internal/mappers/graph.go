@@ -1,9 +1,9 @@
 package mappers
 
 import (
-	"solar3d/compute-service/internal/models"
+	"p9e.in/samavaya/solar3d/compute-service/internal/models"
 
-	graphv1 "github.com/solar3d/solar3d/gen/graph/v1"
+	graphv1 "p9e.in/samavaya/solar3d/gen/graph/v1"
 )
 
 func ProtoToMinimumSpanningTree(req *graphv1.MinimumSpanningTreeRequest) *models.MinimumSpanningTreeRequest {

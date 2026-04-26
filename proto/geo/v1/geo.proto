@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package geo.v1;
 
-option go_package = "github.com/solar3d/solar3d/gen/geo/v1;geov1";
+option go_package = "p9e.in/samavaya/solar3d/gen/geo/v1;geov1";
 
 // GeoService exposes geometry and raster algorithms built on geo-compute.
 service GeoService {

@@ -16,8 +16,11 @@ type Querier interface {
 	DeleteTransmissionRoute(ctx context.Context, id pgtype.UUID) error
 	GetTransmissionRoute(ctx context.Context, id pgtype.UUID) (GetTransmissionRouteRow, error)
 	ListTransmissionRoutes(ctx context.Context, projectID pgtype.UUID) ([]ListTransmissionRoutesRow, error)
+	// Rejection audit is captured in governance_events; dedicated rejected_at /
+	// rejected_by columns are intentionally omitted so the event stream remains
+	// the single source of truth.
+	RejectTransmissionRoute(ctx context.Context, arg RejectTransmissionRouteParams) (RejectTransmissionRouteRow, error)
 	SubmitTransmissionRouteForReview(ctx context.Context, arg SubmitTransmissionRouteForReviewParams) (SubmitTransmissionRouteForReviewRow, error)
 }
 
 var _ Querier = (*Queries)(nil)
-

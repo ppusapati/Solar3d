@@ -1,0 +1,107 @@
+syntax = "proto3";
+
+package interconnection.v1;
+
+option go_package = "p9e.in/samavaya/solar3d/gen/interconnection/v1;interconnectionv1";
+
+import "google/protobuf/timestamp.proto";
+
+// InterconnectionService manages utility Point of Interconnection (POI)
+// modeling, transformer/substation sizing, reactive power studies, and
+// interconnection application form generation.
+service InterconnectionService {
+  rpc CreatePOI(CreatePOIRequest) returns (CreatePOIResponse);
+  rpc GetPOI(GetPOIRequest) returns (GetPOIResponse);
+  rpc ListPOIs(ListPOIsRequest) returns (ListPOIsResponse);
+  rpc SizeTransformer(SizeTransformerRequest) returns (SizeTransformerResponse);
+  rpc ReactivePowerStudy(ReactivePowerStudyRequest) returns (ReactivePowerStudyResponse);
+  rpc GenerateApplicationForm(GenerateApplicationFormRequest) returns (GenerateApplicationFormResponse);
+  rpc DeletePOI(DeletePOIRequest) returns (DeletePOIResponse);
+}
+
+message POI {
+  string id = 1;
+  string project_id = 2;
+  string utility_name = 3;
+  string feeder_id = 4;
+  double latitude = 5;
+  double longitude = 6;
+  double voltage_kv = 7;
+  double available_capacity_mva = 8;
+  double fault_current_ka = 9;
+  string interconnection_type = 10; // "net_metering", "wholesale", "feed_in_tariff"
+  google.protobuf.Timestamp created_at = 11;
+}
+
+message TransformerSizing {
+  double recommended_kva = 1;
+  double primary_voltage_v = 2;
+  double secondary_voltage_v = 3;
+  double impedance_pct = 4;
+  string configuration = 5; // "delta-wye", "wye-wye", "delta-delta"
+  double losses_kw = 6;
+}
+
+message ReactivePowerResult {
+  double power_factor = 1;
+  double reactive_power_kvar = 2;
+  double voltage_rise_pct = 3;
+  bool requires_compensation = 4;
+  double recommended_capacitor_kvar = 5;
+  string ieee1547_category = 6; // "Category A", "Category B", "Category III"
+}
+
+message ApplicationForm {
+  string form_type = 1;           // "SGIP", "FERC_QF", "IEEE_1547"
+  string content_text = 2;        // filled form as text
+  bytes content_pdf = 3;          // filled form as PDF (if generated)
+  repeated string required_documents = 4;
+}
+
+// ---- Request/Response ----
+
+message CreatePOIRequest {
+  string project_id = 1;
+  string utility_name = 2;
+  string feeder_id = 3;
+  double latitude = 4;
+  double longitude = 5;
+  double voltage_kv = 6;
+  double available_capacity_mva = 7;
+  double fault_current_ka = 8;
+  string interconnection_type = 9;
+}
+message CreatePOIResponse { POI poi = 1; }
+
+message GetPOIRequest { string id = 1; }
+message GetPOIResponse { POI poi = 1; }
+
+message ListPOIsRequest { string project_id = 1; }
+message ListPOIsResponse { repeated POI pois = 1; }
+
+message SizeTransformerRequest {
+  string poi_id = 1;
+  double plant_ac_kw = 2;
+  double plant_voltage_v = 3;
+}
+message SizeTransformerResponse { TransformerSizing sizing = 1; }
+
+message ReactivePowerStudyRequest {
+  string poi_id = 1;
+  double plant_ac_kw = 2;
+  double inverter_power_factor = 3;
+  double line_impedance_ohm = 4;
+}
+message ReactivePowerStudyResponse { ReactivePowerResult result = 1; }
+
+message GenerateApplicationFormRequest {
+  string poi_id = 1;
+  string form_type = 2;
+  string applicant_name = 3;
+  string applicant_address = 4;
+  double system_capacity_kw = 5;
+}
+message GenerateApplicationFormResponse { ApplicationForm form = 1; }
+
+message DeletePOIRequest { string id = 1; }
+message DeletePOIResponse {}

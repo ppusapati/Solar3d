@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package ml_inference.v1;
 
-option go_package = "github.com/solar3d/solar3d/gen/ml_inference/v1;mlinferencev1";
+option go_package = "p9e.in/samavaya/solar3d/gen/ml_inference/v1;mlinferencev1";
 
 import "ml_inference/v1/features.proto";
 

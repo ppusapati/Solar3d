@@ -6,12 +6,12 @@ import (
 
 	connect "connectrpc.com/connect"
 	"github.com/google/uuid"
-	structuralv1 "github.com/solar3d/solar3d/gen/structural/v1"
-	structuralv1connect "github.com/solar3d/solar3d/gen/structural/v1/structuralv1connect"
+	structuralv1 "p9e.in/samavaya/solar3d/gen/structural/v1"
+	structuralv1connect "p9e.in/samavaya/solar3d/gen/structural/v1/structuralv1connect"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"solar3d/structural-service/internal/domain"
-	"solar3d/structural-service/internal/service"
+	"p9e.in/samavaya/solar3d/structural-service/internal/domain"
+	"p9e.in/samavaya/solar3d/structural-service/internal/service"
 )
 
 type ConnectStructuralService struct {

@@ -1,0 +1,571 @@
+openapi: 3.1.0
+info:
+  title: telemetry.v1
+paths:
+  /telemetry.v1.TelemetryService/GetAggregatedMetrics:
+    post:
+      tags:
+        - telemetry.v1.TelemetryService
+      summary: GetAggregatedMetrics
+      description: |-
+        GetAggregatedMetrics returns min/max/avg/sum aggregates over a time window
+         for a specified metric and twin.  Window is inclusive on both ends.
+      operationId: telemetry.v1.TelemetryService.GetAggregatedMetrics
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/telemetry.v1.GetAggregatedMetricsRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/telemetry.v1.GetAggregatedMetricsResponse'
+  /telemetry.v1.TelemetryService/GetLatestReadings:
+    post:
+      tags:
+        - telemetry.v1.TelemetryService
+      summary: GetLatestReadings
+      description: |-
+        GetLatestReadings returns the single most recent reading per metric for a twin.
+         Useful for dashboard snapshots; does not paginate.
+      operationId: telemetry.v1.TelemetryService.GetLatestReadings
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/telemetry.v1.GetLatestReadingsRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/telemetry.v1.GetLatestReadingsResponse'
+  /telemetry.v1.TelemetryService/IngestReadings:
+    post:
+      tags:
+        - telemetry.v1.TelemetryService
+      summary: IngestReadings
+      description: |-
+        IngestReadings stores a batch of sensor readings for a twin in a single
+         atomic transaction.  Returns the count of accepted readings.
+         Returns NOT_FOUND if the twin_id does not correspond to an ACTIVE twin.
+      operationId: telemetry.v1.TelemetryService.IngestReadings
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/telemetry.v1.IngestReadingsRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/telemetry.v1.IngestReadingsResponse'
+  /telemetry.v1.TelemetryService/ListReadings:
+    post:
+      tags:
+        - telemetry.v1.TelemetryService
+      summary: ListReadings
+      description: |-
+        ListReadings returns readings for a twin within a time window, optionally
+         filtered by metric. Results are ordered by recorded_at ascending.
+         Maximum 1000 readings per call; use page_token for continuation.
+      operationId: telemetry.v1.TelemetryService.ListReadings
+      parameters:
+        - name: Connect-Protocol-Version
+          in: header
+          required: true
+          schema:
+            $ref: '#/components/schemas/connect-protocol-version'
+        - name: Connect-Timeout-Ms
+          in: header
+          schema:
+            $ref: '#/components/schemas/connect-timeout-header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/telemetry.v1.ListReadingsRequest'
+        required: true
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/connect.error'
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/telemetry.v1.ListReadingsResponse'
+components:
+  schemas:
+    connect-protocol-version:
+      type: number
+      title: Connect-Protocol-Version
+      enum:
+        - 1
+      description: Define the version of the Connect protocol
+      const: 1
+    connect-timeout-header:
+      type: number
+      title: Connect-Timeout-Ms
+      description: Define the timeout, in ms
+    connect.error:
+      type: object
+      properties:
+        code:
+          type: string
+          examples:
+            - not_found
+          enum:
+            - canceled
+            - unknown
+            - invalid_argument
+            - deadline_exceeded
+            - not_found
+            - already_exists
+            - permission_denied
+            - resource_exhausted
+            - failed_precondition
+            - aborted
+            - out_of_range
+            - unimplemented
+            - internal
+            - unavailable
+            - data_loss
+            - unauthenticated
+          description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+        message:
+          type: string
+          description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/connect.error_details.Any'
+          description: A list of messages that carry the error details. There is no limit on the number of messages.
+      title: Connect Error
+      additionalProperties: true
+      description: 'Error type returned by Connect: https://connectrpc.com/docs/go/errors/#http-representation'
+    connect.error_details.Any:
+      type: object
+      properties:
+        type:
+          type: string
+          description: 'A URL that acts as a globally unique identifier for the type of the serialized message. For example: `type.googleapis.com/google.rpc.ErrorInfo`. This is used to determine the schema of the data in the `value` field and is the discriminator for the `debug` field.'
+        value:
+          type: string
+          format: binary
+          description: The Protobuf message, serialized as bytes and base64-encoded. The specific message type is identified by the `type` field.
+        debug:
+          oneOf:
+            - type: object
+              title: Any
+              additionalProperties: true
+              description: Detailed error information.
+          discriminator:
+            propertyName: type
+          title: Debug
+          description: Deserialized error detail payload. The 'type' field indicates the schema. This field is for easier debugging and should not be relied upon for application logic.
+      additionalProperties: true
+      description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message, with an additional debug field for ConnectRPC error details.
+    google.protobuf.Timestamp:
+      type: string
+      examples:
+        - "2023-01-15T01:30:15.01Z"
+        - "2024-12-25T12:00:00Z"
+      format: date-time
+      description: |-
+        A Timestamp represents a point in time independent of any time zone or local
+         calendar, encoded as a count of seconds and fractions of seconds at
+         nanosecond resolution. The count is relative to an epoch at UTC midnight on
+         January 1, 1970, in the proleptic Gregorian calendar which extends the
+         Gregorian calendar backwards to year one.
+
+         All minutes are 60 seconds long. Leap seconds are "smeared" so that no leap
+         second table is needed for interpretation, using a [24-hour linear
+         smear](https://developers.google.com/time/smear).
+
+         The range is from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59.999999999Z. By
+         restricting to that range, we ensure that we can convert to and from [RFC
+         3339](https://www.ietf.org/rfc/rfc3339.txt) date strings.
+
+         # Examples
+
+         Example 1: Compute Timestamp from POSIX `time()`.
+
+             Timestamp timestamp;
+             timestamp.set_seconds(time(NULL));
+             timestamp.set_nanos(0);
+
+         Example 2: Compute Timestamp from POSIX `gettimeofday()`.
+
+             struct timeval tv;
+             gettimeofday(&tv, NULL);
+
+             Timestamp timestamp;
+             timestamp.set_seconds(tv.tv_sec);
+             timestamp.set_nanos(tv.tv_usec * 1000);
+
+         Example 3: Compute Timestamp from Win32 `GetSystemTimeAsFileTime()`.
+
+             FILETIME ft;
+             GetSystemTimeAsFileTime(&ft);
+             UINT64 ticks = (((UINT64)ft.dwHighDateTime) << 32) | ft.dwLowDateTime;
+
+             // A Windows tick is 100 nanoseconds. Windows epoch 1601-01-01T00:00:00Z
+             // is 11644473600 seconds before Unix epoch 1970-01-01T00:00:00Z.
+             Timestamp timestamp;
+             timestamp.set_seconds((INT64) ((ticks / 10000000) - 11644473600LL));
+             timestamp.set_nanos((INT32) ((ticks % 10000000) * 100));
+
+         Example 4: Compute Timestamp from Java `System.currentTimeMillis()`.
+
+             long millis = System.currentTimeMillis();
+
+             Timestamp timestamp = Timestamp.newBuilder().setSeconds(millis / 1000)
+                 .setNanos((int) ((millis % 1000) * 1000000)).build();
+
+         Example 5: Compute Timestamp from Java `Instant.now()`.
+
+             Instant now = Instant.now();
+
+             Timestamp timestamp =
+                 Timestamp.newBuilder().setSeconds(now.getEpochSecond())
+                     .setNanos(now.getNano()).build();
+
+         Example 6: Compute Timestamp from current time in Python.
+
+             timestamp = Timestamp()
+             timestamp.GetCurrentTime()
+
+         # JSON Mapping
+
+         In JSON format, the Timestamp type is encoded as a string in the
+         [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format. That is, the
+         format is "{year}-{month}-{day}T{hour}:{min}:{sec}[.{frac_sec}]Z"
+         where {year} is always expressed using four digits while {month}, {day},
+         {hour}, {min}, and {sec} are zero-padded to two digits each. The fractional
+         seconds, which can go up to 9 digits (i.e. up to 1 nanosecond resolution),
+         are optional. The "Z" suffix indicates the timezone ("UTC"); the timezone
+         is required. A proto3 JSON serializer should always use UTC (as indicated by
+         "Z") when printing the Timestamp type and a proto3 JSON parser should be
+         able to accept both UTC and other timezones (as indicated by an offset).
+
+         For example, "2017-01-15T01:30:15.01Z" encodes 15.01 seconds past
+         01:30 UTC on January 15, 2017.
+
+         In JavaScript, one can convert a Date object to this format using the
+         standard
+         [toISOString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString)
+         method. In Python, a standard `datetime.datetime` object can be converted
+         to this format using
+         [`strftime`](https://docs.python.org/2/library/time.html#time.strftime) with
+         the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one can use
+         the Joda Time's [`ISODateTimeFormat.dateTime()`](
+         http://joda-time.sourceforge.net/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime()
+         ) to obtain a formatter capable of generating timestamps in this format.
+    telemetry.v1.AggregatedMetric:
+      type: object
+      properties:
+        twinId:
+          type: string
+          title: twin_id
+        metric:
+          title: metric
+          $ref: '#/components/schemas/telemetry.v1.TelemetryMetric'
+        windowStart:
+          title: window_start
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        windowEnd:
+          title: window_end
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        minValue:
+          type: number
+          title: min_value
+          format: double
+        maxValue:
+          type: number
+          title: max_value
+          format: double
+        avgValue:
+          type: number
+          title: avg_value
+          format: double
+        sumValue:
+          type: number
+          title: sum_value
+          format: double
+        readingCount:
+          type: integer
+          title: reading_count
+          format: int32
+      title: AggregatedMetric
+      additionalProperties: false
+      description: AggregatedMetric holds pre-computed statistics for a metric over a time window.
+    telemetry.v1.GetAggregatedMetricsRequest:
+      type: object
+      properties:
+        twinId:
+          type: string
+          title: twin_id
+        metric:
+          title: metric
+          $ref: '#/components/schemas/telemetry.v1.TelemetryMetric'
+        windowStart:
+          title: window_start
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        windowEnd:
+          title: window_end
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: GetAggregatedMetricsRequest
+      additionalProperties: false
+    telemetry.v1.GetAggregatedMetricsResponse:
+      type: object
+      properties:
+        aggregatedMetric:
+          title: aggregated_metric
+          $ref: '#/components/schemas/telemetry.v1.AggregatedMetric'
+      title: GetAggregatedMetricsResponse
+      additionalProperties: false
+    telemetry.v1.GetLatestReadingsRequest:
+      type: object
+      properties:
+        twinId:
+          type: string
+          title: twin_id
+        metricFilter:
+          type: array
+          items:
+            $ref: '#/components/schemas/telemetry.v1.TelemetryMetric'
+          title: metric_filter
+          description: 'metric_filter: If empty, returns latest reading for all available metrics.'
+      title: GetLatestReadingsRequest
+      additionalProperties: false
+    telemetry.v1.GetLatestReadingsResponse:
+      type: object
+      properties:
+        readings:
+          type: array
+          items:
+            $ref: '#/components/schemas/telemetry.v1.SensorReading'
+          title: readings
+          description: 'readings: One entry per distinct metric; ordered by metric enum value.'
+      title: GetLatestReadingsResponse
+      additionalProperties: false
+    telemetry.v1.IngestReadingsRequest:
+      type: object
+      properties:
+        twinId:
+          type: string
+          title: twin_id
+          description: 'twin_id: Must correspond to an ACTIVE DigitalTwin; rejected otherwise.'
+        readings:
+          type: array
+          items:
+            $ref: '#/components/schemas/telemetry.v1.SensorReading'
+          title: readings
+      title: IngestReadingsRequest
+      additionalProperties: false
+    telemetry.v1.IngestReadingsResponse:
+      type: object
+      properties:
+        acceptedCount:
+          type: integer
+          title: accepted_count
+          format: int32
+        rejectedCount:
+          type: integer
+          title: rejected_count
+          format: int32
+          description: |-
+            rejected_count: Readings that failed validation (bad format, unknown metric).
+             Partial failures are not supported; if any reading is invalid the entire batch
+             is rejected and accepted_count = 0.
+      title: IngestReadingsResponse
+      additionalProperties: false
+    telemetry.v1.ListReadingsRequest:
+      type: object
+      properties:
+        twinId:
+          type: string
+          title: twin_id
+        metricFilter:
+          title: metric_filter
+          description: 'metric_filter: If empty, returns readings for all metrics in window.'
+          $ref: '#/components/schemas/telemetry.v1.TelemetryMetric'
+        windowStart:
+          title: window_start
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        windowEnd:
+          title: window_end
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        pageSize:
+          type: integer
+          title: page_size
+          format: int32
+        pageToken:
+          type: string
+          title: page_token
+      title: ListReadingsRequest
+      additionalProperties: false
+    telemetry.v1.ListReadingsResponse:
+      type: object
+      properties:
+        readings:
+          type: array
+          items:
+            $ref: '#/components/schemas/telemetry.v1.SensorReading'
+          title: readings
+        nextPageToken:
+          type: string
+          title: next_page_token
+        totalCount:
+          type: integer
+          title: total_count
+          format: int32
+      title: ListReadingsResponse
+      additionalProperties: false
+    telemetry.v1.ReadingQuality:
+      type: string
+      title: ReadingQuality
+      enum:
+        - READING_QUALITY_UNSPECIFIED
+        - READING_QUALITY_GOOD
+        - READING_QUALITY_SUSPECT
+        - READING_QUALITY_BAD
+      description: |-
+        ReadingQuality indicates the confidence level of individual sensor readings.
+         Aligned with IEC 61968 data quality classifications.
+    telemetry.v1.SensorReading:
+      type: object
+      properties:
+        id:
+          type: string
+          title: id
+        twinId:
+          type: string
+          title: twin_id
+          description: 'twin_id: The digital twin this reading belongs to.'
+        sensorId:
+          type: string
+          title: sensor_id
+          description: 'sensor_id: Physical sensor identifier (e.g., SCADA tag, meter serial + channel).'
+        assetIdentityId:
+          type: string
+          title: asset_identity_id
+          description: 'asset_identity_id: Optional link to the AssetIdentity record for the physical asset.'
+        metric:
+          title: metric
+          $ref: '#/components/schemas/telemetry.v1.TelemetryMetric'
+        value:
+          type: number
+          title: value
+          format: double
+        unit:
+          type: string
+          title: unit
+          description: 'unit: SI unit string (e.g., "kW", "kWh", "°C", "V", "A", "W/m²").'
+        quality:
+          title: quality
+          $ref: '#/components/schemas/telemetry.v1.ReadingQuality'
+        recordedAt:
+          title: recorded_at
+          description: 'recorded_at: When the physical sensor captured the measurement.'
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+        ingestedAt:
+          title: ingested_at
+          description: 'ingested_at: Server receive timestamp; set by the service on write.'
+          $ref: '#/components/schemas/google.protobuf.Timestamp'
+      title: SensorReading
+      additionalProperties: false
+      description: |-
+        SensorReading is a single time-stamped measurement from a physical or virtual
+         sensor associated with a digital twin.
+    telemetry.v1.TelemetryMetric:
+      type: string
+      title: TelemetryMetric
+      enum:
+        - TELEMETRY_METRIC_UNSPECIFIED
+        - TELEMETRY_METRIC_POWER_KW
+        - TELEMETRY_METRIC_ENERGY_KWH
+        - TELEMETRY_METRIC_IRRADIANCE_W_M2
+        - TELEMETRY_METRIC_AMBIENT_TEMP_C
+        - TELEMETRY_METRIC_MODULE_TEMP_C
+        - TELEMETRY_METRIC_WIND_SPEED_MS
+        - TELEMETRY_METRIC_DC_VOLTAGE_V
+        - TELEMETRY_METRIC_DC_CURRENT_A
+        - TELEMETRY_METRIC_AC_VOLTAGE_V
+        - TELEMETRY_METRIC_AC_CURRENT_A
+        - TELEMETRY_METRIC_INVERTER_EFFICIENCY
+        - TELEMETRY_METRIC_AVAILABILITY
+      description: |-
+        TelemetryMetric enumerates the measurable quantities producible by solar plant
+         sensors, SCADA systems, and protection relays.  Aligned with IEC 61724-1
+         performance monitoring terminology where applicable.
+security: []
+tags:
+  - name: telemetry.v1.TelemetryService
+    description: |-
+      TelemetryService manages ingestion and retrieval of time-series sensor readings
+       from provisioned digital twins.  Storage backend uses PostgreSQL with a
+       TimescaleDB hypertable partitioned on recorded_at (Option A per Pre-Implementation
+       Locked Decisions).  Ingest batches are atomic: all readings succeed or none persist.

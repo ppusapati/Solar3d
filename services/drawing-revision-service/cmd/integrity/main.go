@@ -8,9 +8,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgxpool"
-
-	"solar3d/drawing-revision-service/internal/repository"
+	"p9e.in/samavaya/packages/database/pgxpostgres"
+	"p9e.in/samavaya/solar3d/drawing-revision-service/internal/repository"
 )
 
 type commandOutput struct {
@@ -39,15 +38,11 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), *timeout)
 	defer cancel()
 
-	pool, err := pgxpool.New(ctx, databaseURL)
+	pool, closePool, err := pgxpostgres.NewPgxFromDSN(ctx, databaseURL, pgxpostgres.DefaultPoolOptions())
 	if err != nil {
-		failf("create connection pool: %v", err)
+		failf("init database pool: %v", err)
 	}
-	defer pool.Close()
-
-	if err := pool.Ping(ctx); err != nil {
-		failf("ping database: %v", err)
-	}
+	defer closePool()
 
 	repo := repository.NewPgRepository(pool)
 	now := time.Now().UTC()

@@ -8,14 +8,16 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
-	commissioningv1connect "github.com/solar3d/solar3d/gen/commissioning/v1/commissioningv1connect"
 
-	"solar3d/commissioning-service/internal/config"
-	"solar3d/commissioning-service/internal/handler"
-	"solar3d/commissioning-service/internal/repository"
-	"solar3d/commissioning-service/internal/service"
+	"p9e.in/samavaya/packages/database/pgxpostgres"
+	mw "p9e.in/samavaya/packages/httpmiddleware"
+	commissioningv1connect "p9e.in/samavaya/solar3d/gen/commissioning/v1/commissioningv1connect"
+
+	"p9e.in/samavaya/solar3d/commissioning-service/internal/config"
+	"p9e.in/samavaya/solar3d/commissioning-service/internal/handler"
+	"p9e.in/samavaya/solar3d/commissioning-service/internal/repository"
+	"p9e.in/samavaya/solar3d/commissioning-service/internal/service"
 )
 
 func main() {
@@ -26,11 +28,11 @@ func main() {
 		logger.Fatal().Err(err).Msg("config load failed")
 	}
 
-	pool, err := pgxpool.New(context.Background(), cfg.DatabaseURL)
+	pool, closePool, err := pgxpostgres.NewPgxFromDSN(context.Background(), cfg.DatabaseURL, pgxpostgres.DefaultPoolOptions())
 	if err != nil {
 		logger.Fatal().Err(err).Msg("database connect failed")
 	}
-	defer pool.Close()
+	defer closePool()
 
 	repo := repository.New(pool)
 	if err := repo.MigrateSchema(context.Background()); err != nil {
@@ -41,13 +43,14 @@ func main() {
 	h := handler.New(svc, logger)
 
 	mux := http.NewServeMux()
+	mux.HandleFunc("GET /healthz", mw.HealthzHandler(pool))
 	h.RegisterRoutes(mux)
 	connectPath, connectHandler := commissioningv1connect.NewCommissioningServiceHandler(handler.NewConnectCommissioningService(svc))
 	mux.Handle(connectPath, connectHandler)
 
 	srv := &http.Server{
 		Addr:         ":" + cfg.Port,
-		Handler:      mux,
+		Handler:      mw.DeprecateRESTAliases(logger)(mux),
 		ReadTimeout:  30 * time.Second,
 		WriteTimeout: 60 * time.Second,
 	}

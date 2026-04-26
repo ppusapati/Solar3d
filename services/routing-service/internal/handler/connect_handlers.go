@@ -7,8 +7,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 
-	"solar3d/routing-service/internal/domain"
-	"solar3d/routing-service/internal/service"
+	"p9e.in/samavaya/solar3d/routing-service/internal/domain"
+	"p9e.in/samavaya/solar3d/routing-service/internal/service"
 )
 
 type RoutingHandler struct {

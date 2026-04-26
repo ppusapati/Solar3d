@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package optimization.v1;
 
-option go_package = "github.com/solar3d/solar3d/gen/optimization/v1;optimizationv1";
+option go_package = "p9e.in/samavaya/solar3d/gen/optimization/v1;optimizationv1";
 
 import "optimization/v1/optimization_domain.proto";
 

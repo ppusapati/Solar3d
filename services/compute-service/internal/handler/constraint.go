@@ -5,12 +5,12 @@ import (
 	"fmt"
 
 	"connectrpc.com/connect"
-	commonv1 "github.com/solar3d/solar3d/gen/common/v1"
-	constraint "github.com/solar3d/solar3d/gen/constraint/v1"
+	commonv1 "p9e.in/samavaya/solar3d/gen/common/v1"
+	constraint "p9e.in/samavaya/solar3d/gen/constraint/v1"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"solar3d/compute-service/internal/models"
-	"solar3d/compute-service/internal/service"
+	"p9e.in/samavaya/solar3d/compute-service/internal/models"
+	"p9e.in/samavaya/solar3d/compute-service/internal/service"
 )
 
 // ConstraintZoneHandler implements constraint zone RPC handlers.

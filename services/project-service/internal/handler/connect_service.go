@@ -3,17 +3,18 @@ package handler
 import (
 	"context"
 	"errors"
-	"strconv"
 	"strings"
 
 	connect "connectrpc.com/connect"
 	"github.com/google/uuid"
-	projectv1 "github.com/solar3d/solar3d/gen/project/v1"
-	projectv1connect "github.com/solar3d/solar3d/gen/project/v1/projectv1connect"
+	projectv1 "p9e.in/samavaya/solar3d/gen/project/v1"
+	projectv1connect "p9e.in/samavaya/solar3d/gen/project/v1/projectv1connect"
 	"google.golang.org/protobuf/types/known/timestamppb"
+	paginationv1 "p9e.in/samavaya/packages/api/v1/pagination"
+	pkgErrors "p9e.in/samavaya/packages/errors"
 
-	"solar3d/project-service/internal/domain"
-	"solar3d/project-service/internal/service"
+	"p9e.in/samavaya/solar3d/project-service/internal/domain"
+	"p9e.in/samavaya/solar3d/project-service/internal/service"
 )
 
 // ConnectProjectService adapts the internal service layer to the generated
@@ -83,19 +84,16 @@ func (h *ConnectProjectService) ListProjects(
 	ctx context.Context,
 	req *connect.Request[projectv1.ListProjectsRequest],
 ) (*connect.Response[projectv1.ListProjectsResponse], error) {
-	pageSize := int(req.Msg.GetPageSize())
+	pagination := req.Msg.GetPagination()
+	pageSize := int(pagination.GetPageSize())
 	if pageSize <= 0 {
 		pageSize = 20
 	}
-
-	offset := 0
-	if token := strings.TrimSpace(req.Msg.GetPageToken()); token != "" {
-		parsed, err := strconv.Atoi(token)
-		if err != nil {
-			return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("invalid page_token"))
-		}
-		offset = parsed
+	if pageSize > 100 {
+		pageSize = 100
 	}
+
+	offset := int(pagination.GetPageOffset())
 
 	projects, err := h.svc.ListProjects(ctx, pageSize, offset)
 	if err != nil {
@@ -107,15 +105,16 @@ func (h *ConnectProjectService) ListProjects(
 		protoProjects = append(protoProjects, projectToProto(project, nil))
 	}
 
-	nextPageToken := ""
-	if len(projects) == pageSize {
-		nextPageToken = strconv.Itoa(offset + len(projects))
-	}
+	hasNext := len(projects) == pageSize
 
 	return connect.NewResponse(&projectv1.ListProjectsResponse{
-		Projects:      protoProjects,
-		NextPageToken: nextPageToken,
-		TotalCount:    int32(offset + len(projects)),
+		Projects: protoProjects,
+		Pagination: &paginationv1.PaginationResponse{
+			TotalCount: int32(offset + len(projects)),
+			PageOffset: pagination.GetPageOffset(),
+			PageSize:   int32(pageSize),
+			HasNext:    hasNext,
+		},
 	}), nil
 }
 
@@ -258,11 +257,19 @@ func protoStatusToDomain(status projectv1.ProjectStatus) domain.ProjectStatus {
 func toConnectError(err error) error {
 	switch {
 	case errors.Is(err, service.ErrInvalidInput):
-		return connect.NewError(connect.CodeInvalidArgument, err)
+		if pkgErr, ok := err.(*pkgErrors.Error); ok {
+			return pkgErr.ToConnectError()
+		}
+		return pkgErrors.InvalidArgumentf("%w", err).ToConnectError()
 	case errors.Is(err, service.ErrNotFound):
-		return connect.NewError(connect.CodeNotFound, err)
+		if pkgErr, ok := err.(*pkgErrors.Error); ok {
+			return pkgErr.ToConnectError()
+		}
+		return pkgErrors.NotFound("project", "").ToConnectError()
 	default:
-		return connect.NewError(connect.CodeInternal, err)
+		if pkgErr, ok := err.(*pkgErrors.Error); ok {
+			return pkgErr.ToConnectError()
+		}
+		return pkgErrors.Internal("operation failed", err.Error()).ToConnectError()
 	}
 }
-

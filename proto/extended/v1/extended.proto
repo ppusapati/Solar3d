@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package extended.v1;
 
-option go_package = "github.com/solar3d/solar3d/gen/extended/v1;extendedv1";
+option go_package = "p9e.in/samavaya/solar3d/gen/extended/v1;extendedv1";
 
 // ExtendedService exposes advanced compute modules built on extended-compute.
 service ExtendedService {

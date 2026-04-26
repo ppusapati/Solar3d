@@ -6,11 +6,11 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
-	routingv1connect "github.com/solar3d/solar3d/gen/routing/v1/routingv1connect"
+	routingv1connect "p9e.in/samavaya/solar3d/gen/routing/v1/routingv1connect"
 
-	"solar3d/routing-service/internal/handler"
-	"solar3d/routing-service/internal/repository"
-	"solar3d/routing-service/internal/service"
+	"p9e.in/samavaya/solar3d/routing-service/internal/handler"
+	"p9e.in/samavaya/solar3d/routing-service/internal/repository"
+	"p9e.in/samavaya/solar3d/routing-service/internal/service"
 )
 
 // Register wires the routing-service handlers onto mux.

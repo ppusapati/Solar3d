@@ -1,10 +1,10 @@
-module solar3d/graph-service
+module p9e.in/samavaya/solar3d/graph-service
 
 go 1.26.1
 
 require (
 	github.com/prometheus/client_golang v1.23.2
-	solar3d/shared v0.0.0
+	p9e.in/samavaya/packages v0.0.0-00010101000000-000000000000
 	google.golang.org/grpc v1.60.0
 )
 

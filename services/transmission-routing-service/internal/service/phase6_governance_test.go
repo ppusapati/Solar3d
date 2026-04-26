@@ -8,8 +8,8 @@ import (
 
 	"github.com/google/uuid"
 
-	"solar3d/transmission-routing-service/internal/domain"
-	"solar3d/transmission-routing-service/internal/repository"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/domain"
+	"p9e.in/samavaya/solar3d/transmission-routing-service/internal/repository"
 )
 
 type fakeTransmissionRepo struct {
@@ -58,6 +58,11 @@ func (f *fakeTransmissionRepo) SubmitForReview(_ context.Context, route *domain.
 }
 
 func (f *fakeTransmissionRepo) Approve(_ context.Context, route *domain.TransmissionRoute) (*domain.TransmissionRoute, error) {
+	f.routes[route.ID] = cloneRoute(route)
+	return cloneRoute(route), nil
+}
+
+func (f *fakeTransmissionRepo) Reject(_ context.Context, route *domain.TransmissionRoute) (*domain.TransmissionRoute, error) {
 	f.routes[route.ID] = cloneRoute(route)
 	return cloneRoute(route), nil
 }
